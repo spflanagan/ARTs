@@ -11,15 +11,29 @@
 
 using namespace std;
 
+class tracker
+{
+public:
+	vector<int> per_locus;
+
+	tracker()
+	{
+		per_locus = vector<int>();
+	}
+
+
+};
 
 class chromosome
 {
 public:
 	vector<int> loci;
+	vector<double> courter_ae, parent_ae;
 	
 	chromosome()
 	{
 		loci = vector<int>();
+		courter_ae = parent_ae = vector<double>();
 	}
 
 
@@ -49,17 +63,17 @@ class parameters
 {
 public:
 	int carrying_capacity, num_sampled, num_chrom, num_markers, num_qtl, max_fecund, max_encounters, num_alleles;
-	int num_pops, num_init_gen, num_exp_gen, num_mal_traits, num_ld_comparisons;
-	double mutation_rate, env_sd, rmu, recombination_rate, allelic_std_dev;
+	int num_pops, num_init_gen, num_exp_gen, num_ld_comparisons;
+	double mutation_rate, recombination_rate, allelic_std_dev;
 	string base_name;
-	bool polygyny;
+	bool court_trait, parent_trait, env_effects, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent;
 
 	parameters()
 	{
 		carrying_capacity = num_sampled = num_chrom = num_markers = num_qtl = max_fecund = max_encounters = num_alleles = int();
 		num_pops = num_init_gen = num_exp_gen = int();
-		mutation_rate = env_sd = rmu = recombination_rate = allelic_std_dev = double();
-		polygyny = bool();
+		mutation_rate =recombination_rate = allelic_std_dev = double();
+		env_effects = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = bool();
 	}
 
 	void set_defaults()
@@ -76,12 +90,12 @@ public:
 		max_encounters = 50;
 		num_alleles = 2; //biallelic to start
 		mutation_rate = 0.0002;
-		num_mal_traits = 1;//either one or two
-		env_sd = 0;
-		rmu = 0;//this value can be altered
 		recombination_rate = 0.2;//0.2
 		allelic_std_dev = 0.5;
-		polygyny = false;
+		court_trait = true;
+		parent_trait = false;
+		env_effects = false;
+		cor_prefs= ind_pref= FD_pref= CD_pref= FD_court= FD_parent= CD_court= CD_parent = false;//no selection
 		base_name = "../../results/arts_";
 		num_ld_comparisons = 100;
 	}
@@ -90,10 +104,9 @@ public:
 	{
 		cout << "\n\t\tHELP MENU\n";
 		cout << "\nSimulation model of G-matrix stability and fsts. Below are the parameters to input to the model. (Defaults in parentheses)\n";
-		cout << "-b:\tBase for output file names (gsim_)\n";
+		cout << "-b:\tBase for output file names (arts_)\n";
 		cout << "-K:\tcarrying capacity (1000)\n";
 		cout << "-s:\tnumber of individuals Sampled. (50)\n";
-		cout << "-t:\tnumber of Traits (2)\n";
 		cout << "-c:\tnumber of Chromosomes (4)\n";
 		cout << "-x:\tnumber of markers per chromosome (1000)\n";
 		cout << "-q:\ttotal number of Quantitative trait loci. (50)\n";
@@ -103,41 +116,21 @@ public:
 		cout << "-p:\tnumber of populations. (2)\n";
 		cout << "-i:\tnumber of initial generations. (1000)\n";
 		cout << "-g:\tnumber of experimental generations (200).\n";
-		cout << "-v:\tenVironmental standard deviation (0).\n";
 		cout << "-mu:\tmaximum mutation rate (0.0002).\n";
-		cout << "-rmu:\trmu value (0).\n";
-		cout << "-mv:\tMutational Variances, enter as many numbers as there are traits separated by commas (0.05,0.05)\n";
 		cout << "-r:\tRecombination rate. (0.2) \n";
 		cout << "-asd:\tAllelic Standard Deviation (0.5)\n";
-		cout << "-m:\tMigration rate. (0.1)\n";
-		cout << "--selection:\tSelection type. Choices are: none, Gaussian (Gaussian)\n";
-		cout << "--selection-file:\tpath to file containing information on selection parameters.(selection.txt)\n\t\tFor more info use flat --selection-help.\n";
-		cout << "--migration:\tMigration type. Choices are: all, ibd, cline, mainland-island, infinite-island (all)\n";
-		cout << "--selection-help:\tOutputs details for selection file specification.\n";
-		cout << "--polygyny:\tIf true, males will mate multiple times. If false, monogamy occurse (false)\n";
+		cout << "--plasticity:\tModel a plastic morph, where genotype is determined by interactions between genes.\n";
+		cout << "--freq-dependent-preference:\tInclude this flag if preferences should be based on the frequency of male morphs (defaults to independent).\n";
+		cout << "--condition-dependent-preference:\tInclude this flag if female preferences are determined by female condition (defaults to independent).\n";
+		cout << "--courter:\tInclude this flag if males should have the courter trait (a trait affecting mating probabilities). Defaults to Gaussian preference for randomly chosen morph unless other flags included. \n";
+		cout << "--parent:\tInclude this flag if males should have the parental trait (a trait affecting offspring survival). Defaults to Gaussian preference for randomly chosen morph unless other flags included. \n";
+		cout << "--freq-dependent-courter:\tIf the courter trait is experiencing frequency dependent selection.\n";
+		cout << "--freq-dependent-parent:\tIf the parent trait is experiencing frequency dependent selection.\n";
+		cout << "--condition-dependent-courter:\tIf the courter trait is determined by male condition.\n";
+		cout << "--condition-dependent-parent:\tIf the parent trait is determined by male condition.\n";
+		cout << "--independent-pref:\tSpecifies an independent female preference (defaults to Gaussian preference for randomly chosen morph unless other flags included). \n";
+		cout << "--correlated-pref:\tSpecifies a female preference correlated with the male courter trait (defaults to Gaussian preference for randomly chosen morph unless other flags included).\n";
 		cout << "-h:\tPrint this help message.\n";
-	}
-
-	void selection_help_message()
-	{
-		cout << "\n\t\tINSTRUCTIONS FOR SELECTION FILE\n";
-		cout << "The first line should begin with 'SELECTION' followed by a space and one of the following keywords : gaussian, sexual_gaussian\n";
-		cout << "The rest of the lines should be split into two sections: OMEGAS and THETAS.\n";
-		cout << "Place the phrase 'OMEGA' on the line preceding the omega values and the phrase 'THETAS' on the line preceding the theta values.\n";
-		cout << "Omega is a symmetric matrix with num_traits rows and columns. Each population should have its own matrix specified, ";
-		cout << "so each population will have num_traits rows with num_traits tab-delimited columns.\n";
-		cout << "The diagonal values are w11,w22, etc, but instead of w12 etc on the off-diagonal please provide the correlation coefficient (rw).\n";
-		cout << "It is acceptable to have a blank line between poulation matrices.\n";
-		cout << "Theta values should be represented in tab-delimited columns, one column for each trait. ";
-		cout << "Each row following THETA represents a population.\n";
-		cout << "The omega values describe the strength of selection on each trait, and smaller values represent stronger selection.\n";
-		cout << "Theta values represent trait optima. ";
-		cout << "If you would like to have the optima centered around the mean, input 'mean' instead of a number in the appropriate column/row.\n";
-		cout << "If multiple episodes of selection are included, just repeat the same format after antoher SELECTION line.\n";
-		cout << "Here's an example:\n\n";
-		cout << "\tgaussian\n\tOMEGAS\n\t9\t0\n\t0\t9\n\t49\t0.5\n\t0.5\t49\n\tTHETAS\n\tmean\t0\n\tmean\t0";
-		cout << "\n\nIf you are specifying sexual selection (sexual_gaussian), add the index for the trait experiencing sexual selection (e.g., 0 or 1) ";
-		cout << "after the line with SELECTION sexual_gaussian and before OMEGAS or THETAS.\n";
 	}
 
 	bool parse_parameters(int argc, char*argv[])
@@ -158,8 +151,6 @@ public:
 			{
 				if (tempstring1 == "-h")
 					help_message();
-				if (tempstring2 == "--selection-help")
-					selection_help_message();
 				run_program = false;
 			}
 			else
@@ -168,15 +159,14 @@ public:
 				for (j = 1; j < argc - 1; j++)
 				{
 					tempstring1 = argv[j];
-					tempstring2 = argv[j + 1];
+					if(tempstring1.substr(0,2) != "--")
+						tempstring2 = argv[j + 1];
 					if (tempstring1 == "-b")
 						base_name = tempstring2;
 					if (tempstring1 == "-K")
 						carrying_capacity = atoi(tempstring2.c_str());
 					if (tempstring1 == "-s")
 						num_sampled = atoi(tempstring2.c_str());
-					if (tempstring1 == "-t")
-						num_traits = atoi(tempstring2.c_str());
 					if (tempstring1 == "-c")
 						num_chrom = atoi(tempstring2.c_str());
 					if (tempstring1 == "-x")
@@ -195,38 +185,34 @@ public:
 						num_init_gen = atoi(tempstring2.c_str());
 					if (tempstring1 == "-g")
 						num_exp_gen = atoi(tempstring2.c_str());
-					if (tempstring1 == "-v")
-						env_sd = atof(tempstring2.c_str());
 					if (tempstring1 == "-mu")
-						max_mutation_rate = atof(tempstring2.c_str());
-					if (tempstring1 == "-rmu")
-						rmu = atof(tempstring2.c_str());
+						mutation_rate = atof(tempstring2.c_str());
 					if (tempstring1 == "-r")
 						recombination_rate = atof(tempstring2.c_str());
 					if (tempstring1 == "-asd")
 						allelic_std_dev = atof(tempstring2.c_str());
-					if (tempstring1 == "-mv")
-					{
-						stringstream ss;
-						ss << tempstring2;
-						while (getline(ss, tempstring1, ','))
-							mutational_variance.push_back(atof(tempstring1.c_str()));
-					}
-					if (tempstring1 == "--selection")
-						selection_type = tempstring2;
-					if (tempstring1 == "--selection-file")
-						selection_file_name = tempstring2;
-					if (tempstring1 == "--migration")
-						migration_type = tempstring2;
-					if (tempstring1 == "-m")
-						migration_rate = atof(tempstring2.c_str());
-					if (tempstring1 == "--polygyny")
-					{
-						if (tempstring2 == "T" | tempstring2 == "true" || tempstring2 == "TRUE" || tempstring2 == "True" || tempstring2 == "t")
-							polygyny = true;
-						else
-							polygyny = false;
-					}
+					if (tempstring1 == "--plasticity")
+						env_effects = true;
+					if (tempstring1 == "--freq-dependent-preference")
+						FD_pref = ind_pref = true;
+					if (tempstring1 == "--condition-dependent-preference")
+						CD_pref = ind_pref = true;
+					if (tempstring1 == "--courter")
+						court_trait = ind_pref = true;
+					if (tempstring1 == "--parent")
+						parent_trait = ind_pref = true;
+					if (tempstring1 == "--freq-dependent-courter")
+						FD_court = true;
+					if (tempstring1 == "--freq-dependent-parent")
+						FD_parent = true;
+					if (tempstring1 == "--condition-dependent-courter")
+						CD_court = true;
+					if (tempstring1 == "--condition-dependent-parent")
+						CD_parent = true;
+					if (tempstring1 == "--independent-pref")
+						ind_pref = true;
+					if (tempstring1 == "--correlated-pref")
+						cor_prefs = true;
 				}
 			}
 		}
@@ -249,20 +235,33 @@ public:
 		param_out << "\nNum Pops:\t" << num_pops;
 		param_out << "\nNum Initial generations:\t" << num_init_gen;
 		param_out << "\nNum Experimental generations:\t" << num_exp_gen;
-		param_out << "\nNum Traits:\t" << num_traits;
 		param_out << "\nNum LD comparisons:\t" << num_ld_comparisons;
-		param_out << "\nMax mutation rate:\t" << max_mutation_rate;
-		param_out << "\nEnvironmental SD:\t" << env_sd;
-		param_out << "\nrmu:\t" << rmu;
+		param_out << "\nMutation rate:\t" << mutation_rate;
 		param_out << "\nRecombination rate:\t" << recombination_rate;
 		param_out << "\nAllelic standard deviation:\t" << allelic_std_dev;
-		param_out << "\nMigration_rate:\t" << migration_rate;
-		param_out << "\nSelection type:\t" << selection_type;
-		param_out << "\nMigration type:\t" << migration_type;
-		param_out << "\nSelection file name:\t" << selection_file_name;
-		param_out << "\nPolygyny:\t" << polygyny;
-		for (int j = 0; j < mutational_variance.size(); j++)
-			param_out << "\nTrait" << j << " mutational variance:\t" << mutational_variance[j];
+		if (env_effects)
+			param_out << "\nPlasticity";
+		if (FD_pref)
+			param_out << "\n--freq-dependent-preference";	
+		if (CD_pref)
+			param_out << "\n--condition-dependent-preference";
+		if (court_trait)
+			param_out << "\n--courter";
+		if (parent_trait)
+			param_out << "\n--parent";
+		if (FD_court)
+			param_out << "\n--freq-dependent-courter";	 
+		if (FD_parent)
+			param_out << "\n--freq-dependent-parent";
+		if (CD_court)
+			param_out << "\n--condition-dependent-courter";
+		if (CD_parent)
+			param_out << "\n--condition-dependent-parent";
+		if (ind_pref)
+			param_out << "\n--independent-pref";
+		if (cor_prefs )
+			param_out<< "\n--correlated-pref";
+			
 		param_out.close();
 	}
 };
