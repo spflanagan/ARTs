@@ -14,11 +14,11 @@ using namespace std;
 class tracker
 {
 public:
-	vector<int> per_locus;
+	vector<double> per_locus;
 
 	tracker()
 	{
-		per_locus = vector<int>();
+		per_locus = vector<double>();
 	}
 
 
@@ -28,12 +28,13 @@ class chromosome
 {
 public:
 	vector<int> loci;
-	vector<double> courter_ae, parent_ae;
-	
+	vector<double> courter_ae, parent_ae, cenv_ae, penv_ae;
+
+
 	chromosome()
 	{
 		loci = vector<int>();
-		courter_ae = parent_ae = vector<double>();
+		courter_ae = parent_ae = cenv_ae = penv_ae = vector<double>();
 	}
 
 
@@ -44,6 +45,7 @@ class individual
 public:
 	double courter_trait, parent_trait, courter_gt, parent_gt; //use courter_trait as pref if it's a female
 	vector<chromosome> maternal, paternal;
+	vector<tracker> courter_int, parent_int, pref_int;
 	bool female, alive, courter, parent;
 	int mate_found;
 
@@ -51,18 +53,98 @@ public:
 	{
 		courter_trait = courter_gt = parent_trait = parent_gt = double();
 		maternal = paternal = vector<chromosome>();
+		courter_int = parent_int = pref_int = vector<tracker>();
 		mate_found = int();
 		female = alive = parent = courter = bool();
 	}
 
+	void calc_courter_trait(double env_cue, parameters gp)
+	{
+		int k, kk, kkk;
+		courter_trait = 0;
+		if (!gp.env_effects)
+		{
+			for (k = 0; k < gp.num_chrom; k++)
+			{
+				for (kk = 0; kk < gp.num_alleles; kk++)
+					courter_trait = courter_trait + maternal[k].courter_ae[kk] + paternal[k].courter_ae[kk];
+			}
+		}
+		else
+		{
+			int qtl_index = 0;
+			for (k = 0; k < gp.num_chrom; k++)
+			{
+				for (kk = 0; kk < gp.num_env_qtl; kk++)
+				{
+					for (kkk = 0; kkk < (gp.num_env_qtl + gp.num_qtl); kkk++)
+					{
+						courter_trait = courter_trait +
+							((maternal[k].cenv_ae[kk] + paternal[k].cenv_ae[kk]) * courter_int[qtl_index].per_locus[kkk])
+							+ env_cue;
+					}
+					qtl_index++;
+				}
+				for (kk = 0; kk < gp.num_qtl; kk++)
+				{
+					for (kkk = 0; kkk < (gp.num_env_qtl + gp.num_qtl); kkk++)
+					{
+						courter_trait = courter_trait +
+							((maternal[k].courter_ae[kk] + paternal[k].courter_ae[kk]) * courter_int[qtl_index].per_locus[kkk]);
+					}
+					qtl_index++;
+				}
+			}
+			courter_trait = 1 / (1 + exp(-1 * courter_trait));
+		}
+	}
 
-
+	void calc_parent_trait(double env_cue, parameters gp)
+	{
+		int k, kk, kkk;
+		parent_trait = 0;
+		if (!gp.env_effects)
+		{
+			for (k = 0; k < gp.num_chrom; k++)
+			{
+				for (kk = 0; kk < gp.num_alleles; kk++)
+					parent_trait = parent_trait + maternal[k].parent_ae[kk] + paternal[k].parent_ae[kk];
+			}
+		}
+		else
+		{
+			int qtl_index = 0;
+			for (k = 0; k < gp.num_chrom; k++)
+			{
+				for (kk = 0; kk < gp.num_env_qtl; kk++)
+				{
+					for (kkk = 0; kkk < (gp.num_env_qtl + gp.num_qtl); kkk++)
+					{
+						parent_trait = parent_trait +
+							((maternal[k].penv_ae[kk] + paternal[k].penv_ae[kk]) * parent_int[qtl_index].per_locus[kkk])
+							+ env_cue;
+					}
+					qtl_index++;
+				}
+				for (kk = 0; kk < gp.num_qtl; kk++)
+				{
+					for (kkk = 0; kkk < (gp.num_env_qtl + gp.num_qtl); kkk++)
+					{
+						parent_trait = parent_trait +
+							((maternal[k].parent_ae[kk] + paternal[k].parent_ae[kk]) * parent_int[qtl_index].per_locus[kkk]);
+					}
+					qtl_index++;
+				}
+			}
+			parent_trait = 1 / (1 + exp(-1 * parent_trait));
+		}
+	}
 };
 
 class parameters
 {
 public:
-	int carrying_capacity, num_sampled, num_chrom, num_markers, num_qtl, max_fecund, max_encounters, num_alleles;
+	int carrying_capacity, num_sampled, num_chrom, num_markers, num_qtl, num_env_qtl, max_fecund, max_encounters, num_alleles;
 	int num_pops, num_init_gen, num_exp_gen, num_ld_comparisons;
 	double mutation_rate, recombination_rate, allelic_std_dev;
 	string base_name;
@@ -86,6 +168,7 @@ public:
 		num_chrom = 4;
 		num_markers = 1000;//1000
 		num_qtl = 50 / num_chrom;//per chrom
+		num_env_qtl = 0;
 		max_fecund = 4;
 		max_encounters = 50;
 		num_alleles = 2; //biallelic to start
@@ -110,6 +193,7 @@ public:
 		cout << "-c:\tnumber of Chromosomes (4)\n";
 		cout << "-x:\tnumber of markers per chromosome (1000)\n";
 		cout << "-q:\ttotal number of Quantitative trait loci. (50)\n";
+		cout << "-eq:\ttotal number of QTL responding the the Environment (half of -q if --plasticity flag included)\n";
 		cout << "-f:\tmaximum Fecundity. (4)\n";
 		cout << "-e:\tmaximum number of Encounters during mating. (50)\n";
 		cout << "-a:\tnumber of alleles (2).\n";
@@ -173,6 +257,8 @@ public:
 						num_markers = atoi(tempstring2.c_str());
 					if (tempstring1 == "-q")
 						num_qtl = atoi(tempstring2.c_str());
+					if (tempstring1 == "-eq")
+						num_env_qtl = atoi(tempstring2.c_str());
 					if (tempstring1 == "-f")
 						max_fecund = atoi(tempstring2.c_str());
 					if (tempstring1 == "-e")
@@ -202,17 +288,24 @@ public:
 					if (tempstring1 == "--parent")
 						parent_trait = ind_pref = true;
 					if (tempstring1 == "--freq-dependent-courter")
-						FD_court = true;
+						FD_court = court_trait= true;
 					if (tempstring1 == "--freq-dependent-parent")
-						FD_parent = true;
+						FD_parent = parent_trait = true;
 					if (tempstring1 == "--condition-dependent-courter")
-						CD_court = true;
+						CD_court = court_trait= true;
 					if (tempstring1 == "--condition-dependent-parent")
-						CD_parent = true;
+						CD_parent =parent_trait= true;
 					if (tempstring1 == "--independent-pref")
 						ind_pref = true;
 					if (tempstring1 == "--correlated-pref")
-						cor_prefs = true;
+						cor_prefs = court_trait = true;
+				}
+				if (env_effects)
+				{
+					if (num_env_qtl == 0)
+						num_env_qtl = num_qtl / 2;
+					else
+						num_env_qtl = num_env_qtl / num_chrom;
 				}
 			}
 		}
