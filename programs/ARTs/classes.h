@@ -28,13 +28,13 @@ class chromosome
 {
 public:
 	vector<int> loci;
-	vector<double> courter_ae, parent_ae, cenv_ae, penv_ae;
+	vector<double> courter_ae, parent_ae, pref_ae;
 
 
 	chromosome()
 	{
 		loci = vector<int>();
-		courter_ae = parent_ae = cenv_ae = penv_ae = vector<double>();
+		courter_ae = parent_ae = pref_ae = vector<double>();
 	}
 
 
@@ -43,22 +43,108 @@ public:
 class individual
 {
 public:
-	double courter_trait, parent_trait, courter_gt, parent_gt; //use courter_trait as pref if it's a female
+	double courter_trait, parent_trait, female_pref;
 	vector<chromosome> maternal, paternal;
-	vector<tracker> courter_int, parent_int, pref_int;
+	vector<tracker> courter_int, parent_int, pref_int, courter_Y, parent_Y, pref_Y;
+	vector<int> courter_Z, parent_Z, pref_Z, courter_x, parent_x, pref_x;
 	bool female, alive, courter, parent;
-	int mate_found;
+	int mate_found, pot_rs;
 
 	individual()
 	{
-		courter_trait = courter_gt = parent_trait = parent_gt = double();
+		courter_trait = parent_trait = female_pref = double();
 		maternal = paternal = vector<chromosome>();
-		courter_int = parent_int = pref_int = vector<tracker>();
-		mate_found = int();
+		courter_int = parent_int = pref_int = courter_Y =  parent_Y =  pref_Y= vector<tracker>();
+		courter_Z = parent_Z = pref_Z = courter_x = parent_x = pref_x = vector<int>();
+		mate_found = pot_rs = int();
 		female = alive = parent = courter = bool();
 	}
 
-	void calc_courter_trait(double env_cue, parameters gp)
+	//phenotype functions
+	void courter_gene_interactions(parameters gp, double env_cue)
+	{
+		int k, kk, t;
+		double diff, x, xlast;
+		alive = true;
+		for (k = 0; k < (gp.num_env_qtl + gp.num_qtl); k++)
+		{
+			xlast = 1;
+			x = 0;
+			for (t = 0; t < 20; t++)
+			{
+				
+				for (kk = 0; kk < (gp.num_env_qtl + gp.num_qtl); kk++)
+				{
+					if (k < gp.num_env_qtl)
+						x = x + (courter_Y[k].per_locus[kk] * courter_int[k].per_locus[kk] * xlast) + env_cue;
+					else
+						x = x + (courter_Y[k].per_locus[kk] * courter_int[k].per_locus[kk] * xlast);
+				}
+				x = 1 / (1 + exp(-1 * x));
+				diff = x - xlast;
+				
+			}
+			if (diff <= 0.01)
+				alive = false;
+			if (k > gp.num_env_qtl)
+				courter_x[k] = x;
+		}
+	}
+	void parent_gene_interactions(parameters gp, double env_cue)
+	{
+		int k, kk, t;
+		double diff, x, xlast;
+
+		for (k = 0; k < (gp.num_env_qtl + gp.num_qtl); k++)
+		{
+			xlast = 1;
+			x = 0;
+			for (t = 0; t < 20; t++)
+			{				
+				for (kk = 0; kk < (gp.num_env_qtl + gp.num_qtl); kk++)
+				{
+					if (k < gp.num_env_qtl)
+						x = x + (parent_Y[k].per_locus[kk] * parent_int[k].per_locus[kk] * xlast) + env_cue;
+					else
+						x = x + (parent_Y[k].per_locus[kk] * parent_int[k].per_locus[kk] * xlast);
+				}
+				x = 1 / (1 + exp(-1 * x));
+				diff = x - xlast;
+			}
+			if (diff <= 0.01)
+				alive = false;
+			if (k > gp.num_env_qtl)
+				parent_x[k] = x;
+		}
+	}
+	void pref_gene_interactions(parameters gp, double env_cue)
+	{
+		int k, kk, t;
+		double diff, x, xlast;
+
+		for (k = 0; k < (gp.num_env_qtl + gp.num_qtl); k++)
+		{
+			xlast = 1;
+			x = 0;
+			for (t = 0; t < 20; t++)
+			{
+				for (kk = 0; kk < (gp.num_env_qtl + gp.num_qtl); kk++)
+				{
+					if (k < gp.num_env_qtl)
+						x = x + (pref_Y[k].per_locus[kk] * pref_int[k].per_locus[kk] * xlast) + env_cue;
+					else
+						x = x + (pref_Y[k].per_locus[kk] * pref_int[k].per_locus[kk] * xlast);
+				}
+				x = 1 / (1 + exp(-1 * x));
+				diff = x - xlast;
+			}
+			if (diff <= 0.01)
+				alive = false;
+			if (k > gp.num_env_qtl)
+				parent_x[k] = x;
+		}
+	}
+	void calc_courter_trait(parameters gp, double env_cue = 0)
 	{
 		int k, kk, kkk;
 		courter_trait = 0;
@@ -72,34 +158,19 @@ public:
 		}
 		else
 		{
+			courter_gene_interactions(gp, env_cue);
 			int qtl_index = 0;
 			for (k = 0; k < gp.num_chrom; k++)
 			{
-				for (kk = 0; kk < gp.num_env_qtl; kk++)
-				{
-					for (kkk = 0; kkk < (gp.num_env_qtl + gp.num_qtl); kkk++)
-					{
-						courter_trait = courter_trait +
-							((maternal[k].cenv_ae[kk] + paternal[k].cenv_ae[kk]) * courter_int[qtl_index].per_locus[kkk])
-							+ env_cue;
-					}
-					qtl_index++;
-				}
 				for (kk = 0; kk < gp.num_qtl; kk++)
 				{
-					for (kkk = 0; kkk < (gp.num_env_qtl + gp.num_qtl); kkk++)
-					{
-						courter_trait = courter_trait +
-							((maternal[k].courter_ae[kk] + paternal[k].courter_ae[kk]) * courter_int[qtl_index].per_locus[kkk]);
-					}
+					courter_trait = courter_trait + (courter_Z[qtl_index] * (maternal[k].courter_ae[kk]+paternal[k].courter_ae[kk])*courter_x[qtl_index]);				
 					qtl_index++;
 				}
 			}
-			courter_trait = 1 / (1 + exp(-1 * courter_trait));
 		}
 	}
-
-	void calc_parent_trait(double env_cue, parameters gp)
+	void calc_parent_trait(parameters gp, double env_cue = 0)
 	{
 		int k, kk, kkk;
 		parent_trait = 0;
@@ -113,30 +184,362 @@ public:
 		}
 		else
 		{
+			parent_gene_interactions(gp, env_cue);
 			int qtl_index = 0;
 			for (k = 0; k < gp.num_chrom; k++)
 			{
-				for (kk = 0; kk < gp.num_env_qtl; kk++)
-				{
-					for (kkk = 0; kkk < (gp.num_env_qtl + gp.num_qtl); kkk++)
-					{
-						parent_trait = parent_trait +
-							((maternal[k].penv_ae[kk] + paternal[k].penv_ae[kk]) * parent_int[qtl_index].per_locus[kkk])
-							+ env_cue;
-					}
-					qtl_index++;
-				}
 				for (kk = 0; kk < gp.num_qtl; kk++)
 				{
-					for (kkk = 0; kkk < (gp.num_env_qtl + gp.num_qtl); kkk++)
-					{
-						parent_trait = parent_trait +
-							((maternal[k].parent_ae[kk] + paternal[k].parent_ae[kk]) * parent_int[qtl_index].per_locus[kkk]);
-					}
+					parent_trait = parent_trait + (parent_Z[qtl_index] * (maternal[k].parent_ae[kk] + paternal[k].parent_ae[kk])*parent_x[qtl_index]);
 					qtl_index++;
 				}
 			}
-			parent_trait = 1 / (1 + exp(-1 * parent_trait));
+		}
+	}
+	void calc_preference_trait(parameters gp, double env_cue = 0)
+	{
+		int k, kk, kkk;
+		female_pref = 0;
+		if (!gp.env_effects)
+		{
+			for (k = 0; k < gp.num_chrom; k++)
+			{
+				for (kk = 0; kk < gp.num_alleles; kk++)
+					female_pref = female_pref + maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk];
+			}
+		}
+		else
+		{
+			pref_gene_interactions(gp, env_cue);
+			int qtl_index = 0;
+			for (k = 0; k < gp.num_chrom; k++)
+			{
+				for (kk = 0; kk < gp.num_qtl; kk++)
+				{
+					female_pref = female_pref + (pref_Z[qtl_index] * (maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk])*pref_x[qtl_index]);
+					qtl_index++;
+				}
+			}
+		}
+	}
+	void assign_court_morph(parameters gp, double threshold)
+	{
+		if (courter_trait < threshold)
+			courter = false;
+		else
+			courter = true;
+		if (courter)
+			pot_rs = gp.rs_c;
+		else
+			pot_rs = gp.rs_nc;
+	}
+	void assign_parent_morph(parameters gp, double threshold)
+	{
+		if (parent_trait < threshold)
+			parent = false;
+		else
+			parent = true;
+		if (parent)
+			pot_rs = gp.rs_p;
+		else
+			pot_rs = gp.rs_np;
+	}
+	void update_traits(parameters gp, double court_thresh, double parent_thresh, double env_cue = 0)
+	{
+		if (gp.court_trait)
+		{
+			calc_courter_trait(gp, env_cue);
+			assign_court_morph(gp, court_thresh);
+		}
+		if (gp.parent_trait)
+		{
+			calc_parent_trait(gp, env_cue);
+			assign_parent_morph(gp, parent_thresh);
+		}
+		if (gp.ind_pref || gp.cor_prefs)
+			calc_preference_trait(gp, env_cue);
+	}
+
+	//life cycle functions
+	void mutation(parameters gp, vector<tracker>& court_qtl, vector<tracker>& parent_qtl,vector<tracker>& pref_qtl)
+	{
+		int m, mm, irand, irand2, gg, ggg, irand3, locus;
+		double rnd1, rnd2;
+		double IndMutationRate;
+		double MutSD;
+		bool mutated;
+
+		MutSD = sqrt(gp.mutational_var);
+		IndMutationRate = gp.mutation_rate* 2 * gp.num_markers*gp.num_chrom;
+
+		rnd1 = genrand();
+		mutated = false;
+		if (rnd1 < IndMutationRate)
+		{
+			irand = randnum(gp.num_chrom);
+			irand2 = randnum(gp.num_markers);
+			rnd2 = genrand();//to choose maternal or paternal
+			if (rnd2 < 0.5)//affects maternal chromosome	
+			{
+				while (!mutated) {
+					irand3 = randnum(gp.num_alleles);
+					if (!maternal[irand].loci[irand2] == irand3)
+					{
+						maternal[irand].loci[irand2] = irand3;
+						mutated = true;
+					}
+				}
+				for (mm = 0; mm < gp.num_qtl; mm++)
+				{
+					if (gp.court_trait)
+					{
+						if (court_qtl[irand].per_locus[mm] == irand2)
+							maternal[irand].courter_ae[mm] =
+							maternal[irand].courter_ae[mm] + randnorm(0, MutSD);
+					}
+					if (gp.parent_trait)
+					{
+						if (parent_qtl[irand].per_locus[mm] == irand2)
+							maternal[irand].parent_ae[mm] =
+							maternal[irand].parent_ae[mm] + randnorm(0, MutSD);
+					}
+					if (gp.ind_pref || gp.cor_prefs)
+					{
+						if (pref_qtl[irand].per_locus[mm] == irand2)
+							maternal[irand].pref_ae[mm] =
+							maternal[irand].pref_ae[mm] + randnorm(0, MutSD);
+					}
+				}
+			}
+			else//affects paternal chromosome
+			{
+				while (!mutated) {
+					irand3 = randnum(gp.num_alleles);
+					if (!paternal[irand].loci[irand2] == irand3)
+					{
+						paternal[irand].loci[irand2] = irand3;
+						mutated = true;
+					}
+				}
+				for (mm = 0; mm < gp.num_qtl; mm++)
+				{
+					if (gp.court_trait)
+					{
+						if (court_qtl[irand].per_locus[mm] == irand2)
+							paternal[irand].courter_ae[mm] =
+							paternal[irand].courter_ae[mm] + randnorm(0, MutSD);
+					}
+					if (gp.parent_trait)
+					{
+						if (parent_qtl[irand].per_locus[mm] == irand2)
+							paternal[irand].parent_ae[mm] =
+							paternal[irand].parent_ae[mm] + randnorm(0, MutSD);
+					}
+					if (gp.ind_pref || gp.cor_prefs)
+					{
+						if (pref_qtl[irand].per_locus[mm] == irand2)
+							paternal[irand].pref_ae[mm] =
+							paternal[irand].pref_ae[mm] + randnorm(0, MutSD);
+					}
+				}
+			}
+		}//end of if	
+	}//mutation
+	void mutation_env(parameters gp)
+	{
+		//do something.
+		int j,jj,rand_loc1, rand_loc2, mut_count;
+		double alpha, mu_mean, sigma_mu, num_mutations,YorZ;
+		alpha = 0.2;
+		mu_mean = 0.02;
+		sigma_mu = 0.5;
+		num_mutations = poissonrand(mu_mean);
+		mut_count = 0;
+		YorZ = (gp.num_qtl*gp.num_qtl)/((gp.num_env_qtl + gp.num_qtl)*(gp.num_env_qtl + gp.num_qtl));
+		while (mut_count < num_mutations)
+		{
+			if (gp.court_trait)
+			{
+				if (genrand() >= YorZ)//then we'll be working with Y
+				{
+					rand_loc1 = randnum(gp.num_env_qtl + gp.num_qtl);
+					rand_loc2 = randnum(gp.num_env_qtl + gp.num_qtl);
+					if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
+					{
+						if (courter_Y[rand_loc1].per_locus[rand_loc2] == 0)//add interaction
+							courter_Y[rand_loc1].per_locus[rand_loc2] = 1;
+						else//remove interaction
+							courter_Y[rand_loc1].per_locus[rand_loc2] = 0;
+					}
+					else //then it affects weight of interaction
+					{
+						courter_int[rand_loc1].per_locus[rand_loc2] = courter_int[rand_loc1].per_locus[rand_loc2] + randnorm(0, sigma_mu);
+					}
+				}
+				else // then we'll work with Z
+				{
+					rand_loc1 = randnum(gp.num_qtl);
+					if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
+					{
+						if (courter_Z[rand_loc1] == 0)//add interaction
+							courter_Z[rand_loc1] = 1;
+						else//remove interaction
+							courter_Z[rand_loc1] = 0;
+					}
+					else //then it affects weight of interaction
+					{
+						int index = 0;
+						for (int j = 0; j < gp.num_chrom; j++)
+						{
+							for (int jj = 0; jj < gp.num_qtl; jj++)
+							{
+								if (index == rand_loc1)
+								{
+									if (genrand() < 0.5)
+										maternal[j].courter_ae[jj] = maternal[j].courter_ae[jj] + randnorm(0, sigma_mu);
+									else
+										paternal[j].courter_ae[jj] = paternal[j].courter_ae[jj] + randnorm(0, sigma_mu);
+								}
+								index++;
+							}
+						}
+					}
+				}
+			}
+			if (gp.parent_trait)
+			{
+				if (genrand() >= YorZ)//then we'll be working with Y
+				{
+					rand_loc1 = randnum(gp.num_env_qtl + gp.num_qtl);
+					rand_loc2 = randnum(gp.num_env_qtl + gp.num_qtl);
+					if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
+					{
+						if (parent_Y[rand_loc1].per_locus[rand_loc2] == 0)//add interaction
+							parent_Y[rand_loc1].per_locus[rand_loc2] = 1;
+						else//remove interaction
+							parent_Y[rand_loc1].per_locus[rand_loc2] = 0;
+					}
+					else //then it affects weight of interaction
+					{
+						parent_int[rand_loc1].per_locus[rand_loc2] = parent_int[rand_loc1].per_locus[rand_loc2] + randnorm(0, sigma_mu);
+					}
+				}
+				else // then we'll work with Z
+				{
+					rand_loc1 = randnum(gp.num_qtl);
+					if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
+					{
+						if (parent_Z[rand_loc1] == 0)//add interaction
+							parent_Z[rand_loc1] = 1;
+						else//remove interaction
+							parent_Z[rand_loc1] = 0;
+					}
+					else //then it affects weight of interaction
+					{
+						int index = 0;
+						for (int j = 0; j < gp.num_chrom; j++)
+						{
+							for (int jj = 0; jj < gp.num_qtl; jj++)
+							{
+								if (index == rand_loc1)
+								{
+									if (genrand() < 0.5)
+										maternal[j].parent_ae[jj] = maternal[j].parent_ae[jj] + randnorm(0, sigma_mu);
+									else
+										paternal[j].parent_ae[jj] = paternal[j].parent_ae[jj] + randnorm(0, sigma_mu);
+								}
+								index++;
+							}
+						}
+					}
+				}
+			}
+			if (gp.ind_pref)
+			{
+				if (genrand() >= YorZ)//then we'll be working with Y
+				{
+					rand_loc1 = randnum(gp.num_env_qtl + gp.num_qtl);
+					rand_loc2 = randnum(gp.num_env_qtl + gp.num_qtl);
+					if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
+					{
+						if (pref_Y[rand_loc1].per_locus[rand_loc2] == 0)//add interaction
+							pref_Y[rand_loc1].per_locus[rand_loc2] = 1;
+						else//remove interaction
+							pref_Y[rand_loc1].per_locus[rand_loc2] = 0;
+					}
+					else //then it affects weight of interaction
+					{
+						pref_int[rand_loc1].per_locus[rand_loc2] = pref_int[rand_loc1].per_locus[rand_loc2] + randnorm(0, sigma_mu);
+					}
+				}
+				else // then we'll work with Z
+				{
+					rand_loc1 = randnum(gp.num_qtl);
+					if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
+					{
+						if (pref_Z[rand_loc1] == 0)//add interaction
+							pref_Z[rand_loc1] = 1;
+						else//remove interaction
+							pref_Z[rand_loc1] = 0;
+					}
+					else //then it affects weight of interaction
+					{
+						int index = 0;
+						for (int j = 0; j < gp.num_chrom; j++)
+						{
+							for (int jj = 0; jj < gp.num_qtl; jj++)
+							{
+								if (index == rand_loc1)
+								{
+									if (genrand() < 0.5)
+										maternal[j].pref_ae[jj] = maternal[j].pref_ae[jj] + randnorm(0, sigma_mu);
+									else
+										paternal[j].pref_ae[jj] = paternal[j].pref_ae[jj] + randnorm(0, sigma_mu);
+								}
+								index++;
+							}
+						}
+					}
+				}
+			}//ind prefs
+			if (gp.cor_prefs && gp.court_trait)//it's the same as courter
+			{
+				for (j = 0; j < (gp.num_env_qtl + gp.num_qtl); j++)
+				{
+					for (jj = 0; jj < (gp.num_env_qtl + gp.num_qtl); jj++)
+					{
+						pref_Y[j].per_locus[jj] = courter_Y[j].per_locus[jj];
+						pref_int[j].per_locus[jj] = courter_int[j].per_locus[jj];
+					}
+				}
+				for (j = 0; j < gp.num_chrom; j++)
+				{
+					for (jj = 0; jj < gp.num_qtl; jj++)
+					{
+						maternal[j].pref_ae[jj] = maternal[j].courter_ae[jj];
+						paternal[j].pref_ae[jj] = paternal[j].courter_ae[jj];
+					}
+				}
+			}
+			if (gp.cor_prefs && !gp.court_trait)
+			{
+				for (j = 0; j < (gp.num_env_qtl + gp.num_qtl); j++)
+				{
+					for (jj = 0; jj < (gp.num_env_qtl + gp.num_qtl); jj++)
+					{
+						pref_Y[j].per_locus[jj] = parent_Y[j].per_locus[jj];
+						pref_int[j].per_locus[jj] = parent_int[j].per_locus[jj];
+					}
+				}
+				for (j = 0; j < gp.num_chrom; j++)
+				{
+					for (jj = 0; jj < gp.num_qtl; jj++)
+					{
+						maternal[j].pref_ae[jj] = maternal[j].parent_ae[jj];
+						paternal[j].pref_ae[jj] = paternal[j].parent_ae[jj];
+					}
+				}
+			}
 		}
 	}
 };
@@ -145,17 +548,17 @@ class parameters
 {
 public:
 	int carrying_capacity, num_sampled, num_chrom, num_markers, num_qtl, num_env_qtl, max_fecund, max_encounters, num_alleles;
-	int num_pops, num_init_gen, num_exp_gen, num_ld_comparisons;
-	double mutation_rate, recombination_rate, allelic_std_dev;
+	int num_pops, num_init_gen, num_exp_gen, num_ld_comparisons, rs_c, rs_nc, rs_p, rs_np;
+	double mutation_rate, mutational_var, recombination_rate, allelic_std_dev, gaussian_pref_mean, cond_adj;
 	string base_name;
-	bool court_trait, parent_trait, env_effects, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent;
+	bool court_trait, parent_trait, env_effects, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
 
 	parameters()
 	{
 		carrying_capacity = num_sampled = num_chrom = num_markers = num_qtl = max_fecund = max_encounters = num_alleles = int();
 		num_pops = num_init_gen = num_exp_gen = int();
 		mutation_rate =recombination_rate = allelic_std_dev = double();
-		env_effects = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = bool();
+		env_effects = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits =  bool();
 	}
 
 	void set_defaults()
@@ -173,14 +576,23 @@ public:
 		max_encounters = 50;
 		num_alleles = 2; //biallelic to start
 		mutation_rate = 0.0002;
+		mutational_var = 0;
 		recombination_rate = 0.2;//0.2
 		allelic_std_dev = 0.5;
 		court_trait = true;
 		parent_trait = false;
 		env_effects = false;
 		cor_prefs= ind_pref= FD_pref= CD_pref= FD_court= FD_parent= CD_court= CD_parent = false;//no selection
+		cor_mal_traits = false;
+		polygyny = false;
 		base_name = "../../results/arts_";
 		num_ld_comparisons = 100;
+		rs_c = 8;
+		rs_nc = 4;
+		rs_p = 8;
+		rs_np = 4;
+		gaussian_pref_mean = 0;
+		cond_adj = 0.1;//amount to add/subtract to condition dependent traits
 	}
 
 	void help_message()
@@ -307,6 +719,8 @@ public:
 					else
 						num_env_qtl = num_env_qtl / num_chrom;
 				}
+				if (ind_pref || cor_prefs)
+					court_trait = true;
 			}
 		}
 		return run_program;
