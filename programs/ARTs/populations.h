@@ -849,6 +849,7 @@ public:
 			//also need to do mutation
 			if (gp.env_effects)//need to evaluate if it's compatible
 			{
+				progeny[num_progeny].alive = true;
 				progeny[num_progeny].mutation_env(gp);
 				if(gp.court_trait)
 					progeny[num_progeny].calc_courter_trait(gp, 0);
@@ -1016,5 +1017,6 @@ public:
 			out_file.close();
 	}//mating
 
+	//selection
 
 };
