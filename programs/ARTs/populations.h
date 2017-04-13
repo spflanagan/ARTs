@@ -457,115 +457,75 @@ public:
 	}
 
 	//all of the ways to calculate preferences
-	void pref_gauss_malemu(parameters gp)
+	void pref_better_morph(parameters gp)//prefer the court/parental trait
 	{
 		int j;
-		double mean;
-		if (gp.court_trait)
-			mean = calc_mean_courter_ae(gp);
-		else
-			mean = calc_mean_parent_ae(gp);
 		for (j = 0; j < gp.carrying_capacity; j++)
 		{
 			if (adults[j].alive && adults[j].female)
-				adults[j].female_pref = mean;
+				adults[j].female_pref = 1;
 		}
 	}
-	void pref_gauss_femtrait_noenv(parameters gp)
+	void pref_femtrait(parameters gp)//if it's correlated, then preference should be based on female's own trait
 	{
 		for (int j = 0; j < gp.carrying_capacity; j++)
 		{
 			if (adults[j].alive && adults[j].female)
 			{
-				adults[j].calc_preference_trait(gp);
+				if(gp.court_trait)
+					adults[j].calc_preference_trait(gp, courter_thresh);
+				else
+					adults[j].calc_preference_trait(gp, parent_thresh);
 			}
 		}
 	}
 	void pref_fd_courter(parameters gp)
 	{
 		int j, jj;
-		double mean, freqT, count;
-		mean = freqT = count = 0;
+		double freqT;
+		freqT= 0;
 		freqT = calc_freq_courter(gp);
-		mean = 0;
-		if (freqT < 0.5) // calculate the mean
+		if (freqT < 0.5) // females prefer courter (courter is less frequent)
 		{
-			for (j = 0; j < gp.carrying_capacity; j++)
-			{
-				if (adults[j].courter && adults[j].alive && !adults[j].female)
-				{
-					mean = mean + adults[j].courter_trait;
-					count++;
-				}
-			}
-			mean = mean / count;
 			//assign female preferences
 			for (j = 0; j < gp.carrying_capacity; j++)
 			{
 				if (adults[j].alive && adults[j].female)
-					adults[j].female_pref = mean;
+					adults[j].female_pref = 1;
 			}
 		}
-		else
+		else //females prefer non-courter (courter is more frequent)
 		{
-			for (j = 0; j < gp.carrying_capacity; j++)
-			{
-				if (!adults[j].courter && adults[j].alive && !adults[j].female)
-				{
-					mean = mean + adults[j].courter_trait;
-					count++;
-				}
-			}
-			mean = mean / count;
 			//assign female preferences
 			for (j = 0; j < gp.carrying_capacity; j++)
 			{
 				if (adults[j].alive && adults[j].female)
-					adults[j].female_pref = mean;
+					adults[j].female_pref = 0;
 			}
 		}
 	}
 	void pref_fd_parent(parameters gp)
 	{
 		int j, jj;
-		double mean, freqT, count;
-		mean = freqT = count = 0;
+		double freqT;
+		freqT= 0;
 		freqT = calc_freq_parent(gp);
-		mean = 0;
-		if (freqT < 0.5) // calculate the mean
+		if (freqT < 0.5) // parent is less frequent; prefer parent
 		{
-			for (j = 0; j < gp.carrying_capacity; j++)
-			{
-				if (adults[j].parent && adults[j].alive && !adults[j].female)
-				{
-					mean = mean + adults[j].parent_trait;
-					count++;
-				}
-			}
-			mean = mean / count;
 			//assign female preferences
 			for (j = 0; j < gp.carrying_capacity; j++)
 			{
 				if (adults[j].alive && adults[j].female)
-					adults[j].female_pref = mean;
+					adults[j].female_pref = 1;
 			}
 		}
-		else
+		else //parent is more frequent; prefer non-parent
 		{
-			for (j = 0; j < gp.carrying_capacity; j++)
-			{
-				if (!adults[j].parent && adults[j].alive && !adults[j].female)
-				{
-					mean = adults[j].parent_trait;
-					count++;
-				}
-			}
-			mean = mean / count;
 			//assign female preferences
 			for (j = 0; j < gp.carrying_capacity; j++)
 			{
 				if (adults[j].alive && adults[j].female)
-					adults[j].female_pref = mean;
+					adults[j].female_pref = 0;
 			}
 		}
 	}
@@ -577,7 +537,7 @@ public:
 		{
 			if (adults[j].alive && adults[j].female)
 			{
-				adults[j].calc_preference_trait(gp);//consider environmental cue...
+				adults[j].calc_preference_trait(gp, courter_thresh);//consider environmental cue...
 				mean = poissonrand(gp.max_fecund + adults[j].female_pref);
 				adults[j].pot_rs = adults[j].female_pref + mean; //this is her fecundity
 				if (xswitch < adults[j].pot_rs)//then she prefers rs_c
@@ -597,9 +557,9 @@ public:
 			{
 				if (gp.ind_pref)//if it's independent, not freq dependent, and not condition dependent
 								//then it's based on mean male trait
-					pref_gauss_malemu(gp);
+					pref_better_morph(gp);
 				else //if it's correlated, then preference should be based on female's own trait
-					pref_gauss_femtrait_noenv(gp);
+					pref_femtrait(gp);
 			}
 			if (gp.FD_pref)//then need the frequency of morphs and female prefers less frequent one.
 			{
@@ -615,43 +575,15 @@ public:
 			{
 				int j, jj, count;
 				double xswitch, meanT, meanF;
+				meanT = 1;
+				meanF = 0;//based on morphs
 				if (gp.court_trait)
 				{
-					xswitch = gp.max_encounters / (gp.rs_c - gp.rs_nc);
-					meanT = meanF = 0;
-					count = 0;
-					for (jj = 0; jj < gp.carrying_capacity; jj++)
-					{
-						if (adults[jj].alive && !adults[jj].female)
-						{
-							if (adults[jj].courter)
-								meanT = meanT + adults[jj].courter_trait;
-							else
-								meanF = meanF + adults[jj].courter_trait;
-							count++;
-						}
-					}
-					meanT = meanT / count;
-					meanF = meanF / count;
+					xswitch = (num_mal / gp.max_encounters) / (gp.rs_c - gp.rs_nc);
 				}
 				else
 				{
-					xswitch = gp.max_encounters / (gp.rs_p - gp.rs_np);
-					meanT = meanF = 0;
-					count = 0;
-					for (jj = 0; jj < gp.carrying_capacity; jj++)
-					{
-						if (adults[jj].alive && !adults[jj].female)
-						{
-							if (adults[jj].parent)
-								meanT = meanT + adults[jj].parent_trait;
-							else
-								meanF = meanF + adults[jj].parent_trait;
-							count++;
-						}
-					}
-					meanT = meanT / count;
-					meanF = meanF / count;
+					xswitch = (num_mal / gp.max_encounters) / (gp.rs_p - gp.rs_np);
 				}
 				pref_cd_courter_noenv(gp, meanT, meanF, xswitch);
 			}
@@ -1016,7 +948,217 @@ public:
 		if (output)
 			out_file.close();
 	}//mating
+	void bestofN_mating(bool output, string out_name, parameters gp)
+	{
+		//monogamous mating without choice
+		int j, jj, jjj, male_id, encounters, irndnum;
+		double mate_prob, rel_rs;
+		num_progeny = num_fem = num_mal = 0;
+		bool mate_found;
+		vector<int> male_index;
+		vector<bool> mated;
+		ofstream out_file;
+		if (output)
+		{
+			cout << "\nWriting to file " << out_name;
+			out_file.open(out_name);
+		}
+		determine_pop_size(gp);
+		assign_preference(gp);
+
+		for (j = 0; j < adults.size(); j++)
+		{
+			if (adults[j].female && adults[j].alive)
+				num_fem++;
+			else
+			{
+				if (adults[j].alive)
+				{
+					num_mal++;
+					male_index.push_back(j);
+					mated.push_back(false);
+				}
+			}
+			adults[j].mate_found = 0;
+		}
+
+
+		for (j = 0; j < adults.size(); j++)
+		{
+			if (adults[j].female && adults[j].alive)
+			{
+				int count = 0;
+				encounters = 0;
+				if (random_mating)
+				{
+					while (!mate_found)//female mates once
+					{
+						irndnum = randnum(num_mal);
+						male_id = male_index[irndnum];
+						if (adults[male_id].alive)
+						{
+							if (gp.polygyny || !mated[irndnum])//either polygyny is ok or if monogamy the male hasn't mated yet
+							{
+								mate_found = true;
+								mated[irndnum] = true;
+								adults[j].mate_found++;
+								adults[male_id].mate_found++;
+							}
+						}
+					}
+				}//random mating
+				else
+				{ //preference for one morph or the other 
+					vector <int> acceptable_males;
+					while (encounters < gp.max_encounters)
+					{
+						irndnum = randnum(num_mal);
+						male_id = male_index[irndnum];
+						if (adults[male_id].alive)
+						{
+							if (gp.polygyny || !mated[irndnum])
+							{
+								if (gp.court_trait)
+								{
+									if (adults[j].female_pref == adults[male_id].courter);
+										acceptable_males.push_back(male_id);
+								}
+								else//parent_trait
+								{
+									if (adults[j].female_pref == adults[male_id].parent);
+										acceptable_males.push_back(male_id);
+								}
+							}
+						}
+						encounters++;
+					}
+					if (acceptable_males.size() > 1)//if there are multiple males, she chooses one randomly
+					{
+						int randbest = randnum(acceptable_males.size());
+						male_id = acceptable_males[randbest];
+						mate_found = true;
+						mated[irndnum] = true;
+						adults[j].mate_found++;
+						adults[male_id].mate_found++;
+						if (gp.CD_court)
+						{
+							if (adults[male_id].courter)//it decreases
+								adults[male_id].courter_trait = adults[male_id].courter_trait - gp.cond_adj;
+							else//it increases
+								adults[male_id].courter_trait = adults[male_id].courter_trait + gp.cond_adj;
+							adults[male_id].assign_court_morph(gp, courter_thresh);
+						}
+						if (gp.CD_parent)
+						{
+							if (adults[male_id].parent)//it decreases
+								adults[male_id].parent_trait = adults[male_id].parent_trait - gp.cond_adj;
+							else//it increases
+								adults[male_id].parent_trait = adults[male_id].parent_trait + gp.cond_adj;
+							adults[male_id].assign_parent_morph(gp, parent_thresh);
+						}
+					}
+				}//end of finding the mates
+				if (mate_found)
+				{
+					int fecundity = min(adults[j].pot_rs, adults[male_id].pot_rs);
+					rel_rs = making_babies(gp, fecundity, num_progeny, j, male_id);
+					if (output)
+					{
+						out_file << '\n' << rel_rs << "\tMother" << '\t' << j;
+						for (jjj = 0; jjj < gp.num_chrom; jjj++)
+						{
+							for (int x = 0; x < gp.num_markers; x++) {
+								out_file << '\t' << adults[j].maternal[jjj].loci[x] << "/" << adults[j].paternal[jjj].loci[x];
+
+							}
+						}
+						out_file << "\nFather" << '\t' << male_id;
+						for (jjj = 0; jjj < gp.num_chrom; jjj++)
+						{
+							for (int x = 0; x < gp.num_markers; x++)
+								out_file << '\t' << adults[male_id].maternal[jjj].loci[x] << "/" << adults[male_id].paternal[jjj].loci[x];
+						}
+						out_file << "\nOffspring" << '\t' << num_progeny;
+						for (jjj = 0; jjj < gp.num_chrom; jjj++)
+						{
+							for (int x = 0; x < gp.num_markers; x++) {
+								out_file << '\t' << progeny[num_progeny].maternal[jjj].loci[x] << "/" << progeny[num_progeny].paternal[jjj].loci[x];
+
+							}
+						}
+					}
+				}
+			}
+		}
+		if (output)
+			out_file.close();
+	}
 
 	//selection
+	double via_against_courter(parameters gp)
+	{
+		int k;
+		
+	}
+	double via_against_parent(parameters gp)
+	{
+		int k;
+	}
+	double via_fd_courter(parameters gp)
+	{
+		int k;
+	}
+	double via_fd_parent(parameters gp)
+	{
+		int k;
+	}
+	void viability_selection(parameters gp)
+	{
+		int j, ProgAlive;
+		double dSurvProb;
+		double drnum1;
+		double dOptimum;
+		double phenSD = 0;
+		double phenMean = 0;
+		double num;
+		int malecount = 0;
+		ProgAlive = 0;
+		
 
+		dOptimum = 0;
+		for (j = 0; j < num_progeny; j++) {
+			if (progeny[j].female)
+			{
+				progeny[j].alive = true;
+				ProgAlive++;
+			}
+			else//selection only on males
+			{
+				if (gp.via_sel_strength > 0)
+				{
+					if (gp.court_trait && !gp.FD_court)
+						dSurvProb = via_against_courter(gp);
+					if(gp.FD_court)
+						dSurvProb = via_fd_courter(gp);
+					if (gp.parent_trait && !gp.FD_court)
+						dSurvProb = via_against_parent(gp); 
+					if (gp.FD_parent)
+						dSurvProb = via_fd_parent(gp);
+					
+					
+				}
+				else
+					dSurvProb = 1;
+				//cout<<dSurvProb<<'\n';
+				drnum1 = genrand();
+				if (drnum1 < dSurvProb)
+				{
+					progeny[j].alive = true;
+					ProgAlive++;
+				}
+				else
+					progeny[j].alive = false;
+			}
+		} // end of i
+	}
 };

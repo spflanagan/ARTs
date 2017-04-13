@@ -196,7 +196,7 @@ public:
 			}
 		}
 	}
-	void calc_preference_trait(parameters gp, double env_cue = 0)
+	void calc_preference_trait(parameters gp, double threshold, double env_cue = 0)
 	{
 		int k, kk, kkk;
 		female_pref = 0;
@@ -221,6 +221,10 @@ public:
 				}
 			}
 		}
+		if (female_pref < threshold)
+			female_pref = 0;
+		else
+			female_pref = 1;
 	}
 	void assign_court_morph(parameters gp, double threshold)
 	{
@@ -549,7 +553,7 @@ class parameters
 public:
 	int carrying_capacity, num_sampled, num_chrom, num_markers, num_qtl, num_env_qtl, max_fecund, max_encounters, num_alleles;
 	int num_pops, num_init_gen, num_exp_gen, num_ld_comparisons, rs_c, rs_nc, rs_p, rs_np;
-	double mutation_rate, mutational_var, recombination_rate, allelic_std_dev, gaussian_pref_mean, cond_adj;
+	double mutation_rate, mutational_var, recombination_rate, allelic_std_dev, gaussian_pref_mean, cond_adj, via_sel_strength;
 	string base_name;
 	bool court_trait, parent_trait, env_effects, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
 
@@ -592,6 +596,7 @@ public:
 		rs_p = 8;
 		rs_np = 4;
 		gaussian_pref_mean = 0;
+		via_sel_strength = 50;//unsure what value to put here
 		cond_adj = 0.1;//amount to add/subtract to condition dependent traits
 	}
 
