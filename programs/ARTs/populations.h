@@ -1095,22 +1095,45 @@ public:
 	}
 
 	//selection
-	double via_against_courter(parameters gp)
+	double via_against_courter(double selection_strength, int ind_id)
 	{
-		int k;
-		
+		double surv_prob,optimum;
+		optimum = 0;
+		surv_prob = exp(-1 * (progeny[ind_id].courter - optimum)*(progeny[ind_id].courter - optimum)
+			/ (2 * selection_strength));
+		return surv_prob;
 	}
-	double via_against_parent(parameters gp)
+	double via_against_parent(double selection_strength, int ind_id)
 	{
-		int k;
+		double surv_prob, optimum;
+		optimum = 0;
+		surv_prob = exp(-1 * (progeny[ind_id].parent - optimum)*(progeny[ind_id].parent - optimum)
+			/ (2 * selection_strength));
+		return surv_prob;
 	}
-	double via_fd_courter(parameters gp)
+	double via_fd_courter(parameters gp, int ind_id)
 	{
-		int k;
+		double surv_prob, optimum, courter_freq;
+		courter_freq = calc_freq_courter(gp);
+		if (courter_freq > 0.5)
+			optimum = 1;
+		else
+			optimum = 0;
+		surv_prob = exp(-1 * (progeny[ind_id].courter - optimum)*(progeny[ind_id].courter - optimum)
+			/ (2 * gp.via_sel_strength));
+		return surv_prob;
 	}
-	double via_fd_parent(parameters gp)
+	double via_fd_parent(parameters gp, int ind_id)
 	{
-		int k;
+		double surv_prob, optimum, parent_freq;
+		parent_freq = calc_freq_parent(gp);
+		if (parent_freq > 0.5)
+			optimum = 1;
+		else
+			optimum = 0;
+		surv_prob = exp(-1 * (progeny[ind_id].parent - optimum)*(progeny[ind_id].parent - optimum)
+			/ (2 * gp.via_sel_strength));
+		return surv_prob;
 	}
 	void viability_selection(parameters gp)
 	{
@@ -1123,10 +1146,9 @@ public:
 		double num;
 		int malecount = 0;
 		ProgAlive = 0;
-		
 
-		dOptimum = 0;
-		for (j = 0; j < num_progeny; j++) {
+		for (j = 0; j < num_progeny; j++) 
+		{
 			if (progeny[j].female)
 			{
 				progeny[j].alive = true;
@@ -1136,16 +1158,15 @@ public:
 			{
 				if (gp.via_sel_strength > 0)
 				{
+					dSurvProb = 1;
 					if (gp.court_trait && !gp.FD_court)
-						dSurvProb = via_against_courter(gp);
+						dSurvProb = dSurvProb*via_against_courter(gp.via_sel_strength, j);
 					if(gp.FD_court)
-						dSurvProb = via_fd_courter(gp);
+						dSurvProb = dSurvProb*via_fd_courter(gp, j);
 					if (gp.parent_trait && !gp.FD_court)
-						dSurvProb = via_against_parent(gp); 
+						dSurvProb = dSurvProb*via_against_parent(gp.via_sel_strength, j);
 					if (gp.FD_parent)
-						dSurvProb = via_fd_parent(gp);
-					
-					
+						dSurvProb = dSurvProb*via_fd_parent(gp, j);					
 				}
 				else
 					dSurvProb = 1;
@@ -1159,6 +1180,6 @@ public:
 				else
 					progeny[j].alive = false;
 			}
-		} // end of i
+		} // end of j
 	}
 };
