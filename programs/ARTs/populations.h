@@ -19,10 +19,10 @@ public:
 	int population_size, num_mal, num_fem, num_progeny, sex_trait, max_num_migrants, migrant_index;
 	double sex_theta, sex_omega, courter_thresh, parent_thresh;
 	bool extinct, random_mating;
-	vector<double> theta, mean_fem_traits, mean_mal_traits;
+	vector<double> theta, mean_fem_traits, mean_mal_traits, d_parentfreq, d_courterfreq;
 	vector<individual> adults;
 	vector<individual> progeny;
-	vector<tracker> courter_qtls,parent_qtls,pref_qtls,courter_env_qtls,parent_env_qtls,pref_env_qtls, maf, hs;
+	vector<tracker> courter_qtls,parent_qtls,pref_qtls,courter_env_qtls,parent_env_qtls,pref_env_qtls, maf, hs, maj_allele, ref_allele;
 
 
 	population()
@@ -1181,5 +1181,215 @@ public:
 					progeny[j].alive = false;
 			}
 		} // end of j
+	}
+
+	//stochastic survival
+	void density_regulation(parameters gp)
+	{
+		int p, pp, ppp;
+		int iNumAdultsChosen;
+		double CarCapUnfilled, ProgLeft, KeepProb;
+		double DRrandnum;
+		num_mal = 0;
+		num_fem = 0;
+		ProgLeft = 0;
+		//count the ones that are still alive
+		for (p = 0; p < num_progeny; p++)
+		{
+			if (progeny[p].alive)
+				ProgLeft++;
+		}
+		CarCapUnfilled = gp.carrying_capacity;
+		iNumAdultsChosen = 0;
+		for (p = 0; p < num_progeny; p++)
+		{
+			if (progeny[p].alive)
+			{
+				if (ProgLeft == 0)
+					KeepProb = 0;
+				else
+					KeepProb = CarCapUnfilled / ProgLeft;
+				DRrandnum = genrand();
+				if (DRrandnum<KeepProb)
+				{//then turn it into an adult
+					adults[iNumAdultsChosen].alive = true;
+					adults[iNumAdultsChosen].mate_found = 0;
+					for (pp = 0; pp < gp.num_chrom; pp++)
+					{
+						for (ppp = 0; ppp < gp.num_markers; ppp++)
+						{
+							adults[iNumAdultsChosen].maternal[pp].loci[ppp] = progeny[p].maternal[pp].loci[ppp];
+							adults[iNumAdultsChosen].paternal[pp].loci[ppp] = progeny[p].paternal[pp].loci[ppp];
+						}
+						for (ppp = 0; ppp < gp.num_qtl; ppp++)
+						{
+							adults[iNumAdultsChosen].maternal[pp].courter_ae[ppp] = progeny[p].maternal[pp].courter_ae[ppp];
+							adults[iNumAdultsChosen].paternal[pp].courter_ae[ppp] = progeny[p].paternal[pp].courter_ae[ppp];
+
+							adults[iNumAdultsChosen].maternal[pp].parent_ae[ppp] = progeny[p].maternal[pp].parent_ae[ppp];
+							adults[iNumAdultsChosen].paternal[pp].parent_ae[ppp] = progeny[p].paternal[pp].parent_ae[ppp];
+							
+							adults[iNumAdultsChosen].maternal[pp].pref_ae[ppp] = progeny[p].maternal[pp].pref_ae[ppp];
+							adults[iNumAdultsChosen].paternal[pp].pref_ae[ppp] = progeny[p].paternal[pp].pref_ae[ppp];
+						}
+					}
+					adults[iNumAdultsChosen].update_traits(gp, courter_thresh, parent_thresh);
+					if (progeny[p].female) {
+						adults[iNumAdultsChosen].female = true;
+						num_fem++;
+					}
+					else {
+						adults[iNumAdultsChosen].female = false;
+						num_mal++;
+					}
+					CarCapUnfilled = CarCapUnfilled - 1;
+					iNumAdultsChosen++;
+				}//end of if KeepProb
+				else
+					progeny[p].alive = false;
+			}//end of if Alive
+			ProgLeft = ProgLeft - 1;
+		}//end of for p
+		population_size = iNumAdultsChosen;
+		if (population_size == 0)
+			extinct = true;
+	}//end Density Regulation
+
+	//output
+	void output_qtl_info(parameters gp, ofstream & qtlinfo_output)
+	{
+		int j, jj;
+		for (j = 0; j < gp.num_chrom; j++)
+		{
+			for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
+				qtlinfo_output << "\tPrefQTL" << j << "." << pref_qtls[j].per_locus[jj];
+
+			if (gp.parent_trait)
+			{
+				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
+					qtlinfo_output << "\tParentQTL" << j << "." << parent_qtls[j].per_locus[jj];
+			}
+			else
+			{
+				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
+					qtlinfo_output << "\tNA";
+			}
+			if (gp.court_trait)
+			{
+				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
+					qtlinfo_output << "\tCourterQTL" << j << "." << courter_qtls[j].per_locus[jj];;
+			}
+			else
+			{
+				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
+					qtlinfo_output << "\tNA";
+			}
+		}
+	}
+	void output_allele_freqs(parameters gp, ofstream & output_file)
+	{
+		int j, jj, jjj;
+		double allele_freq;
+		for (j = 0; j < gp.num_chrom; j++)
+		{
+			for (jj = 0; jj < gp.num_markers; jj++)
+			{
+				allele_freq = 0;
+				for (jjj = 0; jjj < population_size; jjj++)
+				{
+					if (adults[jjj].alive)
+					{
+						if (adults[jjj].maternal[j].loci[jj] == 0)
+							allele_freq++;
+						if (adults[jjj].paternal[j].loci[jj] == 0)
+							allele_freq++;
+					}
+				}
+				allele_freq = allele_freq / population_size;
+				output_file << '\t' << allele_freq;
+				maf[j].per_locus[jj] = allele_freq;
+			}
+		}
+	}
+	void output_summary_info(parameters gp, ofstream & summary_output)
+	{
+		double dtemp;
+		if (gp.parent_trait)
+		{
+			dtemp = calc_freq_parent(gp);
+			summary_output << "\t" << parent_thresh << '\t' << dtemp;
+		}
+		else
+			summary_output << "\tNA\tNA";
+		if (gp.court_trait)
+		{
+			dtemp = calc_freq_courter(gp);
+			summary_output << "\t" << courter_thresh << '\t' << dtemp;
+		}
+		else
+			summary_output << "\tNA\tNA";
+		output_allele_freqs(gp, summary_output);
+	}
+	void output_genotypes_vcf(parameters gp, int pop_id)
+	{
+		int j, jj, jjj;
+		string vcf_name = gp.base_name + to_string(pop_id) + ".vcf";
+		ofstream vcf;
+		vcf.open(vcf_name);
+		//output the header
+		vcf << "##fileformat=VCFv4.0";
+		string date = determine_date();
+		vcf<< "\n##fileDate=" << date;
+		vcf << "\n##source=ARTsSimulation";
+		vcf << "\n##INFO=<ID=AF,Number=.,Type=Float,Description=\"Allele Frequency\">";
+		vcf << "\n##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">";
+		vcf << "\n##CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT";
+		for (j = 0; j < population_size; j++)
+		{
+			if (adults[j].alive)
+			{
+				if (adults[j].female)
+					vcf << "\tFEM" << j << "_pref" << adults[j].female_pref;
+				else
+				{
+					if(adults[j].courter && adults[j].parent)
+						vcf << "\tMAL" << j << "_CP";
+					if (adults[j].courter && !adults[j].parent)
+						vcf << "\tMAL" << j << "_C";
+					if (!adults[j].courter && adults[j].parent)
+						vcf << "\tMAL" << j << "_P";
+					if (!adults[j].courter && !adults[j].parent)
+						vcf << "\tMAL" << j << "_NON";
+				}
+			}
+		}
+		for (j = 0; j < gp.num_chrom; j++)
+		{
+			for (jj = 0; jj < gp.num_markers; jj++)
+			{
+				vcf << '\n' << j << '\t' << jj << '\t' << j << "." << jj << "\t0\t1\t100\tPASS\tAF=" << maf[j].per_locus[jj] << "\tGT";
+				for (jjj = 0; jjj < population_size; j++)
+				{
+					if (adults[jjj].alive)
+					{
+						vcf << '\t' << adults[jjj].maternal[j].loci[jj] << "/" << adults[jjj].paternal[j].loci[jj];
+					}
+				}
+			}
+		}
+		vcf.close();
+	}
+	void output_trait_info(parameters gp, int pop_id, ofstream & output)
+	{
+		int j, jj;
+		for (j = 0; j < population_size; j++)
+		{
+			output << '\n' << pop_id << '\t' << j;// "Pop\tIndividual\tSex\tCourter\tParent\tPreference\tMateFound\tPotRS";
+			if (adults[j].female)
+				output << "\tFEMALE";
+			else
+				output << "\tMALE";
+			output << '\t' << adults[j].courter << '\t' << adults[j].parent << '\t' << adults[j].female_pref << '\t' << adults[j].mate_found << '\t' << adults[j].pot_rs;
+		}
 	}
 };

@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 #include <time.h>
+#include <ctime>
 #include <algorithm>
 #include "random_numbers.h"
 
@@ -777,3 +778,23 @@ public:
 		param_out.close();
 	}
 };
+
+string determine_date()
+{
+	string date;
+	time_t now = time(0);
+	tm *ltm = localtime(&now);
+	int yr, mn, dy;
+	string month, day;
+	yr = 1900 + ltm->tm_year;
+	mn = 1 + ltm->tm_mon;
+	month = to_string(mn);
+	if (month.size() == 1)
+		month = "0" + month;
+	dy = ltm->tm_mday;
+	day = to_string(dy);
+	if (day.size() == 1)
+		day = "0" + day;
+	date = to_string(yr) + month + day;
+	return date;
+}
