@@ -41,6 +41,265 @@ public:
 
 };
 
+class parameters
+{
+public:
+	int carrying_capacity, num_sampled, num_chrom, num_markers, num_qtl, num_env_qtl, max_fecund, max_encounters, num_alleles;
+	int num_pops, num_init_gen, num_exp_gen, num_ld_comparisons, rs_c, rs_nc, rs_p, rs_np;
+	double mutation_rate, mutational_var, recombination_rate, allelic_std_dev, gaussian_pref_mean, cond_adj, via_sel_strength;
+	string base_name;
+	bool court_trait, parent_trait, env_effects, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
+
+	parameters()
+	{
+		carrying_capacity = num_sampled = num_chrom = num_markers = num_qtl = max_fecund = max_encounters = num_alleles = int();
+		num_pops = num_init_gen = num_exp_gen = int();
+		mutation_rate =recombination_rate = allelic_std_dev = double();
+		env_effects = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits =  bool();
+	}
+
+	void set_defaults()
+	{
+		num_init_gen = 10000;//10000 normally
+		num_exp_gen = 2000;//2000 normally
+		num_pops = 1;
+		carrying_capacity = 1000;//1000
+		num_sampled = 50;
+		num_chrom = 4;
+		num_markers = 1000;//1000
+		num_qtl = 50 / num_chrom;//per chrom
+		num_env_qtl = 0;
+		max_fecund = 4;
+		max_encounters = 50;
+		num_alleles = 2; //biallelic to start
+		mutation_rate = 0.0002;
+		mutational_var = 0;
+		recombination_rate = 0.2;//0.2
+		allelic_std_dev = 0.5;
+		court_trait = true;
+		parent_trait = false;
+		env_effects = false;
+		cor_prefs= ind_pref= FD_pref= CD_pref= FD_court= FD_parent= CD_court= CD_parent = false;//no selection
+		cor_mal_traits = false;
+		polygyny = false;
+		base_name = "../../results/arts_";
+		num_ld_comparisons = 100;
+		rs_c = 8;
+		rs_nc = 4;
+		rs_p = 8;
+		rs_np = 4;
+		gaussian_pref_mean = 0;
+		via_sel_strength = 50;//unsure what value to put here
+		cond_adj = 0.1;//amount to add/subtract to condition dependent traits
+	}
+
+	void help_message()
+	{
+		cout << "\n\t\tHELP MENU\n";
+		cout << "\nSimulation model of G-matrix stability and fsts. Below are the parameters to input to the model. (Defaults in parentheses)\n";
+		cout << "-b:\tBase for output file names (arts_)\n";
+		cout << "-K:\tcarrying capacity (1000)\n";
+		cout << "-s:\tnumber of individuals Sampled. (50)\n";
+		cout << "-c:\tnumber of Chromosomes (4)\n";
+		cout << "-x:\tnumber of markers per chromosome (1000)\n";
+		cout << "-q:\ttotal number of Quantitative trait loci. (50)\n";
+		cout << "-eq:\ttotal number of QTL responding the the Environment (half of -q if --plasticity flag included)\n";
+		cout << "-f:\tmaximum Fecundity. (4)\n";
+		cout << "-e:\tmaximum number of Encounters during mating. (50)\n";
+		cout << "-a:\tnumber of alleles (2).\n";
+		cout << "-p:\tnumber of populations. (2)\n";
+		cout << "-i:\tnumber of initial generations. (1000)\n";
+		cout << "-g:\tnumber of experimental generations (200).\n";
+		cout << "-mu:\tmaximum mutation rate (0.0002).\n";
+		cout << "-r:\tRecombination rate. (0.2) \n";
+		cout << "-asd:\tAllelic Standard Deviation (0.5)\n";
+		cout << "--plasticity:\tModel a plastic morph, where genotype is determined by interactions between genes.\n";
+		cout << "--freq-dependent-preference:\tInclude this flag if preferences should be based on the frequency of male morphs (defaults to independent).\n";
+		cout << "--condition-dependent-preference:\tInclude this flag if female preferences are determined by female condition (defaults to independent).\n";
+		cout << "--courter:\tInclude this flag if males should have the courter trait (a trait affecting mating probabilities). Defaults to Gaussian preference for randomly chosen morph unless other flags included. \n";
+		cout << "--parent:\tInclude this flag if males should have the parental trait (a trait affecting offspring survival). Defaults to Gaussian preference for randomly chosen morph unless other flags included. \n";
+		cout << "--freq-dependent-courter:\tIf the courter trait is experiencing frequency dependent selection.\n";
+		cout << "--freq-dependent-parent:\tIf the parent trait is experiencing frequency dependent selection.\n";
+		cout << "--condition-dependent-courter:\tIf the courter trait is determined by male condition.\n";
+		cout << "--condition-dependent-parent:\tIf the parent trait is determined by male condition.\n";
+		cout << "--independent-pref:\tSpecifies an independent female preference (defaults to Gaussian preference for randomly chosen morph unless other flags included). \n";
+		cout << "--correlated-pref:\tSpecifies a female preference correlated with the male courter trait (defaults to Gaussian preference for randomly chosen morph unless other flags included).\n";
+		cout << "-h:\tPrint this help message.\n";
+	}
+
+	bool parse_parameters(int argc, char*argv[])
+	{
+		int j;
+		bool run_program = true;
+		set_defaults();
+		string tempstring1, tempstring2;
+		if (argc == 1)
+		{
+			help_message();
+			run_program = false;
+		}
+		if (argc > 1)
+		{
+			tempstring1 = argv[1];
+			if (tempstring1 == "-h" || tempstring1 == "--selection-help")
+			{
+				if (tempstring1 == "-h")
+					help_message();
+				run_program = false;
+			}
+			else
+			{
+				run_program = true;
+				for (j = 1; j < argc - 1; j++)
+				{
+					tempstring1 = argv[j];
+					if(tempstring1.substr(0,2) != "--")
+						tempstring2 = argv[j + 1];
+					if (tempstring1 == "-b")
+						base_name = tempstring2;
+					if (tempstring1 == "-K")
+						carrying_capacity = atoi(tempstring2.c_str());
+					if (tempstring1 == "-s")
+						num_sampled = atoi(tempstring2.c_str());
+					if (tempstring1 == "-c")
+						num_chrom = atoi(tempstring2.c_str());
+					if (tempstring1 == "-x")
+						num_markers = atoi(tempstring2.c_str());
+					if (tempstring1 == "-q")
+						num_qtl = atoi(tempstring2.c_str());
+					if (tempstring1 == "-eq")
+						num_env_qtl = atoi(tempstring2.c_str());
+					if (tempstring1 == "-f")
+						max_fecund = atoi(tempstring2.c_str());
+					if (tempstring1 == "-e")
+						max_encounters = atoi(tempstring2.c_str());
+					if (tempstring1 == "-a")
+						num_alleles = atoi(tempstring2.c_str());
+					if (tempstring1 == "-p")
+						num_pops = atoi(tempstring2.c_str());
+					if (tempstring1 == "-i")
+						num_init_gen = atoi(tempstring2.c_str());
+					if (tempstring1 == "-g")
+						num_exp_gen = atoi(tempstring2.c_str());
+					if (tempstring1 == "-mu")
+						mutation_rate = atof(tempstring2.c_str());
+					if (tempstring1 == "-r")
+						recombination_rate = atof(tempstring2.c_str());
+					if (tempstring1 == "-asd")
+						allelic_std_dev = atof(tempstring2.c_str());
+					if (tempstring1 == "--plasticity")
+						env_effects = true;
+					if (tempstring1 == "--freq-dependent-preference")
+						FD_pref = ind_pref = true;
+					if (tempstring1 == "--condition-dependent-preference")
+						CD_pref = ind_pref = true;
+					if (tempstring1 == "--courter")
+						court_trait = ind_pref = true;
+					if (tempstring1 == "--parent")
+						parent_trait = ind_pref = true;
+					if (tempstring1 == "--freq-dependent-courter")
+						FD_court = court_trait= true;
+					if (tempstring1 == "--freq-dependent-parent")
+						FD_parent = parent_trait = true;
+					if (tempstring1 == "--condition-dependent-courter")
+						CD_court = court_trait= true;
+					if (tempstring1 == "--condition-dependent-parent")
+						CD_parent =parent_trait= true;
+					if (tempstring1 == "--independent-pref")
+						ind_pref = true;
+					if (tempstring1 == "--correlated-pref")
+						cor_prefs = court_trait = true;
+				}
+				if (env_effects)
+				{
+					if (num_env_qtl == 0)
+						num_env_qtl = num_qtl / 2;
+					else
+						num_env_qtl = num_env_qtl / num_chrom;
+				}
+				if (ind_pref || cor_prefs)
+					court_trait = true;
+			}
+		}
+		return run_program;
+	}
+
+	void output_parameters()
+	{
+		ofstream param_out;
+		string param_out_name = base_name + "_parameters.txt";
+		param_out.open(param_out_name);
+		param_out << "Carrying capacity:\t" << carrying_capacity;
+		param_out << "\nNum Sampled:\t" << num_sampled;
+		param_out << "\nNum Chrom:\t" << num_chrom;
+		param_out << "\nNum markers:\t" << num_markers;
+		param_out << "\nNum QTL:\t" << num_qtl;
+		param_out << "\nMaximum Fecundity:\t" << max_fecund;
+		param_out << "\nMax encounters:\t" << max_encounters;
+		param_out << "\nNum alleles:\t" << num_alleles;
+		param_out << "\nNum Pops:\t" << num_pops;
+		param_out << "\nNum Initial generations:\t" << num_init_gen;
+		param_out << "\nNum Experimental generations:\t" << num_exp_gen;
+		param_out << "\nNum LD comparisons:\t" << num_ld_comparisons;
+		param_out << "\nMutation rate:\t" << mutation_rate;
+		param_out << "\nRecombination rate:\t" << recombination_rate;
+		param_out << "\nAllelic standard deviation:\t" << allelic_std_dev;
+		if (env_effects)
+			param_out << "\nPlasticity";
+		if (FD_pref)
+			param_out << "\n--freq-dependent-preference";	
+		if (CD_pref)
+			param_out << "\n--condition-dependent-preference";
+		if (court_trait)
+			param_out << "\n--courter";
+		if (parent_trait)
+			param_out << "\n--parent";
+		if (FD_court)
+			param_out << "\n--freq-dependent-courter";	 
+		if (FD_parent)
+			param_out << "\n--freq-dependent-parent";
+		if (CD_court)
+			param_out << "\n--condition-dependent-courter";
+		if (CD_parent)
+			param_out << "\n--condition-dependent-parent";
+		if (ind_pref)
+			param_out << "\n--independent-pref";
+		if (cor_prefs )
+			param_out<< "\n--correlated-pref";
+			
+		param_out.close();
+	}
+};
+
+string determine_date()
+{
+//#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
+//	string date;
+	time_t now = time(0);
+	tm ltm;
+//	localtime_s(&ltm, &now);
+//	int yr, mn, dy;
+//	string month, day;
+//	yr = 1900 + ltm.tm_year;
+//	mn = 1 + ltm.tm_mon;
+//	month = to_string(mn);
+//	if (month.size() == 1)
+//		month = "0" + month;
+//	dy = ltm.tm_mday;
+//	day = to_string(dy);
+//	if (day.size() == 1)
+//		day = "0" + day;
+//	date = to_string(yr) + month + day;
+//	return date;
+//#else    // LINUX
+	const size_t size = 1024;
+	char buffer[size];
+	std::strftime(buffer, size, "%Y%D%M", &ltm);
+	
+	return buffer;
+//#endif
+}
+
 class individual
 {
 public:
@@ -55,7 +314,7 @@ public:
 	{
 		courter_trait = parent_trait = female_pref = double();
 		maternal = paternal = vector<chromosome>();
-		courter_int = parent_int = pref_int = courter_Y =  parent_Y =  pref_Y= vector<tracker>();
+		courter_int = parent_int = pref_int = courter_Y = parent_Y = pref_Y = vector<tracker>();
 		courter_Z = parent_Z = pref_Z = courter_x = parent_x = pref_x = vector<int>();
 		mate_found = pot_rs = int();
 		female = alive = parent = courter = bool();
@@ -73,7 +332,7 @@ public:
 			x = 0;
 			for (t = 0; t < 20; t++)
 			{
-				
+
 				for (kk = 0; kk < (gp.num_env_qtl + gp.num_qtl); kk++)
 				{
 					if (k < gp.num_env_qtl)
@@ -83,7 +342,7 @@ public:
 				}
 				x = 1 / (1 + exp(-1 * x));
 				diff = x - xlast;
-				
+
 			}
 			if (diff <= 0.01)
 				alive = false;
@@ -101,7 +360,7 @@ public:
 			xlast = 1;
 			x = 0;
 			for (t = 0; t < 20; t++)
-			{				
+			{
 				for (kk = 0; kk < (gp.num_env_qtl + gp.num_qtl); kk++)
 				{
 					if (k < gp.num_env_qtl)
@@ -165,7 +424,7 @@ public:
 			{
 				for (kk = 0; kk < gp.num_qtl; kk++)
 				{
-					courter_trait = courter_trait + (courter_Z[qtl_index] * (maternal[k].courter_ae[kk]+paternal[k].courter_ae[kk])*courter_x[qtl_index]);				
+					courter_trait = courter_trait + (courter_Z[qtl_index] * (maternal[k].courter_ae[kk] + paternal[k].courter_ae[kk])*courter_x[qtl_index]);
 					qtl_index++;
 				}
 			}
@@ -266,7 +525,7 @@ public:
 	}
 
 	//life cycle functions
-	void mutation(parameters gp, vector<tracker>& court_qtl, vector<tracker>& parent_qtl,vector<tracker>& pref_qtl)
+	void mutation(parameters gp, vector<tracker>& court_qtl, vector<tracker>& parent_qtl, vector<tracker>& pref_qtl)
 	{
 		int m, mm, irand, irand2, gg, ggg, irand3, locus;
 		double rnd1, rnd2;
@@ -275,7 +534,7 @@ public:
 		bool mutated;
 
 		MutSD = sqrt(gp.mutational_var);
-		IndMutationRate = gp.mutation_rate* 2 * gp.num_markers*gp.num_chrom;
+		IndMutationRate = gp.mutation_rate * 2 * gp.num_markers*gp.num_chrom;
 
 		rnd1 = genrand();
 		mutated = false;
@@ -353,14 +612,14 @@ public:
 	void mutation_env(parameters gp)
 	{
 		//do something.
-		int j,jj,rand_loc1, rand_loc2, mut_count;
-		double alpha, mu_mean, sigma_mu, num_mutations,YorZ;
+		int j, jj, rand_loc1, rand_loc2, mut_count;
+		double alpha, mu_mean, sigma_mu, num_mutations, YorZ;
 		alpha = 0.2;
 		mu_mean = 0.02;
 		sigma_mu = 0.5;
 		num_mutations = poissonrand(mu_mean);
 		mut_count = 0;
-		YorZ = (gp.num_qtl*gp.num_qtl)/((gp.num_env_qtl + gp.num_qtl)*(gp.num_env_qtl + gp.num_qtl));
+		YorZ = (gp.num_qtl*gp.num_qtl) / ((gp.num_env_qtl + gp.num_qtl)*(gp.num_env_qtl + gp.num_qtl));
 		while (mut_count < num_mutations)
 		{
 			if (gp.court_trait)
@@ -548,253 +807,3 @@ public:
 		}
 	}
 };
-
-class parameters
-{
-public:
-	int carrying_capacity, num_sampled, num_chrom, num_markers, num_qtl, num_env_qtl, max_fecund, max_encounters, num_alleles;
-	int num_pops, num_init_gen, num_exp_gen, num_ld_comparisons, rs_c, rs_nc, rs_p, rs_np;
-	double mutation_rate, mutational_var, recombination_rate, allelic_std_dev, gaussian_pref_mean, cond_adj, via_sel_strength;
-	string base_name;
-	bool court_trait, parent_trait, env_effects, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
-
-	parameters()
-	{
-		carrying_capacity = num_sampled = num_chrom = num_markers = num_qtl = max_fecund = max_encounters = num_alleles = int();
-		num_pops = num_init_gen = num_exp_gen = int();
-		mutation_rate =recombination_rate = allelic_std_dev = double();
-		env_effects = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits =  bool();
-	}
-
-	void set_defaults()
-	{
-		num_init_gen = 10000;//1000 for testing
-		num_exp_gen = 2000;//200 for testing
-		num_pops = 1;
-		carrying_capacity = 1000;//1000
-		num_sampled = 50;
-		num_chrom = 4;
-		num_markers = 1000;//1000
-		num_qtl = 50 / num_chrom;//per chrom
-		num_env_qtl = 0;
-		max_fecund = 4;
-		max_encounters = 50;
-		num_alleles = 2; //biallelic to start
-		mutation_rate = 0.0002;
-		mutational_var = 0;
-		recombination_rate = 0.2;//0.2
-		allelic_std_dev = 0.5;
-		court_trait = true;
-		parent_trait = false;
-		env_effects = false;
-		cor_prefs= ind_pref= FD_pref= CD_pref= FD_court= FD_parent= CD_court= CD_parent = false;//no selection
-		cor_mal_traits = false;
-		polygyny = false;
-		base_name = "../../results/arts_";
-		num_ld_comparisons = 100;
-		rs_c = 8;
-		rs_nc = 4;
-		rs_p = 8;
-		rs_np = 4;
-		gaussian_pref_mean = 0;
-		via_sel_strength = 50;//unsure what value to put here
-		cond_adj = 0.1;//amount to add/subtract to condition dependent traits
-	}
-
-	void help_message()
-	{
-		cout << "\n\t\tHELP MENU\n";
-		cout << "\nSimulation model of G-matrix stability and fsts. Below are the parameters to input to the model. (Defaults in parentheses)\n";
-		cout << "-b:\tBase for output file names (arts_)\n";
-		cout << "-K:\tcarrying capacity (1000)\n";
-		cout << "-s:\tnumber of individuals Sampled. (50)\n";
-		cout << "-c:\tnumber of Chromosomes (4)\n";
-		cout << "-x:\tnumber of markers per chromosome (1000)\n";
-		cout << "-q:\ttotal number of Quantitative trait loci. (50)\n";
-		cout << "-eq:\ttotal number of QTL responding the the Environment (half of -q if --plasticity flag included)\n";
-		cout << "-f:\tmaximum Fecundity. (4)\n";
-		cout << "-e:\tmaximum number of Encounters during mating. (50)\n";
-		cout << "-a:\tnumber of alleles (2).\n";
-		cout << "-p:\tnumber of populations. (2)\n";
-		cout << "-i:\tnumber of initial generations. (1000)\n";
-		cout << "-g:\tnumber of experimental generations (200).\n";
-		cout << "-mu:\tmaximum mutation rate (0.0002).\n";
-		cout << "-r:\tRecombination rate. (0.2) \n";
-		cout << "-asd:\tAllelic Standard Deviation (0.5)\n";
-		cout << "--plasticity:\tModel a plastic morph, where genotype is determined by interactions between genes.\n";
-		cout << "--freq-dependent-preference:\tInclude this flag if preferences should be based on the frequency of male morphs (defaults to independent).\n";
-		cout << "--condition-dependent-preference:\tInclude this flag if female preferences are determined by female condition (defaults to independent).\n";
-		cout << "--courter:\tInclude this flag if males should have the courter trait (a trait affecting mating probabilities). Defaults to Gaussian preference for randomly chosen morph unless other flags included. \n";
-		cout << "--parent:\tInclude this flag if males should have the parental trait (a trait affecting offspring survival). Defaults to Gaussian preference for randomly chosen morph unless other flags included. \n";
-		cout << "--freq-dependent-courter:\tIf the courter trait is experiencing frequency dependent selection.\n";
-		cout << "--freq-dependent-parent:\tIf the parent trait is experiencing frequency dependent selection.\n";
-		cout << "--condition-dependent-courter:\tIf the courter trait is determined by male condition.\n";
-		cout << "--condition-dependent-parent:\tIf the parent trait is determined by male condition.\n";
-		cout << "--independent-pref:\tSpecifies an independent female preference (defaults to Gaussian preference for randomly chosen morph unless other flags included). \n";
-		cout << "--correlated-pref:\tSpecifies a female preference correlated with the male courter trait (defaults to Gaussian preference for randomly chosen morph unless other flags included).\n";
-		cout << "-h:\tPrint this help message.\n";
-	}
-
-	bool parse_parameters(int argc, char*argv[])
-	{
-		int j;
-		bool run_program = true;
-		set_defaults();
-		string tempstring1, tempstring2;
-		if (argc == 1)
-		{
-			help_message();
-			run_program = false;
-		}
-		if (argc > 1)
-		{
-			tempstring1 = argv[1];
-			if (tempstring1 == "-h" || tempstring1 == "--selection-help")
-			{
-				if (tempstring1 == "-h")
-					help_message();
-				run_program = false;
-			}
-			else
-			{
-				run_program = true;
-				for (j = 1; j < argc - 1; j++)
-				{
-					tempstring1 = argv[j];
-					if(tempstring1.substr(0,2) != "--")
-						tempstring2 = argv[j + 1];
-					if (tempstring1 == "-b")
-						base_name = tempstring2;
-					if (tempstring1 == "-K")
-						carrying_capacity = atoi(tempstring2.c_str());
-					if (tempstring1 == "-s")
-						num_sampled = atoi(tempstring2.c_str());
-					if (tempstring1 == "-c")
-						num_chrom = atoi(tempstring2.c_str());
-					if (tempstring1 == "-x")
-						num_markers = atoi(tempstring2.c_str());
-					if (tempstring1 == "-q")
-						num_qtl = atoi(tempstring2.c_str());
-					if (tempstring1 == "-eq")
-						num_env_qtl = atoi(tempstring2.c_str());
-					if (tempstring1 == "-f")
-						max_fecund = atoi(tempstring2.c_str());
-					if (tempstring1 == "-e")
-						max_encounters = atoi(tempstring2.c_str());
-					if (tempstring1 == "-a")
-						num_alleles = atoi(tempstring2.c_str());
-					if (tempstring1 == "-p")
-						num_pops = atoi(tempstring2.c_str());
-					if (tempstring1 == "-i")
-						num_init_gen = atoi(tempstring2.c_str());
-					if (tempstring1 == "-g")
-						num_exp_gen = atoi(tempstring2.c_str());
-					if (tempstring1 == "-mu")
-						mutation_rate = atof(tempstring2.c_str());
-					if (tempstring1 == "-r")
-						recombination_rate = atof(tempstring2.c_str());
-					if (tempstring1 == "-asd")
-						allelic_std_dev = atof(tempstring2.c_str());
-					if (tempstring1 == "--plasticity")
-						env_effects = true;
-					if (tempstring1 == "--freq-dependent-preference")
-						FD_pref = ind_pref = true;
-					if (tempstring1 == "--condition-dependent-preference")
-						CD_pref = ind_pref = true;
-					if (tempstring1 == "--courter")
-						court_trait = ind_pref = true;
-					if (tempstring1 == "--parent")
-						parent_trait = ind_pref = true;
-					if (tempstring1 == "--freq-dependent-courter")
-						FD_court = court_trait= true;
-					if (tempstring1 == "--freq-dependent-parent")
-						FD_parent = parent_trait = true;
-					if (tempstring1 == "--condition-dependent-courter")
-						CD_court = court_trait= true;
-					if (tempstring1 == "--condition-dependent-parent")
-						CD_parent =parent_trait= true;
-					if (tempstring1 == "--independent-pref")
-						ind_pref = true;
-					if (tempstring1 == "--correlated-pref")
-						cor_prefs = court_trait = true;
-				}
-				if (env_effects)
-				{
-					if (num_env_qtl == 0)
-						num_env_qtl = num_qtl / 2;
-					else
-						num_env_qtl = num_env_qtl / num_chrom;
-				}
-				if (ind_pref || cor_prefs)
-					court_trait = true;
-			}
-		}
-		return run_program;
-	}
-
-	void output_parameters()
-	{
-		ofstream param_out;
-		string param_out_name = base_name + "parameters.txt";
-		param_out.open(param_out_name);
-		param_out << "Carrying capacity:\t" << carrying_capacity;
-		param_out << "\nNum Sampled:\t" << num_sampled;
-		param_out << "\nNum Chrom:\t" << num_chrom;
-		param_out << "\nNum markers:\t" << num_markers;
-		param_out << "\nNum QTL:\t" << num_qtl;
-		param_out << "\nMaximum Fecundity:\t" << max_fecund;
-		param_out << "\nMax encounters:\t" << max_encounters;
-		param_out << "\nNum alleles:\t" << num_alleles;
-		param_out << "\nNum Pops:\t" << num_pops;
-		param_out << "\nNum Initial generations:\t" << num_init_gen;
-		param_out << "\nNum Experimental generations:\t" << num_exp_gen;
-		param_out << "\nNum LD comparisons:\t" << num_ld_comparisons;
-		param_out << "\nMutation rate:\t" << mutation_rate;
-		param_out << "\nRecombination rate:\t" << recombination_rate;
-		param_out << "\nAllelic standard deviation:\t" << allelic_std_dev;
-		if (env_effects)
-			param_out << "\nPlasticity";
-		if (FD_pref)
-			param_out << "\n--freq-dependent-preference";	
-		if (CD_pref)
-			param_out << "\n--condition-dependent-preference";
-		if (court_trait)
-			param_out << "\n--courter";
-		if (parent_trait)
-			param_out << "\n--parent";
-		if (FD_court)
-			param_out << "\n--freq-dependent-courter";	 
-		if (FD_parent)
-			param_out << "\n--freq-dependent-parent";
-		if (CD_court)
-			param_out << "\n--condition-dependent-courter";
-		if (CD_parent)
-			param_out << "\n--condition-dependent-parent";
-		if (ind_pref)
-			param_out << "\n--independent-pref";
-		if (cor_prefs )
-			param_out<< "\n--correlated-pref";
-			
-		param_out.close();
-	}
-};
-
-string determine_date()
-{
-	string date;
-	time_t now = time(0);
-	tm *ltm = localtime(&now);
-	int yr, mn, dy;
-	string month, day;
-	yr = 1900 + ltm->tm_year;
-	mn = 1 + ltm->tm_mon;
-	month = to_string(mn);
-	if (month.size() == 1)
-		month = "0" + month;
-	dy = ltm->tm_mday;
-	day = to_string(dy);
-	if (day.size() == 1)
-		day = "0" + day;
-	date = to_string(yr) + month + day;
-	return date;
-}

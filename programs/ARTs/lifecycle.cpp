@@ -63,9 +63,10 @@ int main(int argc, char*argv[])
 	}		
 
 	//run the program
-	cout << "\nInitializing " << global_params.num_pops << " populations";
+	cout << "\nInitializing " << global_params.num_pops << " populations.\n";
 	for (i = 0; i < global_params.num_pops; i++)
 	{
+		pops.push_back(population());
 		pops[i].initialize(global_params);
 		courter_freqs.push_back(0);
 		parent_freqs.push_back(0);
@@ -96,7 +97,7 @@ int main(int argc, char*argv[])
 			}
 			else
 				write_to_file = false;*/
-			pops[ii].mating(write_to_file, temp_file_name, global_params);
+			pops[ii].bestofN_mating(write_to_file, temp_file_name, global_params);
 			//viability selection
 			pops[ii].viability_selection(global_params);
 			//stochastic survival
@@ -180,15 +181,16 @@ int main(int argc, char*argv[])
 				}
 				if (eq_reached[i] == false)//then we try again
 				{
+					pops[i].determine_pop_size(global_params);
 					//output summary stats
 					summary_output << "\nGen" << global_params.num_init_gen + num_eq_tries << "\tPop" << i;
 					pops[i].output_summary_info(global_params, summary_output);//includes allele freqs
 					//mating (includes assiging preferences, recombination, and mutation)
-					pops[ii].mating(false, "temp", global_params);
+					pops[i].bestofN_mating(false, "temp", global_params);
 					//selection
-					pops[ii].viability_selection(global_params);
+					pops[i].viability_selection(global_params);
 					//stochastic survival
-					pops[ii].density_regulation(global_params);
+					pops[i].density_regulation(global_params);
 					num_eq_tries++;
 				}
 				else//output some stuff
@@ -203,8 +205,11 @@ int main(int argc, char*argv[])
 	else
 	{
 		cout << "\nNo equilibrium could be reached.";
-		pops[i].output_genotypes_vcf(global_params, i);
-		pops[i].output_trait_info(global_params, i, trait_output);
+		for (i = 0; i < global_params.num_pops; i++)
+		{
+			pops[i].output_genotypes_vcf(global_params, i);
+			pops[i].output_trait_info(global_params, i, trait_output);
+		}
 	}
 	
 	//output
