@@ -157,7 +157,7 @@ int main(int argc, char*argv[])
 	num_eq_tries = 0;
 	trait_output.open(trait_output_name);
 	trait_output << "Pop\tIndividual\tSex\tCourter\tParent\tPreference\tMateFound\tPotRS";
-	if (num_eq_tries < global_params.num_exp_gen)
+	while (num_eq_tries < global_params.num_exp_gen)
 	{
 		for (i = 0; i < global_params.num_pops; i++)
 		{
@@ -192,25 +192,42 @@ int main(int argc, char*argv[])
 					//stochastic survival
 					pops[i].density_regulation(global_params);
 					num_eq_tries++;
+					//track frequencies
+					double new_parent, new_courter;
+					if (global_params.parent_trait)
+					{
+						new_parent = pops[i].calc_freq_parent(global_params);
+						if (i > 0)
+							pops[i].d_parentfreq.push_back((new_parent - parent_freqs[i]));
+					}
+					if (global_params.court_trait)
+					{
+						new_courter = pops[i].calc_freq_courter(global_params);
+						if (i > 0)
+							pops[i].d_courterfreq.push_back((new_courter - courter_freqs[i]));
+					}
 				}
 				else//output some stuff
 				{
-					cout << "\nEquilibrium reached at generation " << global_params.num_init_gen + num_eq_tries;
+					cout << "\nEquilibrium reached for population " << i << " at generation " << global_params.num_init_gen + num_eq_tries;
 					pops[i].output_genotypes_vcf(global_params, i);
 					pops[i].output_trait_info(global_params, i, trait_output);
+					num_eq_tries = global_params.num_exp_gen;
 				}
 			}
 		}
 	}
-	else
+	//check to see if they reached equilibrium
+	for (i = 0; i < global_params.num_pops; i++)
 	{
-		cout << "\nNo equilibrium could be reached.";
-		for (i = 0; i < global_params.num_pops; i++)
+		if (!eq_reached[i])
 		{
+			cout << "\nNo equilibrium could be reached for population " << i;
 			pops[i].output_genotypes_vcf(global_params, i);
 			pops[i].output_trait_info(global_params, i, trait_output);
 		}
 	}
+	
 	
 	//output
 	summary_output.close();

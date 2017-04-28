@@ -76,7 +76,7 @@ public:
 		mutational_var = 0;
 		recombination_rate = 0.2;//0.2
 		allelic_std_dev = 0.5;
-		court_trait = true;
+		court_trait = false;
 		parent_trait = false;
 		env_effects = false;
 		cor_prefs= ind_pref= FD_pref= CD_pref= FD_court= FD_parent= CD_court= CD_parent = false;//no selection

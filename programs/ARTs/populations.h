@@ -1400,7 +1400,7 @@ public:
 			for (jj = 0; jj < gp.num_markers; jj++)
 			{
 				vcf << '\n' << j << '\t' << jj << '\t' << j << "." << jj << "\t0\t1\t100\tPASS\tAF=" << maf[j].per_locus[jj] << "\tGT";
-				for (jjj = 0; jjj < population_size; j++)
+				for (jjj = 0; jjj < population_size; jjj++)
 				{
 					if (adults[jjj].alive)
 					{
