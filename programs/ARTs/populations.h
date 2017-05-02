@@ -150,7 +150,12 @@ public:
 			}
 		}
 		//set up progeny
-		for (j = 0; j < (gp.max_fecund*(gp.carrying_capacity + max_num_migrants)); j++)
+		//determine the maximum possible fecundity
+		int max_potential_fecund = max(gp.max_encounters, gp.rs_c);
+		max_potential_fecund = max(max_potential_fecund, gp.rs_nc);
+		max_potential_fecund = max(max_potential_fecund, gp.rs_np);
+		max_potential_fecund = max(max_potential_fecund, gp.rs_p);
+		for (j = 0; j < (max_potential_fecund*(gp.carrying_capacity + max_num_migrants)); j++)
 		{
 			progeny.push_back(individual());
 			if (gp.court_trait || gp.ind_pref || gp.cor_prefs)
@@ -1286,35 +1291,67 @@ public:
 	}//end Density Regulation
 
 	//output
-	void output_qtl_info(parameters gp, ofstream & qtlinfo_output)
+	void output_qtl_info(parameters gp, ofstream & qtlinfo_output, bool initial)
 	{
 		int j, jj;
+		int count1, count2, count3;
+		count1 = count2 = count3 = 0;
 		for (j = 0; j < gp.num_chrom; j++)
 		{
 			if (!random_mating)
 			{
 				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
-					qtlinfo_output << "\tPrefQTL" << j << "." << pref_qtls[j].per_locus[jj];
+				{
+					if (initial)
+						qtlinfo_output << "\tPrefQTL" << count1;
+					else
+						qtlinfo_output << '\t' << j << "." << pref_qtls[j].per_locus[jj];
+					count1++;
+				}
 			}
 			if (gp.parent_trait)
 			{
 				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
-					qtlinfo_output << "\tParentQTL" << j << "." << parent_qtls[j].per_locus[jj];
+				{
+					if (initial)
+						qtlinfo_output << "\tParentQTL" << count2;
+					else
+						qtlinfo_output << '\t' << j << "." << parent_qtls[j].per_locus[jj];
+					count2++;
+				}
 			}
 			else
 			{
 				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
-					qtlinfo_output << "\tNA";
+				{
+					if (initial)
+						qtlinfo_output << "\tParentQTL" << count2;
+					else
+						qtlinfo_output << "\tNA";
+					count2++;
+				}
 			}
 			if (gp.court_trait)
 			{
 				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
-					qtlinfo_output << "\tCourterQTL" << j << "." << courter_qtls[j].per_locus[jj];;
+				{
+					if (initial)
+						qtlinfo_output << "\tCourterQTL" << count3;
+					else
+						qtlinfo_output << '\t' << j << "." << courter_qtls[j].per_locus[jj];
+					count3++;
+				}
 			}
 			else
 			{
 				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
-					qtlinfo_output << "\tNA";
+				{
+					if (initial)
+						qtlinfo_output << "\tCourterQTL" << count3;
+					else
+						qtlinfo_output << "\tNA";
+					count3++;
+				}
 			}
 		}
 	}
@@ -1365,7 +1402,7 @@ public:
 	void output_genotypes_vcf(parameters gp, int pop_id)
 	{
 		int j, jj, jjj;
-		string vcf_name = gp.base_name + to_string(pop_id) + ".vcf";
+		string vcf_name = gp.base_name + "_pop_" + to_string(pop_id) + ".vcf";
 		ofstream vcf;
 		vcf.open(vcf_name);
 		//output the header

@@ -3,7 +3,8 @@
 ### Date Started: 27 April 2017
 
 setwd("~/Projects/ARTs/results/")
-
+library(RColorBrewer)
+### Random Mating
 rm.sum<-read.table("random_mating_summary.txt",header=T)
 plot(c(1,nrow(rm.sum)),c(0,1),type='n')
 for(i in 7:ncol(rm.sum)){ points(rownames(rm.sum),rm.sum[,i],type="l")}
@@ -11,3 +12,69 @@ for(i in 7:ncol(rm.sum)){ points(rownames(rm.sum),rm.sum[,i],type="l")}
 plot(rm.sum$CourterFreq, type="l")
 
 rm.traits<-read.delim("random_mating_traits.txt")
+
+### Courter trait
+ct.sum<-read.table("courter_summary.txt",header=T)
+ct.traits<-read.delim("courter_traits.txt")
+
+plot(ct.sum$CourterFreq,type="l") #courters go to fixation
+#do courter alleles go to fixation?
+ct.qtl<-as.character(scan("courter_qtlinfo.txt",sep='\t',what=character()))
+pref.qtl<-ct.qtl[grep("Pref",ct.qtl)]
+crtr.qtl<-ct.qtl[grep("Courter",ct.qtl)]
+#make them compatible with marker loci
+pref.qtl<-gsub("PrefQTL(\\d.\\d+)","Marker\\1",pref.qtl)
+crtr.qtl<-gsub("CourterQTL(\\d.\\d+)","Marker\\1",crtr.qtl)
+pref.qtl.af<-ct.sum[,pref.qtl]
+crtr.qtl.af<-ct.sum[,crtr.qtl]
+marker.af<-ct.sum[,!(colnames(ct.sum) %in% pref.qtl) & !(colnames(ct.sum) %in% crtr.qtl)]
+nmarkers<-ncol(marker.af)-6
+bgcol<-gray.colors(nmarkers)
+bgcol<-sample(bgcol)
+ctcolsc<-colorRampPalette(c("white","navy blue"))
+ctcol<-ctcolsc(ncol(crtr.qtl.af))
+pfcolsc<-colorRampPalette(c("light pink","dark violet"))
+pfcol<-pfcolsc(ncol(pref.qtl.af))
+
+#plot
+plot(c(1,nrow(ct.sum)),c(0,1),type='n')
+for(i in 7:ncol(marker.af)){ points(rownames(marker.af),marker.af[,i],type="l",col=bgcol[i])}
+for(i in 7:ncol(pref.qtl.af)){ points(rownames(pref.qtl.af),pref.qtl.af[,i],type="l",col=pfcol[i])}
+for(i in 7:ncol(crtr.qtl.af)){ points(rownames(crtr.qtl.af),crtr.qtl.af[,i],type="l",col=ctcol[i])}
+
+hist(unlist(crtr.qtl.af[nrow(crtr.qtl.af),]))
+hist(unlist(pref.qtl.af[nrow(pref.qtl.af),]))
+
+
+### Parent trait
+pt.sum<-read.table("parent_summary.txt",header=T)
+pt.traits<-read.delim("parent_traits.txt")
+
+plot(pt.sum$ParentFreq,type="l") 
+#do courter alleles go to fixation?
+pt.qtl<-read.table("parent_qtlinfo.txt")
+ct.qtl<-as.character(scan("courter_qtlinfo.txt",sep='\t',what=character()))
+pref.qtl<-ct.qtl[grep("Pref",ct.qtl)]
+crtr.qtl<-ct.qtl[grep("Courter",ct.qtl)]
+#make them compatible with marker loci
+pref.qtl<-gsub("PrefQTL(\\d.\\d+)","Marker\\1",pref.qtl)
+crtr.qtl<-gsub("CourterQTL(\\d.\\d+)","Marker\\1",crtr.qtl)
+pref.qtl.af<-ct.sum[,pref.qtl]
+crtr.qtl.af<-ct.sum[,crtr.qtl]
+marker.af<-ct.sum[,!(colnames(ct.sum) %in% pref.qtl) & !(colnames(ct.sum) %in% crtr.qtl)]
+nmarkers<-ncol(marker.af)-6
+bgcol<-gray.colors(nmarkers)
+bgcol<-sample(bgcol)
+ctcolsc<-colorRampPalette(c("white","navy blue"))
+ctcol<-ctcolsc(ncol(crtr.qtl.af))
+pfcolsc<-colorRampPalette(c("light pink","dark violet"))
+pfcol<-pfcolsc(ncol(pref.qtl.af))
+
+#plot
+plot(c(1,nrow(ct.sum)),c(0,1),type='n')
+for(i in 7:ncol(marker.af)){ points(rownames(marker.af),marker.af[,i],type="l",col=bgcol[i])}
+for(i in 7:ncol(pref.qtl.af)){ points(rownames(pref.qtl.af),pref.qtl.af[,i],type="l",col=pfcol[i])}
+for(i in 7:ncol(crtr.qtl.af)){ points(rownames(crtr.qtl.af),crtr.qtl.af[,i],type="l",col=ctcol[i])}
+
+hist(unlist(crtr.qtl.af[nrow(crtr.qtl.af),]))
+hist(unlist(pref.qtl.af[nrow(pref.qtl.af),]))

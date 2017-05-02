@@ -36,13 +36,15 @@ int main(int argc, char*argv[])
 		run = global_params.parse_parameters(argc, argv);
 		if (!run)
 		{
-			cout << "\nNo parameters found.\n";
 			return 0;
 		}
 	}
 	else
+	{
+		cout << "\nRunning the ARTs model with default parameters.\n";
 		global_params.set_defaults();
-
+	}
+	cout << '\n' << global_params.base_name;
 	//output
 	global_params.output_parameters();
 	string summary_output_name, trait_output_name, qtlinfo_output_name;
@@ -52,6 +54,8 @@ int main(int argc, char*argv[])
 
 	qtlinfo_output_name = global_params.base_name + "_qtlinfo.txt";
 	qtlinfo_output.open(qtlinfo_output_name);
+	qtlinfo_output << "Pop";
+	
 
 	summary_output_name = global_params.base_name + "_summary.txt";
 	summary_output.open(summary_output_name);
@@ -72,11 +76,13 @@ int main(int argc, char*argv[])
 		parent_freqs.push_back(0);
 		eq_reached.push_back(false);
 		//output QTL info
-		qtlinfo_output << "Pop" << i;
-		pops[i].output_qtl_info(global_params, qtlinfo_output);
+		if (i == 0)//if it's the first/only pop, write the header
+			pops[i].output_qtl_info(global_params, qtlinfo_output, true);
+		qtlinfo_output << "\nPop" << i;
+		pops[i].output_qtl_info(global_params, qtlinfo_output,false);
 	}
 	qtlinfo_output.close();
-	cout << "\nRunning " << global_params.num_init_gen << " initial generations";
+	cout << "\nRunning " << global_params.num_init_gen << " initial generations\n";
 	for (i = 0; i < global_params.num_init_gen; i++)
 	{
 		for (ii = 0; ii < global_params.num_pops; ii++)

@@ -62,42 +62,43 @@ public:
 	{
 		num_init_gen = 10000;//10000 normally
 		num_exp_gen = 2000;//2000 normally
-		num_pops = 1;
+		num_pops = 1; //default 1
 		carrying_capacity = 1000;//1000
-		num_sampled = 50;
-		num_chrom = 4;
+		num_sampled = 50;//default 50
+		num_chrom = 4;//default 4
 		num_markers = 1000;//1000
 		num_qtl = 50 / num_chrom;//per chrom
-		num_env_qtl = 0;
-		max_fecund = 4;
-		max_encounters = 50;
+		num_env_qtl = 0;//default 0
+		max_fecund = 4;//default 4
+		max_encounters = 50;//default 50
 		num_alleles = 2; //biallelic to start
-		mutation_rate = 0.0002;
-		mutational_var = 0;
+		mutation_rate = 0.0002;//default 0.0002
+		mutational_var = 0;//default 0
 		recombination_rate = 0.2;//0.2
-		allelic_std_dev = 0.5;
-		court_trait = false;
-		parent_trait = false;
-		env_effects = false;
+		allelic_std_dev = 0.5;//default 0.5
+		court_trait = false; //default: false
+		parent_trait = false;//default false
+		env_effects = false;//default false
 		cor_prefs= ind_pref= FD_pref= CD_pref= FD_court= FD_parent= CD_court= CD_parent = false;//no selection
-		cor_mal_traits = false;
-		polygyny = false;
-		base_name = "../../results/arts_";
-		num_ld_comparisons = 100;
-		rs_c = 8;
-		rs_nc = 4;
-		rs_p = 8;
-		rs_np = 4;
-		gaussian_pref_mean = 0;
-		via_sel_strength = 50;//unsure what value to put here
-		cond_adj = 0.1;//amount to add/subtract to condition dependent traits
+		cor_mal_traits = false;//default false
+		polygyny = false;//default false
+		base_name = "../../results/arts";//default: "../../results/arts"
+		num_ld_comparisons = 100;//default 100
+		rs_c = 8;//default 8
+		rs_nc = 4;//default 4
+		rs_p = 8;//default 8
+		rs_np = 4;//default 4
+		gaussian_pref_mean = 0;//default 0
+		via_sel_strength = 50;//unsure what value to put here (currently 50)
+		cond_adj = 0.1;//amount to add/subtract to condition dependent traits (default 0.1)
 	}
 
 	void help_message()
 	{
 		cout << "\n\t\tHELP MENU\n";
-		cout << "\nSimulation model of G-matrix stability and fsts. Below are the parameters to input to the model. (Defaults in parentheses)\n";
-		cout << "-b:\tBase for output file names (arts_)\n";
+		cout << "\nSimulation model of the evolution of alternative reproductive tactics with complex genetic architectures.\n";
+		cout << "Below are the parameters to input to the model. (Defaults in parentheses)\n";
+		cout << "-b:\tBase for output file names (arts)\n";
 		cout << "-K:\tcarrying capacity (1000)\n";
 		cout << "-s:\tnumber of individuals Sampled. (50)\n";
 		cout << "-c:\tnumber of Chromosomes (4)\n";
@@ -124,7 +125,7 @@ public:
 		cout << "--condition-dependent-parent:\tIf the parent trait is determined by male condition.\n";
 		cout << "--independent-pref:\tSpecifies an independent female preference (defaults to Gaussian preference for randomly chosen morph unless other flags included). \n";
 		cout << "--correlated-pref:\tSpecifies a female preference correlated with the male courter trait (defaults to Gaussian preference for randomly chosen morph unless other flags included).\n";
-		cout << "-h:\tPrint this help message.\n";
+		cout << "-h or --help:\tPrint this help message.\n";
 	}
 
 	bool parse_parameters(int argc, char*argv[])
@@ -141,10 +142,9 @@ public:
 		if (argc > 1)
 		{
 			tempstring1 = argv[1];
-			if (tempstring1 == "-h" || tempstring1 == "--selection-help")
+			if (tempstring1 == "-h" || tempstring1 == "--help")
 			{
-				if (tempstring1 == "-h")
-					help_message();
+				help_message();
 				run_program = false;
 			}
 			else
@@ -153,62 +153,67 @@ public:
 				for (j = 1; j < argc - 1; j++)
 				{
 					tempstring1 = argv[j];
-					if(tempstring1.substr(0,2) != "--")
+					if (tempstring1.substr(0, 2) != "--")
+					{
 						tempstring2 = argv[j + 1];
-					if (tempstring1 == "-b")
-						base_name = tempstring2;
-					if (tempstring1 == "-K")
-						carrying_capacity = atoi(tempstring2.c_str());
-					if (tempstring1 == "-s")
-						num_sampled = atoi(tempstring2.c_str());
-					if (tempstring1 == "-c")
-						num_chrom = atoi(tempstring2.c_str());
-					if (tempstring1 == "-x")
-						num_markers = atoi(tempstring2.c_str());
-					if (tempstring1 == "-q")
-						num_qtl = atoi(tempstring2.c_str());
-					if (tempstring1 == "-eq")
-						num_env_qtl = atoi(tempstring2.c_str());
-					if (tempstring1 == "-f")
-						max_fecund = atoi(tempstring2.c_str());
-					if (tempstring1 == "-e")
-						max_encounters = atoi(tempstring2.c_str());
-					if (tempstring1 == "-a")
-						num_alleles = atoi(tempstring2.c_str());
-					if (tempstring1 == "-p")
-						num_pops = atoi(tempstring2.c_str());
-					if (tempstring1 == "-i")
-						num_init_gen = atoi(tempstring2.c_str());
-					if (tempstring1 == "-g")
-						num_exp_gen = atoi(tempstring2.c_str());
-					if (tempstring1 == "-mu")
-						mutation_rate = atof(tempstring2.c_str());
-					if (tempstring1 == "-r")
-						recombination_rate = atof(tempstring2.c_str());
-					if (tempstring1 == "-asd")
-						allelic_std_dev = atof(tempstring2.c_str());
-					if (tempstring1 == "--plasticity")
-						env_effects = true;
-					if (tempstring1 == "--freq-dependent-preference")
-						FD_pref = ind_pref = true;
-					if (tempstring1 == "--condition-dependent-preference")
-						CD_pref = ind_pref = true;
-					if (tempstring1 == "--courter")
-						court_trait = ind_pref = true;
-					if (tempstring1 == "--parent")
-						parent_trait = ind_pref = true;
-					if (tempstring1 == "--freq-dependent-courter")
-						FD_court = court_trait= true;
-					if (tempstring1 == "--freq-dependent-parent")
-						FD_parent = parent_trait = true;
-					if (tempstring1 == "--condition-dependent-courter")
-						CD_court = court_trait= true;
-					if (tempstring1 == "--condition-dependent-parent")
-						CD_parent =parent_trait= true;
-					if (tempstring1 == "--independent-pref")
-						ind_pref = true;
-					if (tempstring1 == "--correlated-pref")
-						cor_prefs = court_trait = true;
+						if (tempstring1 == "-b")
+							base_name = tempstring2;
+						if (tempstring1 == "-K")
+							carrying_capacity = atoi(tempstring2.c_str());
+						if (tempstring1 == "-s")
+							num_sampled = atoi(tempstring2.c_str());
+						if (tempstring1 == "-c")
+							num_chrom = atoi(tempstring2.c_str());
+						if (tempstring1 == "-x")
+							num_markers = atoi(tempstring2.c_str());
+						if (tempstring1 == "-q")
+							num_qtl = atoi(tempstring2.c_str());
+						if (tempstring1 == "-eq")
+							num_env_qtl = atoi(tempstring2.c_str());
+						if (tempstring1 == "-f")
+							max_fecund = atoi(tempstring2.c_str());
+						if (tempstring1 == "-e")
+							max_encounters = atoi(tempstring2.c_str());
+						if (tempstring1 == "-a")
+							num_alleles = atoi(tempstring2.c_str());
+						if (tempstring1 == "-p")
+							num_pops = atoi(tempstring2.c_str());
+						if (tempstring1 == "-i")
+							num_init_gen = atoi(tempstring2.c_str());
+						if (tempstring1 == "-g")
+							num_exp_gen = atoi(tempstring2.c_str());
+						if (tempstring1 == "-mu")
+							mutation_rate = atof(tempstring2.c_str());
+						if (tempstring1 == "-r")
+							recombination_rate = atof(tempstring2.c_str());
+						if (tempstring1 == "-asd")
+							allelic_std_dev = atof(tempstring2.c_str());
+					}
+					else
+					{
+						if (tempstring1 == "--plasticity")
+							env_effects = true;
+						if (tempstring1 == "--freq-dependent-preference")
+							FD_pref = ind_pref = true;
+						if (tempstring1 == "--condition-dependent-preference")
+							CD_pref = ind_pref = true;
+						if (tempstring1 == "--courter")
+							court_trait = ind_pref = true;
+						if (tempstring1 == "--parent")
+							parent_trait = true;
+						if (tempstring1 == "--freq-dependent-courter")
+							FD_court = court_trait = true;
+						if (tempstring1 == "--freq-dependent-parent")
+							FD_parent = parent_trait = true;
+						if (tempstring1 == "--condition-dependent-courter")
+							CD_court = court_trait = true;
+						if (tempstring1 == "--condition-dependent-parent")
+							CD_parent = parent_trait = true;
+						if (tempstring1 == "--independent-pref")
+							ind_pref = true;
+						if (tempstring1 == "--correlated-pref")
+							cor_prefs = court_trait = true;
+					}
 				}
 				if (env_effects)
 				{
@@ -244,16 +249,24 @@ public:
 		param_out << "\nMutation rate:\t" << mutation_rate;
 		param_out << "\nRecombination rate:\t" << recombination_rate;
 		param_out << "\nAllelic standard deviation:\t" << allelic_std_dev;
+		param_out << "\nGaussian preference mean:\t" << gaussian_pref_mean;
+		param_out << "\nViability selection strength:\t" << via_sel_strength;
 		if (env_effects)
 			param_out << "\nPlasticity";
 		if (FD_pref)
 			param_out << "\n--freq-dependent-preference";	
 		if (CD_pref)
 			param_out << "\n--condition-dependent-preference";
-		if (court_trait)
+		if (court_trait) {
 			param_out << "\n--courter";
-		if (parent_trait)
+			param_out << "\nReproductive success for courter:\t" << rs_c
+				<< "\nReproductive success for non-courter:\t" << rs_nc;
+		}
+		if (parent_trait) {
 			param_out << "\n--parent";
+			param_out << "\nReproductive success for parent:\t" << rs_p
+				<< "\nReproductive success for non-parent:\t" << rs_np;
+		}
 		if (FD_court)
 			param_out << "\n--freq-dependent-courter";	 
 		if (FD_parent)
@@ -262,10 +275,14 @@ public:
 			param_out << "\n--condition-dependent-courter";
 		if (CD_parent)
 			param_out << "\n--condition-dependent-parent";
+		if (CD_court || CD_parent)
+			param_out << "\nCondition dependent adjustment amount:\t" << cond_adj;
 		if (ind_pref)
 			param_out << "\n--independent-pref";
-		if (cor_prefs )
+		if (cor_prefs)
 			param_out<< "\n--correlated-pref";
+		if (polygyny)
+			param_out << "\n--polygyny";
 			
 		param_out.close();
 	}
