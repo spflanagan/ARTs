@@ -1354,6 +1354,7 @@ public:
 				}
 			}
 		}
+		qtlinfo_output << '\n';
 	}
 	void output_allele_freqs(parameters gp, ofstream & output_file)
 	{

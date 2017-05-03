@@ -38,13 +38,15 @@ int main(int argc, char*argv[])
 		{
 			return 0;
 		}
+		else
+			cout << "\nRunning the ARTs model with output to base name " << global_params.base_name << '\n';
 	}
 	else
 	{
 		cout << "\nRunning the ARTs model with default parameters.\n";
 		global_params.set_defaults();
 	}
-	cout << '\n' << global_params.base_name;
+	global_params.num_qtl = global_params.num_qtl/global_params.num_chrom;
 	//output
 	global_params.output_parameters();
 	string summary_output_name, trait_output_name, qtlinfo_output_name;
@@ -78,7 +80,7 @@ int main(int argc, char*argv[])
 		//output QTL info
 		if (i == 0)//if it's the first/only pop, write the header
 			pops[i].output_qtl_info(global_params, qtlinfo_output, true);
-		qtlinfo_output << "\nPop" << i;
+		qtlinfo_output << "Pop" << i;
 		pops[i].output_qtl_info(global_params, qtlinfo_output,false);
 	}
 	qtlinfo_output.close();
