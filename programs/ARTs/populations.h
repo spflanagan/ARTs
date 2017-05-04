@@ -151,7 +151,7 @@ public:
 		}
 		//set up progeny
 		//determine the maximum possible fecundity
-		int max_potential_fecund = max(gp.max_encounters, gp.rs_c);
+		int max_potential_fecund = max(gp.max_fecund, gp.rs_c);
 		max_potential_fecund = max(max_potential_fecund, gp.rs_nc);
 		max_potential_fecund = max(max_potential_fecund, gp.rs_np);
 		max_potential_fecund = max(max_potential_fecund, gp.rs_p);
@@ -1144,9 +1144,9 @@ public:
 		double surv_prob, optimum, courter_freq;
 		courter_freq = calc_freq_courter(gp);
 		if (courter_freq > 0.5)
-			optimum = 1;
-		else
 			optimum = 0;
+		else
+			optimum = 1;
 		surv_prob = exp(-1 * (progeny[ind_id].courter - optimum)*(progeny[ind_id].courter - optimum)
 			/ (2 * gp.via_sel_strength));
 		return surv_prob;

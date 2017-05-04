@@ -114,6 +114,10 @@ public:
 		cout << "-mu:\tmaximum mutation rate (0.0002).\n";
 		cout << "-r:\tRecombination rate. (0.2) \n";
 		cout << "-asd:\tAllelic Standard Deviation (0.5)\n";
+		cout << "-prs:\tParental male reproductive success (8)\n";
+		cout << "-nprs:\tNon-parental male reproductive success (4)\n";
+		cout << "-crs:\tCourter male reproductive success (8)\n";
+		cout << "-ncrs:\tNon-courter male reproductive success (4)\n";
 		cout << "--plasticity:\tModel a plastic morph, where genotype is determined by interactions between genes.\n";
 		cout << "--freq-dependent-preference:\tInclude this flag if preferences should be based on the frequency of male morphs (defaults to independent).\n";
 		cout << "--condition-dependent-preference:\tInclude this flag if female preferences are determined by female condition (defaults to independent).\n";
@@ -125,6 +129,7 @@ public:
 		cout << "--condition-dependent-parent:\tIf the parent trait is determined by male condition.\n";
 		cout << "--independent-pref:\tSpecifies an independent female preference (defaults to Gaussian preference for randomly chosen morph unless other flags included). \n";
 		cout << "--correlated-pref:\tSpecifies a female preference correlated with the male courter trait (defaults to Gaussian preference for randomly chosen morph unless other flags included).\n";
+		cout << "--random-mating:\tSpecifies no female choice (default: true).\n";
 		cout << "-h or --help:\tPrint this help message.\n";
 	}
 
@@ -188,6 +193,14 @@ public:
 							recombination_rate = atof(tempstring2.c_str());
 						if (tempstring1 == "-asd")
 							allelic_std_dev = atof(tempstring2.c_str());
+						if (tempstring1 == "-prs")
+							rs_p = atof(tempstring2.c_str());
+						if (tempstring1 == "-nprs")
+							rs_np = atof(tempstring2.c_str());
+						if (tempstring1 == "-crs")
+							rs_c = atof(tempstring2.c_str());
+						if (tempstring1 == "-ncrs")
+							rs_nc = atof(tempstring2.c_str());
 					}
 					else
 					{
@@ -213,6 +226,8 @@ public:
 							ind_pref = true;
 						if (tempstring1 == "--correlated-pref")
 							cor_prefs = court_trait = true;
+						if (tempstring1 == "--random-mating")
+							cor_prefs = ind_pref = false;
 					}
 				}
 				if (env_effects)

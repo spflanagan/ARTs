@@ -45,6 +45,10 @@ int main(int argc, char*argv[])
 	{
 		cout << "\nRunning the ARTs model with default parameters.\n";
 		global_params.set_defaults();
+		//OPTIONAL SET PARAMETERS HERE FOR TESTING
+		global_params.FD_court = true;
+		global_params.cor_prefs = global_params.ind_pref = false;
+		global_params.court_trait = true;
 	}
 	global_params.num_qtl = global_params.num_qtl/global_params.num_chrom;
 	//output
