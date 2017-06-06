@@ -46,16 +46,18 @@ class parameters
 public:
 	int carrying_capacity, num_sampled, num_chrom, num_markers, num_qtl, num_env_qtl, max_fecund, max_encounters, num_alleles;
 	int num_pops, num_init_gen, num_exp_gen, num_ld_comparisons, rs_c, rs_nc, rs_p, rs_np;
-	double mutation_rate, mutational_var, recombination_rate, allelic_std_dev, gaussian_pref_mean, cond_adj, via_sel_strength;
+	double mutation_rate, mutational_var, recombination_rate, allelic_std_dev, gaussian_pref_mean, cond_adj, via_sel_strength, supergene_prop;
 	string base_name;
-	bool court_trait, parent_trait, env_effects, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
+	bool court_trait, parent_trait, env_effects, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits, supergene;
+	vector <int> qtl_per_chrom;
 
 	parameters()
 	{
 		carrying_capacity = num_sampled = num_chrom = num_markers = num_qtl = max_fecund = max_encounters = num_alleles = int();
 		num_pops = num_init_gen = num_exp_gen = int();
 		mutation_rate =recombination_rate = allelic_std_dev = double();
-		env_effects = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits =  bool();
+		env_effects = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
+		qtl_per_chrom = vector<int>();
 	}
 
 	void set_defaults()
@@ -67,7 +69,11 @@ public:
 		num_sampled = 50;//default 50
 		num_chrom = 4;//default 4
 		num_markers = 1000;//1000
-		num_qtl = 50 / num_chrom;//per chrom
+		num_qtl = 50;//default: 50
+		for (int j = 0; j < num_chrom; j++)
+		{
+			qtl_per_chrom.push_back(num_qtl / num_chrom);//default is an even distribution
+		}
 		num_env_qtl = 0;//default 0
 		max_fecund = 4;//default 4
 		max_encounters = 50;//default 50
@@ -76,6 +82,8 @@ public:
 		mutational_var = 0;//default 0
 		recombination_rate = 0.2;//0.2
 		allelic_std_dev = 0.5;//default 0.5
+		supergene_prop = 0.1; //default 0.1 (10% of num_markers = 100)
+		supergene = false; //default: false
 		court_trait = false; //default: false
 		parent_trait = false;//default false
 		env_effects = false;//default false
@@ -118,6 +126,7 @@ public:
 		cout << "-nprs:\tNon-parental male reproductive success (4)\n";
 		cout << "-crs:\tCourter male reproductive success (8)\n";
 		cout << "-ncrs:\tNon-courter male reproductive success (4)\n";
+		cout << "-sprop:\tSupergene proportion of a chromosome (0.1). NOTE: must be > the total number of qtls.\n";
 		cout << "--plasticity:\tModel a plastic morph, where genotype is determined by interactions between genes.\n";
 		cout << "--freq-dependent-preference:\tInclude this flag if preferences should be based on the frequency of male morphs (defaults to independent).\n";
 		cout << "--condition-dependent-preference:\tInclude this flag if female preferences are determined by female condition (defaults to independent).\n";
@@ -130,6 +139,7 @@ public:
 		cout << "--independent-pref:\tSpecifies an independent female preference (defaults to Gaussian preference for randomly chosen morph unless other flags included). \n";
 		cout << "--correlated-pref:\tSpecifies a female preference correlated with the male courter trait (defaults to Gaussian preference for randomly chosen morph unless other flags included).\n";
 		cout << "--random-mating:\tSpecifies no female choice (default: true).\n";
+		cout << "--supergene:\tSpecifies whether the QTLs are grouped together in a supergene.\n";
 		cout << "-h or --help:\tPrint this help message.\n";
 	}
 
@@ -201,6 +211,8 @@ public:
 							rs_c = atof(tempstring2.c_str());
 						if (tempstring1 == "-ncrs")
 							rs_nc = atof(tempstring2.c_str());
+						if (tempstring1 == "-sprop")
+							supergene_prop = atof(tempstring2.c_str());
 					}
 					else
 					{
@@ -228,6 +240,8 @@ public:
 							cor_prefs = court_trait = true;
 						if (tempstring1 == "--random-mating")
 							cor_prefs = ind_pref = false;
+						if (tempstring1 == "--supergene")
+							supergene = true;
 					}
 				}
 				if (env_effects)
