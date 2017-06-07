@@ -48,7 +48,8 @@ public:
 	int num_pops, num_init_gen, num_exp_gen, num_ld_comparisons, rs_c, rs_nc, rs_p, rs_np;
 	double mutation_rate, mutational_var, recombination_rate, allelic_std_dev, gaussian_pref_mean, cond_adj, via_sel_strength, supergene_prop;
 	string base_name;
-	bool court_trait, parent_trait, env_effects, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits, supergene;
+	bool court_trait, parent_trait, env_effects, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
+	bool supergene, var_recomb;
 	vector <int> qtl_per_chrom;
 
 	parameters()
@@ -57,6 +58,7 @@ public:
 		num_pops = num_init_gen = num_exp_gen = int();
 		mutation_rate =recombination_rate = allelic_std_dev = double();
 		env_effects = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
+		var_recomb = bool();
 		qtl_per_chrom = vector<int>();
 	}
 
@@ -83,7 +85,7 @@ public:
 		recombination_rate = 0.2;//0.2
 		allelic_std_dev = 0.5;//default 0.5
 		supergene_prop = 0.1; //default 0.1 (10% of num_markers = 100)
-		supergene = false; //default: false
+		supergene = var_recomb = false; //default: false
 		court_trait = false; //default: false
 		parent_trait = false;//default false
 		env_effects = false;//default false
@@ -140,6 +142,7 @@ public:
 		cout << "--correlated-pref:\tSpecifies a female preference correlated with the male courter trait (defaults to Gaussian preference for randomly chosen morph unless other flags included).\n";
 		cout << "--random-mating:\tSpecifies no female choice (default: true).\n";
 		cout << "--supergene:\tSpecifies whether the QTLs are grouped together in a supergene.\n";
+		cout << "--var-recomb:\tVariable recombination rate.\n";
 		cout << "-h or --help:\tPrint this help message.\n";
 	}
 
@@ -267,7 +270,9 @@ public:
 		param_out << "\nNum Sampled:\t" << num_sampled;
 		param_out << "\nNum Chrom:\t" << num_chrom;
 		param_out << "\nNum markers:\t" << num_markers;
-		param_out << "\nNum QTL:\t" << num_qtl;
+		param_out << "\nTotal Num QTL:\t" << num_qtl;
+		for (int j = 0; j < num_chrom; j++)
+			param_out << "\n" << qtl_per_chrom[j] << " QTL on Chrom " << j;
 		param_out << "\nMaximum Fecundity:\t" << max_fecund;
 		param_out << "\nMax encounters:\t" << max_encounters;
 		param_out << "\nNum alleles:\t" << num_alleles;
@@ -312,6 +317,8 @@ public:
 			param_out<< "\n--correlated-pref";
 		if (polygyny)
 			param_out << "\n--polygyny";
+		if (supergene)
+			param_out << "\n--supergene\n--" << supergene_prop;
 			
 		param_out.close();
 	}
@@ -372,14 +379,14 @@ public:
 		int k, kk, t;
 		double diff, x, xlast;
 		alive = true;
-		for (k = 0; k < (gp.num_env_qtl + gp.num_qtl); k++)
+		for (k = 0; k < gp.num_qtl; k++)
 		{
 			xlast = 1;
 			x = 0;
 			for (t = 0; t < 20; t++)
 			{
 
-				for (kk = 0; kk < (gp.num_env_qtl + gp.num_qtl); kk++)
+				for (kk = 0; kk < gp.num_qtl; kk++)
 				{
 					if (k < gp.num_env_qtl)
 						x = x + (courter_Y[k].per_locus[kk] * courter_int[k].per_locus[kk] * xlast) + env_cue;
@@ -401,13 +408,13 @@ public:
 		int k, kk, t;
 		double diff, x, xlast;
 
-		for (k = 0; k < (gp.num_env_qtl + gp.num_qtl); k++)
+		for (k = 0; k < gp.num_qtl; k++)
 		{
 			xlast = 1;
 			x = 0;
 			for (t = 0; t < 20; t++)
 			{
-				for (kk = 0; kk < (gp.num_env_qtl + gp.num_qtl); kk++)
+				for (kk = 0; kk < gp.num_qtl; kk++)
 				{
 					if (k < gp.num_env_qtl)
 						x = x + (parent_Y[k].per_locus[kk] * parent_int[k].per_locus[kk] * xlast) + env_cue;
@@ -428,13 +435,13 @@ public:
 		int k, kk, t;
 		double diff, x, xlast;
 
-		for (k = 0; k < (gp.num_env_qtl + gp.num_qtl); k++)
+		for (k = 0; k < gp.num_qtl; k++)
 		{
 			xlast = 1;
 			x = 0;
 			for (t = 0; t < 20; t++)
 			{
-				for (kk = 0; kk < (gp.num_env_qtl + gp.num_qtl); kk++)
+				for (kk = 0; kk <gp.num_qtl; kk++)
 				{
 					if (k < gp.num_env_qtl)
 						x = x + (pref_Y[k].per_locus[kk] * pref_int[k].per_locus[kk] * xlast) + env_cue;
@@ -468,7 +475,7 @@ public:
 			int qtl_index = 0;
 			for (k = 0; k < gp.num_chrom; k++)
 			{
-				for (kk = 0; kk < gp.num_qtl; kk++)
+				for (kk = gp.num_env_qtl; kk < gp.num_qtl; kk++)
 				{
 					courter_trait = courter_trait + (courter_Z[qtl_index] * (maternal[k].courter_ae[kk] + paternal[k].courter_ae[kk])*courter_x[qtl_index]);
 					qtl_index++;
@@ -494,7 +501,7 @@ public:
 			int qtl_index = 0;
 			for (k = 0; k < gp.num_chrom; k++)
 			{
-				for (kk = 0; kk < gp.num_qtl; kk++)
+				for (kk = gp.num_env_qtl; kk < gp.num_qtl; kk++)
 				{
 					parent_trait = parent_trait + (parent_Z[qtl_index] * (maternal[k].parent_ae[kk] + paternal[k].parent_ae[kk])*parent_x[qtl_index]);
 					qtl_index++;
@@ -520,7 +527,7 @@ public:
 			int qtl_index = 0;
 			for (k = 0; k < gp.num_chrom; k++)
 			{
-				for (kk = 0; kk < gp.num_qtl; kk++)
+				for (kk = gp.num_env_qtl; kk < gp.num_qtl; kk++)
 				{
 					female_pref = female_pref + (pref_Z[qtl_index] * (maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk])*pref_x[qtl_index]);
 					qtl_index++;
@@ -599,7 +606,7 @@ public:
 						mutated = true;
 					}
 				}
-				for (mm = 0; mm < gp.num_qtl; mm++)
+				for (mm = 0; mm < gp.qtl_per_chrom[irand]; mm++)
 				{
 					if (gp.court_trait)
 					{
@@ -631,7 +638,7 @@ public:
 						mutated = true;
 					}
 				}
-				for (mm = 0; mm < gp.num_qtl; mm++)
+				for (mm = 0; mm < gp.qtl_per_chrom[irand]; mm++)
 				{
 					if (gp.court_trait)
 					{
@@ -665,15 +672,15 @@ public:
 		sigma_mu = 0.5;
 		num_mutations = poissonrand(mu_mean);
 		mut_count = 0;
-		YorZ = (gp.num_qtl*gp.num_qtl) / ((gp.num_env_qtl + gp.num_qtl)*(gp.num_env_qtl + gp.num_qtl));
+		YorZ = ((gp.num_qtl- gp.num_env_qtl)*(gp.num_qtl- gp.num_env_qtl)) / (gp.num_qtl*gp.num_qtl);
 		while (mut_count < num_mutations)
 		{
 			if (gp.court_trait)
 			{
 				if (genrand() >= YorZ)//then we'll be working with Y
 				{
-					rand_loc1 = randnum(gp.num_env_qtl + gp.num_qtl);
-					rand_loc2 = randnum(gp.num_env_qtl + gp.num_qtl);
+					rand_loc1 = randnum(gp.num_qtl);
+					rand_loc2 = randnum(gp.num_qtl);
 					if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
 					{
 						if (courter_Y[rand_loc1].per_locus[rand_loc2] == 0)//add interaction
@@ -688,7 +695,7 @@ public:
 				}
 				else // then we'll work with Z
 				{
-					rand_loc1 = randnum(gp.num_qtl);
+					rand_loc1 = randnum(gp.num_qtl- gp.num_env_qtl);
 					if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
 					{
 						if (courter_Z[rand_loc1] == 0)//add interaction
@@ -701,7 +708,7 @@ public:
 						int index = 0;
 						for (int j = 0; j < gp.num_chrom; j++)
 						{
-							for (int jj = 0; jj < gp.num_qtl; jj++)
+							for (int jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
 							{
 								if (index == rand_loc1)
 								{
@@ -720,8 +727,8 @@ public:
 			{
 				if (genrand() >= YorZ)//then we'll be working with Y
 				{
-					rand_loc1 = randnum(gp.num_env_qtl + gp.num_qtl);
-					rand_loc2 = randnum(gp.num_env_qtl + gp.num_qtl);
+					rand_loc1 = randnum(gp.num_qtl);
+					rand_loc2 = randnum(gp.num_qtl);
 					if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
 					{
 						if (parent_Y[rand_loc1].per_locus[rand_loc2] == 0)//add interaction
@@ -736,7 +743,7 @@ public:
 				}
 				else // then we'll work with Z
 				{
-					rand_loc1 = randnum(gp.num_qtl);
+					rand_loc1 = randnum(gp.num_qtl-gp.num_env_qtl);
 					if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
 					{
 						if (parent_Z[rand_loc1] == 0)//add interaction
@@ -749,7 +756,7 @@ public:
 						int index = 0;
 						for (int j = 0; j < gp.num_chrom; j++)
 						{
-							for (int jj = 0; jj < gp.num_qtl; jj++)
+							for (int jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
 							{
 								if (index == rand_loc1)
 								{
@@ -768,8 +775,8 @@ public:
 			{
 				if (genrand() >= YorZ)//then we'll be working with Y
 				{
-					rand_loc1 = randnum(gp.num_env_qtl + gp.num_qtl);
-					rand_loc2 = randnum(gp.num_env_qtl + gp.num_qtl);
+					rand_loc1 = randnum(gp.num_qtl);
+					rand_loc2 = randnum(gp.num_qtl);
 					if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
 					{
 						if (pref_Y[rand_loc1].per_locus[rand_loc2] == 0)//add interaction
@@ -784,7 +791,7 @@ public:
 				}
 				else // then we'll work with Z
 				{
-					rand_loc1 = randnum(gp.num_qtl);
+					rand_loc1 = randnum(gp.num_qtl-gp.num_env_qtl);
 					if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
 					{
 						if (pref_Z[rand_loc1] == 0)//add interaction
@@ -797,7 +804,7 @@ public:
 						int index = 0;
 						for (int j = 0; j < gp.num_chrom; j++)
 						{
-							for (int jj = 0; jj < gp.num_qtl; jj++)
+							for (int jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
 							{
 								if (index == rand_loc1)
 								{
@@ -814,9 +821,9 @@ public:
 			}//ind prefs
 			if (gp.cor_prefs && gp.court_trait)//it's the same as courter
 			{
-				for (j = 0; j < (gp.num_env_qtl + gp.num_qtl); j++)
+				for (j = 0; j < gp.num_qtl; j++)
 				{
-					for (jj = 0; jj < (gp.num_env_qtl + gp.num_qtl); jj++)
+					for (jj = 0; jj < gp.num_qtl; jj++)
 					{
 						pref_Y[j].per_locus[jj] = courter_Y[j].per_locus[jj];
 						pref_int[j].per_locus[jj] = courter_int[j].per_locus[jj];
@@ -824,7 +831,7 @@ public:
 				}
 				for (j = 0; j < gp.num_chrom; j++)
 				{
-					for (jj = 0; jj < gp.num_qtl; jj++)
+					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
 					{
 						maternal[j].pref_ae[jj] = maternal[j].courter_ae[jj];
 						paternal[j].pref_ae[jj] = paternal[j].courter_ae[jj];
@@ -833,9 +840,9 @@ public:
 			}
 			if (gp.cor_prefs && !gp.court_trait)
 			{
-				for (j = 0; j < (gp.num_env_qtl + gp.num_qtl); j++)
+				for (j = 0; j < gp.num_qtl; j++)
 				{
-					for (jj = 0; jj < (gp.num_env_qtl + gp.num_qtl); jj++)
+					for (jj = 0; jj <  gp.num_qtl; jj++)
 					{
 						pref_Y[j].per_locus[jj] = parent_Y[j].per_locus[jj];
 						pref_int[j].per_locus[jj] = parent_int[j].per_locus[jj];
@@ -843,7 +850,7 @@ public:
 				}
 				for (j = 0; j < gp.num_chrom; j++)
 				{
-					for (jj = 0; jj < gp.num_qtl; jj++)
+					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
 					{
 						maternal[j].pref_ae[jj] = maternal[j].parent_ae[jj];
 						paternal[j].pref_ae[jj] = paternal[j].parent_ae[jj];

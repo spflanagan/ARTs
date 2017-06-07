@@ -193,20 +193,10 @@ public:
 		//assign qtls to be environmental.
 		for (j = 0; j < gp.num_chrom; j++)
 		{
-			if (gp.court_trait)
-				courter_env_qtls.push_back(tracker());
-			if (gp.parent_trait)
-				parent_env_qtls.push_back(tracker());
-			if (!random_mating)
-				pref_env_qtls.push_back(tracker());
+			env_qtls.push_back(tracker());
 			for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
 			{
-				if (gp.court_trait)
-					courter_env_qtls[j].per_locus.push_back(-1);
-				if (gp.parent_trait)
-					parent_env_qtls[j].per_locus.push_back(-1);
-				if (!random_mating)
-					pref_env_qtls[j].per_locus.push_back(-1);
+				env_qtls[j].per_locus.push_back(-1);
 			}
 		}
 		int index = 0;
@@ -331,19 +321,19 @@ public:
 			else
 				adults[j].alive = false;//it's an empty slot for migrants
 			if (gp.env_effects)//set up interactions
-			{//<-----------------------------------------------------------------------------RESUME EDITS HERE
+			{
 				if (gp.court_trait == true)
 				{
 					for (jj = 0; jj < gp.num_qtl; jj++)
-					{
-						adults[j].courter_int.push_back(tracker());
-						adults[j].courter_Y.push_back(tracker());						
+					{//the first ones are the environmentally regulated ones.
+						adults[j].courter_int.push_back(tracker());//SxS matrix of gene interactions
+						adults[j].courter_Y.push_back(tracker());	//SxS matrix of whether genes regulate each other					
 						if (jj > gp.num_env_qtl)
 						{
-							adults[j].courter_Z.push_back(1);
-							adults[j].courter_x.push_back(double());
+							adults[j].courter_Z.push_back(1);		//(S-E) vector of whether gene j contributes to trait i. 
+							adults[j].courter_x.push_back(double());//(S-E) vector of weigths and contributions to trait i.
 						}
-						for (jjj = 0; jjj < (gp.num_qtl + gp.num_env_qtl); jjj++)
+						for (jjj = 0; jjj < gp.num_qtl; jjj++)
 						{
 							adults[j].courter_Y[jj].per_locus.push_back(1);
 							adults[j].courter_int[jj].per_locus.push_back(randnorm(0, 0.5));
@@ -352,7 +342,7 @@ public:
 				}
 				if (gp.parent_trait == true)
 				{
-					for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
+					for (jj = 0; jj < gp.num_qtl; jj++)
 					{
 						adults[j].parent_int.push_back(tracker());
 						adults[j].parent_Y.push_back(tracker());
@@ -361,7 +351,7 @@ public:
 							adults[j].parent_Z.push_back(1);
 							adults[j].parent_x.push_back(double());
 						}
-						for (jjj = 0; jjj < (gp.num_qtl + gp.num_env_qtl); jjj++)
+						for (jjj = 0; jjj < gp.num_qtl; jjj++)
 						{
 							adults[j].parent_Y[jj].per_locus.push_back(1);//they all start out with an interaction
 							adults[j].parent_int[jj].per_locus.push_back(randnorm(0, 0.5));
@@ -370,7 +360,7 @@ public:
 				}
 				if (!random_mating)
 				{
-					for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
+					for (jj = 0; jj < gp.num_qtl; jj++)
 					{
 						adults[j].pref_int.push_back(tracker());
 						adults[j].pref_Y.push_back(tracker());						
@@ -379,7 +369,7 @@ public:
 							adults[j].pref_Z.push_back(1);
 							adults[j].pref_x.push_back(double());
 						}
-						for (jjj = 0; jjj < (gp.num_qtl + gp.num_env_qtl); jjj++)
+						for (jjj = 0; jjj < gp.num_qtl; jjj++)
 						{
 							adults[j].pref_Y[jj].per_locus.push_back(1);
 							adults[j].pref_int[jj].per_locus.push_back(randnorm(0, 0.5));
@@ -392,7 +382,7 @@ public:
 			{
 				if (gp.court_trait || !random_mating)//because if preferences exist then there needs to be a male trait.
 				{
-					for (jjj = 0; jjj < (gp.num_env_qtl+gp.num_qtl); jjj++)
+					for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
 					{
 						adults[j].maternal[jj].courter_ae[jjj] = tempallele1[j%gp.num_alleles];
 						adults[j].paternal[jj].courter_ae[jjj] = tempallele1[j%gp.num_alleles];
@@ -400,7 +390,7 @@ public:
 				}
 				if (gp.parent_trait)
 				{
-					for (jjj = 0; jjj < (gp.num_env_qtl + gp.num_qtl); jjj++)
+					for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
 					{
 						adults[j].maternal[jj].parent_ae[jjj] = tempallele2[j%gp.num_alleles];
 						adults[j].paternal[jj].parent_ae[jjj] = tempallele2[j%gp.num_alleles];
@@ -408,7 +398,7 @@ public:
 				}
 				if (!random_mating)
 				{
-					for (jjj = 0; jjj < (gp.num_env_qtl + gp.num_qtl); jjj++)
+					for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
 					{
 						adults[j].maternal[jj].pref_ae[jjj] = tempallele3[j%gp.num_alleles];
 						adults[j].paternal[jj].pref_ae[jjj] = tempallele3[j%gp.num_alleles];
@@ -804,7 +794,7 @@ public:
 			//now the QTLs
 			if (gp.court_trait)
 			{
-				for (RCi = 0; RCi < (gp.num_env_qtl + gp.num_qtl); RCi++)
+				for (RCi = 0; RCi < gp.qtl_per_chrom[which_chrom]; RCi++)
 				{
 					for (RCj = 0; RCj < num_segments; RCj++)
 					{
@@ -820,7 +810,7 @@ public:
 			}
 			if (gp.parent_trait)
 			{
-				for (RCi = 0; RCi < (gp.num_env_qtl + gp.num_qtl); RCi++)
+				for (RCi = 0; RCi < gp.qtl_per_chrom[which_chrom]; RCi++)
 				{
 					for (RCj = 0; RCj < num_segments; RCj++)
 					{
@@ -836,7 +826,7 @@ public:
 			}
 			if (!random_mating)
 			{
-				for (RCi = 0; RCi < (gp.num_env_qtl + gp.num_qtl); RCi++)
+				for (RCi = 0; RCi < gp.qtl_per_chrom[which_chrom]; RCi++)
 				{
 					for (RCj = 0; RCj < num_segments; RCj++)
 					{
@@ -859,7 +849,7 @@ public:
 			{//maternal
 				for (RCi = 0; RCi < gp.num_markers; RCi++)
 					chrom.loci[RCi] = parent.maternal[which_chrom].loci[RCi];
-				for (RCi = 0; RCi < (gp.num_env_qtl + gp.num_qtl); RCi++)
+				for (RCi = 0; RCi < gp.qtl_per_chrom[which_chrom]; RCi++)
 				{
 					if (gp.court_trait)
 					{
@@ -882,7 +872,7 @@ public:
 			{//paternal
 				for (RCi = 0; RCi < gp.num_markers; RCi++)
 					chrom.loci[RCi] = parent.paternal[which_chrom].loci[RCi];
-				for (RCi = 0; RCi < (gp.num_env_qtl + gp.num_qtl); RCi++)
+				for (RCi = 0; RCi < gp.qtl_per_chrom[which_chrom]; RCi++)
 				{
 					if (gp.court_trait)
 					{
@@ -1418,7 +1408,7 @@ public:
 		{
 			if (!random_mating)
 			{
-				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
 				{
 					if (initial)
 						qtlinfo_output << "\tPrefQTL" << count1;
@@ -1429,7 +1419,7 @@ public:
 			}
 			if (gp.parent_trait)
 			{
-				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
 				{
 					if (initial)
 						qtlinfo_output << "\tParentQTL" << count2;
@@ -1440,7 +1430,7 @@ public:
 			}
 			else
 			{
-				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
 				{
 					if (initial)
 						qtlinfo_output << "\tParentQTL" << count2;
@@ -1451,7 +1441,7 @@ public:
 			}
 			if (gp.court_trait)
 			{
-				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
 				{
 					if (initial)
 						qtlinfo_output << "\tCourterQTL" << count3;
@@ -1462,7 +1452,7 @@ public:
 			}
 			else
 			{
-				for (jj = 0; jj < (gp.num_qtl + gp.num_env_qtl); jj++)
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
 				{
 					if (initial)
 						qtlinfo_output << "\tCourterQTL" << count3;

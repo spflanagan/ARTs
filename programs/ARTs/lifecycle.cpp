@@ -50,7 +50,7 @@ int main(int argc, char*argv[])
 		global_params.cor_prefs = global_params.ind_pref = false;
 		global_params.court_trait = true;
 	}
-	global_params.num_qtl = global_params.num_qtl/global_params.num_chrom;
+	
 	//output
 	global_params.output_parameters();
 	string summary_output_name, trait_output_name, qtlinfo_output_name;

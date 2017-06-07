@@ -1,0 +1,38 @@
+\documentclass[]{article}
+
+%opening
+\title{Genomic Architecture of Alternative Reproductive Tactics Simulation Model Handbook}
+\author{Sarah P. Flanagan}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\section{Gene Network Model}
+When using the gene network model, you specify both the total number of QTL (S) and the number of environmental QTL (E). The environmental QTL are a subset of the QTL so the number of non-environmentally responsive QTL is S-E.
+
+There are several tracking things:
+
+\begin{enumerate}
+	\item int is an SxS matrix tracking the interactions among genes.
+	\item Y is an SxS matrix with whether gene j regulates gene i.
+	\item Z is a (S-E) vector of whether j contributes to trait i
+	\item x is a (S-E) vector of the weights and contributions of gene j to trait i
+\end{enumerate}
+
+I have a separate one of each of these for each trait. Z and x could theoretically be combined into a matrix of vectors.
+
+In each of these, the first E elements represent the environmentally responsive QTL.
+
+Mutations affect either Y or Z. And the trait is determined only by the final values from the (S-E) QTLs.
+
+\section{Supergenes}
+Supergenes mean that all of the QTLs for the male trait(s) are grouped together on one chromosome. This is true regardless of whether it's a gene network model or not.
+
+
+
+\end{document}
