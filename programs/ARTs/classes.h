@@ -361,7 +361,7 @@ public:
 	vector<tracker> courter_int, parent_int, pref_int, courter_Y, parent_Y, pref_Y;
 	vector<int> courter_Z, parent_Z, pref_Z, courter_x, parent_x, pref_x;
 	bool female, alive, courter, parent;
-	int mate_found, pot_rs;
+	int mate_found, pot_rs, mate_id;
 
 	individual()
 	{
@@ -369,7 +369,7 @@ public:
 		maternal = paternal = vector<chromosome>();
 		courter_int = parent_int = pref_int = courter_Y = parent_Y = pref_Y = vector<tracker>();
 		courter_Z = parent_Z = pref_Z = courter_x = parent_x = pref_x = vector<int>();
-		mate_found = pot_rs = int();
+		mate_found = pot_rs = mate_id = int();
 		female = alive = parent = courter = bool();
 	}
 

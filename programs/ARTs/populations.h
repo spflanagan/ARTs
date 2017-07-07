@@ -942,7 +942,7 @@ public:
 		rel_rs = rel_rs / fecundity;
 		return rel_rs;
 	}
-	void mating(bool output, string out_name, parameters gp)
+	void gaussian_mating(bool output, string out_name, parameters gp)
 	{
 		//monogamous mating without choice
 		int j, jj, jjj, male_id, encounters;
@@ -1168,7 +1168,7 @@ public:
 						}
 						encounters++;
 					}
-					if (acceptable_males.size() > 1)//if there are multiple males, she chooses one randomly
+					if (acceptable_males.size() >= 1)//if there are multiple males, she chooses one randomly
 					{
 						int randbest = randnum(acceptable_males.size());
 						male_id = acceptable_males[randbest];
@@ -1228,6 +1228,152 @@ public:
 		}
 		if (output)
 			out_file.close();
+	}
+	void nest_and_fertilize(parameters gp, bool output, string out_name)
+	{
+		int j, jj, jjj;
+		num_progeny = num_fem = num_mal = 0;
+		bool nest_found;
+		vector<int> male_index;
+		ofstream out_file;
+
+		//set up pop level metrics
+		determine_pop_size(gp);
+		assign_preference(gp);
+		for (j = 0; j < adults.size(); j++)
+		{
+			if (adults[j].female && adults[j].alive)
+				num_fem++;
+			else
+			{
+				if (adults[j].alive)
+				{
+					num_mal++;
+					male_index.push_back(j);
+				}
+			}
+			adults[j].mate_found = 0;
+		}
+		for (j = 0; j < adults.size(); j++)
+		{
+			if (adults[j].female && adults[j].alive) //loop through the females.
+			{
+				nest_found = choose_nest(j, male_index, gp);
+				if (nest_found)
+				{
+					random_fertilization(j, male_index, gp);
+				}
+			}
+		}
+	}
+	bool choose_nest(int fem_index, vector<int> & male_index, parameters gp)
+	{//females choose one male to give her eggs to.
+		int male_id, encounters, irndnum;
+		bool mate_found;
+		
+		int count = 0;
+		encounters = 0;
+		mate_found = false;
+		if (random_mating)
+		{
+			while (!mate_found && encounters < gp.max_encounters)//female mates once
+			{
+				irndnum = randnum(num_mal);
+				male_id = male_index[irndnum];
+				if (adults[male_id].alive)
+				{
+					if (gp.polygyny || adults[male_id].mate_found == 0)//either polygyny is ok or if monogamy the male hasn't mated yet
+					{
+						mate_found = true;
+						adults[fem_index].mate_found++;
+						adults[male_id].mate_found++;
+						adults[fem_index].mate_id = male_id;
+					}
+				}
+				encounters++;
+			}
+		}//random mating
+		else
+		{ //preference for one morph or the other 
+			vector <int> acceptable_males;
+			while (encounters < gp.max_encounters)
+			{
+				irndnum = randnum(num_mal);
+				male_id = male_index[irndnum];
+				if (adults[male_id].alive)
+				{
+					if (gp.polygyny || adults[male_id].mate_found == 0)
+					{
+						if (gp.court_trait)
+						{
+							if (adults[fem_index].female_pref == adults[male_id].courter);
+							acceptable_males.push_back(male_id);
+						}
+						else//parent_trait
+						{
+							if (adults[fem_index].female_pref == adults[male_id].parent);
+							acceptable_males.push_back(male_id);
+						}
+					}
+				}
+				encounters++;
+			}
+			if (acceptable_males.size() >= 1)
+			{
+				int randbest = randnum(acceptable_males.size());//if there are multiple males, she chooses one randomly
+				male_id = acceptable_males[randbest];
+				mate_found = true;
+				adults[fem_index].mate_found++;
+				adults[male_id].mate_found++;
+				adults[fem_index].mate_id = male_id;
+				if (gp.CD_court)
+				{
+					if (adults[male_id].courter)//it decreases
+						adults[male_id].courter_trait = adults[male_id].courter_trait - gp.cond_adj;
+					else//it increases
+						adults[male_id].courter_trait = adults[male_id].courter_trait + gp.cond_adj;
+					adults[male_id].assign_court_morph(gp, courter_thresh);
+				}
+				if (gp.CD_parent)
+				{
+					if (adults[male_id].parent)//it decreases
+						adults[male_id].parent_trait = adults[male_id].parent_trait - gp.cond_adj;
+					else//it increases
+						adults[male_id].parent_trait = adults[male_id].parent_trait + gp.cond_adj;
+					adults[male_id].assign_parent_morph(gp, parent_thresh);
+				}
+			}
+		}//end of finding the mates
+		return mate_found;
+	}
+	void random_fertilization(int fem_id, vector<int> & male_index, parameters gp)
+	{
+		int k,fecundity, randmale, sneaker_id;
+		double rel_rs;
+		int male_id = adults[fem_id].mate_id;
+		int num_eggs_left = adults[fem_id].pot_rs;
+		
+		//nesting male gets the first shot
+		fecundity = randnum(adults[male_id].pot_rs);
+		if (fecundity > num_eggs_left)
+			fecundity = num_eggs_left;
+		rel_rs = making_babies(gp, fecundity, num_progeny, fem_id, male_id);
+		num_eggs_left = num_eggs_left - fecundity;
+		//then if there are any eggs left, sneakers can fertilize
+		while (num_eggs_left > 0)
+		{
+			randmale = randnum(male_index.size());
+			if (!adults[male_index[randmale]].parent)//if it's a sneaker
+			{
+				sneaker_id = male_index[randmale];
+				fecundity = randnum(adults[sneaker_id].pot_rs);
+				if(fecundity > num_eggs_left)
+					fecundity = num_eggs_left;
+				rel_rs = making_babies(gp, fecundity, num_progeny, fem_id, sneaker_id);
+				num_eggs_left = num_eggs_left - fecundity;
+				adults[sneaker_id].mate_found++;
+			}
+		}
 	}
 
 	//selection
