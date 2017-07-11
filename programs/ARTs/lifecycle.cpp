@@ -28,7 +28,7 @@ int main(int argc, char*argv[])
 
 	//parse parameters
 	if (argc == 1)
-		command_line = false;
+		command_line = false; //this is also true if running command line with no params
 	else
 		command_line = true;
 	if (command_line)
@@ -83,7 +83,13 @@ int main(int argc, char*argv[])
 		eq_reached.push_back(false);
 		//output QTL info
 		if (i == 0)//if it's the first/only pop, write the header
-			pops[i].output_qtl_info(global_params, qtlinfo_output, true);
+		{
+			if (global_params.env_effects)
+				pops[i].output_qtl_info(global_params, qtlinfo_output, true,
+					pops[i].courter_env_qtls,pops[i].parent_env_qtls,pops[i].pref_env_qtls);
+			else
+				pops[i].output_qtl_info(global_params, qtlinfo_output, true);
+		}
 		qtlinfo_output << "Pop" << i;
 		pops[i].output_qtl_info(global_params, qtlinfo_output,false);
 	}
@@ -109,7 +115,8 @@ int main(int argc, char*argv[])
 			}
 			else
 				write_to_file = false;*/
-			pops[ii].bestofN_mating(write_to_file, temp_file_name, global_params);
+			//pops[ii].bestofN_mating(write_to_file, temp_file_name, global_params);
+			pops[ii].nest_and_fertilize(global_params, write_to_file, temp_file_name);
 			//viability selection
 			pops[ii].viability_selection(global_params);
 			//stochastic survival
@@ -198,7 +205,8 @@ int main(int argc, char*argv[])
 					summary_output << "\nGen" << global_params.num_init_gen + num_eq_tries << "\tPop" << i;
 					pops[i].output_summary_info(global_params, summary_output);//includes allele freqs
 					//mating (includes assiging preferences, recombination, and mutation)
-					pops[i].bestofN_mating(false, "temp", global_params);
+					//pops[i].bestofN_mating(false, "temp", global_params);
+					pops[ii].nest_and_fertilize(global_params, false, "temp");
 					//selection
 					pops[i].viability_selection(global_params);
 					//stochastic survival

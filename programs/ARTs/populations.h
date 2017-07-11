@@ -17,7 +17,7 @@ class population
 {
 public:
 	int population_size, num_mal, num_fem, num_progeny, sex_trait, max_num_migrants, migrant_index;
-	double sex_theta, sex_omega, courter_thresh, parent_thresh;
+	double sex_theta, sex_omega, courter_thresh, parent_thresh,pref_thresh;
 	bool extinct, random_mating;
 	vector<double> theta, mean_fem_traits, mean_mal_traits, d_parentfreq, d_courterfreq;
 	vector<individual> adults;
@@ -29,7 +29,7 @@ public:
 	{
 		population_size = num_mal = num_fem = num_progeny = sex_trait = max_num_migrants = migrant_index = int();
 		theta = mean_fem_traits = mean_mal_traits = vector<double>();
-		sex_theta = sex_omega = courter_thresh = parent_thresh = double();
+		sex_theta = sex_omega = courter_thresh = parent_thresh = pref_thresh = double();
 		adults = progeny = vector<individual>();
 		courter_env_qtls = courter_qtls = parent_env_qtls = parent_qtls = pref_env_qtls = pref_qtls = maf = hs = vector<tracker>();
 		random_mating = false;
@@ -37,6 +37,13 @@ public:
 		sgenrand(time(0));
 	}
 
+	void determine_pref_thresh(parameters gp)
+	{
+		if (gp.court_trait)
+			pref_thresh = courter_thresh;
+		else
+			pref_thresh = parent_thresh;
+	}
 	void initialize_supergene(parameters gp)
 	{
 		int m, mm, mmm;
@@ -211,6 +218,30 @@ public:
 			}
 		}
 	}
+	void assign_env_qtls(vector<tracker>&env_qtls, parameters gp, int global_qtl_per_chrom)//for female prefs with supergene
+	{
+		int j, jj, jjj;
+		//assign qtls to be environmental.
+		for (j = 0; j < gp.num_chrom; j++)
+		{
+			env_qtls.push_back(tracker());
+			for (jj = 0; jj < global_qtl_per_chrom; jj++)
+			{
+				env_qtls[j].per_locus.push_back(-1);
+			}
+		}
+		int index = 0;
+		int this_qtl = randnum(gp.num_qtl);
+		for (jj = 0; jj < gp.num_chrom; jj++)
+		{
+			for (jjj = 0; jjj < global_qtl_per_chrom; jjj++)
+			{
+				index++;
+				if (index == this_qtl)
+					env_qtls[jj].per_locus[jjj] = this_qtl;
+			}
+		}
+	}
 	void initialize(parameters gp)
 	{
 		cout << "Initializing a population.\n";
@@ -221,13 +252,43 @@ public:
 		num_fem = num_mal = 0;
 		migrant_index = gp.carrying_capacity;
 		sex_theta = -100;
+		//set up the qtls
 		if (gp.supergene)
-		{
+		{//if it's a supergene, male traits QTLs are together
 			initialize_supergene(gp);
+			//set up females
+			//female preference is not a part of a supergene if it's independent
+			if (gp.cor_prefs == true)
+			{//then it's the same as the courter trait
+				for (j = 0; j < gp.num_chrom; j++)
+				{
+					pref_qtls.push_back(tracker());
+					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+						pref_qtls[j].per_locus.push_back(courter_qtls[j].per_locus[jj]);
+				}
+			}
+			if (gp.ind_pref == true)
+			{//otherwise it's its own thing.
+				for (j = 0; j < gp.num_chrom; j++)
+				{
+					pref_qtls.push_back(tracker());
+					for (jj = 0; jj < (gp.num_qtl / gp.num_chrom); jj++)
+						pref_qtls[j].per_locus.push_back(randnum(gp.num_markers));
+				}
+			}
+			if (pref_qtls.size() == 0 && !random_mating)//sanity check!
+			{
+				for (j = 0; j < gp.num_chrom; j++)
+				{
+					pref_qtls.push_back(tracker());
+					for (jj = 0; jj < (gp.num_qtl / gp.num_chrom); jj++)
+						pref_qtls[j].per_locus.push_back(randnum(gp.num_markers));
+				}
+				gp.ind_pref = true;
+			}
 		}
 		else
-		{
-			//set up the qtls for the traits
+		{//otherwise they're distributed along the chromosomes.
 			if (gp.court_trait == true)
 			{
 				for (j = 0; j < gp.num_chrom; j++)
@@ -246,37 +307,38 @@ public:
 						parent_qtls[j].per_locus.push_back(randnum(gp.num_markers));
 				}
 			}
-		}
-		//set up females
-		if (gp.cor_prefs == true)
-		{
-			for (j = 0; j < gp.num_chrom; j++)
+			//set up females
+			if (gp.cor_prefs == true)
+			{//then it's the same as the courter trait
+				for (j = 0; j < gp.num_chrom; j++)
+				{
+					pref_qtls.push_back(tracker());
+					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+						pref_qtls[j].per_locus.push_back(courter_qtls[j].per_locus[jj]);
+				}
+			}
+			if (gp.ind_pref == true)
+			{//otherwise it's its own thing.
+				for (j = 0; j < gp.num_chrom; j++)
+				{
+					pref_qtls.push_back(tracker());
+					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+						pref_qtls[j].per_locus.push_back(randnum(gp.num_markers));
+				}
+			}
+			if (pref_qtls.size() == 0 && !random_mating)//sanity check!
 			{
-				pref_qtls.push_back(tracker());
-				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
-					pref_qtls[j].per_locus.push_back(courter_qtls[j].per_locus[jj]);
+				for (j = 0; j < gp.num_chrom; j++)
+				{
+					pref_qtls.push_back(tracker());
+					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+						pref_qtls[j].per_locus.push_back(randnum(gp.num_markers));
+				}
+				gp.ind_pref = true;
 			}
 		}
-		if (gp.ind_pref == true)//female preference is not a part of a supergene if it's independent
-		{
-			for (j = 0; j < gp.num_chrom; j++)
-			{
-				pref_qtls.push_back(tracker());
-				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
-					pref_qtls[j].per_locus.push_back(randnum(gp.num_markers));
-			}
-		}
-		if (pref_qtls.size() == 0 && !random_mating)
-		{
-			for (j = 0; j < gp.num_chrom; j++)
-			{
-				pref_qtls.push_back(tracker());
-				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
-					pref_qtls[j].per_locus.push_back(randnum(gp.num_markers));
-			}
-			gp.ind_pref = true;
-		}
-		//if environmental effects
+		
+		//Set up environmental effect QTL locations if necessary
 		if (gp.env_effects)
 		{
 			//randomly choose gp.num_env_qtl from the set
@@ -287,7 +349,7 @@ public:
 				if (gp.parent_trait)
 					assign_env_qtls(parent_env_qtls, gp);
 				if (!random_mating)
-					assign_env_qtls(pref_env_qtls, gp);
+					assign_env_qtls(pref_env_qtls, gp, gp.num_qtl/gp.num_chrom);
 			}
 		}
 
@@ -303,9 +365,9 @@ public:
 			}
 		}
 		//set up adults
-		initialize_adults(gp);
+		initialize_adults(gp);//just set up the vectors
 		//set up progeny
-		initialize_progeny(gp);
+		initialize_progeny(gp);//just set up the vectors
 		//assign loci and alleles
 		vector<double> tempallele1, tempallele2, tempallele3;
 		for (j = 0; j < gp.num_alleles; j++) //set up specific alleles.
@@ -398,7 +460,7 @@ public:
 				}
 				if (!random_mating)
 				{
-					for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
+					for (jjj = 0; jjj < adults[j].maternal[jj].pref_ae.size(); jjj++)
 					{
 						adults[j].maternal[jj].pref_ae[jjj] = tempallele3[j%gp.num_alleles];
 						adults[j].paternal[jj].pref_ae[jjj] = tempallele3[j%gp.num_alleles];
@@ -413,7 +475,7 @@ public:
 			}
 			if (gp.court_trait || !random_mating) //because if preferences exist then there needs to be a male trait.
 			{
-				adults[j].calc_courter_trait(gp); //to initialize env cue = 0 (the default)
+				adults[j].calc_courter_trait(gp); //to initialize don't use interactions
 			}
 			if (gp.parent_trait)
 			{
@@ -465,9 +527,10 @@ public:
 		}
 		else
 			parent_thresh = 0;
+		determine_pref_thresh(gp);//initialize the preference threshold
 		for (j = 0; j < gp.carrying_capacity; j++)
 		{
-			adults[j].update_traits(gp, courter_thresh, parent_thresh);
+			adults[j].update_traits(gp, courter_thresh, parent_thresh,pref_thresh);
 		}
 		population_size = gp.carrying_capacity;
 		
@@ -599,16 +662,16 @@ public:
 				adults[j].female_pref = 1;
 		}
 	}
-	void pref_femtrait(parameters gp)//if it's correlated, then preference should be based on female's own trait
-	{
+	void pref_femtrait(parameters gp)
+	{//female's own trait is measured against the preferred threshold
 		for (int j = 0; j < gp.carrying_capacity; j++)
 		{
 			if (adults[j].alive && adults[j].female)
 			{
-				if(gp.court_trait)
-					adults[j].calc_preference_trait(gp, courter_thresh);
+				if (gp.env_effects)
+					adults[j].calc_preference_trait(gp, pref_thresh, pref_env_qtls, 0);//what is the environmental cue??
 				else
-					adults[j].calc_preference_trait(gp, parent_thresh);
+					adults[j].calc_preference_trait(gp, pref_thresh);
 			}
 		}
 	}
@@ -662,7 +725,7 @@ public:
 			}
 		}
 	}
-	void pref_cd_courter_noenv(parameters gp, double meanT, double meanF, double xswitch)
+	void pref_cd_courter(parameters gp, double meanT, double meanF, double xswitch)
 	{
 		int j, jj, count;
 		double mean;
@@ -670,7 +733,10 @@ public:
 		{
 			if (adults[j].alive && adults[j].female)
 			{
-				adults[j].calc_preference_trait(gp, courter_thresh);//consider environmental cue...
+				if(gp.env_effects)
+					adults[j].calc_preference_trait(gp, pref_thresh,pref_env_qtls,0);//consider environmental cue...
+				else
+					adults[j].calc_preference_trait(gp, pref_thresh);
 				mean = poissonrand(gp.max_fecund + adults[j].female_pref);
 				adults[j].pot_rs = adults[j].female_pref + mean; //this is her fecundity
 				if (xswitch < adults[j].pot_rs)//then she prefers rs_c
@@ -718,19 +784,19 @@ public:
 				{
 					xswitch = (num_mal / gp.max_encounters) / (gp.rs_p - gp.rs_np);
 				}
-				pref_cd_courter_noenv(gp, meanT, meanF, xswitch);
+				pref_cd_courter(gp, meanT, meanF, xswitch);
 			}
 		}
 	}
 
 	//functions for mating
-	bool recombine_chromosome(chromosome& chrom, individual &parent, double expected_recomb_events, int which_chrom, parameters gp)//tracker& court_qtls, tracker& parent_qtls, tracker& pref_qtls, 
+	void recombine_chromosome(chromosome& chrom, individual &parent, double expected_recomb_events, int which_chrom, parameters gp, bool alive)//tracker& court_qtls, tracker& parent_qtls, tracker& pref_qtls, 
 	{
 		int RCi, RCj, RCk;
 		int NumberRecombEvents = 0;
 		int segment_start[22], segment_end[20];
 		int break_point[20];
-		bool recombined = false;
+		vector<bool> recombine;
 
 		if (expected_recomb_events < 6)
 			NumberRecombEvents = poissonrand(expected_recomb_events);
@@ -746,9 +812,9 @@ public:
 		//actually recombine
 		if (NumberRecombEvents > 0)
 		{
-			recombined = true;
-			for (RCi = 0; RCi < NumberRecombEvents; RCi++)
+			for (RCi = 0; RCi < NumberRecombEvents; RCi++) 
 				break_point[RCi] = randnum(gp.num_markers);
+
 			//sort breakpoints
 			sort(begin(break_point), end(break_point));
 			//first segment maternal or paternal?
@@ -764,6 +830,22 @@ public:
 			{
 				segment_end[RCi] = break_point[RCi];
 				segment_start[RCi + 1] = break_point[RCi];
+				if (gp.supergene)
+				{
+					if (courter_qtls[which_chrom].per_locus.size() > 0 &&
+						courter_qtls[which_chrom].per_locus[0] >= segment_start[RCi] && 
+						courter_qtls[which_chrom].per_locus[gp.qtl_per_chrom[which_chrom]] >= segment_end[RCi])
+					{
+						alive = false;
+					}
+					if (parent_qtls[which_chrom].per_locus.size() > 0 &&
+						parent_qtls[which_chrom].per_locus[0] >= segment_start[RCi] &&
+						parent_qtls[which_chrom].per_locus[gp.qtl_per_chrom[which_chrom]] >= segment_end[RCi])
+					{
+						alive = false;
+					}
+				}
+
 				if (segment_maternal[RCi])
 					segment_maternal[RCi + 1] = false;
 				else
@@ -774,76 +856,68 @@ public:
 			//pass allelic info to recombined chromosome
 			for (RCi = 0; RCi < num_segments; RCi++)
 			{
-				if (segment_maternal[RCi])
+				if(alive == true)
 				{
-					for (RCj = segment_start[RCi]; RCj < segment_end[RCi]; RCj++)
+					if (segment_maternal[RCi])
 					{
-						int new_loc = parent.maternal[which_chrom].loci[RCj];
-						chrom.loci[RCj] = parent.maternal[which_chrom].loci[RCj];
-					}
-				}
-				else
-				{
-					for (RCj = segment_start[RCi]; RCj < segment_end[RCi]; RCj++)
-					{
-						int new_loc = parent.paternal[which_chrom].loci[RCj];
-						chrom.loci[RCj] = parent.paternal[which_chrom].loci[RCj];
-					}
-				}
-			}
-			//now the QTLs
-			if (gp.court_trait)
-			{
-				for (RCi = 0; RCi < gp.qtl_per_chrom[which_chrom]; RCi++)
-				{
-					for (RCj = 0; RCj < num_segments; RCj++)
-					{
-						if (courter_qtls[which_chrom].per_locus[RCi] >= segment_start[RCj] && courter_qtls[which_chrom].per_locus[RCi] >= segment_end[RCj])
+						for (RCj = segment_start[RCi]; RCj < segment_end[RCi]; RCj++)
 						{
-							if (segment_maternal[RCj])
-								chrom.courter_ae[RCi] = parent.maternal[which_chrom].courter_ae[RCi];
-							else
-								chrom.courter_ae[RCi] = parent.paternal[which_chrom].courter_ae[RCi];
+							int new_loc = parent.maternal[which_chrom].loci[RCj];
+							chrom.loci[RCj] = parent.maternal[which_chrom].loci[RCj];
 						}
 					}
-				}
-			}
-			if (gp.parent_trait)
-			{
-				for (RCi = 0; RCi < gp.qtl_per_chrom[which_chrom]; RCi++)
-				{
-					for (RCj = 0; RCj < num_segments; RCj++)
+					else
 					{
-						if (parent_qtls[which_chrom].per_locus[RCi] >= segment_start[RCj] && parent_qtls[which_chrom].per_locus[RCi] >= segment_end[RCj])
+						for (RCj = segment_start[RCi]; RCj < segment_end[RCi]; RCj++)
 						{
-							if (segment_maternal[RCj])
-								chrom.parent_ae[RCi] = parent.maternal[which_chrom].parent_ae[RCi];
-							else
-								chrom.parent_ae[RCi] = parent.paternal[which_chrom].parent_ae[RCi];
+							int new_loc = parent.paternal[which_chrom].loci[RCj];
+							chrom.loci[RCj] = parent.paternal[which_chrom].loci[RCj];
 						}
 					}
-				}
-			}
-			if (!random_mating)
-			{
-				for (RCi = 0; RCi < gp.qtl_per_chrom[which_chrom]; RCi++)
-				{
-					for (RCj = 0; RCj < num_segments; RCj++)
+					if (gp.court_trait)
 					{
-						if (pref_qtls[which_chrom].per_locus[RCi] >= segment_start[RCj] && pref_qtls[which_chrom].per_locus[RCi] >= segment_end[RCj])
+						for (RCj = 0; RCj < gp.qtl_per_chrom[which_chrom]; RCj++)
 						{
-							if (segment_maternal[RCj])
-								chrom.pref_ae[RCi] = parent.maternal[which_chrom].pref_ae[RCi];
-							else
-								chrom.pref_ae[RCi] = parent.paternal[which_chrom].pref_ae[RCi];
+							if (courter_qtls[which_chrom].per_locus[RCj] >= segment_start[RCi] && courter_qtls[which_chrom].per_locus[RCj] >= segment_end[RCi])
+							{
+								if (segment_maternal[RCi])
+									chrom.courter_ae[RCj] = parent.maternal[which_chrom].courter_ae[RCj];
+								else
+									chrom.courter_ae[RCj] = parent.paternal[which_chrom].courter_ae[RCj];
+							}
 						}
 					}
-				}
-			}
+					if (gp.parent_trait)
+					{
+						for (RCj = 0; RCj < gp.qtl_per_chrom[which_chrom]; RCj++)
+						{
+							if (parent_qtls[which_chrom].per_locus[RCj] >= segment_start[RCi] && parent_qtls[which_chrom].per_locus[RCj] >= segment_end[RCi])
+							{
+								if (segment_maternal[RCi])
+									chrom.parent_ae[RCj] = parent.maternal[which_chrom].parent_ae[RCj];
+								else
+									chrom.parent_ae[RCj] = parent.paternal[which_chrom].parent_ae[RCj];
+							}
+						}
+					}
+					if (!random_mating)
+					{
+						for (RCj = 0; RCj < parent.maternal[which_chrom].pref_ae.size(); RCj++)
+						{
+							if (pref_qtls[which_chrom].per_locus[RCj] >= segment_start[RCi] && pref_qtls[which_chrom].per_locus[RCj] >= segment_end[RCi])
+							{
+								if (segment_maternal[RCi])
+									chrom.pref_ae[RCj] = parent.maternal[which_chrom].pref_ae[RCj];
+								else
+									chrom.pref_ae[RCj] = parent.paternal[which_chrom].pref_ae[RCj];
+							}
+						}
+					}
+				}//alive
+			}//num segments			
 		}//numberrecombevents > 0
 		else
 		{
-			recombined = false;
 			//no recombination
 			if (genrand() < 0.5)
 			{//maternal
@@ -861,7 +935,10 @@ public:
 						chrom.parent_ae[RCi] = parent.maternal[which_chrom].parent_ae[RCi];
 						chrom.parent_ae[RCi] = parent.maternal[which_chrom].parent_ae[RCi];
 					}
-					if (!random_mating)
+				}
+				if (!random_mating)
+				{
+					for (RCi = 0; RCi < parent.maternal[which_chrom].pref_ae.size(); RCi++)
 					{
 						chrom.pref_ae[RCi] = parent.maternal[which_chrom].pref_ae[RCi];
 						chrom.pref_ae[RCi] = parent.maternal[which_chrom].pref_ae[RCi];
@@ -883,17 +960,18 @@ public:
 					{
 						chrom.parent_ae[RCi] = parent.paternal[which_chrom].parent_ae[RCi];
 						chrom.parent_ae[RCi] = parent.paternal[which_chrom].parent_ae[RCi];
-					}
-					if (!random_mating)
+					}	
+				}
+				if (!random_mating)
+				{
+					for (RCi = 0; RCi < parent.paternal[which_chrom].pref_ae.size(); RCi++)
 					{
 						chrom.pref_ae[RCi] = parent.paternal[which_chrom].pref_ae[RCi];
 						chrom.pref_ae[RCi] = parent.paternal[which_chrom].pref_ae[RCi];
 					}
 				}
-
 			}
 		}
-		return recombined;
 	}
 	double making_babies(parameters gp, int fecundity, int& num_progeny, int mom_index, int dad_index)
 	{
@@ -905,45 +983,45 @@ public:
 			num_progeny = (gp.max_fecund*gp.carrying_capacity) - 1;
 		for (jj = 0; jj < fecundity; jj++)
 		{
-
+			progeny[num_progeny].alive = true;
 			for (jjj = 0; jjj < gp.num_chrom; jjj++)
 			{
-				recomb1 = recombine_chromosome(progeny[num_progeny].maternal[jjj], adults[mom_index], gp.recombination_rate, jjj, gp);
-				recomb2 = recombine_chromosome(progeny[num_progeny].paternal[jjj], adults[dad_index], gp.recombination_rate, jjj, gp);
-			}
-			//also need to do mutation
-			if (gp.env_effects)//need to evaluate if it's compatible
-			{
-				progeny[num_progeny].alive = true;
-				progeny[num_progeny].mutation_env(gp);
-				if(gp.court_trait)
-					progeny[num_progeny].calc_courter_trait(gp, 0);
-				if (gp.parent_trait)
-					progeny[num_progeny].calc_parent_trait(gp, 0);
-				if (!random_mating)
-					progeny[num_progeny].calc_preference_trait(gp, 0);
-			}
-			else
-			{
-				progeny[num_progeny].mutation(gp, courter_qtls, parent_qtls, pref_qtls);
-				progeny[num_progeny].update_traits(gp, courter_thresh, parent_thresh);
-				progeny[num_progeny].alive = true;
+				if (progeny[num_progeny].alive)
+				{
+					recombine_chromosome(progeny[num_progeny].maternal[jjj], adults[mom_index], gp.recombination_rate, jjj, gp, progeny[num_progeny].alive);
+					recombine_chromosome(progeny[num_progeny].paternal[jjj], adults[dad_index], gp.recombination_rate, jjj, gp, progeny[num_progeny].alive);
+				}
 			}
 			if (progeny[num_progeny].alive)
 			{
-				if (genrand() < 0.5)
-					progeny[num_progeny].female = true;
+				//also need to do mutation
+				if (gp.env_effects)//need to evaluate if it's compatible
+				{
+					progeny[num_progeny].mutation_env(gp);
+					progeny[num_progeny].update_traits(gp, courter_thresh, parent_thresh, pref_thresh,
+						0, courter_env_qtls, parent_env_qtls, pref_env_qtls);
+				}
 				else
-					progeny[num_progeny].female = false;
-				rel_rs++;
-				num_progeny++;
+				{
+					progeny[num_progeny].mutation(gp, courter_qtls, parent_qtls, pref_qtls);
+					progeny[num_progeny].update_traits(gp, courter_thresh, parent_thresh, pref_thresh);
+				}
+				if (progeny[num_progeny].alive)
+				{
+					if (genrand() < 0.5)
+						progeny[num_progeny].female = true;
+					else
+						progeny[num_progeny].female = false;
+					rel_rs++;
+					num_progeny++;
+				}
 			}
 		}
 		rel_rs = rel_rs / fecundity;
 		return rel_rs;
 	}
 	void gaussian_mating(bool output, string out_name, parameters gp)
-	{
+	{//DEPRECATED DO NOT USE
 		//monogamous mating without choice
 		int j, jj, jjj, male_id, encounters;
 		double mate_prob, rel_rs;
@@ -1083,7 +1161,7 @@ public:
 			out_file.close();
 	}//mating
 	void bestofN_mating(bool output, string out_name, parameters gp)
-	{
+	{//DEPRECATED DO NOT USE
 		//monogamous mating without choice
 		int j, jj, jjj, male_id, encounters, irndnum;
 		double mate_prob, rel_rs;
@@ -1503,7 +1581,7 @@ public:
 							adults[iNumAdultsChosen].maternal[pp].loci[ppp] = progeny[p].maternal[pp].loci[ppp];
 							adults[iNumAdultsChosen].paternal[pp].loci[ppp] = progeny[p].paternal[pp].loci[ppp];
 						}
-						for (ppp = 0; ppp < gp.num_qtl; ppp++)
+						for (ppp = 0; ppp < gp.qtl_per_chrom[pp]; ppp++)
 						{
 							if (gp.court_trait || gp.ind_pref || gp.cor_prefs)
 							{
@@ -1514,15 +1592,22 @@ public:
 							{
 								adults[iNumAdultsChosen].maternal[pp].parent_ae[ppp] = progeny[p].maternal[pp].parent_ae[ppp];
 								adults[iNumAdultsChosen].paternal[pp].parent_ae[ppp] = progeny[p].paternal[pp].parent_ae[ppp];
-							}
-							if (!random_mating)
+							}							
+						}
+						if (!random_mating)
+						{
+							for (ppp = 0; ppp < progeny[p].maternal[pp].pref_ae.size(); ppp++)
 							{
 								adults[iNumAdultsChosen].maternal[pp].pref_ae[ppp] = progeny[p].maternal[pp].pref_ae[ppp];
 								adults[iNumAdultsChosen].paternal[pp].pref_ae[ppp] = progeny[p].paternal[pp].pref_ae[ppp];
 							}
 						}
 					}
-					adults[iNumAdultsChosen].update_traits(gp, courter_thresh, parent_thresh);
+					if(gp.env_effects)
+						adults[iNumAdultsChosen].update_traits(gp, courter_thresh, parent_thresh, pref_thresh,
+							0, courter_env_qtls,parent_env_qtls,pref_env_qtls);
+					else
+						adults[iNumAdultsChosen].update_traits(gp, courter_thresh, parent_thresh,pref_thresh);
 					if (progeny[p].female) {
 						adults[iNumAdultsChosen].female = true;
 						num_fem++;
@@ -1545,7 +1630,7 @@ public:
 	}//end Density Regulation
 
 	//output
-	void output_qtl_info(parameters gp, ofstream & qtlinfo_output, bool initial)
+	void output_qtl_info(parameters gp, ofstream & qtlinfo_output, bool initial)//no environmental qtls
 	{
 		int j, jj;
 		int count1, count2, count3;
@@ -1554,7 +1639,7 @@ public:
 		{
 			if (!random_mating)
 			{
-				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				for (jj = 0; jj < pref_qtls[j].per_locus.size(); jj++)
 				{
 					if (initial)
 						qtlinfo_output << "\tPrefQTL" << count1;
@@ -1591,6 +1676,84 @@ public:
 				{
 					if (initial)
 						qtlinfo_output << "\tCourterQTL" << count3;
+					else
+						qtlinfo_output << '\t' << j << "." << courter_qtls[j].per_locus[jj];
+					count3++;
+				}
+			}
+			else
+			{
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (initial)
+						qtlinfo_output << "\tCourterQTL" << count3;
+					else
+						qtlinfo_output << "\tNA";
+					count3++;
+				}
+			}
+		}
+		qtlinfo_output << '\n';
+	}
+	void output_qtl_info(parameters gp, ofstream & qtlinfo_output, bool initial,
+		vector<tracker>& court_env, vector<tracker>& parent_env, vector<tracker>&pref_env)
+	{
+		int j, jj;
+		int count1, count2, count3;
+		count1 = count2 = count3 = 0;
+		for (j = 0; j < gp.num_chrom; j++)
+		{
+			if (!random_mating)
+			{
+				for (jj = 0; jj < pref_qtls[j].per_locus.size(); jj++)
+				{
+					if (initial)
+					{
+						qtlinfo_output << "\tPrefQTL" << count1;
+						if(pref_env[j].per_locus[jj]>=0)
+							qtlinfo_output << "_env";						
+					}
+					else
+						qtlinfo_output << '\t' << j << "." << pref_qtls[j].per_locus[jj];
+					count1++;
+				}
+			}
+			if (gp.parent_trait)
+			{
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (initial)
+					{
+						qtlinfo_output << "\tParentQTL" << count2;
+						if (parent_env[j].per_locus[jj] >= 0)
+							qtlinfo_output << "_env";
+					}
+					else
+						qtlinfo_output << '\t' << j << "." << parent_qtls[j].per_locus[jj];
+					count2++;
+				}
+			}
+			else
+			{
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (initial)
+						qtlinfo_output << "\tParentQTL" << count2;
+					else
+						qtlinfo_output << "\tNA";
+					count2++;
+				}
+			}
+			if (gp.court_trait)
+			{
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (initial)
+					{
+						qtlinfo_output << "\tCourterQTL" << count3;
+						if (court_env[j].per_locus[jj] >= 0)
+							qtlinfo_output << "_env";
+					}
 					else
 						qtlinfo_output << '\t' << j << "." << courter_qtls[j].per_locus[jj];
 					count3++;

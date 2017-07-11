@@ -457,7 +457,8 @@ public:
 				parent_x[k] = x;
 		}
 	}
-	void calc_courter_trait(parameters gp, double env_cue = 0)
+	//overloaded phenotype functions
+	void calc_courter_trait(parameters gp)//for non-env effects
 	{
 		int k, kk, kkk;
 		courter_trait = 0;
@@ -465,7 +466,24 @@ public:
 		{
 			for (k = 0; k < gp.num_chrom; k++)
 			{
-				for (kk = 0; kk < gp.num_alleles; kk++)
+				for (kk = 0; kk < gp.qtl_per_chrom[k]; kk++)
+					courter_trait = courter_trait + maternal[k].courter_ae[kk] + paternal[k].courter_ae[kk];
+			}
+		}
+		else
+		{
+			cout << "\nWARNING: Courter traits not calculated because environmentally responsive QTL are turned on but not specified in function calls.\n";
+		}
+	}
+	void calc_courter_trait(parameters gp, vector<tracker>& courter_env, double env_cue = 0)
+	{
+		int k, kk, kkk;
+		courter_trait = 0;
+		if (!gp.env_effects)
+		{
+			for (k = 0; k < gp.num_chrom; k++)
+			{
+				for (kk = 0; kk < gp.qtl_per_chrom[k]; kk++)
 					courter_trait = courter_trait + maternal[k].courter_ae[kk] + paternal[k].courter_ae[kk];
 			}
 		}
@@ -475,15 +493,17 @@ public:
 			int qtl_index = 0;
 			for (k = 0; k < gp.num_chrom; k++)
 			{
-				for (kk = gp.num_env_qtl; kk < gp.num_qtl; kk++)
+				for (kk = 0; kk < gp.qtl_per_chrom[k]; kk++)
 				{
-					courter_trait = courter_trait + (courter_Z[qtl_index] * (maternal[k].courter_ae[kk] + paternal[k].courter_ae[kk])*courter_x[qtl_index]);
+					if (courter_env[k].per_locus[kk] < 0)//if it's not an env qtl
+						courter_trait = courter_trait + (courter_Z[qtl_index] * (maternal[k].courter_ae[kk] + paternal[k].courter_ae[kk])*courter_x[qtl_index]);
+
 					qtl_index++;
 				}
 			}
 		}
 	}
-	void calc_parent_trait(parameters gp, double env_cue = 0)
+	void calc_parent_trait(parameters gp)//for non-environmental effects
 	{
 		int k, kk, kkk;
 		parent_trait = 0;
@@ -491,7 +511,24 @@ public:
 		{
 			for (k = 0; k < gp.num_chrom; k++)
 			{
-				for (kk = 0; kk < gp.num_alleles; kk++)
+				for (kk = 0; kk < gp.qtl_per_chrom[k]; kk++)
+					parent_trait = parent_trait + maternal[k].parent_ae[kk] + paternal[k].parent_ae[kk];
+			}
+		}
+		else
+		{
+			cout << "\nWARNING: Parent traits not calculated because environmentally responsive QTL are turned on but not specified in function calls.\n";
+		}
+	}
+	void calc_parent_trait(parameters gp, vector<tracker>& parent_env, double env_cue = 0)
+	{
+		int k, kk, kkk;
+		parent_trait = 0;
+		if (!gp.env_effects)
+		{
+			for (k = 0; k < gp.num_chrom; k++)
+			{
+				for (kk = 0; kk < gp.qtl_per_chrom[k]; kk++)
 					parent_trait = parent_trait + maternal[k].parent_ae[kk] + paternal[k].parent_ae[kk];
 			}
 		}
@@ -501,15 +538,16 @@ public:
 			int qtl_index = 0;
 			for (k = 0; k < gp.num_chrom; k++)
 			{
-				for (kk = gp.num_env_qtl; kk < gp.num_qtl; kk++)
+				for (kk = 0; kk < gp.qtl_per_chrom[k]; kk++)
 				{
-					parent_trait = parent_trait + (parent_Z[qtl_index] * (maternal[k].parent_ae[kk] + paternal[k].parent_ae[kk])*parent_x[qtl_index]);
+					if(parent_env[k].per_locus[kk] < 0)//if it's not an environmental qtl
+						parent_trait = parent_trait + (parent_Z[qtl_index] * (maternal[k].parent_ae[kk] + paternal[k].parent_ae[kk])*parent_x[qtl_index]);
 					qtl_index++;
 				}
 			}
 		}
 	}
-	void calc_preference_trait(parameters gp, double threshold, double env_cue = 0)
+	void calc_preference_trait(parameters gp, double threshold)
 	{
 		int k, kk, kkk;
 		female_pref = 0;
@@ -517,7 +555,28 @@ public:
 		{
 			for (k = 0; k < gp.num_chrom; k++)
 			{
-				for (kk = 0; kk < gp.num_alleles; kk++)
+				for (kk = 0; kk < maternal[k].pref_ae.size(); kk++)
+					female_pref = female_pref + maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk];
+			}
+		}
+		else
+		{
+			cout << "\nWARNING: Preference traits not calculated because environmentally responsive QTL are turned on but not specified in function calls.\n";
+		}
+		if (female_pref < threshold)
+			female_pref = 0;
+		else
+			female_pref = 1;
+	}
+	void calc_preference_trait(parameters gp, double threshold, vector<tracker>& pref_env, double env_cue = 0)
+	{
+		int k, kk, kkk;
+		female_pref = 0;
+		if (!gp.env_effects)
+		{
+			for (k = 0; k < gp.num_chrom; k++)
+			{
+				for (kk = 0; kk < maternal[k].pref_ae.size(); kk++)
 					female_pref = female_pref + maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk];
 			}
 		}
@@ -527,9 +586,10 @@ public:
 			int qtl_index = 0;
 			for (k = 0; k < gp.num_chrom; k++)
 			{
-				for (kk = gp.num_env_qtl; kk < gp.num_qtl; kk++)
+				for (kk = 0; kk < maternal[k].pref_ae.size(); kk++)
 				{
-					female_pref = female_pref + (pref_Z[qtl_index] * (maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk])*pref_x[qtl_index]);
+					if (pref_env[k].per_locus[kk] < 0)//if it's not an environmental qtl
+						female_pref = female_pref + (pref_Z[qtl_index] * (maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk])*pref_x[qtl_index]);
 					qtl_index++;
 				}
 			}
@@ -561,20 +621,36 @@ public:
 		else
 			pot_rs = gp.rs_np;
 	}
-	void update_traits(parameters gp, double court_thresh, double parent_thresh, double env_cue = 0)
+	void update_traits(parameters gp, double court_thresh, double parent_thresh,double pref_thresh)//non-environmental
 	{
 		if (gp.court_trait)
 		{
-			calc_courter_trait(gp, env_cue);
+			calc_courter_trait(gp);
 			assign_court_morph(gp, court_thresh);
 		}
 		if (gp.parent_trait)
 		{
-			calc_parent_trait(gp, env_cue);
+			calc_parent_trait(gp);
 			assign_parent_morph(gp, parent_thresh);
 		}
 		if (gp.ind_pref || gp.cor_prefs)
-			calc_preference_trait(gp, env_cue);
+			calc_preference_trait(gp, pref_thresh);
+	}
+	void update_traits(parameters gp, double court_thresh, double parent_thresh, double pref_thresh, 
+		double env_cue, vector<tracker>& court_env,vector<tracker>& parent_env, vector<tracker>& pref_env)//non-environmental
+	{
+		if (gp.court_trait)
+		{
+			calc_courter_trait(gp, court_env, env_cue);
+			assign_court_morph(gp, court_thresh);
+		}
+		if (gp.parent_trait)
+		{
+			calc_parent_trait(gp,parent_env,env_cue);
+			assign_parent_morph(gp, parent_thresh);
+		}
+		if (gp.ind_pref || gp.cor_prefs)
+			calc_preference_trait(gp, pref_thresh,pref_env,env_cue);
 	}
 
 	//life cycle functions
@@ -620,6 +696,9 @@ public:
 							maternal[irand].parent_ae[mm] =
 							maternal[irand].parent_ae[mm] + randnorm(0, MutSD);
 					}
+				}
+				for (mm = 0; mm < maternal[irand].pref_ae.size(); mm++)
+				{
 					if (gp.ind_pref || gp.cor_prefs)
 					{
 						if (pref_qtl[irand].per_locus[mm] == irand2)
@@ -652,6 +731,9 @@ public:
 							paternal[irand].parent_ae[mm] =
 							paternal[irand].parent_ae[mm] + randnorm(0, MutSD);
 					}
+				}
+				for (mm = 0; mm < maternal[irand].pref_ae.size(); mm++)
+				{
 					if (gp.ind_pref || gp.cor_prefs)
 					{
 						if (pref_qtl[irand].per_locus[mm] == irand2)
@@ -804,7 +886,7 @@ public:
 						int index = 0;
 						for (int j = 0; j < gp.num_chrom; j++)
 						{
-							for (int jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+							for (int jj = 0; jj < maternal[j].pref_ae.size(); jj++)
 							{
 								if (index == rand_loc1)
 								{
@@ -850,7 +932,7 @@ public:
 				}
 				for (j = 0; j < gp.num_chrom; j++)
 				{
-					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+					for (jj = 0; jj < maternal[j].pref_ae.size(); jj++)
 					{
 						maternal[j].pref_ae[jj] = maternal[j].parent_ae[jj];
 						paternal[j].pref_ae[jj] = paternal[j].parent_ae[jj];
