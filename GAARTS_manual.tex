@@ -30,9 +30,43 @@ In each of these, the first E elements represent the environmentally responsive 
 
 Mutations affect either Y or Z. And the trait is determined only by the final values from the (S-E) QTLs.
 
+QTLs have a randomly-chosen location on the chromosomes (which takes the place of a regular QTL - but they're not necessarily all lumped together).
+
 \section{Supergenes}
 Supergenes mean that all of the QTLs for the male trait(s) are grouped together on one chromosome. This is true regardless of whether it's a gene network model or not.
 
+If a recombination event occurs within a supergene, the offspring does not survive. 
 
+\section{Selection on Traits}
 
+If all you do is specify that traits should exist, then courters/parents are favored during mating and/or reproductive success, but they have decreased survival as juveniles. 
+
+For example,
+
+./ARTs --courter
+
+will result in courting males having a genetic architecture (but no other traits will have genetic architectures). Females will prefer courting males but courting males will have a lower probability of survival from juveniles to adults.
+
+If you would like to have a courter trait but force random mating, you would run
+./ARTs --courter --random-mating
+
+The selection choices are as follows:
+\begin{enumerate}
+	\item Tradeoffs between sexual selection on courtship traits and viability (--courter)
+	\item Tradeoffs between sexual selection on parental traits and viability (--parent)
+	\item Tradeoffs between sexual selection on courtship traits, fecundity selection on parental traits, and viability selection on courtship and parental traits (--courter --parent)
+	\item Frequency-dependent mate choice on either courtship or parental traits, where females prefer the less frequent morph (--courter --freq-dependent-preference OR --parent --freq-dependent-preference OR --courter --parent --freq-dependent-preference)
+	\item Condition dependent preferences, where females choose which male morph she prefers based on her own fecundity. This choice imposes a female preference genetic architecture. (--courter --condition-dependent-preference OR --parent --condition-dependent-preference OR --courter --parent --condition-dependent-preference --correlated-pref)
+	\item Frequency dependent viability selection against the courtship trait, where the most frequent morph has lower survival to adulthood (--courter --frequency-dependent-courter)
+	\item Frequency dependent viability selection against the most frequent parental morph (--parent --frequency-dependent-parent)
+	\item Condition dependent courtship traits, where courters are penalized during mating for courting and may end up switching to the non-courting morph if they have multiple opportunities to mate (--courter --condition-dependent-courter --polygyny)
+	\item Condition dependent parental traits, where parents are penalized during mating for providing care and may end up switching to the non-parental morph if they have multiple opportunities to mate (--courter --condition-dependent-courter --polygyny)
+\end{enumerate}
+
+*if both courter and parent traits are called, mate choice always occurs on the courtship trait.
+
+When --correlated-pref is called, that means that the QTLs underlying the male courtship trait are the same as the QTLs underlying the female preferences.
+
+When calling the selection types, if you don't specify both the trait and the selection type then it will automatically call the trait as well. (e.g., --condition-dependent-courter is equivalent to --condition-dependent-courter --courter --polygyny). But note that calling only the trait only results in a tradeoff. 
+ 
 \end{document}

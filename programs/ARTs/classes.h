@@ -49,7 +49,7 @@ public:
 	double mutation_rate, mutational_var, recombination_rate, allelic_std_dev, gaussian_pref_mean, cond_adj, via_sel_strength, supergene_prop;
 	string base_name;
 	bool court_trait, parent_trait, env_effects, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
-	bool supergene, var_recomb;
+	bool supergene, random_mating;
 	vector <int> qtl_per_chrom;
 
 	parameters()
@@ -58,7 +58,7 @@ public:
 		num_pops = num_init_gen = num_exp_gen = int();
 		mutation_rate =recombination_rate = allelic_std_dev = double();
 		env_effects = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
-		var_recomb = bool();
+		random_mating = bool();
 		qtl_per_chrom = vector<int>();
 	}
 
@@ -85,7 +85,8 @@ public:
 		recombination_rate = 0.2;//0.2
 		allelic_std_dev = 0.5;//default 0.5
 		supergene_prop = 0.1; //default 0.1 (10% of num_markers = 100)
-		supergene = var_recomb = false; //default: false
+		random_mating = true;//default: false
+		supergene =  false; //default: false
 		court_trait = false; //default: false
 		parent_trait = false;//default false
 		env_effects = false;//default false
@@ -129,6 +130,7 @@ public:
 		cout << "-crs:\tCourter male reproductive success (8)\n";
 		cout << "-ncrs:\tNon-courter male reproductive success (4)\n";
 		cout << "-sprop:\tSupergene proportion of a chromosome (0.1). NOTE: must be > the total number of qtls.\n";
+		cout << "-qpc:\tQTLs per chromosome (-q/-c, aka an even distribution of QTLs among chromosomes). To specify different numbers per chromosome separate them by commas.\n\tExample: for 4 chromosomes, input: 4,2,3,0";
 		cout << "--plasticity:\tModel a plastic morph, where genotype is determined by interactions between genes.\n";
 		cout << "--freq-dependent-preference:\tInclude this flag if preferences should be based on the frequency of male morphs (defaults to independent).\n";
 		cout << "--condition-dependent-preference:\tInclude this flag if female preferences are determined by female condition (defaults to independent).\n";
@@ -141,14 +143,15 @@ public:
 		cout << "--independent-pref:\tSpecifies an independent female preference (defaults to Gaussian preference for randomly chosen morph unless other flags included). \n";
 		cout << "--correlated-pref:\tSpecifies a female preference correlated with the male courter trait (defaults to Gaussian preference for randomly chosen morph unless other flags included).\n";
 		cout << "--random-mating:\tSpecifies no female choice (default: true).\n";
-		cout << "--supergene:\tSpecifies whether the QTLs are grouped together in a supergene.\n";
-		cout << "--var-recomb:\tVariable recombination rate.\n";
+		cout << "--supergene:\tSpecifies whether the QTLs are grouped together in a supergene that has reduced recombination.\n";
+		cout << "--polygyny:\tAllows males to mate multiply (default: false).\n";
 		cout << "-h or --help:\tPrint this help message.\n";
 	}
 
 	bool parse_parameters(int argc, char*argv[])
 	{
 		int j;
+		string qpc;
 		bool run_program = true;
 		set_defaults();
 		string tempstring1, tempstring2;
@@ -216,17 +219,19 @@ public:
 							rs_nc = atof(tempstring2.c_str());
 						if (tempstring1 == "-sprop")
 							supergene_prop = atof(tempstring2.c_str());
+						if (tempstring1 == "-qpc")
+							qpc = tempstring2;
 					}
 					else
 					{
 						if (tempstring1 == "--plasticity")
 							env_effects = true;
 						if (tempstring1 == "--freq-dependent-preference")
-							FD_pref = ind_pref = true;
+							FD_pref = true;
 						if (tempstring1 == "--condition-dependent-preference")
-							CD_pref = ind_pref = true;
+							CD_pref = true;
 						if (tempstring1 == "--courter")
-							court_trait = ind_pref = true;
+							court_trait = true;
 						if (tempstring1 == "--parent")
 							parent_trait = true;
 						if (tempstring1 == "--freq-dependent-courter")
@@ -234,17 +239,22 @@ public:
 						if (tempstring1 == "--freq-dependent-parent")
 							FD_parent = parent_trait = true;
 						if (tempstring1 == "--condition-dependent-courter")
-							CD_court = court_trait = true;
+							CD_court = court_trait = polygyny = true;
 						if (tempstring1 == "--condition-dependent-parent")
-							CD_parent = parent_trait = true;
+							CD_parent = parent_trait = polygyny = true;
 						if (tempstring1 == "--independent-pref")
 							ind_pref = true;
 						if (tempstring1 == "--correlated-pref")
 							cor_prefs = court_trait = true;
 						if (tempstring1 == "--random-mating")
+						{
 							cor_prefs = ind_pref = false;
+							random_mating = true;
+						}
 						if (tempstring1 == "--supergene")
 							supergene = true;
+						if (tempstring1 == "--polygyny")
+							polygyny = true;
 					}
 				}
 				if (env_effects)
@@ -256,6 +266,26 @@ public:
 				}
 				if (ind_pref || cor_prefs)
 					court_trait = true;
+				if (qpc.size() > 0)
+				{
+					istringstream ss(qpc);
+					for (j = 0; j < num_chrom; j++)
+					{
+						string temp;
+						getline(ss, temp, ',');
+						qtl_per_chrom[j] = atoi(temp.c_str());
+					}
+				}
+				if (FD_pref || CD_pref || ind_pref || cor_prefs)
+					random_mating = false;
+				if (CD_pref)
+				{
+					if (!ind_pref && !cor_prefs)
+						ind_pref = true;
+					if (!court_trait && !parent_trait)
+						court_trait = true;
+					random_mating = false;
+				}
 			}
 		}
 		return run_program;

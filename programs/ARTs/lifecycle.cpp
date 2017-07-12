@@ -78,6 +78,9 @@ int main(int argc, char*argv[])
 	{
 		pops.push_back(population());
 		pops[i].initialize(global_params);
+		run = pops[i].sanity_checks(global_params);
+		if (!run)
+			return 0;
 		courter_freqs.push_back(0);
 		parent_freqs.push_back(0);
 		eq_reached.push_back(false);

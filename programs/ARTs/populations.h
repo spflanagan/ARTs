@@ -18,7 +18,7 @@ class population
 public:
 	int population_size, num_mal, num_fem, num_progeny, sex_trait, max_num_migrants, migrant_index;
 	double sex_theta, sex_omega, courter_thresh, parent_thresh,pref_thresh;
-	bool extinct, random_mating;
+	bool extinct;
 	vector<double> theta, mean_fem_traits, mean_mal_traits, d_parentfreq, d_courterfreq;
 	vector<individual> adults;
 	vector<individual> progeny;
@@ -32,11 +32,10 @@ public:
 		sex_theta = sex_omega = courter_thresh = parent_thresh = pref_thresh = double();
 		adults = progeny = vector<individual>();
 		courter_env_qtls = courter_qtls = parent_env_qtls = parent_qtls = pref_env_qtls = pref_qtls = maf = hs = vector<tracker>();
-		random_mating = false;
 		extinct = false;
 		sgenrand(time(0));
 	}
-
+	//initialize
 	void determine_pref_thresh(parameters gp)
 	{
 		if (gp.court_trait)
@@ -48,14 +47,17 @@ public:
 	{
 		int m, mm, mmm;
 		double supergene_nmarkers = gp.supergene_prop*gp.num_markers;
-		//chose a chromosome for the supergene
-		int sg_chrom = randnum(gp.num_chrom);
-		for (m = 0; m < gp.num_chrom; m++)
+		if (gp.qtl_per_chrom[0] == (gp.num_qtl / gp.num_chrom))//otherwise the supergene info was specified by user
 		{
-			if (sg_chrom == m)
-				gp.qtl_per_chrom[m] = gp.num_qtl;
-			else
-				gp.qtl_per_chrom[m] = 0;
+			//chose a chromosome for the supergene
+			int sg_chrom = randnum(gp.num_chrom);
+			for (m = 0; m < gp.num_chrom; m++)
+			{
+				if (sg_chrom == m)
+					gp.qtl_per_chrom[m] = gp.num_qtl;
+				else
+					gp.qtl_per_chrom[m] = 0;
+			}
 		}
 		//choose marker start
 		int sg_start = randnum(gp.num_markers - supergene_nmarkers);
@@ -101,7 +103,7 @@ public:
 		for (j = 0; j < (gp.carrying_capacity + max_num_migrants); j++)
 		{
 			adults.push_back(individual());
-			if (gp.court_trait || gp.ind_pref || gp.cor_prefs)
+			if (gp.court_trait || gp.ind_pref || gp.cor_prefs || !gp.random_mating)
 				adults[j].courter_trait = 0;
 			if (gp.parent_trait)
 				adults[j].parent_trait = 0;
@@ -131,7 +133,7 @@ public:
 						adults[j].paternal[jj].parent_ae.push_back(double());
 					}
 				}
-				if (gp.cor_prefs || gp.ind_pref || !random_mating)
+				if (gp.cor_prefs || gp.ind_pref)
 				{
 					for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
 					{
@@ -183,7 +185,7 @@ public:
 						progeny[j].paternal[jj].parent_ae.push_back(double());
 					}
 				}
-				if (gp.ind_pref || gp.cor_prefs || !random_mating)
+				if (gp.cor_prefs || gp.ind_pref)
 				{
 					for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
 					{
@@ -246,8 +248,6 @@ public:
 	{
 		cout << "Initializing a population.\n";
 		population_size = gp.carrying_capacity;
-		if (!gp.cor_prefs && !gp.ind_pref)
-			random_mating = true;
 		int j, jj, jjj, k;
 		num_fem = num_mal = 0;
 		migrant_index = gp.carrying_capacity;
@@ -276,7 +276,7 @@ public:
 						pref_qtls[j].per_locus.push_back(randnum(gp.num_markers));
 				}
 			}
-			if (pref_qtls.size() == 0 && !random_mating)//sanity check!
+			if ((gp.cor_prefs || gp.ind_pref) && pref_qtls.size() == 0)//sanity check!
 			{
 				for (j = 0; j < gp.num_chrom; j++)
 				{
@@ -326,7 +326,7 @@ public:
 						pref_qtls[j].per_locus.push_back(randnum(gp.num_markers));
 				}
 			}
-			if (pref_qtls.size() == 0 && !random_mating)//sanity check!
+			if ((gp.cor_prefs || gp.ind_pref) && pref_qtls.size() == 0)//sanity check!
 			{
 				for (j = 0; j < gp.num_chrom; j++)
 				{
@@ -348,7 +348,7 @@ public:
 					assign_env_qtls(courter_env_qtls, gp);
 				if (gp.parent_trait)
 					assign_env_qtls(parent_env_qtls, gp);
-				if (!random_mating)
+				if (gp.cor_prefs || gp.ind_pref)
 					assign_env_qtls(pref_env_qtls, gp, gp.num_qtl/gp.num_chrom);
 			}
 		}
@@ -420,7 +420,7 @@ public:
 						}
 					}
 				}
-				if (!random_mating)
+				if (gp.cor_prefs || gp.ind_pref)
 				{
 					for (jj = 0; jj < gp.num_qtl; jj++)
 					{
@@ -442,7 +442,7 @@ public:
 			
 			for (jj = 0; jj < gp.num_chrom; jj++)
 			{
-				if (gp.court_trait || !random_mating)//because if preferences exist then there needs to be a male trait.
+				if (gp.court_trait || !gp.random_mating)//because if preferences exist then there needs to be a male trait.
 				{
 					for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
 					{
@@ -458,7 +458,7 @@ public:
 						adults[j].paternal[jj].parent_ae[jjj] = tempallele2[j%gp.num_alleles];
 					}
 				}
-				if (!random_mating)
+				if (gp.cor_prefs || gp.ind_pref)
 				{
 					for (jjj = 0; jjj < adults[j].maternal[jj].pref_ae.size(); jjj++)
 					{
@@ -473,7 +473,7 @@ public:
 					adults[j].paternal[jj].loci[jjj] = j%gp.num_alleles;
 				}
 			}
-			if (gp.court_trait || !random_mating) //because if preferences exist then there needs to be a male trait.
+			if (gp.court_trait || !gp.random_mating) //because if preferences exist then there needs to be a male trait.
 			{
 				adults[j].calc_courter_trait(gp); //to initialize don't use interactions
 			}
@@ -535,7 +535,235 @@ public:
 		population_size = gp.carrying_capacity;
 		
 	}
-
+	bool sanity_checks(parameters gp)
+	{
+		int p, pp;
+		bool run_program, each_ok;
+		run_program = true;
+		if (gp.supergene)
+		{
+			each_ok = true;
+			
+			for (p = 0; p < gp.num_chrom; p++)
+			{
+				if (gp.qtl_per_chrom[p] != 0 && gp.qtl_per_chrom[p] != gp.num_qtl)
+					each_ok = false;
+			}
+			if (gp.supergene_prop < (gp.num_qtl / gp.num_markers))
+				each_ok = false;
+			if (!gp.court_trait && !gp.parent_trait)
+				each_ok = false;
+			if (!each_ok)
+			{
+				cout << "\nERROR: Supergene parameters are insane.";
+				run_program = each_ok;
+			}
+		}
+		if (gp.cor_prefs)
+		{
+			each_ok = true;
+			if (!gp.court_trait)
+				each_ok = false;
+			if (gp.ind_pref)
+				each_ok = false;
+			if (gp.random_mating)//just reset it
+				gp.random_mating = false;
+			if (pref_qtls.size() == 0)
+				each_ok = false;
+			for (p = 0; p < gp.num_chrom; p++)
+			{
+				for (pp = 0; pp < gp.qtl_per_chrom[p]; pp++)
+				{
+					if (pref_qtls[p].per_locus[pp] != courter_qtls[p].per_locus[pp])
+						each_ok = false;
+				}
+			}
+			if (!each_ok)
+			{
+				cout << "\nERROR: Correlated female preference parameters are insane.";
+				run_program = each_ok;
+			}
+		}
+		if (gp.ind_pref)
+		{
+			each_ok = true;
+			if (gp.cor_prefs)
+				each_ok = false;
+			if (gp.random_mating)
+				gp.random_mating = false;//just reset it here
+			if (pref_qtls.size() == 0)
+				each_ok = false;
+			if (!gp.court_trait && !gp.parent_trait)
+				each_ok = false;
+			if (!each_ok)
+			{
+				cout << "\nERROR: Independent female preference parameters are insane.";
+				run_program = each_ok;
+			}
+		}
+		if (gp.court_trait)
+		{
+			each_ok = true;
+			if (courter_qtls.size() == 0)
+				each_ok = false;
+			if (courter_thresh == 0)
+				each_ok = false;
+			if (gp.rs_c < 0 || gp.rs_nc < 0)
+				each_ok = false;
+			if (!each_ok)
+			{
+				cout << "\nERROR: Courtship trait parameters are insane.";
+				run_program = each_ok;
+			}
+		}
+		if (gp.parent_trait)
+		{
+			each_ok = true;
+			if (parent_qtls.size() == 0)
+				each_ok = false;
+			if (parent_thresh == 0)
+				each_ok = false;
+			if (gp.rs_p < 0 || gp.rs_np < 0)
+				each_ok = false;
+			if (!each_ok)
+			{
+				cout << "\nERROR: Parent trait parameters are insane.";
+				run_program = each_ok;
+			}
+		}
+		if (gp.env_effects)
+		{
+			each_ok = true;
+			if (!gp.court_trait && !gp.parent_trait && !gp.ind_pref && !gp.cor_prefs)
+				each_ok = false;
+			if (gp.num_env_qtl <= 0 || gp.num_env_qtl >= gp.num_qtl)
+				each_ok = false;
+			if (gp.court_trait)
+			{
+				if (courter_env_qtls.size() == 0)
+					each_ok = false;
+			}
+			if (gp.parent_trait)
+			{
+				if (parent_env_qtls.size() == 0)
+					each_ok = false;
+			}
+			if (!gp.random_mating)
+			{
+				if (pref_env_qtls.size() == 0)
+					each_ok = false;
+			}
+			if (!each_ok)
+			{
+				cout << "\nERROR: Environmental effect parameters are insane.";
+				run_program = each_ok;
+			}
+		}
+		if (!gp.random_mating)
+		{//if there's not random mating then there must at least be a courtship trait
+			each_ok = true;
+			if (!gp.court_trait)
+				each_ok = false;
+			if (!each_ok)
+			{
+				cout << "\nERROR: Random mating parameters are insane.";
+				run_program = each_ok;
+			}
+		}
+		if (gp.FD_pref)
+		{//frequency dependent mate choice; does not rely on female preference trait
+			each_ok = true;
+			if (gp.random_mating) //reset it here
+				gp.random_mating = false;
+			if (!gp.court_trait && !gp.parent_trait)
+				each_ok = false;
+			if (!each_ok)
+			{
+				cout << "\nERROR: Frequency dependent mate choice is insane.";
+				run_program = each_ok;
+			}
+		}
+		if (gp.CD_pref)
+		{//condition dependent mate choice, depdent on female's preference trait/fecundity
+			each_ok = true;
+			if (gp.random_mating) //reset it here
+				gp.random_mating = false; 
+			if (!gp.court_trait && !gp.parent_trait)
+				each_ok = false;
+			if (!gp.ind_pref && !gp.cor_prefs)
+				each_ok = false;
+			if (pref_qtls.size() == 0)
+				each_ok = false;
+			if (!each_ok)
+			{
+				cout << "\nERROR: Condition dependent mate choice is insane.";
+				run_program = each_ok;
+			}
+		}
+		if (gp.FD_court)
+		{
+			each_ok = true;
+			if (!gp.court_trait)
+				each_ok = false;
+			if (courter_qtls.size() == 0)
+				each_ok = false;
+			if (!each_ok)
+			{
+				cout << "\nERROR: Frequency dependent selection on courtship trait is insane.";
+				run_program = each_ok;
+			}
+		}
+		if (gp.FD_parent)
+		{
+			each_ok = true;
+			if (!gp.parent_trait)
+				each_ok = false;
+			if (parent_qtls.size() == 0)
+				each_ok = false;
+			if (!each_ok)
+			{
+				cout << "\nERROR: Frequency dependent selection on parent trait is insane.";
+				run_program = each_ok;
+			}
+		}
+		if (gp.CD_court)
+		{
+			each_ok = true;
+			if (!gp.polygyny)
+				gp.polygyny = true;
+			if (!gp.court_trait)
+				each_ok = false;
+			if (courter_qtls.size() == 0)
+				each_ok = false;
+			if (gp.cond_adj <= 0)
+				each_ok = false;
+			if (!each_ok)
+			{
+				cout << "\nERROR: Condition dependent selection on courtship trait is insane.";
+				run_program = each_ok;
+			}
+		}
+		if (gp.CD_parent)
+		{
+			each_ok = true;
+			if (!gp.polygyny)
+				gp.polygyny = true; 
+			if (!gp.parent_trait)
+				each_ok = false;
+			if (parent_qtls.size() == 0)
+				each_ok = false;
+			if (gp.cond_adj <= 0)
+				each_ok = false;
+			if (!each_ok)
+			{
+				cout << "\nERROR: Condition dependent selection on parent trait is insane.";
+				run_program = each_ok;
+			}
+		}
+		return run_program;
+	}
+	
+	//pop size
 	void determine_pop_size(parameters gp)
 	{
 		int j;
@@ -750,42 +978,56 @@ public:
 	{
 		int j, jj, count;
 		double mean;
-		if (!random_mating) //only waste the time if you're gonna use a preference
+		if (!gp.random_mating) //only waste the time if you're gonna use a preference
 		{
-			if (!gp.FD_pref && !gp.CD_pref) //then it's gaussian
+			if (gp.ind_pref || gp.cor_prefs)//if female traits have a genetic architecture
 			{
-				if (gp.ind_pref)//if it's independent, not freq dependent, and not condition dependent
-								//then it's based on mean male trait
-					pref_better_morph(gp);
-				else //if it's correlated, then preference should be based on female's own trait
+				if (!gp.FD_pref && !gp.CD_pref)//just plain old random mating
+				{								//using the female's genetic architecture of preference to determine which morph
 					pref_femtrait(gp);
-			}
-			if (gp.FD_pref)//then need the frequency of morphs and female prefers less frequent one.
-			{
-				double freqT = 0;
-				count = 0;
-				if (gp.court_trait)
-					pref_fd_courter(gp);
-				else //it's based on the parent trait
-					pref_fd_parent(gp);
-				
-			}
-			if (gp.CD_pref)//then need to calculate female fecundity and compare it to S(rs_p - rs_np).
-			{
-				int j, jj, count;
-				double xswitch, meanT, meanF;
-				meanT = 1;
-				meanF = 0;//based on morphs
-				if (gp.court_trait)
+				}
+				if (gp.CD_pref)//then need to calculate female fecundity and compare it to S(rs_p - rs_np).
 				{
-					xswitch = (num_mal / gp.max_encounters) / (gp.rs_c - gp.rs_nc);
+					int j, jj, count;
+					double xswitch, meanT, meanF;
+					meanT = 1;
+					meanF = 0;//based on morphs
+					if (gp.court_trait)
+					{
+						xswitch = (num_mal / gp.max_encounters) / (gp.rs_c - gp.rs_nc);
+					}
+					else
+					{
+						xswitch = (num_mal / gp.max_encounters) / (gp.rs_p - gp.rs_np);
+					}
+					pref_cd_courter(gp, meanT, meanF, xswitch);
+				}
+				if (gp.FD_pref)//then need the frequency of morphs and female prefers less frequent one.
+				{
+					double freqT = 0;
+					count = 0;
+					if (gp.court_trait)
+						pref_fd_courter(gp);
+					else //it's based on the parent trait
+						pref_fd_parent(gp);
+
+				}
+			}
+			else
+			{
+				if (gp.FD_pref)//then need the frequency of morphs and female prefers less frequent one.
+				{
+					double freqT = 0;
+					count = 0;
+					if (gp.court_trait)
+						pref_fd_courter(gp);
+					else //it's based on the parent trait
+						pref_fd_parent(gp);
+
 				}
 				else
-				{
-					xswitch = (num_mal / gp.max_encounters) / (gp.rs_p - gp.rs_np);
-				}
-				pref_cd_courter(gp, meanT, meanF, xswitch);
-			}
+					pref_better_morph(gp);//females just across the board prefer the better morph
+			}								//regardless of genetic architecture
 		}
 	}
 
@@ -900,7 +1142,7 @@ public:
 							}
 						}
 					}
-					if (!random_mating)
+					if (gp.ind_pref || gp.cor_prefs)
 					{
 						for (RCj = 0; RCj < parent.maternal[which_chrom].pref_ae.size(); RCj++)
 						{
@@ -936,7 +1178,7 @@ public:
 						chrom.parent_ae[RCi] = parent.maternal[which_chrom].parent_ae[RCi];
 					}
 				}
-				if (!random_mating)
+				if (gp.ind_pref || gp.cor_prefs)
 				{
 					for (RCi = 0; RCi < parent.maternal[which_chrom].pref_ae.size(); RCi++)
 					{
@@ -962,7 +1204,7 @@ public:
 						chrom.parent_ae[RCi] = parent.paternal[which_chrom].parent_ae[RCi];
 					}	
 				}
-				if (!random_mating)
+				if (gp.ind_pref || gp.cor_prefs)
 				{
 					for (RCi = 0; RCi < parent.paternal[which_chrom].pref_ae.size(); RCi++)
 					{
@@ -1062,7 +1304,7 @@ public:
 			{
 				int count = 0;
 				encounters = 0;
-				if (random_mating)
+				if (gp.random_mating)
 				{
 					while (!mate_found && encounters <= gp.max_encounters)//female mates once
 					{
@@ -1202,7 +1444,7 @@ public:
 				int count = 0;
 				encounters = 0;
 				mate_found = false;
-				if (random_mating)
+				if (gp.random_mating)
 				{
 					while (!mate_found && encounters < gp.max_encounters)//female mates once
 					{
@@ -1352,7 +1594,7 @@ public:
 		int count = 0;
 		encounters = 0;
 		mate_found = false;
-		if (random_mating)
+		if (gp.random_mating)//then they randomly find males
 		{
 			while (!mate_found && encounters < gp.max_encounters)//female mates once
 			{
@@ -1369,6 +1611,25 @@ public:
 					}
 				}
 				encounters++;
+			}
+			if (mate_found)
+			{
+				if (gp.CD_court)
+				{
+					if (adults[male_id].courter)//it decreases
+						adults[male_id].courter_trait = adults[male_id].courter_trait - gp.cond_adj;
+					else//it increases
+						adults[male_id].courter_trait = adults[male_id].courter_trait + gp.cond_adj;
+					adults[male_id].assign_court_morph(gp, courter_thresh);
+				}
+				if (gp.CD_parent)
+				{
+					if (adults[male_id].parent)//it decreases
+						adults[male_id].parent_trait = adults[male_id].parent_trait - gp.cond_adj;
+					else//it increases
+						adults[male_id].parent_trait = adults[male_id].parent_trait + gp.cond_adj;
+					adults[male_id].assign_parent_morph(gp, parent_thresh);
+				}
 			}
 		}//random mating
 		else
@@ -1507,40 +1768,44 @@ public:
 		int malecount = 0;
 		ProgAlive = 0;
 
-		for (j = 0; j < num_progeny; j++) 
+		for (j = 0; j < num_progeny; j++)
 		{
-			if (progeny[j].female)
+			if (progeny[j].alive)
 			{
-				progeny[j].alive = true;
-				ProgAlive++;
-			}
-			else//selection only on males
-			{
-				if (gp.via_sel_strength > 0)
-				{
-					dSurvProb = 1;
-					if (gp.court_trait && !gp.FD_court)
-						dSurvProb = dSurvProb*via_against_courter(gp.via_sel_strength, j);
-					if(gp.FD_court)
-						dSurvProb = dSurvProb*via_fd_courter(gp, j);
-					if (gp.parent_trait && !gp.FD_court)
-						dSurvProb = dSurvProb*via_against_parent(gp.via_sel_strength, j);
-					if (gp.FD_parent)
-						dSurvProb = dSurvProb*via_fd_parent(gp, j);					
-				}
-				else
-					dSurvProb = 1;
-				//cout<<dSurvProb<<'\n';
-				drnum1 = genrand();
-				if (drnum1 < dSurvProb)
+				progeny[j].update_traits(gp, courter_thresh, parent_thresh, pref_thresh);
+				if (progeny[j].female)
 				{
 					progeny[j].alive = true;
 					ProgAlive++;
 				}
-				else
-					progeny[j].alive = false;
-			}
-		} // end of j
+				else//selection only on males
+				{
+					if (gp.via_sel_strength > 0)
+					{
+						dSurvProb = 1;
+						if (gp.court_trait && !gp.FD_court)
+							dSurvProb = dSurvProb*via_against_courter(gp.via_sel_strength, j);
+						if (gp.FD_court)
+							dSurvProb = dSurvProb*via_fd_courter(gp, j);
+						if (gp.parent_trait && !gp.FD_court)
+							dSurvProb = dSurvProb*via_against_parent(gp.via_sel_strength, j);
+						if (gp.FD_parent)
+							dSurvProb = dSurvProb*via_fd_parent(gp, j);
+					}
+					else
+						dSurvProb = 1;
+					//cout<<dSurvProb<<'\n';
+					drnum1 = genrand();
+					if (drnum1 < dSurvProb)
+					{
+						progeny[j].alive = true;
+						ProgAlive++;
+					}
+					else
+						progeny[j].alive = false;
+				}
+			} // end of j
+		}
 	}
 
 	//stochastic survival
@@ -1594,7 +1859,7 @@ public:
 								adults[iNumAdultsChosen].paternal[pp].parent_ae[ppp] = progeny[p].paternal[pp].parent_ae[ppp];
 							}							
 						}
-						if (!random_mating)
+						if (gp.ind_pref || gp.cor_prefs)
 						{
 							for (ppp = 0; ppp < progeny[p].maternal[pp].pref_ae.size(); ppp++)
 							{
@@ -1637,7 +1902,7 @@ public:
 		count1 = count2 = count3 = 0;
 		for (j = 0; j < gp.num_chrom; j++)
 		{
-			if (!random_mating)
+			if (gp.ind_pref || gp.cor_prefs)
 			{
 				for (jj = 0; jj < pref_qtls[j].per_locus.size(); jj++)
 				{
@@ -1703,7 +1968,7 @@ public:
 		count1 = count2 = count3 = 0;
 		for (j = 0; j < gp.num_chrom; j++)
 		{
-			if (!random_mating)
+			if (gp.ind_pref || gp.cor_prefs)
 			{
 				for (jj = 0; jj < pref_qtls[j].per_locus.size(); jj++)
 				{
