@@ -30,12 +30,13 @@ class chromosome
 public:
 	vector<int> loci;
 	vector<double> courter_ae, parent_ae, pref_ae;
+	vector<double> courter_thresh, parent_thresh;
 
 
 	chromosome()
 	{
 		loci = vector<int>();
-		courter_ae = parent_ae = pref_ae = vector<double>();
+		courter_ae = parent_ae = pref_ae = courter_thresh = parent_thresh vector<double>();
 	}
 
 
@@ -49,7 +50,7 @@ public:
 	double mutation_rate, mutational_var, recombination_rate, allelic_std_dev, gaussian_pref_mean, cond_adj, via_sel_strength, supergene_prop;
 	string base_name;
 	bool court_trait, parent_trait, env_effects, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
-	bool supergene, random_mating;
+	bool supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene;
 	vector <int> qtl_per_chrom;
 
 	parameters()
@@ -58,14 +59,14 @@ public:
 		num_pops = num_init_gen = num_exp_gen = int();
 		mutation_rate =recombination_rate = allelic_std_dev = double();
 		env_effects = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
-		random_mating = bool();
+		random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene =bool();
 		qtl_per_chrom = vector<int>();
 	}
 
 	void set_defaults()
 	{
-		num_init_gen = 10000;//10000 normally
-		num_exp_gen = 2000;//2000 normally
+		num_init_gen = 2;//10000 normally
+		num_exp_gen = 1;//2000 normally
 		num_pops = 1; //default 1
 		carrying_capacity = 1000;//1000
 		num_sampled = 50;//default 50
@@ -87,8 +88,9 @@ public:
 		supergene_prop = 0.1; //default 0.1 (10% of num_markers = 100)
 		random_mating = true;//default: false
 		supergene =  false; //default: false
-		court_trait = false; //default: false
-		parent_trait = false;//default false
+		court_trait = courter_conditional = false; //default: false
+		parent_trait = parent_conditional = false;//default false
+		thresholds_evolve = thresholds_in_supergene = false; //default: false
 		env_effects = false;//default false
 		cor_prefs= ind_pref= FD_pref= CD_pref= FD_court= FD_parent= CD_court= CD_parent = false;//no selection
 		cor_mal_traits = false;//default false
@@ -138,13 +140,17 @@ public:
 		cout << "--parent:\tInclude this flag if males should have the parental trait (a trait affecting offspring survival). Defaults to Gaussian preference for randomly chosen morph unless other flags included. \n";
 		cout << "--freq-dependent-courter:\tIf the courter trait is experiencing frequency dependent selection.\n";
 		cout << "--freq-dependent-parent:\tIf the parent trait is experiencing frequency dependent selection.\n";
-		cout << "--condition-dependent-courter:\tIf the courter trait is determined by male condition.\n";
-		cout << "--condition-dependent-parent:\tIf the parent trait is determined by male condition.\n";
+		cout << "--condition-dependent-courter:\tIf the courter trait is influenced by male condition.\n";
+		cout << "--condition-dependent-parent:\tIf the parent trait is influenced by male condition.\n";
 		cout << "--independent-pref:\tSpecifies an independent female preference (defaults to Gaussian preference for randomly chosen morph unless other flags included). \n";
 		cout << "--correlated-pref:\tSpecifies a female preference correlated with the male courter trait (defaults to Gaussian preference for randomly chosen morph unless other flags included).\n";
 		cout << "--random-mating:\tSpecifies no female choice (default: true).\n";
 		cout << "--supergene:\tSpecifies whether the QTLs are grouped together in a supergene that has reduced recombination.\n";
 		cout << "--polygyny:\tAllows males to mate multiply (default: false).\n";
+		cout << "--courter-conditional:\tIf the courter trait has no genetic basis and is determined randomly or through environmental effects.\n";
+		cout << "--parent-conditional:\tIf the parent trait has no genetic basis and is determined randomly or through environmental effects.\n";
+		cout << "--thresholds-evolve:\tIf the thresholds are allowed to evolve (i.e., they have a quantitative genetic basis).\n";
+		cout << "--thresholds-in-supergene:\tThe thresholds have a genetic basis and their loci are in the supergene.\n";
 		cout << "-h or --help:\tPrint this help message.\n";
 	}
 
@@ -255,6 +261,14 @@ public:
 							supergene = true;
 						if (tempstring1 == "--polygyny")
 							polygyny = true;
+						if (tempstring1 == "--courter-conditional")
+							courter_conditional = true;
+						if (tempstring1 == "--parent-conditional")
+							parent_conditional = true;
+						if (tempstring1 == "--thresholds-evolve")
+							thresholds_evolve = true;
+						if (tempstring1 == "--thresholds-in-supergene")
+							thresholds_in_supergene = true;
 					}
 				}
 				if (env_effects)
@@ -265,7 +279,10 @@ public:
 						num_env_qtl = num_env_qtl / num_chrom;
 				}
 				if (ind_pref || cor_prefs)
-					court_trait = true;
+				{//if there are female preferences but neither male trait is specified,
+					if (!court_trait && !parent_trait && !parent_conditional) //then the courter trait exists without genetic basis
+						courter_conditional = true;
+				}
 				if (qpc.size() > 0)
 				{
 					istringstream ss(qpc);
@@ -349,7 +366,14 @@ public:
 			param_out << "\n--polygyny";
 		if (supergene)
 			param_out << "\n--supergene\n--" << supergene_prop;
-			
+		if (parent_conditional)
+			param_out << "\n--parent_conditional";
+		if (courter_conditional)
+			param_out << "\n--courter_conditional";
+		if (thresholds_evolve)
+			param_out << "\n--thresholds_evolve";
+		if (thresholds_in_supergene)
+			param_out << "\n--thresholds_in_supergene";
 		param_out.close();
 	}
 };
@@ -358,9 +382,9 @@ string determine_date()
 {
 //#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
 //	string date;
-	time_t now = time(0);
-	tm ltm;
-//	localtime_s(&ltm, &now);
+	time_t now = std::time(0);
+	struct tm ltm;
+	localtime_s(&ltm, &now);
 //	int yr, mn, dy;
 //	string month, day;
 //	yr = 1900 + ltm.tm_year;

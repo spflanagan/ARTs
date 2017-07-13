@@ -209,7 +209,7 @@ int main(int argc, char*argv[])
 					pops[i].output_summary_info(global_params, summary_output);//includes allele freqs
 					//mating (includes assiging preferences, recombination, and mutation)
 					//pops[i].bestofN_mating(false, "temp", global_params);
-					pops[ii].nest_and_fertilize(global_params, false, "temp");
+					pops[i].nest_and_fertilize(global_params, false, "temp");
 					//selection
 					pops[i].viability_selection(global_params);
 					//stochastic survival

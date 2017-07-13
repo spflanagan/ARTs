@@ -22,7 +22,8 @@ public:
 	vector<double> theta, mean_fem_traits, mean_mal_traits, d_parentfreq, d_courterfreq;
 	vector<individual> adults;
 	vector<individual> progeny;
-	vector<tracker> courter_qtls,parent_qtls,pref_qtls,courter_env_qtls,parent_env_qtls,pref_env_qtls, maf, hs, maj_allele, ref_allele;
+	vector<tracker> courter_qtls, parent_qtls, pref_qtls, courter_env_qtls, parent_env_qtls, pref_env_qtls, courter_thresh_qtls, parent_thresh_qtls;
+	vector<tracker> maf, hs, maj_allele, ref_allele;
 
 
 	population()
@@ -31,21 +32,28 @@ public:
 		theta = mean_fem_traits = mean_mal_traits = vector<double>();
 		sex_theta = sex_omega = courter_thresh = parent_thresh = pref_thresh = double();
 		adults = progeny = vector<individual>();
-		courter_env_qtls = courter_qtls = parent_env_qtls = parent_qtls = pref_env_qtls = pref_qtls = maf = hs = vector<tracker>();
+		courter_env_qtls = courter_qtls = parent_env_qtls = parent_qtls = pref_env_qtls = pref_qtls = parent_thresh_qtls = courter_thresh_qtls = maf = hs = vector<tracker>();
 		extinct = false;
 		sgenrand(time(0));
 	}
 	//initialize
 	void determine_pref_thresh(parameters gp)
 	{
-		if (gp.court_trait)
-			pref_thresh = courter_thresh;
+		if (gp.thresholds_evolve)
+		{
+
+		}
 		else
-			pref_thresh = parent_thresh;
+		{
+			if (gp.court_trait)
+				pref_thresh = courter_thresh;
+			else
+				pref_thresh = parent_thresh;
+		}
 	}
 	void initialize_supergene(parameters gp)
 	{
-		int m, mm, mmm;
+		int m, mm, mmm, sg_start;
 		double supergene_nmarkers = gp.supergene_prop*gp.num_markers;
 		if (gp.qtl_per_chrom[0] == (gp.num_qtl / gp.num_chrom))//otherwise the supergene info was specified by user
 		{
@@ -59,44 +67,139 @@ public:
 					gp.qtl_per_chrom[m] = 0;
 			}
 		}
-		//choose marker start
-		int sg_start = randnum(gp.num_markers - supergene_nmarkers);
+		
 		if (gp.court_trait && gp.parent_trait)
 		{
-			supergene_nmarkers = 2 * supergene_nmarkers;
-			if (supergene_nmarkers <= 2 * gp.num_qtl)//make sure there's enough space in the supergene region.
-				supergene_nmarkers = 2 * gp.num_qtl;
-			for (m = 0; m < gp.num_chrom; m++)
+			if (gp.thresholds_in_supergene)
 			{
-				courter_qtls.push_back(tracker());
-				parent_qtls.push_back(tracker());
-				for (mm = 0; mm < gp.qtl_per_chrom[m]; mm++)
+				supergene_nmarkers = 4 * supergene_nmarkers;
+				if (supergene_nmarkers <= 4 * gp.num_qtl)//make sure there's enough space in the supergene region.
+					supergene_nmarkers = 4 * gp.num_qtl;
+				sg_start = randnum(gp.num_markers - supergene_nmarkers); //choose marker start
+				for (m = 0; m < gp.num_chrom; m++)
 				{
-					courter_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
-					parent_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+					courter_qtls.push_back(tracker());
+					parent_qtls.push_back(tracker());
+					courter_thresh_qtls.push_back(tracker());
+					parent_thresh_qtls.push_back(tracker());
+					for (mm = 0; mm < gp.qtl_per_chrom[m]; mm++)
+					{
+						courter_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+						parent_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+						courter_thresh_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+						parent_thresh_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+					}
+				}
+			}
+			else
+			{
+				supergene_nmarkers = 2 * supergene_nmarkers;
+				if (supergene_nmarkers <= 2 * gp.num_qtl)//make sure there's enough space in the supergene region.
+					supergene_nmarkers = 2 * gp.num_qtl;
+				sg_start = randnum(gp.num_markers - supergene_nmarkers); //choose marker start
+				for (m = 0; m < gp.num_chrom; m++)
+				{
+					courter_qtls.push_back(tracker());
+					parent_qtls.push_back(tracker());
+					for (mm = 0; mm < gp.qtl_per_chrom[m]; mm++)
+					{
+						courter_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+						parent_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+					}
 				}
 			}
 		}
 		else
 		{
-			if (supergene_nmarkers <= gp.num_qtl)//make sure there's enough space in the supergene region.
-				supergene_nmarkers = gp.num_qtl;
+			if (gp.court_trait || gp.parent_trait && gp.thresholds_in_supergene)
+			{
+				if (supergene_nmarkers <= 2*gp.num_qtl)//make sure there's enough space in the supergene region.
+					supergene_nmarkers = 2*gp.num_qtl;
+				sg_start = randnum(gp.num_markers - supergene_nmarkers); //choose marker start
+			}
+			else
+			{
+				if (supergene_nmarkers <= gp.num_qtl)//make sure there's enough space in the supergene region.
+					supergene_nmarkers = gp.num_qtl;
+				sg_start = randnum(gp.num_markers - supergene_nmarkers); //choose marker start
+			}
 			for (m = 0; m < gp.num_chrom; m++)
 			{
 				if (gp.court_trait)
+				{
+					if (gp.thresholds_in_supergene)
+						courter_thresh_qtls.push_back(tracker());
 					courter_qtls.push_back(tracker());
+				}
 				if (gp.parent_trait)
+				{
 					parent_qtls.push_back(tracker());
+					if (gp.thresholds_in_supergene)
+						parent_thresh_qtls.push_back(tracker());
+				}
 				for (mm = 0; mm < gp.qtl_per_chrom[m]; mm++)
 				{
 					if (gp.court_trait)
+					{
 						courter_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+						if(gp.thresholds_in_supergene)
+							courter_thresh_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+					}
 					if (gp.parent_trait)
+					{
 						parent_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+						if(gp.thresholds_in_supergene)
+							parent_thresh_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+					}
 				}
 			}
 		}
-	}
+		if (gp.courter_conditional && gp.parent_conditional && gp.thresholds_in_supergene)
+		{
+			supergene_nmarkers = 2 * supergene_nmarkers;
+			if (supergene_nmarkers <= 2 * gp.num_qtl)//make sure there's enough space in the supergene region.
+				supergene_nmarkers = 2 * gp.num_qtl;
+			sg_start = randnum(gp.num_markers - supergene_nmarkers); //choose marker start
+			for (m = 0; m < gp.num_chrom; m++)
+			{
+				courter_thresh_qtls.push_back(tracker());
+				parent_thresh_qtls.push_back(tracker());
+				for (mm = 0; mm < gp.qtl_per_chrom[m]; mm++)
+				{
+					courter_thresh_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+					parent_thresh_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+				}
+			}
+		}
+		if (gp.courter_conditional && gp.thresholds_in_supergene && !gp.parent_conditional)
+		{
+			if (supergene_nmarkers <= gp.num_qtl)//make sure there's enough space in the supergene region.
+				supergene_nmarkers = gp.num_qtl;
+			sg_start = randnum(gp.num_markers - supergene_nmarkers); //choose marker start
+			for (m = 0; m < gp.num_chrom; m++)
+			{
+				courter_thresh_qtls.push_back(tracker());
+				for (mm = 0; mm < gp.qtl_per_chrom[m]; mm++)
+				{
+					courter_thresh_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+				}
+			}
+		}
+		if (!gp.courter_conditional && gp.parent_conditional && gp.thresholds_in_supergene)
+		{
+			if (supergene_nmarkers <= gp.num_qtl)//make sure there's enough space in the supergene region.
+				supergene_nmarkers = gp.num_qtl;
+			sg_start = randnum(gp.num_markers - supergene_nmarkers); //choose marker start
+			for (m = 0; m < gp.num_chrom; m++)
+			{
+				parent_thresh_qtls.push_back(tracker());
+				for (mm = 0; mm < gp.qtl_per_chrom[m]; mm++)
+				{
+					parent_thresh_qtls[m].per_locus.push_back((sg_start + randnum(supergene_nmarkers)));
+				}
+			}
+		}
+}
 	void initialize_adults(parameters gp)
 	{
 		int j, jj, jjj;
@@ -123,6 +226,11 @@ public:
 					{
 						adults[j].maternal[jj].courter_ae.push_back(double());
 						adults[j].paternal[jj].courter_ae.push_back(double());
+						if (gp.thresholds_evolve)
+						{
+							adults[j].maternal[jj].courter_thresh.push_back(double());
+							adults[j].paternal[jj].courter_thresh.push_back(double());
+						}
 					}
 				}
 				if (gp.parent_trait)
@@ -131,6 +239,11 @@ public:
 					{
 						adults[j].maternal[jj].parent_ae.push_back(double());
 						adults[j].paternal[jj].parent_ae.push_back(double());
+						if (gp.thresholds_evolve)
+						{
+							adults[j].maternal[jj].parent_thresh.push_back(double());
+							adults[j].paternal[jj].parent_thresh.push_back(double());
+						}
 					}
 				}
 				if (gp.cor_prefs || gp.ind_pref)
@@ -175,6 +288,11 @@ public:
 					{
 						progeny[j].maternal[jj].courter_ae.push_back(double());
 						progeny[j].paternal[jj].courter_ae.push_back(double());
+						if (gp.thresholds_evolve)
+						{
+							progeny[j].maternal[jj].courter_thresh.push_back(double());
+							progeny[j].paternal[jj].courter_thresh.push_back(double());
+						}
 					}
 				}
 				if (gp.parent_trait)
@@ -183,6 +301,11 @@ public:
 					{
 						progeny[j].maternal[jj].parent_ae.push_back(double());
 						progeny[j].paternal[jj].parent_ae.push_back(double());
+						if (gp.thresholds_evolve)
+						{
+							progeny[j].maternal[jj].parent_thresh.push_back(double());
+							progeny[j].paternal[jj].parent_thresh.push_back(double());
+						}
 					}
 				}
 				if (gp.cor_prefs || gp.ind_pref)
@@ -307,6 +430,7 @@ public:
 						parent_qtls[j].per_locus.push_back(randnum(gp.num_markers));
 				}
 			}
+			
 			//set up females
 			if (gp.cor_prefs == true)
 			{//then it's the same as the courter trait
@@ -337,7 +461,23 @@ public:
 				gp.ind_pref = true;
 			}
 		}
-		
+		if (gp.thresholds_evolve && !gp.thresholds_in_supergene)
+		{
+			for (j = 0; j < gp.num_chrom; j++)
+			{
+				if (gp.parent_trait || gp.parent_conditional)
+					parent_thresh_qtls.push_back(tracker());
+				if (gp.court_trait || gp.courter_conditional)
+					courter_thresh_qtls.push_back(tracker());
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (gp.parent_trait || gp.parent_conditional)
+						parent_thresh_qtls[j].per_locus.push_back(randnum(gp.num_markers));
+					if (gp.court_trait || gp.courter_conditional)
+						courter_thresh_qtls[j].per_locus.push_back(randnum(gp.num_markers));
+				}
+			}
+		}
 		//Set up environmental effect QTL locations if necessary
 		if (gp.env_effects)
 		{
@@ -593,7 +733,7 @@ public:
 				gp.random_mating = false;//just reset it here
 			if (pref_qtls.size() == 0)
 				each_ok = false;
-			if (!gp.court_trait && !gp.parent_trait)
+			if (!gp.court_trait && !gp.parent_trait && !gp.courter_conditional && !gp.parent_conditional)
 				each_ok = false;
 			if (!each_ok)
 			{
@@ -662,7 +802,7 @@ public:
 		if (!gp.random_mating)
 		{//if there's not random mating then there must at least be a courtship trait
 			each_ok = true;
-			if (!gp.court_trait)
+			if (!gp.court_trait && !gp.parent_trait && !gp.courter_conditional && !gp.parent_conditional)
 				each_ok = false;
 			if (!each_ok)
 			{
@@ -757,6 +897,17 @@ public:
 			if (!each_ok)
 			{
 				cout << "\nERROR: Condition dependent selection on parent trait is insane.";
+				run_program = each_ok;
+			}
+		}
+		if (gp.thresholds_evolve)
+		{
+			each_ok = true;
+			if (courter_thresh_qtls.size() == 0 && parent_thresh_qtls.size() == 0)
+				each_ok = false;
+			if (!each_ok)
+			{
+				cout << "\nERROR: Evolving thresholds are insane.";
 				run_program = each_ok;
 			}
 		}
