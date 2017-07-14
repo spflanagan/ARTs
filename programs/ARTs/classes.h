@@ -410,7 +410,7 @@ string determine_date()
 class individual
 {
 public:
-	double courter_trait, parent_trait, female_pref;
+	double courter_trait, parent_trait, female_pref, ind_cthresh, ind_pthresh;
 	vector<chromosome> maternal, paternal;
 	vector<tracker> courter_int, parent_int, pref_int, courter_Y, parent_Y, pref_Y;
 	vector<int> courter_Z, parent_Z, pref_Z, courter_x, parent_x, pref_x;
@@ -419,7 +419,7 @@ public:
 
 	individual()
 	{
-		courter_trait = parent_trait = female_pref = double();
+		courter_trait = parent_trait = female_pref = ind_cthresh = ind_pthresh = double();
 		maternal = paternal = vector<chromosome>();
 		courter_int = parent_int = pref_int = courter_Y = parent_Y = pref_Y = vector<tracker>();
 		courter_Z = parent_Z = pref_Z = courter_x = parent_x = pref_x = vector<int>();
@@ -428,6 +428,27 @@ public:
 	}
 
 	//phenotype functions
+	void assign_threshold_gt(parameters gp, int id, vector<double>&tempalleles, bool assign_courter)
+	{
+		int k, kk;
+		for (k = 0; k < gp.num_chrom; k++)
+		{
+			for (kk = 0; kk < gp.qtl_per_chrom[k]; kk++)
+			{
+				if (assign_courter)
+				{
+					maternal[k].courter_thresh[kk] = tempalleles[id%gp.num_alleles];
+					paternal[k].courter_thresh[kk] = tempalleles[id%gp.num_alleles];
+				}
+				else
+				{
+					maternal[k].parent_thresh[kk] = tempalleles[id%gp.num_alleles];
+					paternal[k].parent_thresh[kk] = tempalleles[id%gp.num_alleles];
+
+				}
+			}
+		}
+	}
 	void courter_gene_interactions(parameters gp, double env_cue)
 	{
 		int k, kk, t;
@@ -512,6 +533,31 @@ public:
 		}
 	}
 	//overloaded phenotype functions
+	void determine_threshold(parameters gp, double cthresh, double pthresh)
+	{
+		int k,kk;
+		if (gp.thresholds_evolve)
+		{
+			ind_cthresh = ind_pthresh = 0;
+			for (k = 0; k < gp.num_chrom; k++)
+			{
+				for (kk = 0; kk < gp.qtl_per_chrom[k]; kk++)
+				{
+					if (gp.courter_conditional || gp.court_trait)
+						ind_cthresh = ind_cthresh + maternal[k].courter_thresh[kk] + paternal[k].courter_thresh[kk];
+					if (gp.parent_conditional || gp.parent_trait)
+						ind_pthresh = ind_pthresh + maternal[k].parent_thresh[kk] + paternal[k].parent_thresh[kk];
+				}
+			}
+		}
+		else
+		{
+			if (gp.courter_conditional || gp.court_trait)
+				ind_cthresh = cthresh;
+			if (gp.parent_conditional || gp.parent_trait)
+				ind_pthresh = pthresh;
+		}
+	}
 	void calc_courter_trait(parameters gp)//for non-env effects
 	{
 		int k, kk, kkk;
@@ -653,9 +699,9 @@ public:
 		else
 			female_pref = 1;
 	}
-	void assign_court_morph(parameters gp, double threshold)
+	void assign_court_morph(parameters gp)
 	{
-		if (courter_trait < threshold)
+		if (courter_trait < ind_cthresh)
 			courter = false;
 		else
 			courter = true;
@@ -664,9 +710,9 @@ public:
 		else
 			pot_rs = gp.rs_nc;
 	}
-	void assign_parent_morph(parameters gp, double threshold)
+	void assign_parent_morph(parameters gp)
 	{
-		if (parent_trait < threshold)
+		if (parent_trait < ind_pthresh)
 			parent = false;
 		else
 			parent = true;
@@ -675,40 +721,53 @@ public:
 		else
 			pot_rs = gp.rs_np;
 	}
-	void update_traits(parameters gp, double court_thresh, double parent_thresh,double pref_thresh)//non-environmental
+	void assign_conditional_traits(parameters gp)
 	{
+		if (gp.courter_conditional)
+			courter_trait = randnorm(0, gp.allelic_std_dev);
+		if (gp.parent_conditional)
+			parent_trait = randnorm(0, gp.allelic_std_dev);
+		
+	}
+	void update_traits(parameters gp, double pref_thresh)//non-environmental
+	{
+		if (gp.thresholds_evolve)
+			determine_threshold;
 		if (gp.court_trait)
 		{
 			calc_courter_trait(gp);
-			assign_court_morph(gp, court_thresh);
+			assign_court_morph(gp);
 		}
 		if (gp.parent_trait)
 		{
 			calc_parent_trait(gp);
-			assign_parent_morph(gp, parent_thresh);
+			assign_parent_morph(gp);
 		}
 		if (gp.ind_pref || gp.cor_prefs)
 			calc_preference_trait(gp, pref_thresh);
 	}
-	void update_traits(parameters gp, double court_thresh, double parent_thresh, double pref_thresh, 
+	void update_traits(parameters gp, double pref_thresh, 
 		double env_cue, vector<tracker>& court_env,vector<tracker>& parent_env, vector<tracker>& pref_env)//non-environmental
 	{
+		if (gp.thresholds_evolve)
+			determine_threshold;
 		if (gp.court_trait)
 		{
 			calc_courter_trait(gp, court_env, env_cue);
-			assign_court_morph(gp, court_thresh);
+			assign_court_morph(gp);
 		}
 		if (gp.parent_trait)
 		{
 			calc_parent_trait(gp,parent_env,env_cue);
-			assign_parent_morph(gp, parent_thresh);
+			assign_parent_morph(gp);
 		}
 		if (gp.ind_pref || gp.cor_prefs)
 			calc_preference_trait(gp, pref_thresh,pref_env,env_cue);
 	}
 
 	//life cycle functions
-	void mutation(parameters gp, vector<tracker>& court_qtl, vector<tracker>& parent_qtl, vector<tracker>& pref_qtl)
+	void mutation(parameters gp, vector<tracker>& court_qtl, vector<tracker>& parent_qtl, vector<tracker>& pref_qtl,
+		vector<tracker>& courter_thresh_qtl, vector<tracker>& parent_thresh_qtl)
 	{
 		int m, mm, irand, irand2, gg, ggg, irand3, locus;
 		double rnd1, rnd2;
@@ -728,7 +787,8 @@ public:
 			rnd2 = genrand();//to choose maternal or paternal
 			if (rnd2 < 0.5)//affects maternal chromosome	
 			{
-				while (!mutated) {
+				while (!mutated) 
+				{
 					irand3 = randnum(gp.num_alleles);
 					if (!maternal[irand].loci[irand2] == irand3)
 					{
@@ -743,12 +803,22 @@ public:
 						if (court_qtl[irand].per_locus[mm] == irand2)
 							maternal[irand].courter_ae[mm] =
 							maternal[irand].courter_ae[mm] + randnorm(0, MutSD);
+						if (gp.thresholds_evolve)
+						{
+							if(courter_thresh_qtl[irand].per_locus[mm] == irand2)
+								maternal[irand].courter_thresh[mm] = maternal[irand].courter_thresh[mm] + randnorm(0, MutSD);
+						}
 					}
 					if (gp.parent_trait)
 					{
 						if (parent_qtl[irand].per_locus[mm] == irand2)
 							maternal[irand].parent_ae[mm] =
 							maternal[irand].parent_ae[mm] + randnorm(0, MutSD);
+						if (gp.thresholds_evolve)
+						{
+							if (parent_thresh_qtl[irand].per_locus[mm] == irand2)
+								maternal[irand].parent_thresh[mm] = maternal[irand].parent_thresh[mm] + randnorm(0, MutSD);
+						}
 					}
 				}
 				for (mm = 0; mm < maternal[irand].pref_ae.size(); mm++)
@@ -778,12 +848,22 @@ public:
 						if (court_qtl[irand].per_locus[mm] == irand2)
 							paternal[irand].courter_ae[mm] =
 							paternal[irand].courter_ae[mm] + randnorm(0, MutSD);
+						if (gp.thresholds_evolve)
+						{
+							if (courter_thresh_qtl[irand].per_locus[mm] == irand2)
+								paternal[irand].courter_thresh[mm] = paternal[irand].courter_thresh[mm] + randnorm(0, MutSD);
+						}
 					}
 					if (gp.parent_trait)
 					{
 						if (parent_qtl[irand].per_locus[mm] == irand2)
 							paternal[irand].parent_ae[mm] =
 							paternal[irand].parent_ae[mm] + randnorm(0, MutSD);
+						if (gp.thresholds_evolve)
+						{
+							if (parent_thresh_qtl[irand].per_locus[mm] == irand2)
+								paternal[irand].parent_thresh[mm] = paternal[irand].parent_thresh[mm] + randnorm(0, MutSD);
+						}
 					}
 				}
 				for (mm = 0; mm < maternal[irand].pref_ae.size(); mm++)
