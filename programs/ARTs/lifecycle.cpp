@@ -46,13 +46,17 @@ int main(int argc, char*argv[])
 		cout << "\nRunning the ARTs model with default parameters.\n";
 		global_params.set_defaults();
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
-		global_params.FD_court = true;
-		global_params.cor_prefs = global_params.ind_pref = false;
+		global_params.parent_trait = true;
 		global_params.court_trait = true;
+		global_params.thresholds_in_supergene = true;
+		global_params.num_init_gen = 2;
+		global_params.num_exp_gen = 1;
+		global_params.base_name = "../../results/testing_thresh_supergene_";
+		global_params.dependent_params();
 	}
 	
 	//output
-	global_params.output_parameters();
+
 	string summary_output_name, trait_output_name, qtlinfo_output_name;
 	ofstream summary_output, trait_output, qtlinfo_output;
 
@@ -80,22 +84,33 @@ int main(int argc, char*argv[])
 		pops[i].initialize(global_params);
 		run = pops[i].sanity_checks(global_params);
 		if (!run)
-			return 0;
+		{
+			if(command_line)
+				return 0;
+			else
+			{
+				cout << "\nInput integer to close dialog\n";
+				cin >> ii;
+				return ii;
+			}
+		}
 		courter_freqs.push_back(0);
 		parent_freqs.push_back(0);
 		eq_reached.push_back(false);
 		//output QTL info
 		if (i == 0)//if it's the first/only pop, write the header
 		{
-			if (global_params.env_effects)
+			if (global_params.gene_network)
 				pops[i].output_qtl_info(global_params, qtlinfo_output, true,
-					pops[i].courter_env_qtls,pops[i].parent_env_qtls,pops[i].pref_env_qtls);
+					pops[i].courter_env_qtls,pops[i].parent_env_qtls,pops[i].pref_env_qtls,
+					pops[i].cthresh_env_qtls, pops[i].pthresh_env_qtls);
 			else
 				pops[i].output_qtl_info(global_params, qtlinfo_output, true);
 		}
 		qtlinfo_output << "Pop" << i;
 		pops[i].output_qtl_info(global_params, qtlinfo_output,false);
 	}
+	global_params.output_parameters();
 	qtlinfo_output.close();
 	cout << "\nRunning " << global_params.num_init_gen << " initial generations\n";
 	for (i = 0; i < global_params.num_init_gen; i++)
@@ -118,7 +133,6 @@ int main(int argc, char*argv[])
 			}
 			else
 				write_to_file = false;*/
-			//pops[ii].bestofN_mating(write_to_file, temp_file_name, global_params);
 			pops[ii].nest_and_fertilize(global_params, write_to_file, temp_file_name);
 			//viability selection
 			pops[ii].viability_selection(global_params);
@@ -208,7 +222,6 @@ int main(int argc, char*argv[])
 					summary_output << "\nGen" << global_params.num_init_gen + num_eq_tries << "\tPop" << i;
 					pops[i].output_summary_info(global_params, summary_output);//includes allele freqs
 					//mating (includes assiging preferences, recombination, and mutation)
-					//pops[i].bestofN_mating(false, "temp", global_params);
 					pops[i].nest_and_fertilize(global_params, false, "temp");
 					//selection
 					pops[i].viability_selection(global_params);

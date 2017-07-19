@@ -16,26 +16,27 @@ using namespace std;
 class population
 {
 public:
-	int population_size, num_mal, num_fem, num_progeny, sex_trait, max_num_migrants, migrant_index;
+	int population_size, num_mal, num_fem, num_progeny, sex_trait;
 	double sex_theta, sex_omega, courter_thresh, parent_thresh,pref_thresh;
 	bool extinct;
 	vector<double> theta, mean_fem_traits, mean_mal_traits, d_parentfreq, d_courterfreq;
 	vector<individual> adults;
 	vector<individual> progeny;
-	vector<tracker> courter_qtls, parent_qtls, pref_qtls, courter_env_qtls, parent_env_qtls, pref_env_qtls, courter_thresh_qtls, parent_thresh_qtls;
+	vector<tracker> courter_qtls, parent_qtls, pref_qtls, courter_env_qtls, parent_env_qtls, pref_env_qtls, courter_thresh_qtls, parent_thresh_qtls, cthresh_env_qtls, pthresh_env_qtls;
 	vector<tracker> maf, hs, maj_allele, ref_allele;
 
 
 	population()
 	{
-		population_size = num_mal = num_fem = num_progeny = sex_trait = max_num_migrants = migrant_index = int();
+		population_size = num_mal = num_fem = num_progeny = sex_trait = int();
 		theta = mean_fem_traits = mean_mal_traits = vector<double>();
 		sex_theta = sex_omega = courter_thresh = parent_thresh = pref_thresh = double();
 		adults = progeny = vector<individual>();
-		courter_env_qtls = courter_qtls = parent_env_qtls = parent_qtls = pref_env_qtls = pref_qtls = parent_thresh_qtls = courter_thresh_qtls = maf = hs = vector<tracker>();
+		courter_env_qtls = courter_qtls = parent_env_qtls = parent_qtls = pref_env_qtls = pref_qtls = parent_thresh_qtls = courter_thresh_qtls =cthresh_env_qtls = pthresh_env_qtls = maf = hs = vector<tracker>();
 		extinct = false;
 		sgenrand(time(0));
 	}
+	
 	//initialize
 	void determine_pref_thresh(parameters gp)
 	{
@@ -45,7 +46,7 @@ public:
 			pref_thresh = parent_thresh;
 	}
 	void set_thresholds(parameters gp)
-	{
+	{//this function is run after traits have been set
 		int j, adult_count;
 		vector<double> tempallele1, tempallele2;
 		
@@ -53,7 +54,7 @@ public:
 		//if traits are conditional
 		if (gp.courter_conditional || gp.parent_conditional)
 		{
-			for (j = 0; j < (gp.carrying_capacity + max_num_migrants); j++)
+			for (j = 0; j < gp.carrying_capacity; j++)
 			{
 				if (adults[j].alive)
 				{
@@ -85,7 +86,7 @@ public:
 			}
 		}
 		//assign morph to each ind
-		for (j = 0; j < (gp.carrying_capacity + max_num_migrants); j++)
+		for (j = 0; j < gp.carrying_capacity; j++)
 		{
 			if (gp.thresholds_evolve)
 			{
@@ -115,7 +116,7 @@ public:
 		}
 		determine_pref_thresh(gp);//initialize the preference threshold
 	}
-	void initialize_supergene(parameters gp)
+	void initialize_supergene(parameters & gp)
 	{
 		int m, mm, mmm, sg_start;
 		double supergene_nmarkers = gp.supergene_prop*gp.num_markers;
@@ -267,7 +268,7 @@ public:
 	void initialize_adults(parameters gp)
 	{
 		int j, jj, jjj;
-		for (j = 0; j < (gp.carrying_capacity + max_num_migrants); j++)
+		for (j = 0; j < gp.carrying_capacity; j++)
 		{
 			adults.push_back(individual());
 			if (gp.court_trait || gp.ind_pref || gp.cor_prefs || !gp.random_mating)
@@ -290,11 +291,6 @@ public:
 					{
 						adults[j].maternal[jj].courter_ae.push_back(double());
 						adults[j].paternal[jj].courter_ae.push_back(double());
-						if (gp.thresholds_evolve)
-						{
-							adults[j].maternal[jj].courter_thresh.push_back(double());
-							adults[j].paternal[jj].courter_thresh.push_back(double());
-						}
 					}
 				}
 				if (gp.parent_trait)
@@ -303,11 +299,6 @@ public:
 					{
 						adults[j].maternal[jj].parent_ae.push_back(double());
 						adults[j].paternal[jj].parent_ae.push_back(double());
-						if (gp.thresholds_evolve)
-						{
-							adults[j].maternal[jj].parent_thresh.push_back(double());
-							adults[j].paternal[jj].parent_thresh.push_back(double());
-						}
 					}
 				}
 				if (gp.cor_prefs || gp.ind_pref)
@@ -316,6 +307,25 @@ public:
 					{
 						adults[j].maternal[jj].pref_ae.push_back(double());
 						adults[j].paternal[jj].pref_ae.push_back(double());
+					}
+				}
+				if (gp.thresholds_evolve)
+				{
+					if (gp.courter_conditional || gp.court_trait)
+					{
+						for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
+						{
+							adults[j].maternal[jj].courter_thresh.push_back(double());
+							adults[j].paternal[jj].courter_thresh.push_back(double());
+						}
+					}
+					if (gp.parent_conditional || gp.parent_trait)
+					{
+						for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
+						{
+							adults[j].maternal[jj].parent_thresh.push_back(double());
+							adults[j].paternal[jj].parent_thresh.push_back(double());
+						}
 					}
 				}
 			}
@@ -329,7 +339,7 @@ public:
 		max_potential_fecund = max(max_potential_fecund, gp.rs_nc);
 		max_potential_fecund = max(max_potential_fecund, gp.rs_np);
 		max_potential_fecund = max(max_potential_fecund, gp.rs_p);
-		for (j = 0; j < (max_potential_fecund*(gp.carrying_capacity + max_num_migrants)); j++)
+		for (j = 0; j < (max_potential_fecund*gp.carrying_capacity); j++)
 		{
 			progeny.push_back(individual());
 			if (gp.court_trait || gp.ind_pref || gp.cor_prefs)
@@ -378,6 +388,25 @@ public:
 					{
 						progeny[j].maternal[jj].pref_ae.push_back(double());
 						progeny[j].paternal[jj].pref_ae.push_back(double());
+					}
+				}
+				if (gp.thresholds_evolve)
+				{
+					if (gp.courter_conditional || gp.court_trait)
+					{
+						for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
+						{
+							progeny[j].maternal[jj].courter_thresh.push_back(double());
+							progeny[j].paternal[jj].courter_thresh.push_back(double());
+						}
+					}
+					if (gp.parent_conditional || gp.parent_trait)
+					{
+						for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
+						{
+							progeny[j].maternal[jj].parent_thresh.push_back(double());
+							progeny[j].paternal[jj].parent_thresh.push_back(double());
+						}
 					}
 				}
 			}
@@ -431,13 +460,12 @@ public:
 			}
 		}
 	}
-	void initialize(parameters gp)
+	void initialize(parameters & gp)
 	{
 		cout << "Initializing a population.\n";
 		population_size = gp.carrying_capacity;
 		int j, jj, jjj, k;
 		num_fem = num_mal = 0;
-		migrant_index = gp.carrying_capacity;
 		sex_theta = -100;
 		//set up the qtls
 		if (gp.supergene)
@@ -525,7 +553,7 @@ public:
 				gp.ind_pref = true;
 			}
 		}
-		if (gp.thresholds_evolve && !gp.thresholds_in_supergene)
+		if (gp.thresholds_evolve && !gp.thresholds_in_supergene)//put this here in case supergene is called but thresholds aren't there.
 		{
 			for (j = 0; j < gp.num_chrom; j++)
 			{
@@ -543,7 +571,7 @@ public:
 			}
 		}
 		//Set up environmental effect QTL locations if necessary
-		if (gp.env_effects)
+		if (gp.gene_network)
 		{
 			//randomly choose gp.num_env_qtl from the set
 			for (j = 0; j < gp.num_env_qtl; j++)
@@ -554,6 +582,13 @@ public:
 					assign_env_qtls(parent_env_qtls, gp);
 				if (gp.cor_prefs || gp.ind_pref)
 					assign_env_qtls(pref_env_qtls, gp, gp.num_qtl/gp.num_chrom);
+				if (gp.thresholds_evolve)
+				{
+					if (gp.court_trait || gp.courter_conditional)
+						assign_env_qtls(cthresh_env_qtls, gp);
+					if (gp.parent_conditional || gp.parent_trait)
+						assign_env_qtls(pthresh_env_qtls, gp);
+				}
 			}
 		}
 
@@ -561,9 +596,11 @@ public:
 		for (j = 0; j < gp.num_chrom; j++)
 		{
 			maf.push_back(tracker());
+			ref_allele.push_back(tracker());
 			hs.push_back(tracker());
 			for (jj = 0; jj < gp.num_markers; jj++)
 			{
+				ref_allele[j].per_locus.push_back(double());
 				maf[j].per_locus.push_back(double());
 				hs[j].per_locus.push_back(double());
 			}
@@ -580,73 +617,38 @@ public:
 			tempallele2.push_back(randnorm(0, gp.allelic_std_dev));
 			tempallele3.push_back(randnorm(0, gp.allelic_std_dev));
 		}
-		for (j = 0; j < (gp.carrying_capacity + max_num_migrants); j++)
+		for (j = 0; j < gp.carrying_capacity; j++)
 		{
 			if (j < gp.carrying_capacity)
 				adults[j].alive = true;
 			else
 				adults[j].alive = false;//it's an empty slot for migrants
-			if (gp.env_effects)//set up interactions
+			if (gp.gene_network)//set up interactions
 			{
 				if (gp.court_trait == true)
 				{
-					for (jj = 0; jj < gp.num_qtl; jj++)
-					{//the first ones are the environmentally regulated ones.
-						adults[j].courter_int.push_back(tracker());//SxS matrix of gene interactions
-						adults[j].courter_Y.push_back(tracker());	//SxS matrix of whether genes regulate each other					
-						if (jj > gp.num_env_qtl)
-						{
-							adults[j].courter_Z.push_back(1);		//(S-E) vector of whether gene j contributes to trait i. 
-							adults[j].courter_x.push_back(double());//(S-E) vector of weigths and contributions to trait i.
-						}
-						for (jjj = 0; jjj < gp.num_qtl; jjj++)
-						{
-							adults[j].courter_Y[jj].per_locus.push_back(1);
-							adults[j].courter_int[jj].per_locus.push_back(randnorm(0, 0.5));
-						}
-					}
+					adults[j].initialize_env_qtls(gp, adults[j].courter_int, adults[j].courter_Y, adults[j].courter_x, adults[j].courter_Z);
 				}
 				if (gp.parent_trait == true)
 				{
-					for (jj = 0; jj < gp.num_qtl; jj++)
-					{
-						adults[j].parent_int.push_back(tracker());
-						adults[j].parent_Y.push_back(tracker());
-						if (jj > gp.num_env_qtl)
-						{
-							adults[j].parent_Z.push_back(1);
-							adults[j].parent_x.push_back(double());
-						}
-						for (jjj = 0; jjj < gp.num_qtl; jjj++)
-						{
-							adults[j].parent_Y[jj].per_locus.push_back(1);//they all start out with an interaction
-							adults[j].parent_int[jj].per_locus.push_back(randnorm(0, 0.5));
-						}
-					}
+					adults[j].initialize_env_qtls(gp, adults[j].parent_int, adults[j].parent_Y, adults[j].parent_x, adults[j].parent_Z);
 				}
 				if (gp.cor_prefs || gp.ind_pref)
 				{
-					for (jj = 0; jj < gp.num_qtl; jj++)
-					{
-						adults[j].pref_int.push_back(tracker());
-						adults[j].pref_Y.push_back(tracker());						
-						if (jj > gp.num_env_qtl)
-						{
-							adults[j].pref_Z.push_back(1);
-							adults[j].pref_x.push_back(double());
-						}
-						for (jjj = 0; jjj < gp.num_qtl; jjj++)
-						{
-							adults[j].pref_Y[jj].per_locus.push_back(1);
-							adults[j].pref_int[jj].per_locus.push_back(randnorm(0, 0.5));
-						}
-					}
+					adults[j].initialize_env_qtls(gp, adults[j].pref_int, adults[j].pref_Y, adults[j].pref_x, adults[j].pref_Z);
+				}
+				if (gp.thresholds_evolve)
+				{
+					if(gp.courter_conditional || gp.court_trait)
+						adults[j].initialize_env_qtls(gp, adults[j].cthresh_int, adults[j].cthresh_Y, adults[j].cthresh_x, adults[j].cthresh_Z);
+					if(gp.parent_conditional || gp.parent_trait)
+						adults[j].initialize_env_qtls(gp, adults[j].pthresh_int, adults[j].pthresh_Y, adults[j].pthresh_x, adults[j].pthresh_Z);
 				}
 			}
 			
 			for (jj = 0; jj < gp.num_chrom; jj++)
 			{
-				if (gp.court_trait || !gp.random_mating)//because if preferences exist then there needs to be a male trait.
+				if (gp.court_trait)
 				{
 					for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
 					{
@@ -688,6 +690,7 @@ public:
 			if (genrand() < 0.5)
 			{
 				adults[j].female = true;
+				adults[j].pot_rs = gp.max_fecund;
 				num_fem++;
 			}
 			else
@@ -700,12 +703,12 @@ public:
 		set_thresholds(gp); //this also takes care of conditional (random) traits
 		for (j = 0; j < gp.carrying_capacity; j++)
 		{
-			adults[j].update_traits(gp, pref_thresh);
+			adults[j].update_traits(gp, courter_thresh, parent_thresh, pref_thresh);
 		}
 		population_size = gp.carrying_capacity;
 		
 	}
-	bool sanity_checks(parameters gp)
+	bool sanity_checks(parameters& gp)
 	{
 		int p, pp;
 		bool run_program, each_ok;
@@ -801,7 +804,7 @@ public:
 				run_program = each_ok;
 			}
 		}
-		if (gp.env_effects)
+		if (gp.gene_network)
 		{
 			each_ok = true;
 			if (!gp.court_trait && !gp.parent_trait && !gp.ind_pref && !gp.cor_prefs)
@@ -823,9 +826,33 @@ public:
 				if (pref_env_qtls.size() == 0)
 					each_ok = false;
 			}
+			if (gp.thresholds_evolve)
+			{
+				if (gp.courter_conditional || gp.court_trait)
+				{
+					if (cthresh_env_qtls.size() == 0)
+						each_ok = false;
+				}
+				if (gp.parent_conditional || gp.parent_trait)
+				{
+					if (pthresh_env_qtls.size() == 0)
+						each_ok = false;
+				}
+			}
 			if (!each_ok)
 			{
-				cout << "\nERROR: Environmental effect parameters are insane.";
+				cout << "\nERROR: Gene network parameters are insane.";
+				run_program = each_ok;
+			}
+		}
+		if (gp.env_cue)
+		{
+			each_ok = true;
+			if (!gp.gene_network)
+				each_ok = false;
+			if (!each_ok)
+			{
+				cout << "\nERROR: Environmental cue parameters are insane.";
 				run_program = each_ok;
 			}
 		}
@@ -971,7 +998,7 @@ public:
 	{
 		int j;
 		population_size = 0;
-		for (j = 0; j < (gp.carrying_capacity + max_num_migrants); j++)
+		for (j = 0; j < gp.carrying_capacity; j++)
 		{
 			if (adults[j].alive)
 				population_size++;
@@ -990,7 +1017,7 @@ public:
 		{
 			if (adults[j].alive && !adults[j].female)
 			{
-				if (gp.env_effects)
+				if (gp.gene_network)
 					adults[j].calc_courter_trait(gp, courter_env_qtls, 0);
 				else
 					adults[j].calc_courter_trait(gp);
@@ -1010,7 +1037,7 @@ public:
 		{
 			if (adults[j].alive && !adults[j].female)
 			{
-				if (gp.env_effects)
+				if (gp.gene_network)
 					adults[j].calc_parent_trait(gp, parent_env_qtls, 0);
 				else
 					adults[j].calc_parent_trait(gp);
@@ -1105,7 +1132,7 @@ public:
 		{
 			if (adults[j].alive && adults[j].female)
 			{
-				if (gp.env_effects)
+				if (gp.gene_network)
 					adults[j].calc_preference_trait(gp, pref_thresh, pref_env_qtls, 0);//what is the environmental cue??
 				else
 					adults[j].calc_preference_trait(gp, pref_thresh);
@@ -1170,7 +1197,7 @@ public:
 		{
 			if (adults[j].alive && adults[j].female)
 			{
-				if(gp.env_effects)
+				if(gp.gene_network)
 					adults[j].calc_preference_trait(gp, pref_thresh,pref_env_qtls,0);//consider environmental cue...
 				else
 					adults[j].calc_preference_trait(gp, pref_thresh);
@@ -1240,6 +1267,67 @@ public:
 		}
 	}
 
+	//calculating cues
+	void nesting_cue_eval(parameters gp, int mal_id,bool courter_trait, double fem_opt)
+	{
+		double c;
+		if (gp.gene_network)//sanity check
+		{
+			if (courter_trait == true)
+			{
+				if (gp.env_cue)
+					c = double(adults[mal_id].mate_found / gp.max_num_mates) - exp((adults[mal_id].courter - fem_opt)*(adults[mal_id].courter - fem_opt));
+				else
+					c = 0;
+				adults[mal_id].calc_courter_trait(gp, courter_env_qtls, c,false);
+				if (gp.thresholds_evolve)
+					adults[mal_id].determine_threshold(gp, courter_thresh, parent_thresh, cthresh_env_qtls, pthresh_env_qtls, c, false);
+				adults[mal_id].assign_court_morph(gp);
+			}
+			else
+			{
+				if (gp.env_cue)
+					c = double(adults[mal_id].mate_found / gp.max_num_mates) - exp((adults[mal_id].parent - fem_opt)*(adults[mal_id].parent - fem_opt));
+				else
+					c = 0;
+				adults[mal_id].calc_parent_trait(gp, parent_env_qtls, c, false);
+				if (gp.thresholds_evolve)
+					adults[mal_id].determine_threshold(gp, courter_thresh, parent_thresh, cthresh_env_qtls, pthresh_env_qtls, c, false);
+				adults[mal_id].assign_parent_morph(gp);
+			}
+		}
+	}
+	void preference_cue_eval(parameters gp, int fem_id, int num_encounters, int male_trait)
+	{
+		double c;
+		if (gp.gene_network)
+		{
+			if (gp.env_cue)
+				c = double(num_encounters) / gp.max_encounters - exp((adults[fem_id].female_pref - male_trait)*(adults[fem_id].female_pref - male_trait));
+			else
+				c = 0;
+			adults[fem_id].calc_preference_trait(gp, pref_thresh, pref_env_qtls, c, false);
+			//I could add frequency dependence but I'm not sure how...
+		}
+	}
+	void parent_cue_eval(parameters gp, int mal_id)
+	{
+		double c;
+		if (gp.gene_network)
+		{
+			if (gp.parent_trait)
+			{
+				if (gp.env_cue)
+					c = double(adults[mal_id].mate_found) / gp.max_num_mates - exp((adults[mal_id].pot_rs - gp.rs_p)*(adults[mal_id].pot_rs - gp.rs_p));
+				else
+					c = 0;
+				adults[mal_id].calc_parent_trait(gp, parent_env_qtls, c, false);
+				if (gp.thresholds_evolve)
+					adults[mal_id].determine_threshold(gp, courter_thresh, parent_thresh, cthresh_env_qtls, pthresh_env_qtls, c, false);
+				adults[mal_id].assign_parent_morph(gp);
+			}
+		}
+	}
 	//functions for mating
 	void recombine_chromosome(chromosome& chrom, individual &parent, double expected_recomb_events, int which_chrom, parameters gp, bool alive)//tracker& court_qtls, tracker& parent_qtls, tracker& pref_qtls, 
 	{
@@ -1283,17 +1371,25 @@ public:
 				segment_start[RCi + 1] = break_point[RCi];
 				if (gp.supergene)
 				{
-					if (courter_qtls[which_chrom].per_locus.size() > 0 &&
-						courter_qtls[which_chrom].per_locus[0] >= segment_start[RCi] && 
-						courter_qtls[which_chrom].per_locus[gp.qtl_per_chrom[which_chrom]] >= segment_end[RCi])
+					if (courter_qtls[which_chrom].per_locus.size() > 0)
 					{
-						alive = false;
+						double first_qtl, last_qtl;
+						first_qtl = courter_qtls[which_chrom].first_qtl();
+						last_qtl = courter_qtls[which_chrom].last_qtl();
+						if (first_qtl >= segment_start[RCi] && last_qtl >= segment_end[RCi])
+						{
+							alive = false;
+						}
 					}
-					if (parent_qtls[which_chrom].per_locus.size() > 0 &&
-						parent_qtls[which_chrom].per_locus[0] >= segment_start[RCi] &&
-						parent_qtls[which_chrom].per_locus[gp.qtl_per_chrom[which_chrom]] >= segment_end[RCi])
+					if (parent_qtls[which_chrom].per_locus.size() > 0)
 					{
-						alive = false;
+						int first_qtl, last_qtl;
+						first_qtl = parent_qtls[which_chrom].first_qtl();
+						last_qtl = parent_qtls[which_chrom].last_qtl();
+						if(first_qtl >= segment_start[RCi] && last_qtl <= segment_end[RCi])
+						{
+							alive = false;
+						}
 					}
 				}
 
@@ -1463,7 +1559,7 @@ public:
 	}
 	double making_babies(parameters gp, int fecundity, int& num_progeny, int mom_index, int dad_index)
 	{
-		int j, jj, jjj, rec_val;
+		int jj, jjj, rec_val;
 		double rel_rs, diff;
 		bool recomb1, recomb2;
 		rel_rs = 0;
@@ -1483,20 +1579,20 @@ public:
 			if (progeny[num_progeny].alive)
 			{
 				//also need to do mutation
-				if (gp.env_effects)//need to evaluate if it's compatible
+				if (gp.gene_network)//need to evaluate if it's compatible
 				{
 					progeny[num_progeny].mutation_env(gp);
 					if (gp.courter_conditional || gp.parent_conditional)
 						progeny[num_progeny].assign_conditional_traits(gp);//do this before updating traits, but after mutation
-					progeny[num_progeny].update_traits(gp, pref_thresh,
-						0, courter_env_qtls, parent_env_qtls, pref_env_qtls);
+					progeny[num_progeny].update_traits(gp, courter_thresh, parent_thresh, pref_thresh,
+						0, courter_env_qtls, parent_env_qtls, pref_env_qtls, pthresh_env_qtls,cthresh_env_qtls);
 				}
 				else
 				{
-					progeny[num_progeny].mutation(gp, courter_qtls, parent_qtls, pref_qtls);
+					progeny[num_progeny].mutation(gp, courter_qtls, parent_qtls, pref_qtls,courter_thresh_qtls,parent_thresh_qtls);
 					if (gp.courter_conditional || gp.parent_conditional)
 						progeny[num_progeny].assign_conditional_traits(gp);//do this before updating traits, but after mutation
-					progeny[num_progeny].update_traits(gp, pref_thresh);
+					progeny[num_progeny].update_traits(gp, courter_thresh, parent_thresh, pref_thresh);
 				}
 				if (progeny[num_progeny].alive)
 				{
@@ -1512,296 +1608,9 @@ public:
 		rel_rs = rel_rs / fecundity;
 		return rel_rs;
 	}
-	void gaussian_mating(bool output, string out_name, parameters gp)
-	{//DEPRECATED DO NOT USE
-		//monogamous mating without choice
-		int j, jj, jjj, male_id, encounters;
-		double mate_prob, rel_rs;
-		num_progeny = num_fem = num_mal = 0;
-		bool mate_found;
-		vector<int> male_index;
-		vector<bool> mated;
-		ofstream out_file;
-		if (output)
-		{
-			cout << "\nWriting to file " << out_name;
-			out_file.open(out_name);
-		}
-		determine_pop_size(gp);
-		assign_preference(gp);
-
-		for (j = 0; j < adults.size(); j++)
-		{
-			if (adults[j].female && adults[j].alive)
-				num_fem++;
-			else
-			{
-				if (adults[j].alive)
-				{
-					num_mal++;
-					male_index.push_back(j);
-					mated.push_back(false);
-				}
-			}
-			adults[j].mate_found = 0;
-		}
-		
-
-		for (j = 0; j < adults.size(); j++)
-		{
-			mate_found = false;
-			if (adults[j].female && adults[j].alive)
-			{
-				int count = 0;
-				encounters = 0;
-				if (gp.random_mating)
-				{
-					while (!mate_found && encounters <= gp.max_encounters)//female mates once
-					{
-						int irndnum = randnum(num_mal);
-						male_id = male_index[irndnum];
-						if (adults[male_id].alive)
-						{
-							if (gp.polygyny || !mated[irndnum])
-							{
-								mate_found = true;
-								mated[irndnum] = true;
-								adults[j].mate_found++;
-								adults[male_id].mate_found++;
-							}
-							encounters++;
-						}
-					}
-				}//random mating
-				else
-				{ //gaussian: already calculated male traits and female prefs 
-					while (!mate_found && encounters <= gp.max_encounters)
-					{
-						int irndnum = randnum(num_mal);
-						male_id = male_index[irndnum];
-						if (adults[male_id].alive)
-						{
-							if (gp.polygyny || !mated[irndnum])
-							{
-								if (gp.court_trait)
-									mate_prob = exp(-0.5 * (adults[male_id].courter_trait - gp.gaussian_pref_mean)*
-									(adults[male_id].courter_trait - gp.gaussian_pref_mean) / adults[j].female_pref);
-								else
-									mate_prob = exp(-0.5 * (adults[male_id].parent_trait - gp.gaussian_pref_mean)*
-									(adults[male_id].parent_trait - gp.gaussian_pref_mean) / adults[j].female_pref);
-								if (genrand() < mate_prob)
-								{
-									mate_found = true;
-									mated[irndnum] = true;
-									adults[j].mate_found++;
-									adults[male_id].mate_found++;
-									if (gp.CD_court)
-									{
-										if (adults[male_id].courter)//it decreases
-											adults[male_id].courter_trait = adults[male_id].courter_trait - gp.cond_adj;
-										else//it increases
-											adults[male_id].courter_trait = adults[male_id].courter_trait + gp.cond_adj;
-										adults[male_id].assign_court_morph(gp, courter_thresh);
-									}
-									if (gp.CD_parent)
-									{
-										if (adults[male_id].parent)//it decreases
-											adults[male_id].parent_trait = adults[male_id].parent_trait - gp.cond_adj;
-										else//it increases
-											adults[male_id].parent_trait = adults[male_id].parent_trait + gp.cond_adj;
-										adults[male_id].assign_parent_morph(gp, parent_thresh);
-									}
-								}
-							}
-							encounters++;
-						}
-					}//while
-				}				
-				if (mate_found)
-				{
-					int fecundity = min(adults[j].pot_rs, adults[male_id].pot_rs);
-					rel_rs = making_babies(gp, fecundity, num_progeny, j, male_id);
-					if (output)
-					{
-						out_file << '\n' << rel_rs << "\tMother" << '\t' << j;
-						for (jjj = 0; jjj < gp.num_chrom; jjj++)
-						{
-							for (int x = 0; x < gp.num_markers; x++) {
-								out_file << '\t' << adults[j].maternal[jjj].loci[x] << "/" << adults[j].paternal[jjj].loci[x];
-
-							}
-						}
-						out_file << "\nFather" << '\t' << male_id;
-						for (jjj = 0; jjj < gp.num_chrom; jjj++)
-						{
-							for (int x = 0; x < gp.num_markers; x++)
-								out_file << '\t' << adults[male_id].maternal[jjj].loci[x] << "/" << adults[male_id].paternal[jjj].loci[x];
-						}
-						out_file << "\nOffspring" << '\t' << num_progeny;
-						for (jjj = 0; jjj < gp.num_chrom; jjj++)
-						{
-							for (int x = 0; x < gp.num_markers; x++) {
-								out_file << '\t' << progeny[num_progeny].maternal[jjj].loci[x] << "/" << progeny[num_progeny].paternal[jjj].loci[x];
-
-							}
-						}
-					}
-				}
-			}
-		}
-		if (output)
-			out_file.close();
-	}//mating
-	void bestofN_mating(bool output, string out_name, parameters gp)
-	{//DEPRECATED DO NOT USE
-		//monogamous mating without choice
-		int j, jj, jjj, male_id, encounters, irndnum;
-		double mate_prob, rel_rs;
-		num_progeny = num_fem = num_mal = 0;
-		bool mate_found;
-		vector<int> male_index;
-		vector<bool> mated;
-		ofstream out_file;
-		if (output)
-		{
-			cout << "\nWriting to file " << out_name;
-			out_file.open(out_name);
-		}
-		determine_pop_size(gp);
-		assign_preference(gp);
-
-		for (j = 0; j < adults.size(); j++)
-		{
-			if (adults[j].female && adults[j].alive)
-				num_fem++;
-			else
-			{
-				if (adults[j].alive)
-				{
-					num_mal++;
-					male_index.push_back(j);
-					mated.push_back(false);
-				}
-			}
-			adults[j].mate_found = 0;
-		}
-
-
-		for (j = 0; j < adults.size(); j++)
-		{
-			if (adults[j].female && adults[j].alive)
-			{
-				int count = 0;
-				encounters = 0;
-				mate_found = false;
-				if (gp.random_mating)
-				{
-					while (!mate_found && encounters < gp.max_encounters)//female mates once
-					{
-						irndnum = randnum(num_mal);
-						male_id = male_index[irndnum];
-						if (adults[male_id].alive)
-						{
-							if (gp.polygyny || !mated[irndnum])//either polygyny is ok or if monogamy the male hasn't mated yet
-							{
-								mate_found = true;
-								mated[irndnum] = true;
-								adults[j].mate_found++;
-								adults[male_id].mate_found++;
-							}
-						}
-						encounters++;
-					}
-				}//random mating
-				else
-				{ //preference for one morph or the other 
-					vector <int> acceptable_males;
-					while (encounters < gp.max_encounters)
-					{
-						irndnum = randnum(num_mal);
-						male_id = male_index[irndnum];
-						if (adults[male_id].alive)
-						{
-							if (gp.polygyny || !mated[irndnum])
-							{
-								if (gp.court_trait)
-								{
-									if (adults[j].female_pref == adults[male_id].courter);
-										acceptable_males.push_back(male_id);
-								}
-								else//parent_trait
-								{
-									if (adults[j].female_pref == adults[male_id].parent);
-										acceptable_males.push_back(male_id);
-								}
-							}
-						}
-						encounters++;
-					}
-					if (acceptable_males.size() >= 1)//if there are multiple males, she chooses one randomly
-					{
-						int randbest = randnum(acceptable_males.size());
-						male_id = acceptable_males[randbest];
-						mate_found = true;
-						mated[irndnum] = true;
-						adults[j].mate_found++;
-						adults[male_id].mate_found++;
-						if (gp.CD_court)
-						{
-							if (adults[male_id].courter)//it decreases
-								adults[male_id].courter_trait = adults[male_id].courter_trait - gp.cond_adj;
-							else//it increases
-								adults[male_id].courter_trait = adults[male_id].courter_trait + gp.cond_adj;
-							adults[male_id].assign_court_morph(gp, courter_thresh);
-						}
-						if (gp.CD_parent)
-						{
-							if (adults[male_id].parent)//it decreases
-								adults[male_id].parent_trait = adults[male_id].parent_trait - gp.cond_adj;
-							else//it increases
-								adults[male_id].parent_trait = adults[male_id].parent_trait + gp.cond_adj;
-							adults[male_id].assign_parent_morph(gp, parent_thresh);
-						}
-					}
-				}//end of finding the mates
-				if (mate_found)
-				{
-					int fecundity = min(adults[j].pot_rs, adults[male_id].pot_rs);
-					rel_rs = making_babies(gp, fecundity, num_progeny, j, male_id);
-					if (output)
-					{
-						out_file << '\n' << rel_rs << "\tMother" << '\t' << j;
-						for (jjj = 0; jjj < gp.num_chrom; jjj++)
-						{
-							for (int x = 0; x < gp.num_markers; x++) {
-								out_file << '\t' << adults[j].maternal[jjj].loci[x] << "/" << adults[j].paternal[jjj].loci[x];
-
-							}
-						}
-						out_file << "\nFather" << '\t' << male_id;
-						for (jjj = 0; jjj < gp.num_chrom; jjj++)
-						{
-							for (int x = 0; x < gp.num_markers; x++)
-								out_file << '\t' << adults[male_id].maternal[jjj].loci[x] << "/" << adults[male_id].paternal[jjj].loci[x];
-						}
-						out_file << "\nOffspring" << '\t' << num_progeny;
-						for (jjj = 0; jjj < gp.num_chrom; jjj++)
-						{
-							for (int x = 0; x < gp.num_markers; x++) {
-								out_file << '\t' << progeny[num_progeny].maternal[jjj].loci[x] << "/" << progeny[num_progeny].paternal[jjj].loci[x];
-
-							}
-						}
-					}
-				}
-			}
-		}
-		if (output)
-			out_file.close();
-	}
 	void nest_and_fertilize(parameters gp, bool output, string out_name)
 	{
-		int j, jj, jjj;
+		int j, jj, jjj, first_progeny;
 		num_progeny = num_fem = num_mal = 0;
 		bool nest_found;
 		vector<int> male_index;
@@ -1831,7 +1640,10 @@ public:
 				nest_found = choose_nest(j, male_index, gp);
 				if (nest_found)
 				{
-					random_fertilization(j, male_index, gp);
+					if (gp.gene_network)
+						parent_cue_eval(gp, adults[j].mate_id);
+					first_progeny = fertilization(j, male_index, gp);
+					nest_survival(gp, first_progeny, adults[j].mate_id);
 				}
 			}
 		}
@@ -1870,7 +1682,7 @@ public:
 						adults[male_id].courter_trait = adults[male_id].courter_trait - gp.cond_adj;
 					else//it increases
 						adults[male_id].courter_trait = adults[male_id].courter_trait + gp.cond_adj;
-					adults[male_id].assign_court_morph(gp, courter_thresh);
+					adults[male_id].assign_court_morph(gp);
 				}
 				if (gp.CD_parent)
 				{
@@ -1878,10 +1690,10 @@ public:
 						adults[male_id].parent_trait = adults[male_id].parent_trait - gp.cond_adj;
 					else//it increases
 						adults[male_id].parent_trait = adults[male_id].parent_trait + gp.cond_adj;
-					adults[male_id].assign_parent_morph(gp, parent_thresh);
+					adults[male_id].assign_parent_morph(gp);
 				}
 			}
-		}//random mating
+		}//end random mating
 		else
 		{ //preference for one morph or the other 
 			vector <int> acceptable_males;
@@ -1891,17 +1703,25 @@ public:
 				male_id = male_index[irndnum];
 				if (adults[male_id].alive)
 				{
-					if (gp.polygyny || adults[male_id].mate_found == 0)
+					if (adults[male_id].mate_found < gp.max_num_mates)
 					{
+						if (gp.gene_network)
+						{//redetermine traits and thresholds, given the mating experience and optimality of trait
+							nesting_cue_eval(gp, male_id, gp.court_trait, adults[fem_index].female_pref);
+							if (gp.ind_pref || gp.cor_prefs && gp.court_trait)
+								preference_cue_eval(gp, fem_index, encounters, adults[male_id].courter);
+							if (gp.ind_pref || gp.cor_prefs && !gp.court_trait)
+								preference_cue_eval(gp, fem_index, encounters, adults[male_id].parent);
+						}
 						if (gp.court_trait)
 						{
-							if (adults[fem_index].female_pref == adults[male_id].courter);
-							acceptable_males.push_back(male_id);
+							if (adults[fem_index].female_pref == adults[male_id].courter)	
+								acceptable_males.push_back(male_id);
 						}
 						else//parent_trait
 						{
-							if (adults[fem_index].female_pref == adults[male_id].parent);
-							acceptable_males.push_back(male_id);
+							if (adults[fem_index].female_pref == adults[male_id].parent)
+								acceptable_males.push_back(male_id);
 						}
 					}
 				}
@@ -1921,7 +1741,7 @@ public:
 						adults[male_id].courter_trait = adults[male_id].courter_trait - gp.cond_adj;
 					else//it increases
 						adults[male_id].courter_trait = adults[male_id].courter_trait + gp.cond_adj;
-					adults[male_id].assign_court_morph(gp, courter_thresh);
+					adults[male_id].assign_court_morph(gp);
 				}
 				if (gp.CD_parent)
 				{
@@ -1929,38 +1749,83 @@ public:
 						adults[male_id].parent_trait = adults[male_id].parent_trait - gp.cond_adj;
 					else//it increases
 						adults[male_id].parent_trait = adults[male_id].parent_trait + gp.cond_adj;
-					adults[male_id].assign_parent_morph(gp, parent_thresh);
+					adults[male_id].assign_parent_morph(gp);
 				}
 			}
 		}//end of finding the mates
 		return mate_found;
 	}
-	void random_fertilization(int fem_id, vector<int> & male_index, parameters gp)
+	int fertilization(int fem_id, vector<int> & male_index, parameters gp)
 	{
-		int k,fecundity, randmale, sneaker_id;
+		int k,kk,fecundity, randmale, max_sperm, first_progeny;
 		double rel_rs;
 		int male_id = adults[fem_id].mate_id;
-		int num_eggs_left = adults[fem_id].pot_rs;
+		vector<int> male_ids;
+		vector<double> fecundity_share;	
+		first_progeny = num_progeny;//set up this tracker
 		
-		//nesting male gets the first shot
-		fecundity = randnum(adults[male_id].pot_rs);
-		if (fecundity > num_eggs_left)
-			fecundity = num_eggs_left;
-		rel_rs = making_babies(gp, fecundity, num_progeny, fem_id, male_id);
-		num_eggs_left = num_eggs_left - fecundity;
-		//then if there are any eggs left, sneakers can fertilize
-		while (num_eggs_left > 0)
+		max_sperm = adults[male_id].pot_rs;
+		//if parent traits don't exist then set them all to false so all males have equal chance.
+		if (!gp.parent_conditional && !gp.parent_trait)
+		{
+			for (k = 0; k < gp.carrying_capacity; k++)
+			{
+				adults[k].parent = false;
+			}
+		}
+		//get the non-parental male mates
+		male_ids.push_back(male_id);
+		fecundity_share.push_back(0);
+		while(male_ids.size() < gp.max_num_mates)
 		{
 			randmale = randnum(male_index.size());
-			if (!adults[male_index[randmale]].parent)//if it's a sneaker
+			if (randmale != male_id)
 			{
-				sneaker_id = male_index[randmale];
-				fecundity = randnum(adults[sneaker_id].pot_rs);
-				if(fecundity > num_eggs_left)
-					fecundity = num_eggs_left;
-				rel_rs = making_babies(gp, fecundity, num_progeny, fem_id, sneaker_id);
-				num_eggs_left = num_eggs_left - fecundity;
-				adults[sneaker_id].mate_found++;
+				if (!adults[male_index[randmale]].parent)//if it's a sneaker
+				{
+					fecundity_share.push_back(0);
+					male_ids.push_back(randmale);
+					max_sperm = max_sperm + (gp.sperm_comp_r*adults[randmale].pot_rs);//if sperm_comp_r is 1, they're all equally weighted
+					adults[male_index[randmale]].mate_found++;//keep track of individual reproductive success
+				}
+			}
+		}
+		fecundity_share[0] = double(adults[male_id].pot_rs) / double(max_sperm); //it doesn't get weighted if r < 1
+		for (k = 1; k < gp.max_num_mates; k++)
+			fecundity_share[k] = double(adults[male_ids[k]].pot_rs*gp.sperm_comp_r) / double(max_sperm);
+		
+		//now generate the offspring
+		for (k = 0; k < gp.max_num_mates; k++)
+		{
+			fecundity = fecundity_share[k] * adults[fem_id].pot_rs;
+			for (kk = 0; kk < fecundity; kk++)
+				rel_rs = making_babies(gp, fecundity, num_progeny, fem_id, male_ids[k]);
+		}
+		return first_progeny;
+	}
+	void nest_survival(parameters gp, int prog_start, int mal_id)
+	{
+		int k;
+		double surv_rand;
+		if (gp.parent_conditional || gp.parent_trait)//assign survival based on
+		{
+			for (k = prog_start; k < num_progeny; k++)
+			{
+				surv_rand = rand();
+				if (adults[mal_id].parent)
+				{
+					if (surv_rand < gp.egg_surv_parent)
+						progeny[k].alive = true;
+					else
+						progeny[k].alive = false;
+				}
+				else
+				{
+					if (surv_rand < gp.egg_surv_noparent)
+						progeny[k].alive = true;
+					else
+						progeny[k].alive = false;
+				}
 			}
 		}
 	}
@@ -2022,7 +1887,11 @@ public:
 		{
 			if (progeny[j].alive)
 			{
-				progeny[j].update_traits(gp, courter_thresh, parent_thresh, pref_thresh);
+				if(gp.gene_network)
+					progeny[num_progeny].update_traits(gp, courter_thresh, parent_thresh, pref_thresh,
+						0, courter_env_qtls, parent_env_qtls, pref_env_qtls, pthresh_env_qtls, cthresh_env_qtls);
+				else
+					progeny[j].update_traits(gp, courter_thresh, parent_thresh, pref_thresh);
 				if (progeny[j].female)
 				{
 					progeny[j].alive = true;
@@ -2059,6 +1928,123 @@ public:
 	}
 
 	//stochastic survival
+	void pass_on_env_qtls(parameters gp, int adult_index, int progeny_index)
+	{
+		int pp, ppp;
+		//pass on env effects
+		for (pp = 0; pp < gp.num_qtl; pp++)
+		{
+			if (pp > gp.num_env_qtl)
+			{
+				if (gp.court_trait)
+				{
+					adults[adult_index].courter_Z[pp] = progeny[progeny_index].courter_Z[pp];
+					adults[adult_index].courter_x[pp] = progeny[progeny_index].courter_x[pp];
+				}
+				if (gp.parent_trait)
+				{
+					adults[adult_index].parent_Z[pp] = progeny[progeny_index].parent_Z[pp];
+					adults[adult_index].parent_x[pp] = progeny[progeny_index].parent_x[pp];
+				}
+				if (gp.ind_pref || gp.cor_prefs)
+				{
+					adults[adult_index].pref_Z[pp] = progeny[progeny_index].pref_Z[pp];
+					adults[adult_index].pref_x[pp] = progeny[progeny_index].pref_x[pp];
+				}
+				if (gp.thresholds_evolve)
+				{
+					if (gp.courter_conditional || gp.court_trait)
+					{
+						adults[adult_index].cthresh_Z[pp] = progeny[progeny_index].cthresh_Z[pp];
+						adults[adult_index].cthresh_x[pp] = progeny[progeny_index].cthresh_x[pp];
+					}
+					if (gp.parent_conditional || gp.parent_trait)
+					{
+						adults[adult_index].pthresh_Z[pp] = progeny[progeny_index].pthresh_Z[pp];
+						adults[adult_index].pthresh_x[pp] = progeny[progeny_index].pthresh_x[pp];
+					}
+				}
+			}
+			for (ppp = 0; ppp < gp.num_qtl; ppp++)
+			{
+				if (gp.court_trait)
+				{
+					adults[adult_index].courter_Y[pp].per_locus[pp] = progeny[progeny_index].courter_Y[pp].per_locus[ppp];
+					adults[adult_index].courter_int[pp].per_locus[ppp] = progeny[progeny_index].courter_int[pp].per_locus[ppp];
+				}
+				if (gp.parent_trait)
+				{
+					adults[adult_index].parent_Y[pp].per_locus[pp] = progeny[progeny_index].parent_Y[pp].per_locus[ppp];
+					adults[adult_index].parent_int[pp].per_locus[ppp] = progeny[progeny_index].parent_int[pp].per_locus[ppp];
+				}
+				if (gp.cor_prefs || gp.ind_pref)
+				{
+					adults[adult_index].pref_Y[pp].per_locus[pp] = progeny[progeny_index].pref_Y[pp].per_locus[ppp];
+					adults[adult_index].pref_int[pp].per_locus[ppp] = progeny[progeny_index].pref_int[pp].per_locus[ppp];
+
+				}
+				if (gp.thresholds_evolve)
+				{
+					if (gp.courter_conditional || gp.court_trait)
+					{
+						adults[adult_index].cthresh_Y[pp].per_locus[pp] = progeny[progeny_index].cthresh_Y[pp].per_locus[ppp];
+						adults[adult_index].cthresh_int[pp].per_locus[ppp] = progeny[progeny_index].cthresh_int[pp].per_locus[ppp];
+					}
+					if (gp.parent_conditional || gp.parent_trait)
+					{
+						adults[adult_index].pthresh_Y[pp].per_locus[pp] = progeny[progeny_index].pthresh_Y[pp].per_locus[ppp];
+						adults[adult_index].pthresh_int[pp].per_locus[ppp] = progeny[progeny_index].pthresh_int[pp].per_locus[ppp];
+					}
+				}
+			}
+		}
+	}
+	void pass_on_loci(parameters gp, int adult_index, int progeny_index)
+	{
+		int pp, ppp;
+		for (pp = 0; pp < gp.num_chrom; pp++)
+		{
+			for (ppp = 0; ppp < gp.num_markers; ppp++)
+			{
+				adults[adult_index].maternal[pp].loci[ppp] = progeny[progeny_index].maternal[pp].loci[ppp];
+				adults[adult_index].paternal[pp].loci[ppp] = progeny[progeny_index].paternal[pp].loci[ppp];
+			}
+			for (ppp = 0; ppp < gp.qtl_per_chrom[pp]; ppp++)
+			{
+				if (gp.thresholds_evolve)
+				{
+					if (gp.courter_conditional || gp.court_trait)
+					{
+						adults[adult_index].maternal[pp].courter_thresh[ppp] = progeny[progeny_index].maternal[pp].courter_thresh[ppp];
+						adults[adult_index].paternal[pp].courter_thresh[ppp] = progeny[progeny_index].paternal[pp].courter_thresh[ppp];
+					}
+					if (gp.parent_conditional || gp.parent_trait)
+					{
+						adults[adult_index].maternal[pp].parent_thresh[ppp] = progeny[progeny_index].maternal[pp].parent_thresh[ppp];
+						adults[adult_index].paternal[pp].parent_thresh[ppp] = progeny[progeny_index].paternal[pp].parent_thresh[ppp];
+					}
+				}
+				if (gp.court_trait)
+				{
+					adults[adult_index].maternal[pp].courter_ae[ppp] = progeny[progeny_index].maternal[pp].courter_ae[ppp];
+					adults[adult_index].paternal[pp].courter_ae[ppp] = progeny[progeny_index].paternal[pp].courter_ae[ppp];
+				}
+				if (gp.parent_trait)
+				{
+					adults[adult_index].maternal[pp].parent_ae[ppp] = progeny[progeny_index].maternal[pp].parent_ae[ppp];
+					adults[adult_index].paternal[pp].parent_ae[ppp] = progeny[progeny_index].paternal[pp].parent_ae[ppp];
+				}
+			}
+			if (gp.ind_pref || gp.cor_prefs)
+			{
+				for (ppp = 0; ppp < progeny[progeny_index].maternal[pp].pref_ae.size(); ppp++)
+				{
+					adults[adult_index].maternal[pp].pref_ae[ppp] = progeny[progeny_index].maternal[pp].pref_ae[ppp];
+					adults[adult_index].paternal[pp].pref_ae[ppp] = progeny[progeny_index].paternal[pp].pref_ae[ppp];
+				}
+			}
+		}
+	}
 	void density_regulation(parameters gp)
 	{
 		int p, pp, ppp;
@@ -2089,45 +2075,23 @@ public:
 				{//then turn it into an adult
 					adults[iNumAdultsChosen].alive = true;
 					adults[iNumAdultsChosen].mate_found = 0;
-					for (pp = 0; pp < gp.num_chrom; pp++)
+					pass_on_loci(gp, iNumAdultsChosen, p);
+					if (gp.gene_network)
 					{
-						for (ppp = 0; ppp < gp.num_markers; ppp++)
-						{
-							adults[iNumAdultsChosen].maternal[pp].loci[ppp] = progeny[p].maternal[pp].loci[ppp];
-							adults[iNumAdultsChosen].paternal[pp].loci[ppp] = progeny[p].paternal[pp].loci[ppp];
-						}
-						for (ppp = 0; ppp < gp.qtl_per_chrom[pp]; ppp++)
-						{
-							if (gp.court_trait || gp.ind_pref || gp.cor_prefs)
-							{
-								adults[iNumAdultsChosen].maternal[pp].courter_ae[ppp] = progeny[p].maternal[pp].courter_ae[ppp];
-								adults[iNumAdultsChosen].paternal[pp].courter_ae[ppp] = progeny[p].paternal[pp].courter_ae[ppp];
-							}
-							if (gp.parent_trait)
-							{
-								adults[iNumAdultsChosen].maternal[pp].parent_ae[ppp] = progeny[p].maternal[pp].parent_ae[ppp];
-								adults[iNumAdultsChosen].paternal[pp].parent_ae[ppp] = progeny[p].paternal[pp].parent_ae[ppp];
-							}							
-						}
-						if (gp.ind_pref || gp.cor_prefs)
-						{
-							for (ppp = 0; ppp < progeny[p].maternal[pp].pref_ae.size(); ppp++)
-							{
-								adults[iNumAdultsChosen].maternal[pp].pref_ae[ppp] = progeny[p].maternal[pp].pref_ae[ppp];
-								adults[iNumAdultsChosen].paternal[pp].pref_ae[ppp] = progeny[p].paternal[pp].pref_ae[ppp];
-							}
-						}
-					}
-					if(gp.env_effects)
+						pass_on_env_qtls(gp, iNumAdultsChosen, p);
 						adults[iNumAdultsChosen].update_traits(gp, courter_thresh, parent_thresh, pref_thresh,
-							0, courter_env_qtls,parent_env_qtls,pref_env_qtls);
+							0, courter_env_qtls, parent_env_qtls, pref_env_qtls, pthresh_env_qtls, cthresh_env_qtls);
+					}
 					else
-						adults[iNumAdultsChosen].update_traits(gp, courter_thresh, parent_thresh,pref_thresh);
-					if (progeny[p].female) {
+						adults[iNumAdultsChosen].update_traits(gp, courter_thresh, parent_thresh, pref_thresh);
+					if (progeny[p].female) 
+					{
 						adults[iNumAdultsChosen].female = true;
+						adults[iNumAdultsChosen].pot_rs = gp.max_fecund;
 						num_fem++;
 					}
-					else {
+					else 
+					{
 						adults[iNumAdultsChosen].female = false;
 						num_mal++;
 					}
@@ -2144,12 +2108,51 @@ public:
 			extinct = true;
 	}//end Density Regulation
 
+	//calc summary statistics
+	void calc_allele_freqs(parameters gp)
+	{
+		int j, jj, jjj, k,kk;
+		for (j = 0; j < gp.num_chrom; j++)
+		{
+			for (jj = 0; jj < gp.num_markers; jj++)
+			{
+				double allele_freqs;
+				int maj_allele;
+				double max_af = 0;
+				for (jjj = 0; jjj < gp.num_alleles; jjj++)
+				{
+					int alive_adults = 0;
+					allele_freqs = 0;
+					for (k = 0; k < gp.carrying_capacity; k++)
+					{
+						if (adults[k].alive)
+						{
+							if (adults[k].maternal[j].loci[jj] == jjj)
+								allele_freqs++;
+							if (adults[k].paternal[j].loci[jj] == jjj)
+								allele_freqs++;
+							alive_adults++;
+						}
+					}
+					allele_freqs = allele_freqs / 2 * alive_adults;
+					if (allele_freqs > max_af)
+					{
+						maj_allele = jjj;
+						max_af = allele_freqs;
+					}
+				}
+				ref_allele[j].per_locus[jj] = maj_allele;
+				maf[j].per_locus[jj] = max_af;
+			}
+		}
+	}
+	
 	//output
 	void output_qtl_info(parameters gp, ofstream & qtlinfo_output, bool initial)//no environmental qtls
 	{
 		int j, jj;
-		int count1, count2, count3;
-		count1 = count2 = count3 = 0;
+		int count1, count2, count3, count4,count5;
+		count1 = count2 = count3 =count4= count5 =0;
 		for (j = 0; j < gp.num_chrom; j++)
 		{
 			if (gp.ind_pref || gp.cor_prefs)
@@ -2207,15 +2210,60 @@ public:
 					count3++;
 				}
 			}
+			if (courter_thresh_qtls.size() > 0)
+			{
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (initial)
+						qtlinfo_output << "\tCourterThresholdQTL" << count4;
+					else
+						qtlinfo_output << '\t' << j << "." << courter_thresh_qtls[j].per_locus[jj];
+					count4++;
+				}
+			}
+			else
+			{
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (initial)
+						qtlinfo_output << "\tCourterThresholdQTL" << count4;
+					else
+						qtlinfo_output << "\tNA";
+					count4++;
+				}
+			}
+			if (parent_thresh_qtls.size() > 0)
+			{
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (initial)
+						qtlinfo_output << "\tParentThresholdQTL" << count5;
+					else
+						qtlinfo_output << '\t' << j << "." << parent_thresh_qtls[j].per_locus[jj];
+					count5++;
+				}
+			}
+			else
+			{
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (initial)
+						qtlinfo_output << "\tParentThresholdQTL" << count5;
+					else
+						qtlinfo_output << "\tNA";
+					count5++;
+				}
+			}
 		}
 		qtlinfo_output << '\n';
 	}
 	void output_qtl_info(parameters gp, ofstream & qtlinfo_output, bool initial,
-		vector<tracker>& court_env, vector<tracker>& parent_env, vector<tracker>&pref_env)
+		vector<tracker>& court_env, vector<tracker>& parent_env, vector<tracker>&pref_env,
+		vector<tracker>& cthresh_env, vector<tracker>&pthresh_env)
 	{
 		int j, jj;
-		int count1, count2, count3;
-		count1 = count2 = count3 = 0;
+		int count1, count2, count3, count4, count5;
+		count1 = count2 = count3 = count4 = count5 = 0;
 		for (j = 0; j < gp.num_chrom; j++)
 		{
 			if (gp.ind_pref || gp.cor_prefs)
@@ -2231,6 +2279,20 @@ public:
 					else
 						qtlinfo_output << '\t' << j << "." << pref_qtls[j].per_locus[jj];
 					count1++;
+				}
+			}
+			else
+			{
+				if (gp.ind_pref || gp.cor_prefs)
+				{
+					for (jj = 0; jj < pref_qtls[j].per_locus.size(); jj++)
+					{
+						if (initial)
+							qtlinfo_output << "\tPrefQTL" << count1;
+						else
+							qtlinfo_output << "\tNA";
+						count1++;
+					}
 				}
 			}
 			if (gp.parent_trait)
@@ -2285,31 +2347,73 @@ public:
 					count3++;
 				}
 			}
+			if (courter_thresh_qtls.size() > 0)
+			{
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (initial)
+					{
+						qtlinfo_output << "\tCourterThresholdQTL" << count4;
+						if (cthresh_env[j].per_locus[jj] >= 0)
+							qtlinfo_output << "_env";
+					}
+					else
+						qtlinfo_output << '\t' << j << "." << courter_thresh_qtls[j].per_locus[jj];
+					count4++;
+				}
+			}
+			else
+			{
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (initial)
+					{
+						qtlinfo_output << "\tCourterThresholdQTL" << count4;
+					}
+					else
+						qtlinfo_output << "\tNA";
+					count4++;
+				}
+			}
+			if (parent_thresh_qtls.size() > 0)
+			{
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (initial)
+					{
+						qtlinfo_output << "\tParentThresholdQTL" << count5;
+						if (pthresh_env[j].per_locus[jj] >= 0)
+							qtlinfo_output << "_env";
+					}
+					else
+						qtlinfo_output << '\t' << j << "." << parent_thresh_qtls[j].per_locus[jj];
+					count5++;
+				}
+			}
+			else
+			{
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (initial)
+						qtlinfo_output << "\tParentThresholdQTL" << count5;
+					else
+						qtlinfo_output << "\tNA";
+					count5++;
+				}
+			}
 		}
 		qtlinfo_output << '\n';
 	}
+	
 	void output_allele_freqs(parameters gp, ofstream & output_file)
 	{
-		int j, jj, jjj;
-		double allele_freq;
+		int j, jj;
+		calc_allele_freqs(gp);
 		for (j = 0; j < gp.num_chrom; j++)
 		{
 			for (jj = 0; jj < gp.num_markers; jj++)
 			{
-				allele_freq = 0;
-				for (jjj = 0; jjj < population_size; jjj++)
-				{
-					if (adults[jjj].alive)
-					{
-						if (adults[jjj].maternal[j].loci[jj] == 0)
-							allele_freq++;
-						if (adults[jjj].paternal[j].loci[jj] == 0)
-							allele_freq++;
-					}
-				}
-				allele_freq = allele_freq / (2*population_size);
-				output_file << '\t' << allele_freq;
-				maf[j].per_locus[jj] = allele_freq;
+				output_file << '\t' << maf[j].per_locus[jj];
 			}
 		}
 	}
@@ -2338,6 +2442,7 @@ public:
 		string vcf_name = gp.base_name + "_pop_" + to_string(pop_id) + ".vcf";
 		ofstream vcf;
 		vcf.open(vcf_name);
+		calc_allele_freqs(gp);//also determines ref allele
 		//output the header
 		vcf << "##fileformat=VCFv4.0";
 		string date = determine_date();
@@ -2369,7 +2474,20 @@ public:
 		{
 			for (jj = 0; jj < gp.num_markers; jj++)
 			{
-				vcf << '\n' << j << '\t' << jj << '\t' << j << "." << jj << "\t0\t1\t100\tPASS\tAF=" << maf[j].per_locus[jj] << "\tGT";
+				vcf << '\n' << j << '\t' << jj << '\t' << j << "." << jj << '\t' << ref_allele[j].per_locus[jj];
+				int cnt = 0;//output the reference alleles
+				for (jjj = 0; jjj < gp.num_alleles; jjj++)
+				{
+					if (ref_allele[j].per_locus[jj] != jjj)
+					{
+						if (cnt == 0)
+							vcf << "\t" << jjj;
+						else
+							vcf << "," << jjj;
+						cnt++;
+					}
+				}
+				vcf << "\t100\tPASS\tAF=" << maf[j].per_locus[jj] << "\tGT";
 				for (jjj = 0; jjj < population_size; jjj++)
 				{
 					if (adults[jjj].alive)
