@@ -903,13 +903,10 @@ public:
 		qtl_index = 0;
 		for (c = 0; c < chrom; c++)
 		{
-			for (cc = 0; cc < gp.qtl_per_chrom[c]; cc++)
-			{
-				if (c == chrom && cc == qtl_loc)
-					return qtl_index;
-				qtl_index++;
-			}
+			qtl_index = qtl_index + gp.qtl_per_chrom[c];
 		}
+		qtl_index = qtl_index + qtl_loc;
+		return qtl_index;
 	}
 	void mutation(parameters gp, vector<tracker>& court_qtl, vector<tracker>& parent_qtl, vector<tracker>& pref_qtl,
 		vector<tracker>& courter_thresh_qtl, vector<tracker>& parent_thresh_qtl, 
@@ -1161,10 +1158,10 @@ public:
 	{
 		if (genrand() <= alpha && env_tracker > -1)//then it add/removes interactions by mutating Y or Z.
 		{
-			if (Z[qtl_index] == 0)//add interaction
-				Z[qtl_index] = 1;
+			if (Z[qtl_index - gp.num_env_qtl] == 0)//add interaction
+				Z[qtl_index - gp.num_env_qtl] = 1;
 			else//remove interaction
-				Z[qtl_index] = 0;
+				Z[qtl_index - gp.num_env_qtl] = 0;
 		}
 		else //then it affects weight of the interaction on 
 		{

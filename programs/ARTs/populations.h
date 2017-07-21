@@ -2136,34 +2136,34 @@ public:
 		//pass on env effects
 		for (pp = 0; pp < gp.num_qtl; pp++)
 		{
-			if (pp > gp.num_env_qtl)
+			if (pp >= gp.num_env_qtl)
 			{
 				if (gp.court_trait)
 				{
-					adults[adult_index].courter_Z[pp] = progeny[progeny_index].courter_Z[pp];
-					adults[adult_index].courter_x[pp] = progeny[progeny_index].courter_x[pp];
+					adults[adult_index].courter_Z[pp - gp.num_env_qtl] = progeny[progeny_index].courter_Z[pp - gp.num_env_qtl];
+					adults[adult_index].courter_x[pp - gp.num_env_qtl] = progeny[progeny_index].courter_x[pp - gp.num_env_qtl];
 				}
 				if (gp.parent_trait)
 				{
-					adults[adult_index].parent_Z[pp] = progeny[progeny_index].parent_Z[pp];
-					adults[adult_index].parent_x[pp] = progeny[progeny_index].parent_x[pp];
+					adults[adult_index].parent_Z[pp - gp.num_env_qtl] = progeny[progeny_index].parent_Z[pp - gp.num_env_qtl];
+					adults[adult_index].parent_x[pp - gp.num_env_qtl] = progeny[progeny_index].parent_x[pp - gp.num_env_qtl];
 				}
 				if (gp.ind_pref || gp.cor_prefs)
 				{
-					adults[adult_index].pref_Z[pp] = progeny[progeny_index].pref_Z[pp];
-					adults[adult_index].pref_x[pp] = progeny[progeny_index].pref_x[pp];
+					adults[adult_index].pref_Z[pp - gp.num_env_qtl] = progeny[progeny_index].pref_Z[pp - gp.num_env_qtl];
+					adults[adult_index].pref_x[pp - gp.num_env_qtl] = progeny[progeny_index].pref_x[pp - gp.num_env_qtl];
 				}
 				if (gp.thresholds_evolve)
 				{
 					if (gp.courter_conditional || gp.court_trait)
 					{
-						adults[adult_index].cthresh_Z[pp] = progeny[progeny_index].cthresh_Z[pp];
-						adults[adult_index].cthresh_x[pp] = progeny[progeny_index].cthresh_x[pp];
+						adults[adult_index].cthresh_Z[pp - gp.num_env_qtl] = progeny[progeny_index].cthresh_Z[pp - gp.num_env_qtl];
+						adults[adult_index].cthresh_x[pp - gp.num_env_qtl] = progeny[progeny_index].cthresh_x[pp - gp.num_env_qtl];
 					}
 					if (gp.parent_conditional || gp.parent_trait)
 					{
-						adults[adult_index].pthresh_Z[pp] = progeny[progeny_index].pthresh_Z[pp];
-						adults[adult_index].pthresh_x[pp] = progeny[progeny_index].pthresh_x[pp];
+						adults[adult_index].pthresh_Z[pp - gp.num_env_qtl] = progeny[progeny_index].pthresh_Z[pp - gp.num_env_qtl];
+						adults[adult_index].pthresh_x[pp - gp.num_env_qtl] = progeny[progeny_index].pthresh_x[pp - gp.num_env_qtl];
 					}
 				}
 			}
