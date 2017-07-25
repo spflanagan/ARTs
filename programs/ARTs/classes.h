@@ -876,7 +876,7 @@ public:
 		double env_cue, vector<tracker>& court_env,vector<tracker>& parent_env, vector<tracker>& pref_env, vector<tracker>& pthresh_env, vector<tracker>& cthresh_env)//non-environmental
 	{
 		if (gp.thresholds_evolve)
-			determine_threshold(gp,courter_thresh, parent_thresh,pthresh_env,cthresh_env,env_cue);
+			determine_threshold(gp,courter_thresh, parent_thresh,cthresh_env,pthresh_env,env_cue);
 		if (gp.court_trait)
 		{
 			calc_courter_trait(gp, court_env, env_cue);
@@ -947,88 +947,104 @@ public:
 				{
 					if (gp.court_trait)
 					{
-						if (court_qtl[irand].per_locus[mm] == irand2)
+						if (court_qtl[irand].per_locus.size() > 0)
 						{
-							if (gp.gene_network)
+							if (court_qtl[irand].per_locus[mm] == irand2)
 							{
-								qtl_index = find_qtl_index(gp, irand, mm);
-								if (genrand() < YorZ)
-									mut_env_Y(gp, qtl_index,courter_Y, courter_int, alpha, sigma_mu);
+								if (gp.gene_network)
+								{
+									qtl_index = find_qtl_index(gp, irand, mm);
+									if (genrand() < YorZ)
+										mut_env_Y(gp, qtl_index, courter_Y, courter_int, alpha, sigma_mu);
+									else
+										mut_env_Z(gp, qtl_index, courter_Z, courter_env_qtl[irand].per_locus[mm], maternal[irand].courter_ae[mm], alpha, sigma_mu);
+								}
 								else
-									mut_env_Z(gp, qtl_index, courter_Z, courter_env_qtl[irand].per_locus[mm],maternal[irand].courter_ae[mm],alpha, sigma_mu);
+									maternal[irand].courter_ae[mm] = maternal[irand].courter_ae[mm] + randnorm(0, MutSD);
 							}
-							else
-								maternal[irand].courter_ae[mm] = maternal[irand].courter_ae[mm] + randnorm(0, MutSD);
 						}
 					}
 					if (gp.parent_trait)
 					{
-						if (parent_qtl[irand].per_locus[mm] == irand2)
+						if (parent_qtl[irand].per_locus.size() > 0)
 						{
-							if (gp.gene_network)
+							if (parent_qtl[irand].per_locus[mm] == irand2)
 							{
-								qtl_index = find_qtl_index(gp, irand, mm);
-								if (genrand() < YorZ)
-									mut_env_Y(gp, qtl_index, parent_Y, parent_int, alpha, sigma_mu);
+								if (gp.gene_network)
+								{
+									qtl_index = find_qtl_index(gp, irand, mm);
+									if (genrand() < YorZ)
+										mut_env_Y(gp, qtl_index, parent_Y, parent_int, alpha, sigma_mu);
+									else
+										mut_env_Z(gp, qtl_index, parent_Z, parent_env_qtl[irand].per_locus[mm], maternal[irand].parent_ae[mm], alpha, sigma_mu);
+								}
 								else
-									mut_env_Z(gp, qtl_index, parent_Z, parent_env_qtl[irand].per_locus[mm], maternal[irand].parent_ae[mm],alpha, sigma_mu);
+									maternal[irand].parent_ae[mm] = maternal[irand].parent_ae[mm] + randnorm(0, MutSD);
 							}
-							else
-								maternal[irand].parent_ae[mm] = maternal[irand].parent_ae[mm] + randnorm(0, MutSD);
+						}
+					}
+					if (gp.thresholds_evolve)
+					{
+						if (gp.courter_conditional || gp.court_trait)
+						{
+							if (courter_thresh_qtl[irand].per_locus.size() > 0)
+							{
+								if (courter_thresh_qtl[irand].per_locus[mm] == irand2)
+								{
+									if (gp.gene_network)
+									{
+										qtl_index = find_qtl_index(gp, irand, mm);
+										if (genrand() < YorZ)
+											mut_env_Y(gp, qtl_index, cthresh_Y, cthresh_int, alpha, sigma_mu);
+										else
+											mut_env_Z(gp, qtl_index, cthresh_Z, cthresh_env_qtl[irand].per_locus[mm], maternal[irand].courter_thresh[mm], alpha, sigma_mu);
+									}
+									else
+										maternal[irand].courter_thresh[mm] = maternal[irand].courter_thresh[mm] + randnorm(0, MutSD);
+								}
+							}
+						}
+						if (gp.parent_conditional || gp.parent_trait)
+						{
+							if (parent_thresh_qtl[irand].per_locus.size() > 0)
+							{
+								if (parent_thresh_qtl[irand].per_locus[mm] == irand2)
+								{
+									if (gp.gene_network)
+									{
+										qtl_index = find_qtl_index(gp, irand, mm);
+										if (genrand() < YorZ)
+											mut_env_Y(gp, qtl_index, pthresh_Y, pthresh_int, alpha, sigma_mu);
+										else
+											mut_env_Z(gp, qtl_index, pthresh_Z, pthresh_env_qtl[irand].per_locus[mm], maternal[irand].parent_thresh[mm], alpha, sigma_mu);
+									}
+									else
+										maternal[irand].parent_thresh[mm] = maternal[irand].parent_thresh[mm] + randnorm(0, MutSD);
+								}
+							}
 						}
 					}
 				}
-				if (gp.thresholds_evolve)
-				{
-					if (gp.courter_conditional || gp.court_trait)
-					{
-						if (courter_thresh_qtl[irand].per_locus[mm] == irand2)
-						{
-							if (gp.gene_network)
-							{
-								qtl_index = find_qtl_index(gp, irand, mm);
-								if (genrand() < YorZ)
-									mut_env_Y(gp, qtl_index, cthresh_Y, cthresh_int, alpha, sigma_mu);
-								else
-									mut_env_Z(gp, qtl_index, cthresh_Z, cthresh_env_qtl[irand].per_locus[mm], maternal[irand].courter_thresh[mm], alpha, sigma_mu);
-							}
-							else
-								maternal[irand].courter_thresh[mm] = maternal[irand].courter_thresh[mm] + randnorm(0, MutSD);
-						}
-					}
-					if (gp.parent_conditional || gp.parent_trait)
-					{
-						if (parent_thresh_qtl[irand].per_locus[mm] == irand2)
-						{
-							if (gp.gene_network)
-							{
-								qtl_index = find_qtl_index(gp, irand, mm);
-								if (genrand() < YorZ)
-									mut_env_Y(gp, qtl_index, pthresh_Y, pthresh_int, alpha, sigma_mu);
-								else
-									mut_env_Z(gp, qtl_index, pthresh_Z, pthresh_env_qtl[irand].per_locus[mm], maternal[irand].parent_thresh[mm], alpha, sigma_mu);
-							}
-							else
-								maternal[irand].parent_thresh[mm] = maternal[irand].parent_thresh[mm] + randnorm(0, MutSD);
-						}							
-					}
-				}
+				
 				for (mm = 0; mm < maternal[irand].pref_ae.size(); mm++)
 				{
 					if (gp.ind_pref || gp.cor_prefs)
 					{
-						if (pref_qtl[irand].per_locus[mm] == irand2)
+						if (pref_qtl[irand].per_locus.size() > 0)
 						{
-							if (gp.gene_network)
+							if (pref_qtl[irand].per_locus[mm] == irand2)
 							{
-								qtl_index = find_qtl_index(gp, irand, mm);
-								if (genrand() < YorZ)
-									mut_env_Y(gp, qtl_index, pref_Y, pref_int, alpha, sigma_mu);
+								if (gp.gene_network)
+								{
+									qtl_index = find_qtl_index(gp, irand, mm);
+									if (genrand() < YorZ)
+										mut_env_Y(gp, qtl_index, pref_Y, pref_int, alpha, sigma_mu);
+									else
+										mut_env_Z(gp, qtl_index, pref_Z, pref_env_qtl[irand].per_locus[mm], maternal[irand].pref_ae[mm], alpha, sigma_mu);
+								}
 								else
-									mut_env_Z(gp, qtl_index, pref_Z, pref_env_qtl[irand].per_locus[mm], maternal[irand].pref_ae[mm], alpha, sigma_mu);
+									maternal[irand].pref_ae[mm] = maternal[irand].pref_ae[mm] + randnorm(0, MutSD);
 							}
-							else
-								maternal[irand].pref_ae[mm] = maternal[irand].pref_ae[mm] + randnorm(0, MutSD);
 						}
 					}
 				}
@@ -1048,89 +1064,104 @@ public:
 				{
 					if (gp.court_trait)
 					{
-						if (court_qtl[irand].per_locus[mm] == irand2)
+						if (court_qtl[irand].per_locus.size() > 0)
 						{
-							if (gp.gene_network)
+							if (court_qtl[irand].per_locus[mm] == irand2)
 							{
-								qtl_index = find_qtl_index(gp, irand, mm);
-								if (genrand() < YorZ)
-									mut_env_Y(gp, qtl_index, courter_Y, courter_int, alpha, sigma_mu);
+								if (gp.gene_network)
+								{
+									qtl_index = find_qtl_index(gp, irand, mm);
+									if (genrand() < YorZ)
+										mut_env_Y(gp, qtl_index, courter_Y, courter_int, alpha, sigma_mu);
+									else
+										mut_env_Z(gp, qtl_index, courter_Z, courter_env_qtl[irand].per_locus[mm], paternal[irand].courter_ae[mm], alpha, sigma_mu);
+								}
 								else
-									mut_env_Z(gp, qtl_index, courter_Z, courter_env_qtl[irand].per_locus[mm], paternal[irand].courter_ae[mm], alpha, sigma_mu);
+									paternal[irand].courter_ae[mm] = paternal[irand].courter_ae[mm] + randnorm(0, MutSD);
 							}
-							else
-								paternal[irand].courter_ae[mm] = paternal[irand].courter_ae[mm] + randnorm(0, MutSD);
-						}
-						
+						}						
 					}
 					if (gp.parent_trait)
 					{
-						if (parent_qtl[irand].per_locus[mm] == irand2)
+						if (parent_qtl[irand].per_locus.size() > 0)
 						{
-							if (gp.gene_network)
+							if (parent_qtl[irand].per_locus[mm] == irand2)
 							{
-								qtl_index = find_qtl_index(gp, irand, mm);
-								if (genrand() < YorZ)
-									mut_env_Y(gp, qtl_index, parent_Y, parent_int, alpha, sigma_mu);
+								if (gp.gene_network)
+								{
+									qtl_index = find_qtl_index(gp, irand, mm);
+									if (genrand() < YorZ)
+										mut_env_Y(gp, qtl_index, parent_Y, parent_int, alpha, sigma_mu);
+									else
+										mut_env_Z(gp, qtl_index, parent_Z, parent_env_qtl[irand].per_locus[mm], paternal[irand].parent_ae[mm], alpha, sigma_mu);
+								}
 								else
-									mut_env_Z(gp, qtl_index, parent_Z, parent_env_qtl[irand].per_locus[mm], paternal[irand].parent_ae[mm], alpha, sigma_mu);
+									paternal[irand].parent_ae[mm] = paternal[irand].parent_ae[mm] + randnorm(0, MutSD);
 							}
-							else
-								paternal[irand].parent_ae[mm] = paternal[irand].parent_ae[mm] + randnorm(0, MutSD);
+						}
+					}
+					if (gp.thresholds_evolve)
+					{
+						if (gp.courter_conditional || gp.court_trait)
+						{
+							if (courter_thresh_qtl[irand].per_locus.size() > 0)
+							{
+								if (courter_thresh_qtl[irand].per_locus[mm] == irand2)
+								{
+									if (gp.gene_network)
+									{
+										qtl_index = find_qtl_index(gp, irand, mm);
+										if (genrand() < YorZ)
+											mut_env_Y(gp, qtl_index, cthresh_Y, cthresh_int, alpha, sigma_mu);
+										else
+											mut_env_Z(gp, qtl_index, cthresh_Z, cthresh_env_qtl[irand].per_locus[mm], paternal[irand].courter_thresh[mm], alpha, sigma_mu);
+									}
+									else
+										paternal[irand].courter_thresh[mm] = paternal[irand].courter_thresh[mm] + randnorm(0, MutSD);
+								}
+							}
+						}
+						if (gp.parent_conditional || gp.parent_trait)
+						{
+							if (parent_thresh_qtl[irand].per_locus.size() > 0)
+							{
+								if (parent_thresh_qtl[irand].per_locus[mm] == irand2)
+								{
+									if (gp.gene_network)
+									{
+										qtl_index = find_qtl_index(gp, irand, mm);
+										if (genrand() < YorZ)
+											mut_env_Y(gp, qtl_index, pthresh_Y, pthresh_int, alpha, sigma_mu);
+										else
+											mut_env_Z(gp, qtl_index, pthresh_Z, pthresh_env_qtl[irand].per_locus[mm], paternal[irand].parent_thresh[mm], alpha, sigma_mu);
+									}
+									else
+										paternal[irand].parent_thresh[mm] = paternal[irand].parent_thresh[mm] + randnorm(0, MutSD);
+								}
+							}
 						}
 					}
 				}
-				if (gp.thresholds_evolve)
-				{
-					if (gp.courter_conditional || gp.court_trait)
-					{
-						if (courter_thresh_qtl[irand].per_locus[mm] == irand2)
-						{
-							if (gp.gene_network)
-							{
-								qtl_index = find_qtl_index(gp, irand, mm);
-								if (genrand() < YorZ)
-									mut_env_Y(gp, qtl_index, cthresh_Y, cthresh_int, alpha, sigma_mu);
-								else
-									mut_env_Z(gp, qtl_index, cthresh_Z, cthresh_env_qtl[irand].per_locus[mm], paternal[irand].courter_thresh[mm], alpha, sigma_mu);
-							}
-							else
-								paternal[irand].courter_thresh[mm] = paternal[irand].courter_thresh[mm] + randnorm(0, MutSD);
-						}
-					}
-					if (gp.parent_conditional || gp.parent_trait)
-					{
-						if (parent_thresh_qtl[irand].per_locus[mm] == irand2)
-						{
-							if (gp.gene_network)
-							{
-								qtl_index = find_qtl_index(gp, irand, mm);
-								if (genrand() < YorZ)
-									mut_env_Y(gp, qtl_index, pthresh_Y, pthresh_int, alpha, sigma_mu);
-								else
-									mut_env_Z(gp, qtl_index, pthresh_Z, pthresh_env_qtl[irand].per_locus[mm], paternal[irand].parent_thresh[mm], alpha, sigma_mu);
-							}
-							else
-								paternal[irand].parent_thresh[mm] = paternal[irand].parent_thresh[mm] + randnorm(0, MutSD);
-						}
-					}
-				}
+				
 				for (mm = 0; mm < maternal[irand].pref_ae.size(); mm++)
 				{
 					if (gp.ind_pref || gp.cor_prefs)
 					{
-						if (pref_qtl[irand].per_locus[mm] == irand2)
+						if (pref_qtl[irand].per_locus.size() > 0)
 						{
-							if (gp.gene_network)
+							if (pref_qtl[irand].per_locus[mm] == irand2)
 							{
-								qtl_index = find_qtl_index(gp, irand, mm);
-								if (genrand() < YorZ)
-									mut_env_Y(gp, qtl_index, pref_Y, pref_int, alpha, sigma_mu);
+								if (gp.gene_network)
+								{
+									qtl_index = find_qtl_index(gp, irand, mm);
+									if (genrand() < YorZ)
+										mut_env_Y(gp, qtl_index, pref_Y, pref_int, alpha, sigma_mu);
+									else
+										mut_env_Z(gp, qtl_index, pref_Z, pref_env_qtl[irand].per_locus[mm], paternal[irand].pref_ae[mm], alpha, sigma_mu);
+								}
 								else
-									mut_env_Z(gp, qtl_index, pref_Z, pref_env_qtl[irand].per_locus[mm], paternal[irand].pref_ae[mm], alpha, sigma_mu);
+									paternal[irand].pref_ae[mm] = paternal[irand].pref_ae[mm] + randnorm(0, MutSD);
 							}
-							else
-								paternal[irand].pref_ae[mm] = paternal[irand].pref_ae[mm] + randnorm(0, MutSD);
 						}
 					}
 				}

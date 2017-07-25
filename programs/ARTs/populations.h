@@ -1546,7 +1546,7 @@ public:
 				segment_start[RCi + 1] = break_point[RCi];
 				if (gp.supergene)
 				{
-					if (courter_qtls[which_chrom].per_locus.size() > 0)
+					if (gp.court_trait && courter_qtls[which_chrom].per_locus.size() > 0)
 					{
 						double first_qtl, last_qtl;
 						first_qtl = courter_qtls[which_chrom].first_qtl();
@@ -1556,7 +1556,7 @@ public:
 							alive = false;
 						}
 					}
-					if (parent_qtls[which_chrom].per_locus.size() > 0)
+					if (gp.parent_trait && parent_qtls[which_chrom].per_locus.size() > 0)
 					{
 						int first_qtl, last_qtl;
 						first_qtl = parent_qtls[which_chrom].first_qtl();
@@ -1679,20 +1679,21 @@ public:
 						chrom.parent_ae[RCi] = parent.maternal[which_chrom].parent_ae[RCi];
 						chrom.parent_ae[RCi] = parent.maternal[which_chrom].parent_ae[RCi];
 					}
-				}
-				if (gp.thresholds_evolve)
-				{
-					if (gp.courter_conditional || gp.court_trait)
+					if (gp.thresholds_evolve)
 					{
-						chrom.courter_thresh[RCi] = parent.maternal[which_chrom].courter_thresh[RCi];
-						chrom.courter_thresh[RCi] = parent.maternal[which_chrom].courter_thresh[RCi];
-					}
-					if (gp.parent_conditional || gp.parent_trait)
-					{
-						chrom.parent_thresh[RCi] = parent.maternal[which_chrom].parent_thresh[RCi];
-						chrom.parent_thresh[RCi] = parent.maternal[which_chrom].parent_thresh[RCi];
+						if (gp.courter_conditional || gp.court_trait)
+						{
+							chrom.courter_thresh[RCi] = parent.maternal[which_chrom].courter_thresh[RCi];
+							chrom.courter_thresh[RCi] = parent.maternal[which_chrom].courter_thresh[RCi];
+						}
+						if (gp.parent_conditional || gp.parent_trait)
+						{
+							chrom.parent_thresh[RCi] = parent.maternal[which_chrom].parent_thresh[RCi];
+							chrom.parent_thresh[RCi] = parent.maternal[which_chrom].parent_thresh[RCi];
+						}
 					}
 				}
+				
 				if (gp.ind_pref || gp.cor_prefs)
 				{
 					for (RCi = 0; RCi < parent.maternal[which_chrom].pref_ae.size(); RCi++)
@@ -1718,18 +1719,18 @@ public:
 						chrom.parent_ae[RCi] = parent.paternal[which_chrom].parent_ae[RCi];
 						chrom.parent_ae[RCi] = parent.paternal[which_chrom].parent_ae[RCi];
 					}	
-				}
-				if (gp.thresholds_evolve)
-				{
-					if (gp.courter_conditional || gp.court_trait)
+					if (gp.thresholds_evolve)
 					{
-						chrom.courter_thresh[RCi] = parent.paternal[which_chrom].courter_thresh[RCi];
-						chrom.courter_thresh[RCi] = parent.paternal[which_chrom].courter_thresh[RCi];
-					}
-					if (gp.parent_conditional || gp.parent_trait)
-					{
-						chrom.parent_thresh[RCi] = parent.paternal[which_chrom].parent_thresh[RCi];
-						chrom.parent_thresh[RCi] = parent.paternal[which_chrom].parent_thresh[RCi];
+						if (gp.courter_conditional || gp.court_trait)
+						{
+							chrom.courter_thresh[RCi] = parent.paternal[which_chrom].courter_thresh[RCi];
+							chrom.courter_thresh[RCi] = parent.paternal[which_chrom].courter_thresh[RCi];
+						}
+						if (gp.parent_conditional || gp.parent_trait)
+						{
+							chrom.parent_thresh[RCi] = parent.paternal[which_chrom].parent_thresh[RCi];
+							chrom.parent_thresh[RCi] = parent.paternal[which_chrom].parent_thresh[RCi];
+						}
 					}
 				}
 				if (gp.ind_pref || gp.cor_prefs)
