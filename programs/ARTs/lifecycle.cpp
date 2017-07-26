@@ -46,11 +46,11 @@ int main(int argc, char*argv[])
 		cout << "\nRunning the ARTs model with default parameters.\n";
 		global_params.set_defaults();
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
-		global_params.parent_trait = true;
-		global_params.thresholds_in_supergene = true;
+		global_params.courter_conditional = true;
+		global_params.FD_pref = true;
 		global_params.num_init_gen = 2;
 		global_params.num_exp_gen = 1;
-		global_params.base_name = "../../results/testing_parent_threshold_supergene";
+		global_params.base_name = "../../results/testing_courter-conditional_nfds";
 		global_params.dependent_params();
 	}
 	

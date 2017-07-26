@@ -706,7 +706,7 @@ public:
 			{
 				for (kk = 0; kk < gp.qtl_per_chrom[k]; kk++)//loop through courter_env_qtls
 				{
-					if (courter_env[k].per_locus[kk] < 0)//if it's not an env qtl
+					if (courter_env[k].per_locus[kk] >= gp.num_env_qtl)//if it's not an env qtl
 					{
 						courter_trait = courter_trait + (courter_Z[trait_qtl_index] * (maternal[k].courter_ae[kk] + paternal[k].courter_ae[kk])*courter_x[trait_qtl_index]);
 						trait_qtl_index++;
@@ -735,27 +735,30 @@ public:
 	void calc_parent_trait(parameters gp, vector<tracker>& parent_env, double env_cue = 0, bool stability = true)
 	{
 		int k, kk, kkk;
-		parent_trait = 0;
-		if (!gp.gene_network)
+		if(gp.parent_trait)
 		{
-			for (k = 0; k < gp.num_chrom; k++)
+			parent_trait = 0;
+			if (!gp.gene_network)
 			{
-				for (kk = 0; kk < gp.qtl_per_chrom[k]; kk++)
-					parent_trait = parent_trait + maternal[k].parent_ae[kk] + paternal[k].parent_ae[kk];
-			}
-		}
-		else
-		{
-			gene_interactions(gp,parent_Y,parent_int,parent_x, env_cue, stability);
-			int trait_qtl_index = 0;
-			for (k = 0; k < gp.num_chrom; k++)
-			{
-				for (kk = 0; kk < gp.qtl_per_chrom[k]; kk++)
+				for (k = 0; k < gp.num_chrom; k++)
 				{
-					if (parent_env[k].per_locus[kk] < 0)//if it's not an environmental qtl
+					for (kk = 0; kk < gp.qtl_per_chrom[k]; kk++)
+						parent_trait = parent_trait + maternal[k].parent_ae[kk] + paternal[k].parent_ae[kk];
+				}
+			}
+			else
+			{
+				gene_interactions(gp, parent_Y, parent_int, parent_x, env_cue, stability);
+				int trait_qtl_index = 0;
+				for (k = 0; k < gp.num_chrom; k++)
+				{
+					for (kk = 0; kk < gp.qtl_per_chrom[k]; kk++)
 					{
-						parent_trait = parent_trait + (parent_Z[trait_qtl_index] * (maternal[k].parent_ae[kk] + paternal[k].parent_ae[kk])*parent_x[trait_qtl_index]);
-						trait_qtl_index++;
+						if (parent_env[k].per_locus[kk] >= gp.num_env_qtl)//if it's not an environmental qtl
+						{
+							parent_trait = parent_trait + (parent_Z[trait_qtl_index] * (maternal[k].parent_ae[kk] + paternal[k].parent_ae[kk])*parent_x[trait_qtl_index]);
+							trait_qtl_index++;
+						}
 					}
 				}
 			}
@@ -802,9 +805,11 @@ public:
 			{
 				for (kk = 0; kk < maternal[k].pref_ae.size(); kk++)
 				{
-					if (pref_env[k].per_locus[kk] < 0)//if it's not an environmental qtl
+					if (pref_env[k].per_locus[kk] >= gp.num_env_qtl)//if it's not an environmental qtl
+					{
 						female_pref = female_pref + (pref_Z[qtl_index] * (maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk])*pref_x[qtl_index]);
-					qtl_index++;
+						qtl_index++;
+					}
 				}
 			}
 		}
@@ -1172,29 +1177,29 @@ public:
 	void mut_env_Y(parameters gp, int locus, vector<tracker>&Y, vector<tracker>&in, double alpha, double sigma_mu)
 	{
 		int rand_loc;
-		rand_loc = randnum(gp.num_qtl);//randomly choose an interaction to mutatte
-		if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
+		rand_loc = randnum(gp.num_qtl);//randomly choose an interaction to mutate
+		if (genrand() <= alpha)//then it add/removes interactions by mutating Y.
 		{
 			if (Y[locus].per_locus[rand_loc] == 0)//add interaction
 				Y[locus].per_locus[rand_loc] = 1;
 			else//remove interaction
 				Y[locus].per_locus[rand_loc] = 0;
 		}
-		else //then it affects weight of interaction
+		else //then it affects weight of interaction between loci
 		{
 			in[locus].per_locus[rand_loc] = in[locus].per_locus[rand_loc] + randnorm(0, sigma_mu);
 		}
 	}
 	void mut_env_Z(parameters gp,int qtl_index, vector<int> &Z, double env_tracker, double& ae, double alpha, double sigma_mu)
 	{
-		if (genrand() <= alpha && env_tracker > -1)//then it add/removes interactions by mutating Y or Z.
+		if (genrand() <= alpha && env_tracker > -1 && qtl_index > gp.num_env_qtl)//then it add/removes interactions by mutating Z.
 		{
 			if (Z[qtl_index - gp.num_env_qtl] == 0)//add interaction
 				Z[qtl_index - gp.num_env_qtl] = 1;
 			else//remove interaction
 				Z[qtl_index - gp.num_env_qtl] = 0;
 		}
-		else //then it affects weight of the interaction on 
+		else //then it affects weight of the interaction on the trait
 		{
 			ae = ae + randnorm(0, sigma_mu);
 		}

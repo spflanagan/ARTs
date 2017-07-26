@@ -931,7 +931,7 @@ public:
 			each_ok = true;
 			if (gp.random_mating) //reset it here
 				gp.random_mating = false;
-			if (!gp.court_trait && !gp.parent_trait)
+			if (!gp.court_trait && !gp.parent_trait && !gp.courter_conditional && !gp.parent_conditional)
 				each_ok = false;
 			if (!each_ok)
 			{
@@ -944,7 +944,7 @@ public:
 			each_ok = true;
 			if (gp.random_mating) //reset it here
 				gp.random_mating = false; 
-			if (!gp.court_trait && !gp.parent_trait)
+			if (!gp.court_trait && !gp.parent_trait && !gp.courter_conditional && !gp.parent_conditional)
 				each_ok = false;
 			if (!gp.ind_pref && !gp.cor_prefs)
 				each_ok = false;
@@ -959,7 +959,7 @@ public:
 		if (gp.FD_court)
 		{
 			each_ok = true;
-			if (!gp.court_trait)
+			if (!gp.court_trait && !gp.courter_conditional)
 				each_ok = false;
 			if (courter_qtls.size() == 0)
 				each_ok = false;
@@ -972,7 +972,7 @@ public:
 		if (gp.FD_parent)
 		{
 			each_ok = true;
-			if (!gp.parent_trait)
+			if (!gp.parent_trait && !gp.parent_conditional)
 				each_ok = false;
 			if (parent_qtls.size() == 0)
 				each_ok = false;
@@ -987,7 +987,7 @@ public:
 			each_ok = true;
 			if (!gp.polygyny)
 				gp.polygyny = true;
-			if (!gp.court_trait)
+			if (!gp.court_trait && !gp.courter_conditional)
 				each_ok = false;
 			if (courter_qtls.size() == 0)
 				each_ok = false;
@@ -1004,7 +1004,7 @@ public:
 			each_ok = true;
 			if (!gp.polygyny)
 				gp.polygyny = true; 
-			if (!gp.parent_trait)
+			if (!gp.parent_trait && !gp.parent_conditional)
 				each_ok = false;
 			if (parent_qtls.size() == 0)
 				each_ok = false;
