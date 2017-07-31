@@ -493,7 +493,7 @@ string determine_date()
 	
 #endif
 	
-	std::strftime(buffer, size, "%Y%M%D", &ltm);
+	std::strftime(buffer, size, "%Y%m%d", &ltm);
 	return buffer;
 }
 
