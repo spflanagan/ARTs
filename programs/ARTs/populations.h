@@ -2276,10 +2276,13 @@ public:
 	}
 	void regulate_popsize(parameters gp)
 	{
-		int p, pp, ppp;
-		int num_adults_chosen, rand_prog;
+		int p, pp, ppp, count;
+		int num_adults_chosen, rand_prog, prog_left, cc_unfilled;
+		double keep_prob, drand;
 		vector<int> prog_tracker;
 		num_mal = num_fem = num_adults_chosen = 0;
+		cc_unfilled = gp.carrying_capacity;
+		prog_left = num_progeny;
 		if (num_progeny > gp.carrying_capacity)
 		{//only some of the progeny survive
 			for (p = 0; p < num_progeny; p++)
@@ -2288,14 +2291,37 @@ public:
 			}
 			for (p = 0; p < gp.carrying_capacity; p++)//reset the adults
 				adults[p].alive = false;
-			while (num_adults_chosen < gp.carrying_capacity)
-			{//choose a random progeny
-				rand_prog = randnum(num_progeny);
-				if (progeny[rand_prog].alive && !prog_tracker[rand_prog])
+			count = 0;
+			for (p = 0; p < num_progeny; p++)
+			{
+				if (progeny[p].alive)
 				{
-					adult_from_prog(gp, num_adults_chosen, rand_prog);
-					num_adults_chosen++;
-					prog_tracker[rand_prog] = true;
+					if (prog_left == 0)
+						keep_prob = 0;
+					else
+						keep_prob = cc_unfilled/ prog_left;
+					drand = genrand();
+					if (drand < keep_prob)
+					{
+						adult_from_prog(gp, num_adults_chosen, p);
+						num_adults_chosen++;
+						cc_unfilled--;
+						prog_tracker[p] = true;
+					}
+				}
+				prog_left--;
+			}
+			if (num_adults_chosen < gp.carrying_capacity)
+			{
+				for (p = 0; p < num_progeny; p++)
+				{
+					if (progeny[p].alive && !prog_tracker[p] && num_adults_chosen < gp.carrying_capacity)
+					{
+						adult_from_prog(gp, num_adults_chosen, p);
+						num_adults_chosen++;
+						cc_unfilled--;
+						prog_tracker[p] = true;
+					}
 				}
 			}
 		}

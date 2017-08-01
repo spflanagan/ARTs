@@ -55,15 +55,18 @@ int main(int argc, char*argv[])
 	
 	//output
 
-	string summary_output_name, trait_output_name, qtlinfo_output_name;
-	ofstream summary_output, trait_output, qtlinfo_output;
+	string summary_output_name, trait_output_name, qtlinfo_output_name,popdyn_output_name;
+	ofstream summary_output, trait_output, qtlinfo_output, popdyn_output;
 
 	trait_output_name = global_params.base_name + "_traits.txt";
+
+	popdyn_output_name = global_params.base_name + "_popdyn.txt";
+	popdyn_output.open(popdyn_output_name);
+	popdyn_output << "Generation\tPop\tPopSize\tNumMal\tNumFem\tNumProgeny";
 
 	qtlinfo_output_name = global_params.base_name + "_qtlinfo.txt";
 	qtlinfo_output.open(qtlinfo_output_name);
 	qtlinfo_output << "Pop";
-	
 
 	summary_output_name = global_params.base_name + "_summary.txt";
 	summary_output.open(summary_output_name);
@@ -87,7 +90,7 @@ int main(int argc, char*argv[])
 				return 0;
 			else
 			{
-				cout << "\nInput integer to close dialog\n";
+				cout << "\nInput integer to close dialogue\n";
 				cin >> ii;
 				return ii;
 			}
@@ -169,6 +172,8 @@ int main(int argc, char*argv[])
 					return 0;
 				}
 			}
+			//output population info
+			popdyn_output << '\n' << i << '\t' << ii << '\t' << pops[ii].population_size << '\t' << pops[ii].num_mal << '\t' << pops[ii].num_fem << '\t' << pops[ii].num_progeny;
 		}	
 		if (i % 1000 == 0)
 				cout << "\nInitial generation " << i + 1 << " completed.";	
@@ -244,7 +249,6 @@ int main(int argc, char*argv[])
 						//stochastic survival
 						//pops[i].density_regulation(global_params);
 						pops[i].regulate_popsize(global_params);
-						num_eq_tries++;
 						//track frequencies
 						double new_parent, new_courter;
 						if (global_params.parent_trait)
@@ -280,6 +284,10 @@ int main(int argc, char*argv[])
 						return 0;
 					}
 				}
+				//output population info
+				popdyn_output << '\n' << global_params.num_init_gen + num_eq_tries << '\t' << i << '\t' 
+					<< pops[i].population_size << '\t' << pops[i].num_mal << '\t' << pops[i].num_fem << '\t' << pops[i].num_progeny;
+				num_eq_tries++;
 			}
 		}
 	}
@@ -298,7 +306,8 @@ int main(int argc, char*argv[])
 	//output
 	summary_output.close();
 	trait_output.close();
-	cout << "\nDone!";
+	popdyn_output.close();
+	cout << "\nDone!\n";
 	if (command_line)
 		return 0;
 	else
