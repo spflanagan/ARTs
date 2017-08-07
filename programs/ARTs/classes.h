@@ -14,6 +14,21 @@
 
 using namespace std;
 
+//This is adapted from random_shuffle
+//and the Knuth-Fisher-Yates shuffle algorithm
+//adapted from: https://blog.codinghorror.com/the-danger-of-naivete/
+void shuffle_vec(vector<int> & vec)
+{
+	int i, temp;
+	for (int i = vec.size() - 1; i > 0; i--)
+	{
+		int n = randnum(i + 1);
+		temp = vec[i];
+		vec[i] = vec[n];
+		vec[n] = vec[i];
+	}
+}
+
 class tracker
 {
 public:
