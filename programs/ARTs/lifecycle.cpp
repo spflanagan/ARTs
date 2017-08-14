@@ -46,10 +46,10 @@ int main(int argc, char*argv[])
 		cout << "\nRunning the ARTs model with default parameters.\n";
 		global_params.set_defaults();
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
-		global_params.parent_conditional = true;
+		global_params.parent_trait = true;
 		global_params.num_init_gen = 2;
 		global_params.num_exp_gen = 1;
-		global_params.base_name = "../../results/testing_parent-conditional";
+		global_params.base_name = "../../results/testing_parent";
 		global_params.dependent_params();
 	}
 	
