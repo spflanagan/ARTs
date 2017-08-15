@@ -1986,7 +1986,7 @@ public:
 					if (!adults[sneakers[randmale]].parent)//if it's a sneaker: sanity check!
 					{
 						fecundity_share.push_back(0);
-						male_ids.push_back(randmale);
+						male_ids.push_back(sneakers[randmale]);
 						max_sperm = max_sperm + (gp.sperm_comp_r*adults[sneakers[randmale]].pot_rs);//if sperm_comp_r is 1, they're all equally weighted
 						adults[sneakers[randmale]].mate_found++;//keep track of individual reproductive success
 					}
@@ -2277,7 +2277,7 @@ public:
 	void regulate_popsize(parameters gp)
 	{
 		int p;
-		int num_adults_chosen;
+		int num_adults_chosen, prog_alive;
 		double keep_prob, drand;
 		vector<int> itracker;
 		num_mal = num_fem = num_adults_chosen = 0;
@@ -2289,7 +2289,11 @@ public:
 					itracker.push_back(p);				
 			}
 			shuffle_vec(itracker);
-			for (p = 0; p < gp.carrying_capacity; p++)
+			if (gp.carrying_capacity < itracker.size())
+				prog_alive = gp.carrying_capacity;
+			else
+				prog_alive = itracker.size();
+			for (p = 0; p < prog_alive; p++)
 			{
 				adult_from_prog(gp, p, itracker[p]);
 				num_adults_chosen++;
