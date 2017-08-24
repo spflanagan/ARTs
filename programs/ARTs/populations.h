@@ -1901,7 +1901,7 @@ public:
 							if (gp.ind_pref || gp.cor_prefs && !gp.court_trait)
 								preference_cue_eval(gp, fem_index, encounters, adults[male_id].parent);
 						}
-						if (gp.court_trait)
+						if (gp.court_trait || gp.courter_conditional)
 						{
 							if (adults[fem_index].female_pref == adults[male_id].courter)	
 								acceptable_males.push_back(male_id);
@@ -2105,11 +2105,11 @@ public:
 					if (gp.via_sel_strength > 0)
 					{
 						dSurvProb = 1;
-						if (gp.court_trait && !gp.FD_court)
+						if (gp.court_trait || gp.courter_conditional && !gp.FD_court)
 							dSurvProb = dSurvProb*via_against_courter(gp.via_sel_strength, j);
 						if (gp.FD_court)
 							dSurvProb = dSurvProb*via_fd_courter(gp, j);
-						if (gp.parent_trait && !gp.FD_court)
+						if (gp.parent_trait || gp.parent_conditional && !gp.FD_court)
 							dSurvProb = dSurvProb*via_against_parent(gp.via_sel_strength, j);
 						if (gp.FD_parent)
 							dSurvProb = dSurvProb*via_fd_parent(gp, j);
@@ -2288,7 +2288,7 @@ public:
 				if(progeny[p].alive)
 					itracker.push_back(p);				
 			}
-			shuffle_vec(itracker);
+			random_shuffle(itracker.begin(),itracker.end());
 			if (gp.carrying_capacity < itracker.size())
 				prog_alive = gp.carrying_capacity;
 			else
