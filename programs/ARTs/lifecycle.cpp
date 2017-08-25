@@ -47,7 +47,7 @@ int main(int argc, char*argv[])
 		global_params.set_defaults();
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
 		global_params.parent_trait = true;
-		global_params.num_init_gen = 2;
+		global_params.num_init_gen = 10;
 		global_params.num_exp_gen = 1;
 		global_params.base_name = "../../results/testing_parent";
 		global_params.dependent_params();
@@ -120,9 +120,11 @@ int main(int argc, char*argv[])
 		{
 			if(pops[ii].population_size > 0)
 			{
+				cout << "\ndetermine pop size,";
 				pops[ii].determine_pop_size(global_params);
 				//output summary stats
 				summary_output << "\nGen" << i << "\tPop" << ii;
+				cout << "output summary info,";
 				pops[ii].output_summary_info(global_params, summary_output);//includes allele freqs
 				//mating (includes assigning preferences, recombination, and mutation)
 				bool write_to_file = false;
@@ -136,17 +138,21 @@ int main(int argc, char*argv[])
 				}
 				else
 					write_to_file = false;*/
+				cout << "nest and fertilize,";
 				pops[ii].nest_and_fertilize(global_params, write_to_file, temp_file_name);
 
 				//viability selection
+				cout << "viability selection,";
 				pops[ii].viability_selection(global_params);
 				//stochastic survival
 				//pops[ii].density_regulation(global_params);
+				cout << "regulate popsize,";
 				pops[ii].regulate_popsize(global_params);
 				//track frequencies
 				double new_parent, new_courter;
 				if (global_params.parent_trait)
 				{
+					cout << "track parent frequency,";
 					new_parent = pops[ii].calc_freq_parent(global_params);
 					if (i > 0)
 						pops[ii].d_parentfreq.push_back((new_parent - parent_freqs[ii]));
@@ -175,8 +181,9 @@ int main(int argc, char*argv[])
 			//output population info
 			popdyn_output << '\n' << i << '\t' << ii << '\t' << pops[ii].population_size << '\t' << pops[ii].num_mal << '\t' << pops[ii].num_fem << '\t' << pops[ii].num_progeny;
 		}	
-		if (i % 1000 == 0)
-				cout << "\nInitial generation " << i + 1 << " completed.";	
+		//if (i % 1000 == 0)
+		//		cout << "\nInitial generation " << i + 1 << " completed.";	
+		cout << i << ",";
 	}
 	//calc variance in change in frequencies
 	if (global_params.parent_trait)
