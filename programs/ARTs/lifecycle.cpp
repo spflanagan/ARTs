@@ -47,7 +47,7 @@ int main(int argc, char*argv[])
 		global_params.set_defaults();
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
 		global_params.parent_trait = true;
-		global_params.num_init_gen = 10;
+		global_params.num_init_gen = 2;
 		global_params.num_exp_gen = 1;
 		global_params.base_name = "../../results/testing_parent";
 		global_params.dependent_params();
@@ -120,11 +120,10 @@ int main(int argc, char*argv[])
 		{
 			if(pops[ii].population_size > 0)
 			{
-				cout << "\ndetermine pop size,";
 				pops[ii].determine_pop_size(global_params);
 				//output summary stats
 				summary_output << "\nGen" << i << "\tPop" << ii;
-				cout << "output summary info,";
+				cout << "\nPopsize " << pops[ii].population_size << ",";
 				pops[ii].output_summary_info(global_params, summary_output);//includes allele freqs
 				//mating (includes assigning preferences, recombination, and mutation)
 				bool write_to_file = false;
