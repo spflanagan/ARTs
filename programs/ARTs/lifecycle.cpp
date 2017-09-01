@@ -123,7 +123,8 @@ int main(int argc, char*argv[])
 				pops[ii].determine_pop_size(global_params);
 				//output summary stats
 				summary_output << "\nGen" << i << "\tPop" << ii;
-				cout << "\nPopsize " << pops[ii].population_size << ",";
+				if (global_params.verbose)
+					cout << "\nPopsize " << pops[ii].population_size << ",";
 				pops[ii].output_summary_info(global_params, summary_output);//includes allele freqs
 				//mating (includes assigning preferences, recombination, and mutation)
 				bool write_to_file = false;
@@ -137,21 +138,25 @@ int main(int argc, char*argv[])
 				}
 				else
 					write_to_file = false;*/
-				cout << "nest and fertilize,";
+				if (global_params.verbose)
+					cout << "nest and fertilize,";
 				pops[ii].nest_and_fertilize(global_params, write_to_file, temp_file_name);
 
 				//viability selection
-				cout << "viability selection,";
+				if (global_params.verbose)
+					cout << "viability selection,";
 				pops[ii].viability_selection(global_params);
 				//stochastic survival
 				//pops[ii].density_regulation(global_params);
-				cout << "regulate popsize,";
+				if (global_params.verbose)
+					cout << "regulate popsize,";
 				pops[ii].regulate_popsize(global_params);
 				//track frequencies
 				double new_parent, new_courter;
 				if (global_params.parent_trait)
 				{
-					cout << "track parent frequency,";
+					if (global_params.verbose)
+						cout << "track parent frequency,";
 					new_parent = pops[ii].calc_freq_parent(global_params);
 					if (i > 0)
 						pops[ii].d_parentfreq.push_back((new_parent - parent_freqs[ii]));
@@ -159,6 +164,8 @@ int main(int argc, char*argv[])
 				}
 				if (global_params.court_trait)
 				{
+					if (global_params.verbose)
+						cout << "track courter frequency,";
 					new_courter = pops[ii].calc_freq_courter(global_params);
 					if (i > 0)
 						pops[ii].d_courterfreq.push_back((new_courter - courter_freqs[ii]));
@@ -180,9 +187,14 @@ int main(int argc, char*argv[])
 			//output population info
 			popdyn_output << '\n' << i << '\t' << ii << '\t' << pops[ii].population_size << '\t' << pops[ii].num_mal << '\t' << pops[ii].num_fem << '\t' << pops[ii].num_progeny;
 		}	
-		//if (i % 1000 == 0)
-		//		cout << "\nInitial generation " << i + 1 << " completed.";	
-		cout << i << ",";
+		
+		if (global_params.verbose)
+			cout << i << ",";
+		else
+		{
+			if (i % 1000 == 0)
+				cout << "\nInitial generation " << i + 1 << " completed.";	
+		}
 	}
 	//calc variance in change in frequencies
 	if (global_params.parent_trait)

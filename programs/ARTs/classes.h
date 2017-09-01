@@ -90,7 +90,7 @@ public:
 	double sperm_comp_r, egg_surv_parent, egg_surv_noparent;
 	string base_name;
 	bool court_trait, parent_trait, gene_network, env_cue, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
-	bool supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene;
+	bool supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose;
 	vector <int> qtl_per_chrom;
 
 	parameters()
@@ -148,6 +148,7 @@ public:
 		gaussian_pref_mean = 0;//default 0
 		via_sel_strength = 50;//unsure what value to put here (currently 50)
 		cond_adj = 0.1;//amount to add/subtract to condition dependent traits (default 0.1)
+		verbose = false; //outputs info about every step during every initial generation -- good for debugging
 	}
 
 	void help_message()
@@ -200,6 +201,7 @@ public:
 		cout << "--parent-conditional:\tIf the parent trait has no genetic basis and is determined randomly or through environmental effects.\n";
 		cout << "--thresholds-evolve:\tIf the thresholds are allowed to evolve (i.e., they have a quantitative genetic basis).\n";
 		cout << "--thresholds-in-supergene:\tThe thresholds have a genetic basis and their loci are in the supergene.\n";
+		cout << "--verbose:\tOutputs info about every step during every initial generation -- good for debugging";
 		cout << "-h or --help:\tPrint this help message.\n";
 	}
 
@@ -406,6 +408,8 @@ public:
 							thresholds_evolve = true;
 						if (tempstring1 == "--thresholds-in-supergene")
 							thresholds_in_supergene = true;
+						if (tempstring1 == "--verbose")
+							verbose = true;
 					}
 				}
 				
