@@ -13,10 +13,10 @@
 # #with a genetic architecture
 # ./ARTs --courter -b ../../results/courter
 # ./ARTs --parent -b ../../results/parent
-./ARTs --courter --parent -b ../../results/parent-courter
+#./ARTs --courter --parent -b ../../results/parent-courter
 
-./ARTs --courter -b --freq-dependent-preference ../../results/courter_nfds
-./ARTs --parent -b --freq-dependent-preference ../../results/parent_nfds
+./ARTs --courter --freq-dependent-preference -b ../../results/courter_nfds
+./ARTs --parent --freq-dependent-preference -b ../../results/parent_nfds
 ./ARTs --courter --parent --freq-dependent-preference -b ../../results/parent-courter_nfds
 
 #Evolving thresholds
