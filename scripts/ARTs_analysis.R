@@ -4,6 +4,14 @@
 
 setwd("~/Projects/ARTs/results/")
 library(RColorBrewer)
+
+### Courter-conditional
+cc.sum<-read.delim("courter-conditional_summary.txt")
+cc.traits<-read.delim("courter-conditional_traits.txt")
+cc.popdyn<-read.delim("courter-conditional_popdyn.txt")
+
+
+
 ### Random Mating
 rm.sum<-read.table("random_mating_summary.txt",header=T)
 plot(c(1,nrow(rm.sum)),c(0,1),type='n')

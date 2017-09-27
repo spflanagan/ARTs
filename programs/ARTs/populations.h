@@ -671,9 +671,9 @@ public:
 		vector<double> tempallele1, tempallele2, tempallele3;
 		for (j = 0; j < gp.num_alleles; j++) //set up specific alleles.
 		{
-			tempallele1.push_back(randnorm(0, gp.allelic_std_dev));
-			tempallele2.push_back(randnorm(0, gp.allelic_std_dev));
-			tempallele3.push_back(randnorm(0, gp.allelic_std_dev));
+			tempallele1.push_back(randnorm(0, gp.allelic_std_dev/gp.num_qtl));
+			tempallele2.push_back(randnorm(0, gp.allelic_std_dev / gp.num_qtl));
+			tempallele3.push_back(randnorm(0, gp.allelic_std_dev / gp.num_qtl));
 		}
 		for (j = 0; j < gp.carrying_capacity; j++)
 		{
@@ -2404,7 +2404,7 @@ public:
 							alive_adults++;
 						}
 					}
-					allele_freqs = allele_freqs / 2 * alive_adults;
+					allele_freqs = allele_freqs / (2 * alive_adults);
 					if (allele_freqs > max_af)
 					{
 						maj_allele = jjj;
@@ -2690,14 +2690,14 @@ public:
 	void output_summary_info(parameters gp, ofstream & summary_output)
 	{
 		double dtemp;
-		if (gp.parent_trait)
+		if (gp.parent_trait || gp.parent_conditional)
 		{
 			dtemp = calc_freq_parent(gp);
 			summary_output << "\t" << parent_thresh << '\t' << dtemp;
 		}
 		else
 			summary_output << "\tNA\tNA";
-		if (gp.court_trait)
+		if (gp.court_trait || gp.courter_conditional)
 		{
 			dtemp = calc_freq_courter(gp);
 			summary_output << "\t" << courter_thresh << '\t' << dtemp;
@@ -2709,7 +2709,7 @@ public:
 	void output_genotypes_vcf(parameters gp, int pop_id)
 	{
 		int j, jj, jjj;
-		if (gp.parent_trait || gp.court_trait || gp.ind_pref || gp.cor_prefs)
+		if (gp.parent_trait || gp.court_trait || gp.courter_conditional || gp.parent_conditional || gp.ind_pref || gp.cor_prefs)
 		{
 			string vcf_name = gp.base_name + "_pop_" + to_string(pop_id) + ".vcf";
 			ofstream vcf;
