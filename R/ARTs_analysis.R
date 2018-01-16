@@ -5,14 +5,14 @@
 setwd("~/Projects/ARTs/results/")
 library(RColorBrewer)
 
-### Courter-conditional
+## ---- CourterConditionalData
 cc.sum<-read.delim("courter-conditional_summary.txt")
 cc.traits<-read.delim("courter-conditional_traits.txt")
 cc.popdyn<-read.delim("courter-conditional_popdyn.txt")
 
+## ---- end
 
-
-### Random Mating
+## ---- RandomMating
 rm.sum<-read.table("random_mating_summary.txt",header=T)
 plot(c(1,nrow(rm.sum)),c(0,1),type='n')
 for(i in 7:ncol(rm.sum)){ points(rownames(rm.sum),rm.sum[,i],type="l")}
@@ -21,7 +21,9 @@ plot(rm.sum$CourterFreq, type="l")
 
 rm.traits<-read.delim("random_mating_traits.txt")
 
-### Courter trait
+## ---- end
+
+## ---- CourterTrait
 ct.sum<-read.table("courter_summary.txt",header=T)
 ct.traits<-read.delim("courter_traits.txt")
 
@@ -52,8 +54,9 @@ for(i in 7:ncol(crtr.qtl.af)){ points(rownames(crtr.qtl.af),crtr.qtl.af[,i],type
 
 hist(unlist(crtr.qtl.af[nrow(crtr.qtl.af),]))
 hist(unlist(pref.qtl.af[nrow(pref.qtl.af),]))
+## ---- end
 
-#### with 4 QTL
+## ---- Courters4QTL
 ct.sum<-read.table("courter_q4_summary.txt",header=T)
 ct.traits<-read.delim("courter_q4_traits.txt")
 
@@ -82,7 +85,9 @@ for(i in 1:ncol(crtr.qtl.af)){ points(rownames(crtr.qtl.af),crtr.qtl.af[,i],type
 
 hist(unlist(crtr.qtl.af[nrow(crtr.qtl.af),]))
 hist(unlist(pref.qtl.af[nrow(pref.qtl.af),]))
-### Parent trait
+## ---- end
+
+## ---- ParentTrait
 pt.sum<-read.table("parent_summary.txt",header=T)
 pt.traits<-read.delim("parent_traits.txt")
 
@@ -105,10 +110,10 @@ for(i in 7:ncol(marker.af)){ points(rownames(marker.af),marker.af[,i],type="l",c
 for(i in 7:ncol(parent.qtl.af)){ points(rownames(parent.qtl.af),parent.qtl.af[,i],type="l",col=ptcol[i])}
 
 hist(unlist(parent.qtl.af[nrow(parent.qtl.af),]))
+## ---- end
 
-
-### Frequency dependent preference
 setwd("~/Projects/ARTs/results/")
+## ---- FrequencyDependentPreference
 pt.sum<-read.table("fdcourter_summary.txt",header=T)
 pt.traits<-read.delim("fdcourter_traits.txt")
 
@@ -133,7 +138,6 @@ ctcol<-ctcolsc(ncol(crtr.qtl.af))
 pfcolsc<-colorRampPalette(c("light pink","dark violet"))
 pfcol<-pfcolsc(ncol(pref.qtl.af))
 
-
 #plot
 plot(c(1,nrow(pt.sum)),c(0,1),type='n')
 for(i in 7:ncol(marker.af)){ points(rownames(marker.af),marker.af[,i],type="l",col=bgcol[i])}
@@ -142,3 +146,4 @@ for(i in 1:ncol(crtr.qtl.af)){ points(rownames(crtr.qtl.af),crtr.qtl.af[,i],type
 
 hist(unlist(crtr.qtl.af[nrow(crtr.qtl.af),]))
 hist(unlist(pref.qtl.af[nrow(pref.qtl.af),]))
+## ---- end
