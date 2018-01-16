@@ -1,0 +1,50 @@
+---
+title: "High-level ARTs Debugging"
+output: html_document
+author: "Sarah P. Flanagan"
+date: "16 January 2018"
+
+---
+
+The purpose of this model is to understand how genetic architectures of alternative reproductive tactics impact their maintenance in populations. I'm using an individual-based simulation model with different selection scenarios, types of alternative tactics, and genetic architectures (genome-wide additive genetic variance, supergenes, expression networks) To test the model and make sure that everything has been implemented correctly, I'm first testing to ensure that the model produces the expected results without the genetic architectures.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir='../results/')
+```
+```{r, echo=FALSE}
+library(knitr)
+library(RColorBrewer)
+read_chunk("../R/ARTs_analysis.R")
+```
+
+
+Based on previous theoretical work, the following expectations exist:
+```{r expecations, echo=FALSE}
+expectations<-data.frame(Scenario=c("Courtship trait", "Parental Trait","Courtship and Parental Traits",
+                                    "Courtship Trait + Neg Freq Dep Sel", "Parental Trait + Neg Freq Dep Sel",
+                                    "Parental Trait and courtship Trait + Neg Freq Dep Sel"),
+                         Expected_Outcome=c("Both alts maintained if costs = benefits","Both alts maintained if costs = benefits",
+                                            "Coevolution of both alts, and both alts maintained if costs = benefits",
+                                            "both alts maintained", "?","?"))
+kable(expectations, caption = "Expected outcomes")
+```
+
+One caveat to comparing to previous work is that in my model the parental and courtship traits have a trade-off, and I haven't found a model incorporated tradeoffs and negative frequency dependent selection.
+
+But we can look at what happens with the runs that I've done
+
+## Courter Trait
+
+```{r CourterTrait}
+```
+
+## Parent Trait
+
+```{r ParentTrait}
+```
+
+## Frequency-Dependent Preference
+
+```{r FrequencyDependentPreference}
+```
