@@ -1339,7 +1339,7 @@ public:
 				{
 					double freqT = 0;
 					count = 0;
-					if (gp.court_trait)
+					if (gp.court_trait || gp.courter_conditional)
 						pref_fd_courter(gp);
 					else //it's based on the parent trait
 						pref_fd_parent(gp);
@@ -1352,7 +1352,7 @@ public:
 				{
 					double freqT = 0;
 					count = 0;
-					if (gp.court_trait)
+					if (gp.court_trait || gp.courter_conditional)
 						pref_fd_courter(gp);
 					else //it's based on the parent trait
 						pref_fd_parent(gp);
@@ -1817,6 +1817,10 @@ public:
 				{
 					num_mal++;
 					male_index.push_back(j);
+					if (gp.court_trait || gp.courter_conditional)//make sure morphs are assigned.
+						adults[j].assign_court_morph(gp);
+					if (gp.parent_trait || gp.parent_conditional)
+						adults[j].assign_parent_morph(gp);
 				}
 			}
 			adults[j].mate_found = 0;
@@ -2433,6 +2437,17 @@ public:
 						qtlinfo_output << "\tPrefQTL" << count1;
 					else
 						qtlinfo_output << '\t' << j << "." << pref_qtls[j].per_locus[jj];
+					count1++;
+				}
+			}
+			else
+			{
+				for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+				{
+					if (initial)
+						qtlinfo_output << "\tPrefQTL" << count1;
+					else
+						qtlinfo_output << "\tNA";
 					count1++;
 				}
 			}

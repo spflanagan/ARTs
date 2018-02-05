@@ -46,10 +46,11 @@ int main(int argc, char*argv[])
 		cout << "\nRunning the ARTs model with default parameters.\n";
 		global_params.set_defaults();
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
+		global_params.FD_pref = true;
 		global_params.courter_conditional = true;
 		global_params.num_init_gen = 2;
 		global_params.num_exp_gen = 1;
-		global_params.base_name = "../../results/testing_courter-conditional";
+		global_params.base_name = "../../results/testing_courter-conditional_nfds";
 		global_params.dependent_params();
 	}
 	
@@ -122,7 +123,7 @@ int main(int argc, char*argv[])
 			{
 				pops[ii].determine_pop_size(global_params);
 				//output summary stats
-				summary_output << "\nGen" << i << "\tPop" << ii;
+				summary_output << "\n" << i << "\tPop" << ii;
 				if (global_params.verbose)
 					cout << "\nPopsize " << pops[ii].population_size << ",";
 				pops[ii].output_summary_info(global_params, summary_output);//includes allele freqs
