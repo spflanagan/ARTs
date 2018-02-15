@@ -6,7 +6,7 @@
 #DETERMINE WHAT SHOULD RUN
 CONDITIONAL=false
 COND_NFDS=true
-GENETIC_ARCH=true
+GENETIC_ARCH=false
 EVOLVING=false
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROGDIR="../programs/ARTs"

@@ -93,7 +93,7 @@ mtext("Frequency of Courtship Males",4)
 
 In this case, the female preference is based on the frequency of the courtship morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; males are assigned a trait value at random (it's not inherited), all nests survive since parental care is not incorporated in this model, and courters and parental males are disfavored in viability selection.
 
-```{r courtship_nfds,ech=FALSE}
+```{r courtship_nfds,echo=FALSE}
 cn<-read.delim("courter-conditional_nfds_summary.txt")
 plot(cn$CourterFreq,lwd=2,xlab="Generations",ylab="Frequency of Courtship Males",
      bty="l",type="l",ylim=c(0,1),col=alpha(cols["courter"],0.75))
@@ -103,7 +103,7 @@ plot(cn$CourterFreq,lwd=2,xlab="Generations",ylab="Frequency of Courtship Males"
 
 In this case, the female preference is based on the frequency of the parental morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; males are assigned a trait value at random (it's not inherited), nests have a 90% chance of survival, and courters and parental males are disfavored in viability selection.
 
-```{r parent_nfds,ech=FALSE}
+```{r parent_nfds,echo=FALSE}
 pn<-read.delim("parent-conditional_nfds_summary.txt")
 plot(pn$ParentFreq,lwd=2,xlab="Generations",ylab="Frequency of Parental Males",
      bty="l",type="l",ylim=c(0,1),col=alpha(cols["parent"],0.75))
@@ -113,7 +113,7 @@ plot(pn$ParentFreq,lwd=2,xlab="Generations",ylab="Frequency of Parental Males",
 
 In this case, the female preference is based on the frequency of the courtship morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; males are assigned a trait value at random (it's not inherited), parental males' nests survive with a probability of 90% and non-parental males' nests survive with a probability of 10%, and courters and parental males are disfavored in viability selection.
 
-```{r parent_courtship_nfds,ech=FALSE}
+```{r parent_courtship_nfds,echo=FALSE}
 pcn<-read.delim("parent-courter-conditional_nfds_summary.txt")
 plot(pcn$CourterFreq,lwd=2,xlab="Generations",ylab="Frequency of Courtship Males",
      bty="u",type="l",ylim=c(0,1),col=alpha(cols["courter"],0.75))
