@@ -681,7 +681,7 @@ public:
 				adults[j].alive = true;
 			else
 				adults[j].alive = false;//it's an empty slot for migrants
-			
+			adults[j].lifetime_rs = 0;
 			for (jj = 0; jj < gp.num_chrom; jj++)
 			{
 				if (gp.court_trait)
@@ -1788,6 +1788,8 @@ public:
 						progeny[num_progeny].female = true;
 					else
 						progeny[num_progeny].female = false;
+					progeny[num_progeny].mom = mom_index;
+					progeny[num_progeny].dad = dad_index;
 					rel_rs++;
 					num_progeny++;
 				}
@@ -1835,7 +1837,8 @@ public:
 					if (gp.gene_network)
 						parent_cue_eval(gp, adults[j].mate_id);
 					first_progeny = fertilization(j,gp);
-					nest_survival(gp, first_progeny, adults[j].mate_id);
+					int survive = nest_survival(gp, first_progeny, adults[j].mate_id);
+					adults[j].lifetime_rs = adults[j].lifetime_rs + survive;
 				}
 			}
 		}
@@ -2010,10 +2013,11 @@ public:
 		}
 		return first_progeny;
 	}
-	void nest_survival(parameters gp, int prog_start, int mal_id)
+	int nest_survival(parameters gp, int prog_start, int mal_id)
 	{
-		int k;
+		int k, num_survive;
 		double surv_rand;
+		num_survive = 0;
 		if (gp.parent_conditional || gp.parent_trait)//assign survival based on
 		{
 			for (k = prog_start; k < num_progeny; k++)
@@ -2022,19 +2026,28 @@ public:
 				if (adults[mal_id].parent)
 				{
 					if (surv_rand < gp.egg_surv_parent)
+					{
 						progeny[k].alive = true;
+						adults[progeny[k].dad].lifetime_rs = adults[progeny[k].dad].lifetime_rs++;
+						num_survive++;
+					}
 					else
 						progeny[k].alive = false;
 				}
 				else
 				{
 					if (surv_rand < gp.egg_surv_noparent)
+					{
 						progeny[k].alive = true;
+						adults[progeny[k].dad].lifetime_rs = adults[progeny[k].dad].lifetime_rs++;
+						num_survive++;
+					}
 					else
 						progeny[k].alive = false;
 				}
 			}
 		}
+		return(num_survive);
 	}
 
 	//selection
@@ -2277,6 +2290,7 @@ public:
 			adults[adult_index].female = false;
 			num_mal++;
 		}
+		adults[adult_index].lifetime_rs = 0;
 	}
 	void regulate_popsize(parameters gp)
 	{

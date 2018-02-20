@@ -525,7 +525,7 @@ public:
 	vector<int> courter_Z, parent_Z, pref_Z, cthresh_Z, pthresh_Z;
 	vector<double> courter_x, parent_x, pref_x, cthresh_x, pthresh_x;
 	bool female, alive, courter, parent;
-	int mate_found, pot_rs, mate_id;
+	int mate_found, pot_rs, mate_id,lifetime_rs, mom,dad;
 
 	individual()
 	{
@@ -534,7 +534,7 @@ public:
 		courter_int = parent_int = pref_int =cthresh_int = pthresh_int, courter_Y = parent_Y = pref_Y = cthresh_Y=pthresh_Y =vector<tracker>();
 		courter_Z = parent_Z = pref_Z = cthresh_Z = pthresh_Z = vector<int>();
 		courter_x = parent_x = pref_x = cthresh_x = pthresh_x = vector<double>();
-		mate_found = pot_rs = mate_id = int();
+		mate_found = pot_rs = mate_id = lifetime_rs =mom = dad = int();
 		female = alive = parent = courter = bool();
 	}
 
