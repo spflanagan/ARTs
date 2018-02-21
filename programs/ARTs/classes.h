@@ -19,7 +19,7 @@ using namespace std;
 //adapted from: https://blog.codinghorror.com/the-danger-of-naivete/
 void shuffle_vec(vector<int> & vec)
 {
-	int i, temp;
+	int temp;
 	for (int i = vec.size() - 1; i > 0; i--)
 	{
 		int n = randnum(i + 1);
@@ -90,7 +90,7 @@ public:
 	double sperm_comp_r, egg_surv_parent, egg_surv_noparent;
 	string base_name;
 	bool court_trait, parent_trait, gene_network, env_cue, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
-	bool supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose;
+	bool supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive;
 	vector <int> qtl_per_chrom;
 
 	parameters()
@@ -99,7 +99,7 @@ public:
 		num_pops = num_init_gen = num_exp_gen = max_num_mates = int();
 		mutation_rate =recombination_rate = allelic_std_dev = egg_surv_parent = egg_surv_noparent = sperm_comp_r = double();
 		gene_network = env_cue = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
-		random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene =bool();
+		random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive =bool();
 		qtl_per_chrom = vector<int>();
 	}
 
@@ -130,6 +130,7 @@ public:
 		supergene =  false; //default: false
 		court_trait = courter_conditional = false; //default: false
 		parent_trait = parent_conditional = false;//default false
+		linked_additive = true; //default: true, traits are determined by additive genetic variance.
 		thresholds_evolve = thresholds_in_supergene = false; //default: false
 		env_cue = gene_network = false;//default false
 		cor_prefs= ind_pref= FD_pref= CD_pref= FD_court= FD_parent= CD_court= CD_parent = false;//no selection
@@ -149,6 +150,7 @@ public:
 		via_sel_strength = 50;//unsure what value to put here (currently 50)
 		cond_adj = 0.1;//amount to add/subtract to condition dependent traits (default 0.1)
 		verbose = false; //outputs info about every step during every initial generation -- good for debugging
+		no_genetics = false; //removes genetic architecture, is just unlinked additive genetic variance
 	}
 
 	void help_message()
@@ -202,6 +204,8 @@ public:
 		cout << "--thresholds-evolve:\tIf the thresholds are allowed to evolve (i.e., they have a quantitative genetic basis).\n";
 		cout << "--thresholds-in-supergene:\tThe thresholds have a genetic basis and their loci are in the supergene.\n";
 		cout << "--verbose:\tOutputs info about every step during every initial generation -- good for debugging";
+		cout << "--no-genetics:\tRemoves genetic architecture; traits encoded by heritable unlinked additive genetic variance.\n";
+		cout << "--linked-additive:\t(default) Traits are determined by genome-wide additive genetic variance distributed among chromosomes.\n";
 		cout << "-h or --help:\tPrint this help message.\n";
 	}
 
@@ -209,6 +213,13 @@ public:
 	{
 		int j, qtl_counter;
 		//assign values based on input
+		if (no_genetics)
+		{
+			gene_network = supergene = false;
+			num_chrom = 1;
+			num_markers = 0;
+			recombination_rate = 0;
+		}
 		if (qpc.size() > 0)
 		{
 			istringstream ss(qpc);
@@ -281,6 +292,23 @@ public:
 			ind_pref = false;
 		if (ind_pref)
 			cor_prefs = false;
+		if (court_trait || courter_conditional)// if there's a courtship trait then there must be a female preference
+		{
+			if (!cor_prefs && !ind_pref)
+				ind_pref = true;
+		}
+		//if (parent_conditional || parent_trait)
+		//{
+		//	if (!courter_conditional && !court_trait)// if there's no courtship trait and no female preferences specified
+		//	{										//then females choose a nest randomly. 
+		//		if (!ind_pref && !cor_prefs)
+		//			random_mating = true;
+		//	}
+		//}
+		if (!no_genetics & !gene_network & !supergene & !courter_conditional & !parent_conditional)
+			linked_additive = true;
+		else
+			linked_additive = false;
 	}
 
 	bool parse_parameters(int argc, char*argv[])
@@ -306,12 +334,13 @@ public:
 			else
 			{
 				run_program = true;
-				for (j = 1; j < argc - 1; j++)
+				for (j = 1; j < argc; j++)
 				{
 					tempstring1 = argv[j];
 					if (tempstring1.substr(0, 2) != "--")
 					{
 						tempstring2 = argv[j + 1];
+						j++;
 						if (tempstring1 == "-b")
 							base_name = tempstring2;
 						if (tempstring1 == "-K")
@@ -410,6 +439,10 @@ public:
 							thresholds_in_supergene = true;
 						if (tempstring1 == "--verbose")
 							verbose = true;
+						if (tempstring1 == "--no-genetics")
+							no_genetics = true;
+						if (tempstring1 == "--linked-additive")
+							no_genetics = true;
 					}
 				}
 				
@@ -493,6 +526,12 @@ public:
 			param_out << "\n--thresholds_evolve";
 		if (thresholds_in_supergene)
 			param_out << "\n--thresholds_in_supergene";
+		if (verbose)
+			param_out << "\n--verbose";
+		if (no_genetics)
+			param_out << "\n--no-genetics";
+		if (linked_additive)
+			param_out << "\n--linked-additive";
 		param_out.close();
 	}
 };
@@ -519,7 +558,7 @@ string determine_date()
 class individual
 {
 public:
-	double courter_trait, parent_trait, female_pref, ind_cthresh, ind_pthresh;
+	double courter_trait, parent_trait, female_pref,pref_trait, ind_cthresh, ind_pthresh;
 	vector<chromosome> maternal, paternal;
 	vector<tracker> courter_int, parent_int, pref_int, cthresh_int, pthresh_int, courter_Y, parent_Y, pref_Y,cthresh_Y,pthresh_Y;
 	vector<int> courter_Z, parent_Z, pref_Z, cthresh_Z, pthresh_Z;
@@ -529,7 +568,7 @@ public:
 
 	individual()
 	{
-		courter_trait = parent_trait = female_pref = ind_cthresh = ind_pthresh = double();
+		courter_trait = parent_trait = female_pref = pref_trait = ind_cthresh = ind_pthresh = double();
 		maternal = paternal = vector<chromosome>();
 		courter_int = parent_int = pref_int =cthresh_int = pthresh_int, courter_Y = parent_Y = pref_Y = cthresh_Y=pthresh_Y =vector<tracker>();
 		courter_Z = parent_Z = pref_Z = cthresh_Z = pthresh_Z = vector<int>();
@@ -690,7 +729,7 @@ public:
 	}
 	void calc_courter_trait(parameters gp)//for non-env effects
 	{
-		int k, kk, kkk;
+		int k, kk;
 		courter_trait = 0;
 		if (!gp.gene_network)
 		{
@@ -707,7 +746,7 @@ public:
 	}
 	void calc_courter_trait(parameters gp, vector<tracker>& courter_env, double env_cue = 0, bool stability = true)
 	{
-		int k, kk, kkk;
+		int k, kk;
 		courter_trait = 0;
 		if (!gp.gene_network)
 		{
@@ -736,7 +775,7 @@ public:
 	}
 	void calc_parent_trait(parameters gp)//for non-environmental effects
 	{
-		int k, kk, kkk;
+		int k, kk;
 		parent_trait = 0;
 		if (!gp.gene_network)
 		{
@@ -753,7 +792,7 @@ public:
 	}
 	void calc_parent_trait(parameters gp, vector<tracker>& parent_env, double env_cue = 0, bool stability = true)
 	{
-		int k, kk, kkk;
+		int k, kk;
 		if(gp.parent_trait)
 		{
 			parent_trait = 0;
@@ -785,7 +824,7 @@ public:
 	}
 	void calc_preference_trait(parameters gp, double threshold)
 	{
-		int k, kk, kkk;
+		int k, kk;
 		female_pref = 0;
 		if (!gp.gene_network)
 		{
@@ -794,6 +833,7 @@ public:
 				for (kk = 0; kk < maternal[k].pref_ae.size(); kk++)
 					female_pref = female_pref + maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk];
 			}
+			pref_trait = female_pref;
 		}
 		else
 		{
@@ -806,7 +846,7 @@ public:
 	}
 	void calc_preference_trait(parameters gp, double threshold, vector<tracker>& pref_env, double env_cue = 0, bool stability = true)
 	{
-		int k, kk, kkk;
+		int k, kk;
 		female_pref = 0;
 		if (!gp.gene_network)
 		{
@@ -815,6 +855,7 @@ public:
 				for (kk = 0; kk < maternal[k].pref_ae.size(); kk++)
 					female_pref = female_pref + maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk];
 			}
+			pref_trait = female_pref;
 		}
 		else
 		{
@@ -831,6 +872,7 @@ public:
 					}
 				}
 			}
+			pref_trait = female_pref;
 		}
 		if (female_pref < threshold)
 			female_pref = 0;
@@ -923,7 +965,7 @@ public:
 	//life cycle functions
 	int find_qtl_index(parameters gp, int chrom, int qtl_loc)
 	{
-		int c, cc, qtl_index;
+		int c, qtl_index;
 		qtl_index = 0;
 		for (c = 0; c < chrom; c++)
 		{
@@ -936,7 +978,7 @@ public:
 		vector<tracker>& courter_thresh_qtl, vector<tracker>& parent_thresh_qtl, 
 		vector<tracker>& courter_env_qtl, vector<tracker>& parent_env_qtl, vector<tracker>& cthresh_env_qtl, vector<tracker>& pthresh_env_qtl,vector<tracker>&pref_env_qtl)
 	{
-		int m, mm, irand, irand2, gg, ggg, irand3, locus, qtl_index;
+		int mm, irand, irand2, irand3, qtl_index;
 		double rnd1, rnd2;
 		double IndMutationRate;
 		double MutSD;
@@ -1263,7 +1305,7 @@ public:
 	void mutation_env(parameters gp)
 	{
 		//do something.
-		int j, jj, rand_loc1, rand_loc2, mut_count;
+		int j, jj, rand_loc1, mut_count;
 		double alpha, mu_mean, sigma_mu, num_mutations, YorZ;
 		alpha = 0.2;
 		mu_mean = 0.02;

@@ -121,7 +121,116 @@ points(pcn$ParentFreq,lwd=2,type="l",col=alpha(cols["parent"],0.75))
 mtext(text = "Frequency of Parental Males",side=4)
 ```
 
-## With a genetic basis to traits
+## Unlinked additive genetic variance
+
+In these cases, the traits are encoded by a number of loci, whose alleles contribute additively to determine the trait value. These alleles are all freely recombining and are not adhered to any physical genomic location (aka this is a classical quantitative genetics approach). The overall trait value is compared to a population-level threshold (which is static, in these cases), and if the trait value is above the threshold the male takes the parent or courter morph and if it is below he does not. 
+
+### Courter trait
+
+Females choose nests based on whether the male is a courter or not, and they all prefer courters all of the time. Because parental care is not incorporated in this model, all nests survive.
+
+```{r unlinked_courter}
+cng.sum<-read.delim("courter-nogenetics_summary.txt")
+plot(cng.sum$CourterFreq,lwd=2,xlab="Generations",ylab="Frequency of Courting Males",
+     bty="L",type="l",ylim = c(0,1),col=cols["courter"])
+```
+
+### Parental traits
+
+Females randomly select males to nest with. Parental males provide care that allows nests to have a 90% chance of survival. 
+
+```{r parental_nogenetics, echo=FALSE}
+png.sum<-read.delim("parent-nogenetics_summary.txt")
+plot(png.sum$ParentFreq,lwd=2,xlab="Generations",ylab="Frequency of Parental Males",
+     bty="L",type="l",ylim = c(0,1),col=cols["parent"])
+```
+
+
+### Courtship and Parental Traits
+
+Females choose nests based on males' courtship morph (nest with courting males only), and then the survival of the nest depends on whether the courting male is also a parental male. If the chosen male is a parental male, the nest has a 90% chance of survival. Otherwise, it only has a 10% chance.
+
+```{r parentalCourtship_nogenetics, echo=FALSE}
+pcng.sum<-read.delim("parent-courter-nogenetics_summary.txt")
+par(mar=c(4,4,1,4))
+plot(pcng.sum$ParentFreq,lwd=2,xlab="Generations",ylab="",
+     bty="u",type="l",ylim = c(0,1),col=alpha(cols["parent"],0.75),las=1)
+points(pcng.sum$CourterFreq,lwd=2,type="l",col=alpha(cols["courter"],0.75))
+axis(4,las=1)
+mtext("Frequency of Courtship Males",4,line=2.5,col=cols["courter"])
+mtext("Frequency of Parental Males",2,line=2.5,col=cols["parent"])
+```
+
+Courting males are maintained at a frequency around 80% in these cases and parental males are around 20%. This is surprising - males who are courters and parents should rise to the top, and both should be maintained at a fairly high frequency. Let's look at the reproductive success of the morphs over time.
+
+```{r courtParent_rs,echo=FALSE}
+par(mar=c(4,4,1,4),mfrow=c(2,1))
+plot(pcng.sum$ParentW,lwd=2,xlab="Generations",ylab="Parental Reproductive Success",
+     bty="u",type="l",ylim = c(0,4.25),col=alpha(cols["parent"],0.75),las=1)
+points(pcng.sum$NonParentW,lwd=2,lty=3,type="l",col=alpha(cols["parent"],0.75))
+points(pcng.sum$NonParentW,lwd=2,lty=3,type="l",col=alpha("grey",0.75))
+plot(pcng.sum$CourterW,xlab="Generations",ylab="Courter Reproductive Success",
+     bty="u",lwd=2,type="l",col=alpha(cols["courter"],0.75),ylim = c(0,4.25))
+points(pcng.sum$NonCourterW,lwd=2,lty=3,type="l",col=alpha(cols["courter"],0.75))
+points(pcng.sum$NonCourterW,lwd=2,lty=3,type="l",col=alpha("grey",0.75))
+
+```
+
+So, although courting males have lower reproductive success, they're at higher frequency in the population, and parental males are at low frequency. What?!?
+
+Let's look for a correlation between traits. Because these are discrete trait characters, it's a bit wonky to look at. I'm going to add an output for the actual trait values - then I can create a nice landscape. 
+
+```{r courtParent_traits,echo=FALSE}
+pcng.traits<-read.delim("parent-courter-nogenetics_traits.txt")
+
+##How can I create a fitness landscape?? 
+plot(pcng.traits$Courter,pcng.traits$Parent,cex=pcng.traits$LifetimeRS)
+library(lattice)
+library(viridisLite)
+rscol<-plasma(100,direction=-1)
+levelplot(pcng.traits$LifetimeRS ~ pcng.traits$Courter*pcng.traits$Parent,
+  xlab = "Courter", ylab = "Parent",
+  main = "Reproductive Success",
+  col.regions = rscol
+)
+#could also use image(), maybe
+```
+
+Ok, so it looks like all of the individuals have either one trait or the other - a negative correlation between the two. 
+
+### Courtship + Negative Frequency Dependent Selection
+
+In this case, the female preference is based on the frequency of the courtship morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; all nests survive since parental care is not incorporated in this model, and courters and parental males are disfavored in viability selection.
+
+```{r courtship_nogenetics_nfds,echo=FALSE}
+cnng<-read.delim("courter-nogenetics-nfds_summary.txt")
+plot(cnng$CourterFreq,lwd=2,xlab="Generations",ylab="Frequency of Courtship Males",
+     bty="l",type="l",ylim=c(0,1),col=alpha(cols["courter"],0.75))
+```
+
+### Parental Males + Negative Frequency Dependent Selection
+
+In this case, the female preference is based on the frequency of the parental morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; nests have a 90% chance of survival, and courters and parental males are disfavored in viability selection.
+
+```{r parent_nogenetics_nfds,echo=FALSE}
+pnng<-read.delim("parent-nogenetics-nfds_summary.txt")
+plot(pnng$ParentFreq,lwd=2,xlab="Generations",ylab="Frequency of Parental Males",
+     bty="l",type="l",ylim=c(0,1),col=alpha(cols["parent"],0.75))
+```
+
+### Courtship + Parental Males + Negative Frequency Dependent Selection
+
+In this case, the female preference is based on the frequency of the courtship morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; parental males' nests survive with a probability of 90% and non-parental males' nests survive with a probability of 10%, and courters and parental males are disfavored in viability selection.
+
+```{r unlinked_parent_courtship_nfds,echo=FALSE}
+pcnng<-read.delim("parent-courter-nogenetics-nfds_summary.txt")
+plot(pcnng$CourterFreq,lwd=2,xlab="Generations",ylab="Frequency of Courtship Males",
+     bty="u",type="l",ylim=c(0,1),col=alpha(cols["courter"],0.75))
+points(pcnng$ParentFreq,lwd=2,type="l",col=alpha(cols["parent"],0.75))
+mtext(text = "Frequency of Parental Males",side=4)
+```
+
+## Linked additive genetic variance
 
 ### Courter Trait
 

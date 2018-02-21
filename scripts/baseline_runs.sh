@@ -4,8 +4,9 @@
 ### and to ensure that all of the processes and outputs are working properly.
 
 #DETERMINE WHAT SHOULD RUN
+NO_GENETICS=true
 CONDITIONAL=false
-COND_NFDS=true
+COND_NFDS=false
 GENETIC_ARCH=false
 EVOLVING=false
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -16,7 +17,17 @@ cd $DIR
 cd $PROGDIR
 
 
-#No genetic architectures 
+#No genetic architectures, just additive genetic variance
+ if [ "$NO_GENETICS" = true ]; then
+	./ARTs --courter --no-genetics -b ../../results/courter-nogenetics
+    ./ARTs --parent --no-genetics -b ../../results/parent-nogenetics
+	./ARTs --courter --no-genetics --parent -b ../../results/parent-courter-nogenetics
+	./ARTs --courter --no-genetics --freq-dependent-preference -b ../../results/courter-nogenetics-nfds
+	./ARTs --parent --no-genetics --freq-dependent-preference -b ../../results/parent-nogenetics-nfds
+	./ARTs --courter --no-genetics --parent --freq-dependent-preference -b ../../results/parent-courter-nogenetics-nfds
+fi &
+
+#Random traits
 if [ "$CONDITIONAL" = true ]; then
 	./ARTs --courter-conditional -b ../../results/courter-conditional
 	./ARTs --parent-conditional -b ../../results/parent-conditional

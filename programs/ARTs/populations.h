@@ -125,7 +125,7 @@ public:
 	}
 	void initialize_supergene(parameters & gp)
 	{
-		int m, mm, mmm, sg_start;
+		int m, mm, sg_start;
 		double supergene_nmarkers = gp.supergene_prop*gp.num_markers;
 		if (gp.qtl_per_chrom[0] == (gp.num_qtl / gp.num_chrom))//otherwise the supergene info was specified by user
 		{
@@ -525,7 +525,7 @@ public:
 	{
 		cout << "Initializing a population.\n";
 		population_size = gp.carrying_capacity;
-		int j, jj, jjj, k;
+		int j, jj, jjj;
 		num_fem = num_mal = 0;
 		sex_theta = -100;
 		//set up the qtls
@@ -761,7 +761,8 @@ public:
 		if (gp.supergene)
 		{
 			each_ok = true;
-			
+			if (gp.no_genetics)
+				each_ok = false;
 			for (p = 0; p < gp.num_chrom; p++)
 			{
 				if (gp.qtl_per_chrom[p] != 0 && gp.qtl_per_chrom[p] != gp.num_qtl)
@@ -856,6 +857,8 @@ public:
 		if (gp.gene_network)
 		{
 			each_ok = true;
+			if (gp.no_genetics)
+				each_ok = false;
 			if (!gp.court_trait && !gp.parent_trait && !gp.ind_pref && !gp.cor_prefs)
 				each_ok = false;
 			if (gp.num_env_qtl <= 0 || gp.num_env_qtl >= gp.num_qtl)
@@ -1069,6 +1072,25 @@ public:
 		if (population_size == 0)
 			cout << "\nPopulation has crashed!";
 	}
+	void determine_sex_nums(parameters gp)
+	{
+		int j;
+		num_mal = num_fem = 0;
+		for (j = 0; j < adults.size(); j++)
+		{
+			if (adults[j].alive)
+			{
+				if (adults[j].female)
+					num_fem++;
+				else
+					num_mal++;
+			}
+		}
+		if (num_mal == 0)
+			cout << "\nNo males in the population!";
+		if (num_fem == 0)
+			cout << "\nNo females in the population!";
+	}
 
 	//set up male traits
 	double calc_mean_courter_ae(parameters gp)
@@ -1110,7 +1132,7 @@ public:
 	}
 	double calc_mean_parent_ae(parameters gp)
 	{
-		int j, jj, jjj, count;
+		int j, count;
 		double mean;
 		mean = count = 0;
 		for (j = 0; j < gp.carrying_capacity; j++)
@@ -1147,7 +1169,7 @@ public:
 	}
 	double calc_freq_courter(parameters gp)
 	{
-		int j, jj;
+		int j;
 		double mean, freqT, count;
 		mean = freqT = count = 0;
 		for (j = 0; j < gp.carrying_capacity; j++)
@@ -1164,7 +1186,7 @@ public:
 	}
 	double calc_freq_parent(parameters gp)
 	{
-		int j, jj;
+		int j;
 		double mean, freqT, count;
 		mean = freqT = count = 0;
 		for (j = 0; j < gp.carrying_capacity; j++)
@@ -1181,8 +1203,8 @@ public:
 	}
 	void parent_fd_rs(parameters gp)
 	{
-		int j, jj;
-		double mean, freqT, count;
+		int j;
+		double mean, freqT;
 		freqT = calc_freq_parent(gp);
 		mean = 0;
 		if (freqT < 0.5) //parents have higher RS
@@ -1238,7 +1260,7 @@ public:
 	}
 	void pref_fd_courter(parameters gp)
 	{
-		int j, jj;
+		int j;
 		double freqT;
 		freqT= 0;
 		freqT = calc_freq_courter(gp);
@@ -1263,7 +1285,7 @@ public:
 	}
 	void pref_fd_parent(parameters gp)
 	{
-		int j, jj;
+		int j;
 		double freqT;
 		freqT= 0;
 		freqT = calc_freq_parent(gp);
@@ -1288,7 +1310,7 @@ public:
 	}
 	void pref_cd_courter(parameters gp, double meanT, double meanF, double xswitch)
 	{
-		int j, jj, count;
+		int j;
 		double mean;
 		for (j = 0; j < gp.carrying_capacity; j++)
 		{
@@ -1309,8 +1331,7 @@ public:
 	}
 	void assign_preference(parameters gp)
 	{
-		int j, jj, count;
-		double mean;
+		int count;
 		if (!gp.random_mating) //only waste the time if you're gonna use a preference
 		{
 			if (gp.ind_pref || gp.cor_prefs)//if female traits have a genetic architecture
@@ -1321,7 +1342,6 @@ public:
 				}
 				if (gp.CD_pref)//then need to calculate female fecundity and compare it to S(rs_p - rs_np).
 				{
-					int j, jj, count;
 					double xswitch, meanT, meanF;
 					meanT = 1;
 					meanF = 0;//based on morphs
@@ -1337,7 +1357,6 @@ public:
 				}
 				if (gp.FD_pref)//then need the frequency of morphs and female prefers less frequent one.
 				{
-					double freqT = 0;
 					count = 0;
 					if (gp.court_trait || gp.courter_conditional)
 						pref_fd_courter(gp);
@@ -1350,13 +1369,11 @@ public:
 			{
 				if (gp.FD_pref)//then need the frequency of morphs and female prefers less frequent one.
 				{
-					double freqT = 0;
 					count = 0;
 					if (gp.court_trait || gp.courter_conditional)
 						pref_fd_courter(gp);
 					else //it's based on the parent trait
 						pref_fd_parent(gp);
-
 				}
 				else
 					pref_better_morph(gp);//females just across the board prefer the better morph
@@ -1506,12 +1523,13 @@ public:
 	}
 	void recombine_chromosome(chromosome& chrom, individual &parent, double expected_recomb_events, int which_chrom, parameters gp, bool alive, int prog_id)//tracker& court_qtls, tracker& parent_qtls, tracker& pref_qtls, 
 	{
-		int RCi, RCj, RCk;
+		int RCi, RCj;
 		int NumberRecombEvents = 0;
 		int segment_start[22], segment_end[20];
 		int break_point[20];
 		vector<bool> recombine;
-
+		if (expected_recomb_events == 0)
+			NumberRecombEvents = 0;
 		if (expected_recomb_events < 6)
 			NumberRecombEvents = poissonrand(expected_recomb_events);
 		if (expected_recomb_events > 6)
@@ -1744,17 +1762,18 @@ public:
 			}
 		}
 	}
+	
 	double making_babies(parameters gp, int fecundity, int& num_progeny, int mom_index, int dad_index)
 	{
-		int jj, jjj, rec_val;
-		double rel_rs, diff;
-		bool recomb1, recomb2;
+		int jj, jjj;
+		double rel_rs;
 		rel_rs = 0;
 		if (num_progeny >= (gp.max_fecund*gp.carrying_capacity))
 			num_progeny = (gp.max_fecund*gp.carrying_capacity) - 1;
 		for (jj = 0; jj < fecundity; jj++)
 		{
 			progeny[num_progeny].alive = true;
+			
 			for (jjj = 0; jjj < gp.num_chrom; jjj++)
 			{
 				if (progeny[num_progeny].alive)
@@ -1800,11 +1819,13 @@ public:
 	}
 	void nest_and_fertilize(parameters gp, bool output, string out_name)
 	{
-		int j, jj, jjj, first_progeny;
-		num_progeny = num_fem = num_mal = 0;
+		int j, first_progeny;
 		bool nest_found;
 		vector<int> male_index;
 		ofstream out_file;
+		int fem_ms;
+
+		fem_ms = num_progeny = num_fem = num_mal = 0;
 
 		//set up pop level metrics
 		determine_pop_size(gp);
@@ -1838,10 +1859,12 @@ public:
 						parent_cue_eval(gp, adults[j].mate_id);
 					first_progeny = fertilization(j,gp);
 					int survive = nest_survival(gp, first_progeny, adults[j].mate_id);
-					adults[j].lifetime_rs = adults[j].lifetime_rs + survive;
+					fem_ms++;
 				}
 			}
 		}
+		if (gp.verbose)
+			cout << ", " << num_mal << " males, " << num_fem << " females, and " << fem_ms << " mated";
 	}
 	bool choose_nest(int fem_index, vector<int> & male_index, parameters gp)
 	{//females choose one male to give her eggs to.
@@ -1952,7 +1975,7 @@ public:
 	}
 	int fertilization(int fem_id,parameters gp)
 	{
-		int k,kk,fecundity, randmale, max_sperm, first_progeny, num_tries;
+		int k,kk,fecundity, randmale, max_sperm, first_progeny;
 		double rel_rs;
 		int male_id = adults[fem_id].mate_id;
 		vector<int> male_ids;
@@ -2018,7 +2041,7 @@ public:
 		int k, num_survive;
 		double surv_rand;
 		num_survive = 0;
-		if (gp.parent_conditional || gp.parent_trait)//assign survival based on
+		if (gp.parent_conditional || gp.parent_trait)//assign survival based on parent trait
 		{
 			for (k = prog_start; k < num_progeny; k++)
 			{
@@ -2028,7 +2051,6 @@ public:
 					if (surv_rand < gp.egg_surv_parent)
 					{
 						progeny[k].alive = true;
-						adults[progeny[k].dad].lifetime_rs = adults[progeny[k].dad].lifetime_rs++;
 						num_survive++;
 					}
 					else
@@ -2039,12 +2061,19 @@ public:
 					if (surv_rand < gp.egg_surv_noparent)
 					{
 						progeny[k].alive = true;
-						adults[progeny[k].dad].lifetime_rs = adults[progeny[k].dad].lifetime_rs++;
 						num_survive++;
 					}
 					else
 						progeny[k].alive = false;
 				}
+			}
+		}
+		else // all of them survive
+		{
+			for (k = prog_start; k < num_progeny; k++)
+			{
+				progeny[k].alive = true;
+				num_survive++;
 			}
 		}
 		return(num_survive);
@@ -2096,10 +2125,8 @@ public:
 		int j, ProgAlive;
 		double dSurvProb;
 		double drnum1;
-		double dOptimum;
 		double phenSD = 0;
 		double phenMean = 0;
-		double num;
 		int malecount = 0;
 		ProgAlive = 0;
 
@@ -2146,6 +2173,8 @@ public:
 				}
 			} // end of j
 		}
+		if (gp.verbose)
+			cout << ", " << ProgAlive << " progeny";
 	}
 
 	//stochastic survival
@@ -2296,7 +2325,6 @@ public:
 	{
 		int p;
 		int num_adults_chosen, prog_alive;
-		double keep_prob, drand;
 		vector<int> itracker;
 		num_mal = num_fem = num_adults_chosen = 0;
 		if (num_progeny > gp.carrying_capacity)
@@ -2329,12 +2357,13 @@ public:
 			}
 		}
 		population_size = num_adults_chosen;
+		if (gp.verbose)
+			cout << ", " << num_adults_chosen << " become adults";
 	}
 	
 	void density_regulation(parameters gp)
 	{
-		int p, pp, ppp;
-		int iNumAdultsChosen;
+		int p, iNumAdultsChosen;
 		double CarCapUnfilled, ProgLeft, KeepProb;
 		double DRrandnum;
 		num_mal = 0;
@@ -2399,7 +2428,7 @@ public:
 	//calc summary statistics
 	void calc_allele_freqs(parameters gp)
 	{
-		int j, jj, jjj, k,kk;
+		int j, jj, jjj, k;
 		for (j = 0; j < gp.num_chrom; j++)
 		{
 			for (jj = 0; jj < gp.num_markers; jj++)
@@ -2433,6 +2462,81 @@ public:
 				maf[j].per_locus[jj] = max_af;
 			}
 		}
+	}
+	void eval_rs(parameters gp) // calculate average reproductive success
+	{
+		int j;
+		for (j = 0; j < adults.size(); j++)
+		{
+			adults[j].lifetime_rs = 0;
+		}
+		for (j = 0; j < progeny.size(); j++)
+		{
+			if (progeny[j].alive)
+			{
+				adults[progeny[j].mom].lifetime_rs++;
+				adults[progeny[j].dad].lifetime_rs++;
+			}
+		}
+
+	}
+	vector<double> avg_court_rs(parameters gp)
+	{
+		int k;
+		int num_courter, num_parent, num_noncourter, num_nonparent;
+		determine_sex_nums(gp); 
+		num_courter = calc_freq_courter(gp)*num_mal;
+		num_noncourter = num_mal - num_courter;
+		num_parent = calc_freq_parent(gp)*num_mal;
+		num_nonparent = num_mal - num_parent;
+		eval_rs(gp);
+		
+		vector<double> rs;// courter_rs, noncourter_rs, parent_rs, nonparent_rs
+		for (k = 0; k < 4; k++)
+			rs.push_back(0);
+		for (k = 0; k < adults.size(); k++)
+		{
+			if (adults[k].alive && !adults[k].female)
+			{
+				if (gp.courter_conditional || gp.court_trait)
+				{
+					if (adults[k].courter)
+						rs[0] = rs[0] + adults[k].lifetime_rs;
+					else
+						rs[1] = rs[1] + adults[k].lifetime_rs;
+				}
+				if (gp.parent_conditional || gp.parent_trait)
+				{
+					if (adults[k].parent)
+						rs[2] = rs[2] + adults[k].lifetime_rs;
+					else
+						rs[3] = rs[3] + adults[k].lifetime_rs;
+				}
+			}
+		}
+		if (gp.courter_conditional || gp.court_trait)
+		{
+			if (num_courter > 0)
+				rs[0] = rs[0] / num_courter;
+			else
+				rs[0] = 0;
+			if(num_noncourter > 0)
+				rs[1] = rs[1] / num_noncourter;
+			else
+				rs[1] = 0;
+		}
+		if (gp.parent_conditional || gp.parent_trait)
+		{
+			if (num_parent > 0)
+				rs[2] = rs[2] / num_parent;
+			else
+				rs[2] = 0;
+			if (num_nonparent > 0)
+				rs[3] = rs[3] / num_nonparent;
+			else
+				rs[3] = 0;
+		}
+		return rs;
 	}
 	
 	//output
@@ -2719,20 +2823,21 @@ public:
 	void output_summary_info(parameters gp, ofstream & summary_output)
 	{
 		double dtemp;
+		vector<double> rs = avg_court_rs(gp);
 		if (gp.parent_trait || gp.parent_conditional)
 		{
 			dtemp = calc_freq_parent(gp);
-			summary_output << "\t" << parent_thresh << '\t' << dtemp;
+			summary_output << "\t" << parent_thresh << '\t' << dtemp << '\t' << rs[2] << '\t' << rs[3];
 		}
 		else
-			summary_output << "\tNA\tNA";
+			summary_output << "\tNA\tNA\tNA\tNA";
 		if (gp.court_trait || gp.courter_conditional)
 		{
 			dtemp = calc_freq_courter(gp);
-			summary_output << "\t" << courter_thresh << '\t' << dtemp;
+			summary_output << "\t" << courter_thresh << '\t' << dtemp << '\t' << rs[0] << '\t' << rs[1];
 		}
 		else
-			summary_output << "\tNA\tNA";
+			summary_output << "\tNA\tNA\tNA\tNA";
 		output_allele_freqs(gp, summary_output);
 	}
 	void output_genotypes_vcf(parameters gp, int pop_id)
@@ -2803,15 +2908,18 @@ public:
 	}
 	void output_trait_info(parameters gp, int pop_id, ofstream & output)
 	{
-		int j, jj;
+		int j;
+		eval_rs(gp);
 		for (j = 0; j < population_size; j++)
 		{
-			output << '\n' << pop_id << '\t' << j;// "Pop\tIndividual\tSex\tCourter\tParent\tPreference\tMateFound\tPotRS\tAlive";
+			output << '\n' << pop_id << '\t' << j;// "Pop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
 			if (adults[j].female)
 				output << "\tFEMALE";
 			else
 				output << "\tMALE";
-			output << '\t' << adults[j].courter << '\t' << adults[j].parent << '\t' << adults[j].female_pref << '\t' << adults[j].mate_found << '\t' << adults[j].pot_rs << '\t' << adults[j].alive;
+			output << '\t' << adults[j].courter << '\t' << adults[j].courter_trait << '\t' << adults[j].parent << '\t' << adults[j].parent_trait 
+				<< '\t' << adults[j].female_pref << '\t' << adults[j].pref_trait << '\t' << adults[j].mate_found << '\t' << adults[j].pot_rs 
+				<< '\t' << adults[j].lifetime_rs <<'\t' <<adults[j].alive;
 		}
 	}
 };
