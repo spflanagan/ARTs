@@ -25,7 +25,7 @@ cd $PROGDIR
 	./ARTs --courter --no-genetics --freq-dependent-preference -b ../../results/courter-nogenetics-nfds
 	./ARTs --parent --no-genetics --freq-dependent-preference -b ../../results/parent-nogenetics-nfds
 	./ARTs --courter --no-genetics --parent --freq-dependent-preference -b ../../results/parent-courter-nogenetics-nfds
-fi &
+fi
 
 #Random traits
 if [ "$CONDITIONAL" = true ]; then

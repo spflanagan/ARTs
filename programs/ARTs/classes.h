@@ -25,7 +25,7 @@ void shuffle_vec(vector<int> & vec)
 		int n = randnum(i + 1);
 		temp = vec[i];
 		vec[i] = vec[n];
-		vec[n] = vec[i];
+		vec[n] = temp;
 	}
 }
 
@@ -42,7 +42,7 @@ public:
 	int first_qtl()
 	{
 		int q;
-		int min = per_locus[0];
+		double min = per_locus[0];
 		for (q = 0; q < per_locus.size(); q++)
 		{
 			if (per_locus[q] < min)
@@ -54,7 +54,7 @@ public:
 	int last_qtl()
 	{
 		int q;
-		int max = per_locus[0];
+		double max = per_locus[0];
 		for (q = 0; q < per_locus.size(); q++)
 		{
 			if (per_locus[q] > max)
@@ -374,13 +374,13 @@ public:
 						if (tempstring1 == "-asd")
 							allelic_std_dev = atof(tempstring2.c_str());
 						if (tempstring1 == "-prs")
-							rs_p = atof(tempstring2.c_str());
+							rs_p = atoi(tempstring2.c_str());
 						if (tempstring1 == "-nprs")
-							rs_np = atof(tempstring2.c_str());
+							rs_np = atoi(tempstring2.c_str());
 						if (tempstring1 == "-crs")
-							rs_c = atof(tempstring2.c_str());
+							rs_c = atoi(tempstring2.c_str());
 						if (tempstring1 == "-ncrs")
-							rs_nc = atof(tempstring2.c_str());
+							rs_nc = atoi(tempstring2.c_str());
 						if (tempstring1 == "-sprop")
 							supergene_prop = atof(tempstring2.c_str());
 						if (tempstring1 == "-qpc")
@@ -1268,7 +1268,7 @@ public:
 	
 	//DEPRECATED DON'T USE
 	//original way of mutating gene network
-	void mut_env_Y(parameters gp, vector<tracker>&Y, vector<tracker>&in, double alpha, double sigma_mu)
+	int mut_env_Y(parameters gp, vector<tracker>&Y, vector<tracker>&in, double alpha, double sigma_mu)
 	{
 		int rand_loc1, rand_loc2;
 		rand_loc1 = randnum(gp.num_qtl);
@@ -1285,7 +1285,7 @@ public:
 			in[rand_loc1].per_locus[rand_loc2] = in[rand_loc1].per_locus[rand_loc2] + randnorm(0, sigma_mu);
 		}
 	}
-	void mut_env_Z(parameters gp, double locus, vector<int> &Z,double maternal_ae, double paternal_ae, double alpha, double sigma_mu)
+	int mut_env_Z(parameters gp, double locus, vector<int> &Z,double maternal_ae, double paternal_ae, double alpha, double sigma_mu)
 	{
 		if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
 		{
@@ -1313,13 +1313,14 @@ public:
 		num_mutations = poissonrand(mu_mean);
 		mut_count = 0;
 		YorZ = ((gp.num_qtl- gp.num_env_qtl)*(gp.num_qtl- gp.num_env_qtl)) / (gp.num_qtl*gp.num_qtl);
-		while (mut_count < num_mutations)
+		while (mut_count < num_mutations)//mut_count never gets incremented
 		{
 			if (gp.court_trait)
 			{
 				if (genrand() >= YorZ)//then we'll be working with Y
 				{
 					mut_env_Y(gp, courter_Y, courter_int, alpha, sigma_mu);
+					mut_count++;
 				}
 				else // then we'll work with Z
 				{
@@ -1339,6 +1340,7 @@ public:
 						}
 					}
 					mut_env_Z(gp, rand_loc1, courter_Z, maternal[chrom_id].courter_ae[loc_id], paternal[chrom_id].courter_ae[loc_id], alpha, sigma_mu);
+					mut_count++;
 				}
 			}
 			if (gp.parent_trait)
@@ -1346,6 +1348,7 @@ public:
 				if (genrand() >= YorZ)//then we'll be working with Y
 				{
 					mut_env_Y(gp, parent_Y, parent_int, alpha, sigma_mu);
+					mut_count++;
 				}
 				else // then we'll work with Z
 				{
@@ -1365,6 +1368,7 @@ public:
 						}
 					}
 					mut_env_Z(gp, rand_loc1, parent_Z, maternal[chrom_id].parent_ae[loc_id], paternal[chrom_id].parent_ae[loc_id], alpha, sigma_mu);
+					mut_count++;
 				}
 			}
 			if (gp.ind_pref)
@@ -1372,6 +1376,7 @@ public:
 				if (genrand() >= YorZ)//then we'll be working with Y
 				{
 					mut_env_Y(gp, pref_Y, pref_int, alpha, sigma_mu);
+					mut_count++;
 				}
 				else // then we'll work with Z
 				{
@@ -1391,6 +1396,7 @@ public:
 						}
 					}
 					mut_env_Z(gp, rand_loc1, pref_Z, maternal[chrom_id].pref_ae[loc_id], paternal[chrom_id].pref_ae[loc_id], alpha, sigma_mu);
+					mut_count++;
 				}
 			}//ind prefs
 			if (gp.thresholds_evolve)
@@ -1400,6 +1406,7 @@ public:
 					if (genrand() >= YorZ)//then we'll be working with Y
 					{
 						mut_env_Y(gp, cthresh_Y, cthresh_int, alpha, sigma_mu);
+						mut_count++;
 					}
 					else // then we'll work with Z
 					{
@@ -1419,6 +1426,7 @@ public:
 							}
 						}
 						mut_env_Z(gp, rand_loc1, cthresh_Z, maternal[chrom_id].courter_thresh[loc_id], paternal[chrom_id].courter_thresh[loc_id], alpha, sigma_mu);
+						mut_count++;
 					}
 				}
 				if (gp.parent_conditional || gp.parent_trait)
@@ -1426,6 +1434,7 @@ public:
 					if (genrand() >= YorZ)//then we'll be working with Y
 					{
 						mut_env_Y(gp, pthresh_Y, pthresh_int, alpha, sigma_mu);
+						mut_count++;
 					}
 					else // then we'll work with Z
 					{
@@ -1445,6 +1454,7 @@ public:
 							}
 						}
 						mut_env_Z(gp, rand_loc1, pthresh_Z, maternal[chrom_id].parent_thresh[loc_id], paternal[chrom_id].parent_thresh[loc_id], alpha, sigma_mu);
+						mut_count++;
 					}
 				}
 			}

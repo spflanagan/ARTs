@@ -48,11 +48,10 @@ int main(int argc, char*argv[])
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
 		global_params.parent_trait= true;
 		global_params.no_genetics = true;
-		global_params.FD_pref = true;
-		global_params.verbose = true;
-		global_params.num_init_gen = 2;
+		global_params.carrying_capacity = 1000;
+		global_params.num_init_gen = 5;
 		global_params.num_exp_gen = 2;
-		global_params.base_name = "../../results/testing_parent-nogenetics-nfds";
+		global_params.base_name = "../../results/testing_parent-nogenetics";
 		global_params.dependent_params();
 	}
 	
@@ -122,10 +121,16 @@ int main(int argc, char*argv[])
 	{
 		for (ii = 0; ii < global_params.num_pops; ii++)
 		{
+			cout << i << endl;//for testing
 			if(pops[ii].population_size > 0)
 			{
 				if (global_params.verbose)
-					cout << '\n' << i;
+					cout << ", " << i << std::flush;
+				else
+				{
+					if (i % 1000 == 0)
+						cout << "\nInitial generation " << i + 1 << " beginning.";
+				}
 				pops[ii].determine_pop_size(global_params);
 				
 				//mating (includes assigning preferences, recombination, and mutation)
@@ -160,6 +165,8 @@ int main(int argc, char*argv[])
 					if (i > 0)
 						pops[ii].d_parentfreq.push_back((new_parent - parent_freqs[ii]));
 					parent_freqs[ii] = new_parent;
+					if (global_params.verbose)
+						cout << ", " << new_parent << " parents" << std::flush;
 				}
 				if (global_params.court_trait)
 				{
@@ -167,6 +174,9 @@ int main(int argc, char*argv[])
 					if (i > 0)
 						pops[ii].d_courterfreq.push_back((new_courter - courter_freqs[ii]));
 					courter_freqs[ii] = new_courter;
+
+					if (global_params.verbose)
+						cout << ", " << new_courter << " courters" << std::flush;
 				}
 			}
 			else
@@ -183,13 +193,9 @@ int main(int argc, char*argv[])
 			}
 			//output population info
 			popdyn_output << '\n' << i << '\t' << ii << '\t' << pops[ii].population_size << '\t' << pops[ii].num_mal << '\t' << pops[ii].num_fem << '\t' << pops[ii].num_progeny;
+			if(global_params.verbose)
+				cout << endl;
 		}	
-		
-		if (!global_params.verbose)
-		{
-			if (i % 1000 == 0)
-				cout << "\nInitial generation " << i + 1 << " completed.";	
-		}
 	}
 	//calc variance in change in frequencies
 	if (global_params.parent_trait)
@@ -252,7 +258,12 @@ int main(int argc, char*argv[])
 					if (eq_reached[i] == false)//then we try again
 					{
 						if (global_params.verbose)
-							cout << '\n' << i;
+							cout << '\n' << i << std::flush;
+						else
+						{
+							if (num_eq_tries % 1000 == 0)
+								cout << "\nEquilibrium generation " << num_eq_tries + 1 << " beginning.";
+						}
 						pops[i].determine_pop_size(global_params);						
 						//mating (includes assiging preferences, recombination, and mutation)
 						pops[i].nest_and_fertilize(global_params, false, "temp");
