@@ -1836,6 +1836,8 @@ public:
 			}
 			adults[j].mate_found = 0;
 		}
+		if(gp.verbose)
+			cout << ", " << num_mal << " males, " << num_fem << " females" << flush;
 		for (j = 0; j < adults.size(); j++)
 		{
 			if (adults[j].female && adults[j].alive) //loop through the females.
@@ -1852,7 +1854,7 @@ public:
 			}
 		}
 		if (gp.verbose)
-			cout << ", " << num_mal << " males, " << num_fem << " females, and " << fem_ms << " mated" << std::flush;
+			cout <<", and " << fem_ms << " mated" << std::flush;
 	}
 	bool choose_nest(int fem_index, vector<int> & male_index, parameters gp)
 	{//females choose one male to give her eggs to.
@@ -1861,7 +1863,7 @@ public:
 		encounters = 0;
 		if (gp.random_mating)//then they randomly find males
 		{
-			while (!mate_found && encounters < gp.max_encounters)//female mates once
+			while (!mate_found && (encounters < gp.max_encounters))//female mates once
 			{
 				irndnum = randnum(num_mal);
 				male_id = male_index[irndnum];
@@ -1960,7 +1962,7 @@ public:
 	}
 	int fertilization(int fem_id,parameters gp)
 	{
-		int k,kk,fecundity, randmale, max_sperm, first_progeny;
+		int k,kk,fecundity, randmale, max_sperm, first_progeny, num_mates;
 		int male_id = adults[fem_id].mate_id;
 		vector<int> male_ids;
 		vector<double> fecundity_share;	
@@ -1992,7 +1994,11 @@ public:
 			//get the non-parental male mates
 			male_ids.push_back(male_id);
 			fecundity_share.push_back(0);
-			while (male_ids.size() < gp.max_num_mates)
+			if (sneakers.size() < gp.max_num_mates)
+				num_mates = sneakers.size() + 1;
+			else
+				num_mates = gp.max_num_mates;
+			while (male_ids.size() < num_mates)
 			{
 				randmale = randnum(sneakers.size());
 				if (randmale != male_id)

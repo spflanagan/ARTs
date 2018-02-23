@@ -121,7 +121,6 @@ int main(int argc, char*argv[])
 	{
 		for (ii = 0; ii < global_params.num_pops; ii++)
 		{
-			cout << i << endl;//for testing
 			if(pops[ii].population_size > 0)
 			{
 				if (global_params.verbose)
@@ -132,7 +131,8 @@ int main(int argc, char*argv[])
 						cout << "\nInitial generation " << i + 1 << " beginning.";
 				}
 				pops[ii].determine_pop_size(global_params);
-				
+				if (global_params.verbose)
+					cout << ", " << pops[ii].population_size << " adults" << flush;
 				//mating (includes assigning preferences, recombination, and mutation)
 				bool write_to_file = false;
 				string temp_file_name;
