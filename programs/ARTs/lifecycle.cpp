@@ -46,13 +46,14 @@ int main(int argc, char*argv[])
 		cout << "\nRunning the ARTs model with default parameters.\n";
 		global_params.set_defaults();
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
-		global_params.parent_trait= true;
+		global_params.court_trait= true;
 		global_params.no_genetics = true;
 		global_params.carrying_capacity = 1000;
 		global_params.num_init_gen = 5;
 		global_params.num_exp_gen = 2;
-		global_params.base_name = "../../results/testing_parent-nogenetics";
+		global_params.base_name = "../../results/testing_court-nogenetics";
 		global_params.dependent_params();
+		global_params.verbose = true;
 	}
 	
 	//output
@@ -72,7 +73,8 @@ int main(int argc, char*argv[])
 
 	summary_output_name = global_params.base_name + "_summary.txt";
 	summary_output.open(summary_output_name);
-	summary_output << "Generation\tPop\tParentThresh\tParentFreq\tParentW\tNonParentW\tCourterThresh\tCourterFreq\tCourterW\tNonCourterW";
+	summary_output << "Generation\tPop\tParentThresh\tParentFreq\tParentW\tNonParentW\tCourterThresh\tCourterFreq\tCourterW\tNonCourterW"
+		<< "\tFreqNcNp\tFreqCNp\tFreqNcP\tFreqCP";
 	for (i = 0; i < global_params.num_chrom; i++)
 	{
 		for (ii = 0; ii < global_params.num_markers; ii++)
@@ -124,7 +126,7 @@ int main(int argc, char*argv[])
 			if(pops[ii].population_size > 0)
 			{
 				if (global_params.verbose)
-					cout << ", " << i << std::flush;
+					cout << i << std::flush;
 				else
 				{
 					if (i % 1000 == 0)
@@ -230,7 +232,7 @@ int main(int argc, char*argv[])
 	cout << "\nEvaluating equilibrium";
 	num_eq_tries = 0;
 	trait_output.open(trait_output_name);
-	trait_output << "Pop\tIndividual\tSex\tCourter\tCourtTriat\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
+	trait_output << "Pop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
 	while (num_eq_tries < global_params.num_exp_gen)
 	{
 		for (i = 0; i < global_params.num_pops; i++)

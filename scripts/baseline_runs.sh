@@ -19,8 +19,8 @@ cd $PROGDIR
 
 #No genetic architectures, just additive genetic variance
  if [ "$NO_GENETICS" = true ]; then
-	#./ARTs --courter --no-genetics -b ../../results/courter-nogenetics
-    ./ARTs --parent --no-genetics -b ../../results/parent-nogenetics --verbose
+	./ARTs --courter --no-genetics -b ../../results/courter-nogenetics
+    ./ARTs --parent --no-genetics -b ../../results/parent-nogenetics
 	./ARTs --courter --no-genetics --parent -b ../../results/parent-courter-nogenetics
 	./ARTs --courter --no-genetics --freq-dependent-preference -b ../../results/courter-nogenetics-nfds
 	./ARTs --parent --no-genetics --freq-dependent-preference -b ../../results/parent-nogenetics-nfds

@@ -18,6 +18,7 @@ library(RColorBrewer)
 library(scales)
 read_chunk("../R/ARTs_analysis.R")
 cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
+cols2<-c('#a1dab4','#41b6c4','#2c7fb8','#253494')
 ```
 
 
@@ -133,7 +134,16 @@ Females choose nests based on whether the male is a courter or not, and they all
 cng.sum<-read.delim("courter-nogenetics_summary.txt")
 plot(cng.sum$CourterFreq,lwd=2,xlab="Generations",ylab="Frequency of Courting Males",
      bty="L",type="l",ylim = c(0,1),col=cols["courter"])
+cng.pop<-read.delim("courter-nogenetics_popdyn.txt")
+plot(cng.pop$PopSize,lwd=2,xlab="Generations",ylab="PopSize",
+     bty="L",type="l")
+plot(cng.pop$NumMal,col=alpha("navy",0.5),ylim=c(0,1000))
+points(cng.pop$NumMal,col=alpha("violetred",0.5),cex=0.5,pch=19)
+cng.traits<-read.delim("courter-nogenetics_traits.txt")
+
 ```
+
+
 
 ### Parental traits
 
@@ -161,7 +171,7 @@ mtext("Frequency of Courtship Males",4,line=2.5,col=cols["courter"])
 mtext("Frequency of Parental Males",2,line=2.5,col=cols["parent"])
 ```
 
-Courting males are maintained at a frequency around 80% in these cases and parental males are around 20%. This is surprising - males who are courters and parents should rise to the top, and both should be maintained at a fairly high frequency. Let's look at the reproductive success of the morphs over time.
+Both are maintained at a frequency a little above 50%
 
 ```{r courtParent_rs,echo=FALSE}
 par(mar=c(4,4,1,4),mfrow=c(2,1))
@@ -182,18 +192,39 @@ Let's look for a correlation between traits. Because these are discrete trait ch
 
 ```{r courtParent_traits,echo=FALSE}
 pcng.traits<-read.delim("parent-courter-nogenetics_traits.txt")
+pcng.traits$Morph<-factor(paste(pcng.traits$Courter,pcng.traits$Parent,sep=","))
+rcols<-colorRampPalette(cols)(25)
+plot(jitter(pcng.traits$Courter,1.5),jitter(pcng.traits$Parent,1.5),
+     cex=((pcng.traits$LifetimeRS/max(pcng.traits$LifetimeRS))+1),
+     axes=F,xlab="",ylab="",pch=19,col=alpha(cols2[pcng.traits$Morph],0.75),lwd=2)
+text(x=c(0,1),y=-0.4,c("Non-Courter","Courter"),xpd=TRUE)
+text(x=-0.4,y=c(0,1),c("Non-Parent","Parent"),xpd=TRUE,srt=90)
 
 ##How can I create a fitness landscape?? 
-plot(pcng.traits$Courter,pcng.traits$Parent,cex=pcng.traits$LifetimeRS)
+##I have discrete values
 library(lattice)
-library(viridisLite)
-rscol<-plasma(100,direction=-1)
+contourplot(pcng.traits$LifetimeRS ~ pcng.traits$CourtTriat*pcng.traits$ParentTrait,
+  xlab = "Courter", ylab = "Parent",
+  main = "Reproductive Success",
+  col.regions = rscol,
+  panel=function(...){
+    panel.levelplot(...)
+    panel.abline(h=pcng.sum$ParentThresh,lwd=2)
+    panel.abline(v=pcng.sum$CourterThresh,lwd=2)
+  }
+)#not very informative
+
+
 levelplot(pcng.traits$LifetimeRS ~ pcng.traits$Courter*pcng.traits$Parent,
   xlab = "Courter", ylab = "Parent",
   main = "Reproductive Success",
   col.regions = rscol
 )
-#could also use image(), maybe
+
+heatmap(pcng.traits$LifetimeRS ~ pcng.traits$CourtTriat*pcng.traits$ParentTrait)
+
+image(pcng.traits$LifetimeRS,col = rscol)
+
 ```
 
 Ok, so it looks like all of the individuals have either one trait or the other - a negative correlation between the two. 

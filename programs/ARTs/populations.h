@@ -1200,6 +1200,32 @@ public:
 		freqT = freqT / count;
 		return freqT;
 	}
+	vector<double> calc_freq_morphs(parameters gp)
+	{
+		int j;
+		vector<double> morph_freqs;
+		if ((gp.parent_trait || gp.parent_conditional) && (gp.court_trait || gp.courter_conditional))//sanity check
+		{
+			for (j = 0; j < 4; j++) //initialize
+				morph_freqs.push_back(0);
+			for (j = 0; j < gp.carrying_capacity; j++)
+			{
+				if (adults[j].alive && !adults[j].female)
+				{
+					if (!adults[j].courter && !adults[j].parent)
+						morph_freqs[0]++;
+					if (adults[j].courter && !adults[j].parent)
+						morph_freqs[1]++;
+					if (!adults[j].courter && adults[j].parent)
+						morph_freqs[2]++;
+					if (adults[j].courter && adults[j].parent)
+						morph_freqs[3]++;
+				}
+			}
+
+		}
+		return morph_freqs;
+	}
 	void parent_fd_rs(parameters gp)
 	{
 		int j;
@@ -1832,12 +1858,16 @@ public:
 						adults[j].assign_court_morph(gp);
 					if (gp.parent_trait || gp.parent_conditional)
 						adults[j].assign_parent_morph(gp);
+					//if parent traits don't exist then set them all to false so all males have equal chance.
+					if (!gp.parent_conditional && !gp.parent_trait)
+						adults[j].parent = false;
 				}
 			}
 			adults[j].mate_found = 0;
 		}
 		if(gp.verbose)
 			cout << ", " << num_mal << " males, " << num_fem << " females" << flush;
+		//mating happens
 		for (j = 0; j < adults.size(); j++)
 		{
 			if (adults[j].female && adults[j].alive) //loop through the females.
@@ -1970,19 +2000,15 @@ public:
 		first_progeny = num_progeny;//set up this tracker
 		
 		max_sperm = adults[male_id].pot_rs;
-		//if parent traits don't exist then set them all to false so all males have equal chance.
-		if (!gp.parent_conditional && !gp.parent_trait)
-		{
-			for (k = 0; k < gp.carrying_capacity; k++)
-			{
-				adults[k].parent = false;
-			}
-		}
+		
 		//identify sneakers/eligible bachelors
 		for (k = 0; k < gp.carrying_capacity; k++)
 		{
 			if (adults[k].alive && !adults[k].female && !adults[k].parent)
-				sneakers.push_back(k);
+			{
+				if(adults[k].pot_rs > 0)
+					sneakers.push_back(k);
+			}
 		}
 		if (sneakers.size() == 0)//if all males are parents
 		{
@@ -2022,6 +2048,7 @@ public:
 				fecundity = fecundity_share[k] * adults[fem_id].pot_rs;
 				for (kk = 0; kk < fecundity; kk++)
 					making_babies(gp, fecundity, num_progeny, fem_id, male_ids[k]);
+				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - fecundity; //reduce male's RS based on how many babies he's already made.
 			}
 		}
 		return first_progeny;
@@ -2796,6 +2823,7 @@ public:
 				output_file << '\t' << maf[j].per_locus[jj];
 			}
 		}
+		output_file << std::flush;
 	}
 	void output_summary_info(parameters gp, ofstream & summary_output)
 	{
@@ -2812,6 +2840,14 @@ public:
 		{
 			dtemp = calc_freq_courter(gp);
 			summary_output << "\t" << courter_thresh << '\t' << dtemp << '\t' << rs[0] << '\t' << rs[1];
+		}
+		else
+			summary_output << "\tNA\tNA\tNA\tNA";
+		if ((gp.parent_trait || gp.parent_conditional) && (gp.court_trait || gp.courter_conditional))
+		{
+			vector<double> morph_freqs = calc_freq_morphs(gp);
+			for (int j = 0; j < 4; j++)
+				summary_output << '\t' << morph_freqs[j];
 		}
 		else
 			summary_output << "\tNA\tNA\tNA\tNA";
