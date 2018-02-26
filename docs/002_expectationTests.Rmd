@@ -16,7 +16,7 @@ knitr::opts_knit$set(root.dir='../results/')
 library(knitr)
 library(RColorBrewer)
 library(scales)
-read_chunk("../R/ARTs_analysis.R")
+read_chunk("../R/002_expectationTests.R")
 cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
 cols2<-c('#a1dab4','#41b6c4','#2c7fb8','#253494')
 ```

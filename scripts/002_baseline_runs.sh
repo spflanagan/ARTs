@@ -1,7 +1,9 @@
 #!/bin/bash
 
 ## This file runs some initial tests of the ARTs model to verify that the results are in accordance with expectations
-### and to ensure that all of the processes and outputs are working properly.
+## and to ensure that all of the processes and outputs are working properly.
+
+### This script will run the programs in the background and produce a log file in the logs/ directory ###
 
 ###----DETERMINE WHAT SHOULD RUN----###
 NUMREPS=1
@@ -21,7 +23,7 @@ DATE=`date +%Y%m%d`
 
 for i in `seq 1 $NUMREPS`; do
 
-	echo "Starting Rep ${i}"
+	echo "Starting Rep ${i} of $NUMREPS"
 	#No genetic architectures, just additive genetic variance
 	 if [ "$NO_GENETICS" = true ]; then
 		./ARTs --courter --no-genetics -b ../../results/courter-nogenetics
@@ -67,4 +69,4 @@ for i in `seq 1 $NUMREPS`; do
 		./ARTs --parent --thresholds-evolve -b ../../results/parent_thresholds
 		./ARTs --courter --parent --thresholds-evolve -b ../../results/parent-courter_thresholds
 	fi
-done >> ../../logs/${DATE}.log 2>&1 &
+done >> ../../logs/002_${DATE}.log 2>&1 &
