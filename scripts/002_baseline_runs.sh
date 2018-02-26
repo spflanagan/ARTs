@@ -6,7 +6,7 @@
 ### This script will run the programs in the background and produce a log file in the logs/ directory ###
 
 ###----DETERMINE WHAT SHOULD RUN----###
-NUMREPS=0
+NUMREPS=20
 NO_GENETICS=true
 CONDITIONAL=false
 COND_NFDS=false
@@ -37,47 +37,47 @@ for i in `seq 1 $NUMREPS`; do
 	echo "Starting Rep ${i} of $NUMREPS"
 	#No genetic architectures, just additive genetic variance
 	 if [ "$NO_GENETICS" = true ]; then
-		./ARTs --courter --no-genetics -b ../../results/courter-nogenetics
-	    ./ARTs --parent --no-genetics -b ../../results/parent-nogenetics
-		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter-nogenetics
-		./ARTs --courter --no-genetics --freq-dependent-preference -b ../../results/courter-nogenetics-nfds
-		./ARTs --parent --no-genetics --freq-dependent-preference -b ../../results/parent-nogenetics-nfds
-		./ARTs --courter --no-genetics --parent --freq-dependent-preference -b ../../results/parent-courter-nogenetics-nfds
+		./ARTs --courter --no-genetics -b ../../results/courter-nogenetics_${i}
+	    ./ARTs --parent --no-genetics -b ../../results/parent-nogenetics_${i}
+		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter-nogenetics_${i}
+		./ARTs --courter --no-genetics --freq-dependent-preference -b ../../results/courter-nogenetics-nfds_${i}
+		./ARTs --parent --no-genetics --freq-dependent-preference -b ../../results/parent-nogenetics-nfds_${i}
+		./ARTs --courter --no-genetics --parent --freq-dependent-preference -b ../../results/parent-courter-nogenetics-nfds_${i}
 	fi 
 
 	#Random traits
 	if [ "$CONDITIONAL" = true ]; then
-		./ARTs --courter-conditional -b ../../results/courter-conditional
-		./ARTs --parent-conditional -b ../../results/parent-conditional
-		./ARTs --courter-conditional --parent-conditional -b ../../results/parent-courter-conditional
+		./ARTs --courter-conditional -b ../../results/courter-conditional_${i}
+		./ARTs --parent-conditional -b ../../results/parent-conditional_${i}
+		./ARTs --courter-conditional --parent-conditional -b ../../results/parent-courter-conditional_${i}
 	fi
 
 	#Frequency dependent selection
 	if [ "$COND_NFDS" = true ]; then
-		./ARTs --courter-conditional --freq-dependent-preference -b ../../results/courter-conditional_nfds
-		./ARTs --parent-conditional --freq-dependent-preference -b ../../results/parent-conditional_nfds
-		./ARTs --courter-conditional --parent-conditional --freq-dependent-preference -b ../../results/parent-courter-conditional_nfds
+		./ARTs --courter-conditional --freq-dependent-preference -b ../../results/courter-conditional_nfds_${i}
+		./ARTs --parent-conditional --freq-dependent-preference -b ../../results/parent-conditional_nfds_${i}
+		./ARTs --courter-conditional --parent-conditional --freq-dependent-preference -b ../../results/parent-courter-conditional_nfds_${i}
 	fi
 
 	#with a genetic architecture
 	if [ "$GENETIC_ARCH" = true ]; then
-		./ARTs --courter -b ../../results/courter
-		./ARTs --parent -b ../../results/parent
-		./ARTs --courter --parent -b ../../results/parent-courter
+		./ARTs --courter -b ../../results/courter_${i}
+		./ARTs --parent -b ../../results/parent_${i}
+		./ARTs --courter --parent -b ../../results/parent-courter_${i}
 		 
-		./ARTs --courter --freq-dependent-preference -b ../../results/courter_nfds
-		./ARTs --parent --freq-dependent-preference -b ../../results/parent_nfds
-		./ARTs --courter --parent --freq-dependent-preference -b ../../results/parent-courter_nfds
+		./ARTs --courter --freq-dependent-preference -b ../../results/courter_nfds_${i}
+		./ARTs --parent --freq-dependent-preference -b ../../results/parent_nfds_${i}
+		./ARTs --courter --parent --freq-dependent-preference -b ../../results/parent-courter_nfds_${i}
 	fi
 
 	#Evolving thresholds
 	if [ "$EVOLVING" = true ]; then
-		./ARTs --courter-conditional --thresholds-evolve -b ../../results/courter-conditional_thresholds
-		./ARTs --parent-conditional --thresholds-evolve -b ../../results/parent-conditional_thresholds
-		./ARTs --courter-conditional --parent-conditional --thresholds-evolve -b ../../results/parent-courter-conditional_thresholds
+		./ARTs --courter-conditional --thresholds-evolve -b ../../results/courter-conditional_thresholds_${i}
+		./ARTs --parent-conditional --thresholds-evolve -b ../../results/parent-conditional_thresholds_${i}
+		./ARTs --courter-conditional --parent-conditional --thresholds-evolve -b ../../results/parent-courter-conditional_thresholds_${i}
 		 
-		./ARTs --courter --thresholds-evolve -b ../../results/courter_thresholds
-		./ARTs --parent --thresholds-evolve -b ../../results/parent_thresholds
-		./ARTs --courter --parent --thresholds-evolve -b ../../results/parent-courter_thresholds
+		./ARTs --courter --thresholds-evolve -b ../../results/courter_thresholds_${i}
+		./ARTs --parent --thresholds-evolve -b ../../results/parent_thresholds_${i}
+		./ARTs --courter --parent --thresholds-evolve -b ../../results/parent-courter_thresholds_${i}
 	fi
 done >> ../../logs/002_${DATE}.log 2>&1 &
