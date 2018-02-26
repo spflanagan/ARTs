@@ -46,12 +46,13 @@ int main(int argc, char*argv[])
 		cout << "\nRunning the ARTs model with default parameters.\n";
 		global_params.set_defaults();
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
-		global_params.court_trait= true;
+		global_params.parent_trait= true;
+		global_params.FD_pref = true;
 		global_params.no_genetics = true;
 		global_params.carrying_capacity = 1000;
 		global_params.num_init_gen = 5;
 		global_params.num_exp_gen = 2;
-		global_params.base_name = "../../results/testing_court-nogenetics";
+		global_params.base_name = "../../results/testing";
 		global_params.dependent_params();
 		global_params.verbose = true;
 	}
@@ -82,7 +83,7 @@ int main(int argc, char*argv[])
 	}		
 
 	//Initialize
-	cout << "\nInitializing " << global_params.num_pops << " populations.\n";
+	cout << "\nInitializing " << global_params.num_pops << " populations.\n" << std::flush;
 	for (i = 0; i < global_params.num_pops; i++)
 	{
 		pops.push_back(population());
@@ -118,7 +119,7 @@ int main(int argc, char*argv[])
 	global_params.output_parameters();
 	qtlinfo_output.close();
 	//Run the program
-	cout << "\nRunning " << global_params.num_init_gen << " initial generations\n";
+	cout << "\nRunning " << global_params.num_init_gen << " initial generations\n" << std::flush;
 	for (i = 0; i < global_params.num_init_gen; i++)
 	{
 		for (ii = 0; ii < global_params.num_pops; ii++)
@@ -130,7 +131,7 @@ int main(int argc, char*argv[])
 				else
 				{
 					if (i % 1000 == 0)
-						cout << "\nInitial generation " << i + 1 << " beginning.";
+						cout << "\nInitial generation " << i + 1 << " beginning." << std::flush;
 				}
 				pops[ii].determine_pop_size(global_params);
 				if (global_params.verbose)
@@ -183,18 +184,18 @@ int main(int argc, char*argv[])
 			}
 			else
 			{
-				cout << "\nPopulation has crashed at initial generation " << i << '\n';
+				cout << "\nPopulation has crashed at initial generation " << i << '\n' << std::flush;
 				if (command_line)
 					return 0;
 				else
 				{
-					cout << "\nInput integer to close dialogue.\n";
+					cout << "\nInput integer to close dialogue.\n" << std::flush;
 					cin >> iii;
 					return 0;
 				}
 			}
 			//output population info
-			popdyn_output << '\n' << i << '\t' << ii << '\t' << pops[ii].population_size << '\t' << pops[ii].num_mal << '\t' << pops[ii].num_fem << '\t' << pops[ii].num_progeny;
+			popdyn_output << '\n' << i << '\t' << ii << '\t' << pops[ii].population_size << '\t' << pops[ii].num_mal << '\t' << pops[ii].num_fem << '\t' << pops[ii].num_progeny << std::flush;
 			if(global_params.verbose)
 				cout << endl;
 		}	
@@ -229,7 +230,7 @@ int main(int argc, char*argv[])
 		}
 	}
 
-	cout << "\nEvaluating equilibrium";
+	cout << "\nEvaluating equilibrium" << std::flush;
 	num_eq_tries = 0;
 	trait_output.open(trait_output_name);
 	trait_output << "Pop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
@@ -264,7 +265,7 @@ int main(int argc, char*argv[])
 						else
 						{
 							if (num_eq_tries % 1000 == 0)
-								cout << "\nEquilibrium generation " << num_eq_tries + 1 << " beginning.";
+								cout << "\nEquilibrium generation " << num_eq_tries + 1 << " beginning." << std::flush;
 						}
 						pops[i].determine_pop_size(global_params);						
 						//mating (includes assiging preferences, recombination, and mutation)
@@ -294,7 +295,7 @@ int main(int argc, char*argv[])
 					}
 					else//output some stuff
 					{
-						cout << "\nEquilibrium reached for population " << i << " at generation " << global_params.num_init_gen + num_eq_tries;
+						cout << "\nEquilibrium reached for population " << i << " at generation " << global_params.num_init_gen + num_eq_tries << std::flush;
 						pops[i].output_genotypes_vcf(global_params, i);
 						pops[i].output_trait_info(global_params, i, trait_output);
 						num_eq_tries = global_params.num_exp_gen;
@@ -302,19 +303,19 @@ int main(int argc, char*argv[])
 				}
 				else
 				{
-					cout << "\nPopulation has crashed at experimental generation " << num_eq_tries << '\n';
+					cout << "\nPopulation has crashed at experimental generation " << num_eq_tries << '\n' << std::flush;
 					if (command_line)
 						return 0;
 					else
 					{
-						cout << "\nInput integer to close dialogue.\n";
+						cout << "\nInput integer to close dialogue.\n" << std::flush;
 						cin >> ii;
 						return 0;
 					}
 				}
 				//output population info
 				popdyn_output << '\n' << global_params.num_init_gen + num_eq_tries << '\t' << i << '\t' 
-					<< pops[i].population_size << '\t' << pops[i].num_mal << '\t' << pops[i].num_fem << '\t' << pops[i].num_progeny;
+					<< pops[i].population_size << '\t' << pops[i].num_mal << '\t' << pops[i].num_fem << '\t' << pops[i].num_progeny << std::flush;
 				num_eq_tries++;
 			}
 		}
@@ -324,7 +325,7 @@ int main(int argc, char*argv[])
 	{
 		if (!eq_reached[i])
 		{
-			cout << "\nNo equilibrium could be reached for population " << i << " with population size " << pops[i].population_size;
+			cout << "\nNo equilibrium could be reached for population " << i << " with population size " << pops[i].population_size << std::flush;
 			pops[i].output_genotypes_vcf(global_params, i);
 			pops[i].output_trait_info(global_params, i, trait_output);
 		}
@@ -335,12 +336,12 @@ int main(int argc, char*argv[])
 	summary_output.close();
 	trait_output.close();
 	popdyn_output.close();
-	cout << "\nDone!\n";
+	cout << "\nDone!\n" << std::flush;
 	if (command_line)
 		return 0;
 	else
 	{
-		cout << "\nInput integer to quit.\n";
+		cout << "\nInput integer to quit.\n" << std::flush;
 		cin >> i;
 		return 0;
 	}

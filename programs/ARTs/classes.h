@@ -885,10 +885,13 @@ public:
 			courter = false;
 		else
 			courter = true;
-		if (courter)
-			pot_rs = gp.rs_c;
-		else
-			pot_rs = gp.rs_nc;
+		if (!female)
+		{
+			if (courter)
+				pot_rs = gp.rs_c;
+			else
+				pot_rs = gp.rs_nc;
+		}
 	}
 	void assign_parent_morph(parameters gp)
 	{
@@ -896,10 +899,13 @@ public:
 			parent = false;
 		else
 			parent = true;
-		if (parent)
-			pot_rs = gp.rs_p;
-		else
-			pot_rs = gp.rs_np;
+		if (!female)
+		{
+			if (parent)
+				pot_rs = gp.rs_p;
+			else
+				pot_rs = gp.rs_np;
+		}
 	}
 	void assign_conditional_traits(parameters gp)
 	{

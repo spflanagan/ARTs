@@ -1785,10 +1785,12 @@ public:
 	void making_babies(parameters gp, int fecundity, int& num_progeny, int mom_index, int dad_index)
 	{
 		int jj, jjj;
-		if (num_progeny >= (gp.max_fecund*gp.carrying_capacity))
-			num_progeny = (gp.max_fecund*gp.carrying_capacity) - 1;
+
 		for (jj = 0; jj < fecundity; jj++)
 		{
+			if (num_progeny >= (gp.max_fecund*gp.carrying_capacity))
+				num_progeny = (gp.max_fecund*gp.carrying_capacity) - 1;
+
 			progeny[num_progeny].alive = true;
 			
 			for (jjj = 0; jjj < gp.num_chrom; jjj++)
@@ -2029,7 +2031,7 @@ public:
 				randmale = randnum(sneakers.size());
 				if (randmale != male_id)
 				{
-					if (!adults[sneakers[randmale]].parent)//if it's a sneaker: sanity check!
+					if (!adults[sneakers[randmale]].parent && (adults[sneakers[randmale]].pot_rs > 0))//if it's a sneaker: sanity check!
 					{
 						fecundity_share.push_back(0);
 						male_ids.push_back(sneakers[randmale]);
@@ -2039,11 +2041,11 @@ public:
 				}
 			}
 			fecundity_share[0] = double(adults[male_id].pot_rs) / double(max_sperm); //it doesn't get weighted if r <= 1
-			for (k = 1; k < gp.max_num_mates; k++)
+			for (k = 1; k < num_mates; k++)
 				fecundity_share[k] = double(adults[male_ids[k]].pot_rs*gp.sperm_comp_r) / double(max_sperm);
 
 			//now generate the offspring
-			for (k = 0; k < gp.max_num_mates; k++)
+			for (k = 0; k < num_mates; k++)
 			{
 				fecundity = fecundity_share[k] * adults[fem_id].pot_rs;
 				for (kk = 0; kk < fecundity; kk++)
@@ -2304,14 +2306,6 @@ public:
 		adults[adult_index].alive = true;
 		adults[adult_index].mate_found = 0;
 		pass_on_loci(gp, adult_index, progeny_index);
-		if (gp.gene_network)
-		{
-			pass_on_env_qtls(gp, adult_index, progeny_index);
-			adults[adult_index].update_traits(gp, courter_thresh, parent_thresh, pref_thresh,
-				0, courter_env_qtls, parent_env_qtls, pref_env_qtls, pthresh_env_qtls, cthresh_env_qtls);
-		}
-		else
-			adults[adult_index].update_traits(gp, courter_thresh, parent_thresh, pref_thresh);
 		if (progeny[progeny_index].female)
 		{
 			adults[adult_index].female = true;
@@ -2323,6 +2317,14 @@ public:
 			adults[adult_index].female = false;
 			num_mal++;
 		}
+		if (gp.gene_network)
+		{
+			pass_on_env_qtls(gp, adult_index, progeny_index);
+			adults[adult_index].update_traits(gp, courter_thresh, parent_thresh, pref_thresh,
+				0, courter_env_qtls, parent_env_qtls, pref_env_qtls, pthresh_env_qtls, cthresh_env_qtls);
+		}
+		else
+			adults[adult_index].update_traits(gp, courter_thresh, parent_thresh, pref_thresh);
 		adults[adult_index].lifetime_rs = 0;
 	}
 	void regulate_popsize(parameters gp)

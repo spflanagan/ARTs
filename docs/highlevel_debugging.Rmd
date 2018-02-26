@@ -135,8 +135,6 @@ cng.sum<-read.delim("courter-nogenetics_summary.txt")
 plot(cng.sum$CourterFreq,lwd=2,xlab="Generations",ylab="Frequency of Courting Males",
      bty="L",type="l",ylim = c(0,1),col=cols["courter"])
 cng.pop<-read.delim("courter-nogenetics_popdyn.txt")
-plot(cng.pop$PopSize,lwd=2,xlab="Generations",ylab="PopSize",
-     bty="L",type="l")
 plot(cng.pop$NumMal,col=alpha("navy",0.5),ylim=c(0,1000))
 points(cng.pop$NumMal,col=alpha("violetred",0.5),cex=0.5,pch=19)
 cng.traits<-read.delim("courter-nogenetics_traits.txt")
@@ -174,16 +172,17 @@ mtext("Frequency of Parental Males",2,line=2.5,col=cols["parent"])
 Both are maintained at a frequency a little above 50%
 
 ```{r courtParent_rs,echo=FALSE}
+ymax<-round(max(pcng.sum$ParentW,pcng.sum$NonParentW,pcng.sum$CourterW,pcng.sum$NonCourterW)+1)
 par(mar=c(4,4,1,4),mfrow=c(2,1))
 plot(pcng.sum$ParentW,lwd=2,xlab="Generations",ylab="Parental Reproductive Success",
-     bty="u",type="l",ylim = c(0,4.25),col=alpha(cols["parent"],0.75),las=1)
+     bty="u",type="l",ylim = c(0,ymax),col=alpha(cols["parent"],0.75),las=1)
 points(pcng.sum$NonParentW,lwd=2,lty=3,type="l",col=alpha(cols["parent"],0.75))
 points(pcng.sum$NonParentW,lwd=2,lty=3,type="l",col=alpha("grey",0.75))
 plot(pcng.sum$CourterW,xlab="Generations",ylab="Courter Reproductive Success",
-     bty="u",lwd=2,type="l",col=alpha(cols["courter"],0.75),ylim = c(0,4.25))
+     bty="u",lwd=2,type="l",col=alpha(cols["courter"],0.75),ylim = c(0,ymax))
 points(pcng.sum$NonCourterW,lwd=2,lty=3,type="l",col=alpha(cols["courter"],0.75))
 points(pcng.sum$NonCourterW,lwd=2,lty=3,type="l",col=alpha("grey",0.75))
-
+legend("topright",bty='n',legend=c("Preferred","Not Preferred"),lty=c(1,2),col="darkgrey",lwd=2)
 ```
 
 So, although courting males have lower reproductive success, they're at higher frequency in the population, and parental males are at low frequency. What?!?
@@ -195,35 +194,10 @@ pcng.traits<-read.delim("parent-courter-nogenetics_traits.txt")
 pcng.traits$Morph<-factor(paste(pcng.traits$Courter,pcng.traits$Parent,sep=","))
 rcols<-colorRampPalette(cols)(25)
 plot(jitter(pcng.traits$Courter,1.5),jitter(pcng.traits$Parent,1.5),
-     cex=((pcng.traits$LifetimeRS/max(pcng.traits$LifetimeRS))+1),
+     cex=((pcng.traits$LifetimeRS/max(pcng.traits$LifetimeRS))+1),xlim=c(-0.05,1.05),ylim=c(-0.05,1.05),
      axes=F,xlab="",ylab="",pch=19,col=alpha(cols2[pcng.traits$Morph],0.75),lwd=2)
-text(x=c(0,1),y=-0.4,c("Non-Courter","Courter"),xpd=TRUE)
-text(x=-0.4,y=c(0,1),c("Non-Parent","Parent"),xpd=TRUE,srt=90)
-
-##How can I create a fitness landscape?? 
-##I have discrete values
-library(lattice)
-contourplot(pcng.traits$LifetimeRS ~ pcng.traits$CourtTriat*pcng.traits$ParentTrait,
-  xlab = "Courter", ylab = "Parent",
-  main = "Reproductive Success",
-  col.regions = rscol,
-  panel=function(...){
-    panel.levelplot(...)
-    panel.abline(h=pcng.sum$ParentThresh,lwd=2)
-    panel.abline(v=pcng.sum$CourterThresh,lwd=2)
-  }
-)#not very informative
-
-
-levelplot(pcng.traits$LifetimeRS ~ pcng.traits$Courter*pcng.traits$Parent,
-  xlab = "Courter", ylab = "Parent",
-  main = "Reproductive Success",
-  col.regions = rscol
-)
-
-heatmap(pcng.traits$LifetimeRS ~ pcng.traits$CourtTriat*pcng.traits$ParentTrait)
-
-image(pcng.traits$LifetimeRS,col = rscol)
+text(x=c(0,1),y=-0.04,c("Non-Courter","Courter"),xpd=TRUE)
+text(x=-0.1,y=c(0,1),c("Non-Parent","Parent"),xpd=TRUE,srt=90)
 
 ```
 
