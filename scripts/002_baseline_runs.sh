@@ -6,7 +6,7 @@
 ### This script will run the programs in the background and produce a log file in the logs/ directory ###
 
 ###----DETERMINE WHAT SHOULD RUN----###
-NUMREPS=1
+NUMREPS=0
 NO_GENETICS=true
 CONDITIONAL=false
 COND_NFDS=false
@@ -20,6 +20,17 @@ cd $DIR
 cd $PROGDIR
 
 DATE=`date +%Y%m%d`
+
+### --- RUN THE PARAMETER COMBINATIONS --- ###
+echo "Running ${NUMREPS} reps with default parameters with courter, parent, and both traits."
+echo "It will run the following scenarios:"
+if [ "$NO_GENETICS" = true ]; then printf "\t%s\n" "NO_GENETICS"; fi
+if [ "$CONDITIONAL" = true ]; then printf "\t%s\n" "CONDITIONAL"; fi
+if [ "$COND_NFDS" = true ]; then printf "\t%s\n" "COND_NFDS"; fi
+if [ "$GENETIC_ARCH" = true ]; then printf "\t%s\n" "GENETIC_ARCH"; fi
+if [ "$EVOLVING" = true ]; then printf "\t%s\n" "EVOLVING"; fi
+echo "The program will run in the background."
+echo "Check the status with htop or by looking at logs/002_${DATE}.log"
 
 for i in `seq 1 $NUMREPS`; do
 
