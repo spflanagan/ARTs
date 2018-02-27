@@ -1,5 +1,8 @@
 #pragma once
 
+//this contains the class population and the operations contained within that class. 
+//most of the work for the ARTs program happens here
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -2026,7 +2029,8 @@ public:
 				num_mates = sneakers.size() + 1;
 			else
 				num_mates = gp.max_num_mates;
-			while (male_ids.size() < num_mates)
+			int tries = 0;
+			while (male_ids.size() < num_mates && tries < 10000)
 			{
 				randmale = randnum(sneakers.size());
 				if (randmale != male_id)
@@ -2039,6 +2043,7 @@ public:
 						adults[sneakers[randmale]].mate_found++;//keep track of individual reproductive success
 					}
 				}
+				tries++;//just to break out of a while loop in case.
 			}
 			fecundity_share[0] = double(adults[male_id].pot_rs) / double(max_sperm); //it doesn't get weighted if r <= 1
 			for (k = 1; k < num_mates; k++)
@@ -2048,7 +2053,7 @@ public:
 			for (k = 0; k < num_mates; k++)
 			{
 				fecundity = fecundity_share[k] * adults[fem_id].pot_rs;
-				for (kk = 0; kk < fecundity; kk++)
+				if(fecundity > 0)
 					making_babies(gp, fecundity, num_progeny, fem_id, male_ids[k]);
 				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - fecundity; //reduce male's RS based on how many babies he's already made.
 			}

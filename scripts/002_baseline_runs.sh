@@ -6,7 +6,7 @@
 ### This script will run the programs in the background and produce a log file in the logs/ directory ###
 
 ###----DETERMINE WHAT SHOULD RUN----###
-NUMREPS=20
+NUMREPS=10
 NO_GENETICS=true
 CONDITIONAL=false
 COND_NFDS=false
@@ -37,12 +37,12 @@ for i in `seq 1 $NUMREPS`; do
 	echo "Starting Rep ${i} of $NUMREPS"
 	#No genetic architectures, just additive genetic variance
 	 if [ "$NO_GENETICS" = true ]; then
-		./ARTs --courter --no-genetics -b ../../results/courter-nogenetics_${i}
-	    ./ARTs --parent --no-genetics -b ../../results/parent-nogenetics_${i}
-		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter-nogenetics_${i}
-		./ARTs --courter --no-genetics --freq-dependent-preference -b ../../results/courter-nogenetics-nfds_${i}
-		./ARTs --parent --no-genetics --freq-dependent-preference -b ../../results/parent-nogenetics-nfds_${i}
-		./ARTs --courter --no-genetics --parent --freq-dependent-preference -b ../../results/parent-courter-nogenetics-nfds_${i}
+		./ARTs --courter --no-genetics -b ../../results/courter-nogenetics_${i} --verbose
+	    ./ARTs --parent --no-genetics -b ../../results/parent-nogenetics_${i} --verbose
+		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter-nogenetics_${i} --verbose
+		./ARTs --courter --no-genetics --freq-dependent-preference -b ../../results/courter-nogenetics-nfds_${i} --verbose
+		./ARTs --parent --no-genetics --freq-dependent-preference -b ../../results/parent-nogenetics-nfds_${i} --verbose
+		./ARTs --courter --no-genetics --parent --freq-dependent-preference -b ../../results/parent-courter-nogenetics-nfds_${i} --verbose
 	fi 
 
 	#Random traits

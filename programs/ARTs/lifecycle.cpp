@@ -47,11 +47,10 @@ int main(int argc, char*argv[])
 		global_params.set_defaults();
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
 		global_params.parent_trait= true;
-		global_params.FD_pref = true;
 		global_params.no_genetics = true;
 		global_params.carrying_capacity = 1000;
-		global_params.num_init_gen = 5;
-		global_params.num_exp_gen = 2;
+		global_params.num_init_gen = 50;
+		global_params.num_exp_gen = 20;
 		global_params.base_name = "../../results/testing";
 		global_params.dependent_params();
 		global_params.verbose = true;
