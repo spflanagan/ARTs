@@ -9,7 +9,7 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 The purpose of this model is to understand how genetic architectures of alternative reproductive tactics impact their maintenance in populations. I'm using an individual-based simulation model with different selection scenarios, types of alternative tactics, and genetic architectures (genome-wide additive genetic variance, supergenes, expression networks) To test the model and make sure that everything has been implemented correctly, I'm first testing to ensure that the model produces the expected results without the genetic architectures.
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_knit$set(root.dir='../results/')
 ```
 ```{r, echo=FALSE}
@@ -233,6 +233,31 @@ plot(pcnng$CourterFreq,lwd=2,xlab="Generations",ylab="Frequency of Courtship Mal
      bty="u",type="l",ylim=c(0,1),col=alpha(cols["courter"],0.75))
 points(pcnng$ParentFreq,lwd=2,type="l",col=alpha(cols["parent"],0.75))
 mtext(text = "Frequency of Parental Males",side=4)
+```
+
+### Comparing multiple runs
+
+I ran the model with 10 replicates of each of these sets, and now I can look at the ending frequency of each morph.
+
+```{r get_summary,echo=FALSE}
+files<-list(list.files(pattern="^courter-nogenetics_\\d+_summary.txt"),
+            list.files(pattern="^parent-nogenetics_\\d+_summary.txt"),
+            list.files(pattern="^parent-courter-nogenetics_\\d+_summary.txt"),
+            list.files(pattern="^courter-nogenetics-nfds_\\d+_summary.txt"),
+            list.files(pattern="^parent-nogenetics-nfds_\\d+_summary.txt"),
+            list.files(pattern="^parent-courter-nogenetics-nfds_\\d+_summary.txt"))
+
+summary<-lapply(files,function(cat){
+  dat<-do.call(rbind,lapply(cat,function(file){
+    summ<-read.delim(file)
+    last.freqs<-sum[nrow(sum),c("ParentFreq","CourterFreq","FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")]
+    scen<-gsub("^(\\w+.*)_\\d+_summary.txt","\\1",file)
+    last.freqs$scenario<-scen
+    return(last.freqs)
+  }))
+  result<-cbind(colMeans(dat[,1:6]),unique(dat$scenario))
+  return(result)
+}) #this still needs to be tested once I have the actual data!
 ```
 
 ## Linked additive genetic variance

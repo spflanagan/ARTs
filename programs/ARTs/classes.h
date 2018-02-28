@@ -113,10 +113,6 @@ public:
 		num_chrom = 4;//default 4
 		num_markers = 1000;//1000
 		num_qtl = 50;//default: 50
-		for (int j = 0; j < num_chrom; j++)
-		{
-			qtl_per_chrom.push_back(num_qtl / num_chrom);//default is an even distribution
-		}
 		num_env_qtl = 0;//default 0
 		max_fecund = 4;//default 4
 		max_encounters = 50;//default 50
@@ -237,7 +233,7 @@ public:
 			qtl_counter = 0;
 			for (j = 0; j < num_chrom; j++)
 			{
-				qtl_per_chrom[j] = num_qtl/num_chrom;
+				qtl_per_chrom.push_back(num_qtl / num_chrom);//default is an even distribution
 				qtl_counter = qtl_counter +qtl_per_chrom[j];
 			}
 		}

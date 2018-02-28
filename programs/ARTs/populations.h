@@ -1,5 +1,6 @@
 #pragma once
 
+//Author: Sarah P. Flanagan (spflanagan.phd@gmail.com)
 //this contains the class population and the operations contained within that class. 
 //most of the work for the ARTs program happens here
 
@@ -2046,11 +2047,11 @@ public:
 				tries++;//just to break out of a while loop in case.
 			}
 			fecundity_share[0] = double(adults[male_id].pot_rs) / double(max_sperm); //it doesn't get weighted if r <= 1
-			for (k = 1; k < num_mates; k++)
+			for (k = 1; k < fecundity_share.size(); k++)
 				fecundity_share[k] = double(adults[male_ids[k]].pot_rs*gp.sperm_comp_r) / double(max_sperm);
 
 			//now generate the offspring
-			for (k = 0; k < num_mates; k++)
+			for (k = 0; k < fecundity_share.size(); k++)
 			{
 				fecundity = fecundity_share[k] * adults[fem_id].pot_rs;
 				if(fecundity > 0)
@@ -2355,6 +2356,8 @@ public:
 				adult_from_prog(gp, p, itracker[p]);
 				num_adults_chosen++;
 			}
+			for (p = prog_alive; p < adults.size(); p++) //designate any remainder as dead.
+				adults[p].alive = false;
 		}
 		else
 		{//all of the progeny survive
@@ -2366,6 +2369,8 @@ public:
 					num_adults_chosen++;
 				}
 			}
+			for (p = num_progeny; p < adults.size(); p++)
+				adults[p].alive = false;
 		}
 		population_size = num_adults_chosen;
 		if (gp.verbose)

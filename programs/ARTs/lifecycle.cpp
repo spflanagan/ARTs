@@ -46,7 +46,8 @@ int main(int argc, char*argv[])
 		cout << "\nRunning the ARTs model with default parameters.\n";
 		global_params.set_defaults();
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
-		global_params.parent_trait= true;
+		global_params.court_trait= true;
+		global_params.FD_pref = false;
 		global_params.no_genetics = true;
 		global_params.carrying_capacity = 1000;
 		global_params.num_init_gen = 50;
@@ -101,6 +102,18 @@ int main(int argc, char*argv[])
 		}
 		courter_freqs.push_back(0);
 		parent_freqs.push_back(0);
+		if (global_params.parent_trait)
+		{
+			pops[i].d_parentfreq.push_back(pops[i].calc_freq_parent(global_params));
+			if (global_params.verbose)
+				cout << ", " << pops[i].d_parentfreq[0] << " parents" << std::flush;
+		}
+		if (global_params.court_trait)
+		{
+			pops[i].d_courterfreq.push_back(pops[i].calc_freq_courter(global_params));
+			if (global_params.verbose)
+				cout << ", " << pops[i].d_courterfreq[0] << " courters" << std::flush;
+		}
 		eq_reached.push_back(false);
 		//output QTL info
 		if (i == 0)//if it's the first/only pop, write the header
@@ -117,6 +130,7 @@ int main(int argc, char*argv[])
 	}
 	global_params.output_parameters();
 	qtlinfo_output.close();
+	
 	//Run the program
 	cout << "\nRunning " << global_params.num_init_gen << " initial generations\n" << std::flush;
 	for (i = 0; i < global_params.num_init_gen; i++)
@@ -164,8 +178,7 @@ int main(int argc, char*argv[])
 				if (global_params.parent_trait)
 				{
 					new_parent = pops[ii].calc_freq_parent(global_params);
-					if (i > 0)
-						pops[ii].d_parentfreq.push_back((new_parent - parent_freqs[ii]));
+					pops[ii].d_parentfreq.push_back((new_parent - parent_freqs[ii]));
 					parent_freqs[ii] = new_parent;
 					if (global_params.verbose)
 						cout << ", " << new_parent << " parents" << std::flush;
@@ -173,10 +186,8 @@ int main(int argc, char*argv[])
 				if (global_params.court_trait)
 				{
 					new_courter = pops[ii].calc_freq_courter(global_params);
-					if (i > 0)
-						pops[ii].d_courterfreq.push_back((new_courter - courter_freqs[ii]));
+					pops[ii].d_courterfreq.push_back((new_courter - courter_freqs[ii]));
 					courter_freqs[ii] = new_courter;
-
 					if (global_params.verbose)
 						cout << ", " << new_courter << " courters" << std::flush;
 				}
