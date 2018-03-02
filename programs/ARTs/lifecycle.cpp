@@ -46,8 +46,9 @@ int main(int argc, char*argv[])
 		cout << "\nRunning the ARTs model with default parameters.\n";
 		global_params.set_defaults();
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
-		global_params.court_trait= true;
-		global_params.FD_pref = false;
+		global_params.parent_trait= true;
+		global_params.court_trait = true;
+		global_params.FD_pref = true;
 		global_params.no_genetics = true;
 		global_params.carrying_capacity = 1000;
 		global_params.num_init_gen = 50;
@@ -91,6 +92,8 @@ int main(int argc, char*argv[])
 		run = pops[i].sanity_checks(global_params);
 		if (!run)
 		{
+			summary_output.close();
+			popdyn_output.close();
 			if(command_line)
 				return 0;
 			else
@@ -195,6 +198,8 @@ int main(int argc, char*argv[])
 			else
 			{
 				cout << "\nPopulation has crashed at initial generation " << i << '\n' << std::flush;
+				summary_output.close();
+				popdyn_output.close();
 				if (command_line)
 					return 0;
 				else
@@ -314,6 +319,9 @@ int main(int argc, char*argv[])
 				else
 				{
 					cout << "\nPopulation has crashed at experimental generation " << num_eq_tries << '\n' << std::flush;
+					summary_output.close();
+					trait_output.close();
+					popdyn_output.close();
 					if (command_line)
 						return 0;
 					else

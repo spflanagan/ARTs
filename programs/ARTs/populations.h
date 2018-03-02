@@ -1206,8 +1206,9 @@ public:
 	}
 	vector<double> calc_freq_morphs(parameters gp)
 	{
-		int j;
+		int j,male_count;
 		vector<double> morph_freqs;
+		male_count = 0;
 		if ((gp.parent_trait || gp.parent_conditional) && (gp.court_trait || gp.courter_conditional))//sanity check
 		{
 			for (j = 0; j < 4; j++) //initialize
@@ -1224,9 +1225,11 @@ public:
 						morph_freqs[2]++;
 					if (adults[j].courter && adults[j].parent)
 						morph_freqs[3]++;
+					male_count++;
 				}
 			}
-
+			for (j = 0; j < 4; j++)
+				morph_freqs[j] = morph_freqs[j] / male_count;
 		}
 		return morph_freqs;
 	}
@@ -2864,6 +2867,7 @@ public:
 		else
 			summary_output << "\tNA\tNA\tNA\tNA";
 		output_allele_freqs(gp, summary_output);
+		summary_output << std::flush;
 	}
 	void output_genotypes_vcf(parameters gp, int pop_id)
 	{

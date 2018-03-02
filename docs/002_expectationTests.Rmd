@@ -247,17 +247,23 @@ files<-list(list.files(pattern="^courter-nogenetics_\\d+_summary.txt"),
             list.files(pattern="^parent-nogenetics-nfds_\\d+_summary.txt"),
             list.files(pattern="^parent-courter-nogenetics-nfds_\\d+_summary.txt"))
 
-summary<-lapply(files,function(cat){
+summary<-do.call(rbind,lapply(files,function(cat){
   dat<-do.call(rbind,lapply(cat,function(file){
-    summ<-read.delim(file)
-    last.freqs<-sum[nrow(sum),c("ParentFreq","CourterFreq","FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")]
+    summ<-suppressWarnings(read.delim(file))
+    if(nrow(summ) == 10000){
+      last.freqs<-summ[nrow(summ),c("ParentFreq","CourterFreq","FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")]
+    }else{
+      last.freqs<-data.frame("ParentFreq"=-1,"CourterFreq"=-1,
+                             "FreqNcNp"=-1, "FreqCNp"=-1, "FreqNcP"=-1, "FreqCP"=-1)
+    }
     scen<-gsub("^(\\w+.*)_\\d+_summary.txt","\\1",file)
     last.freqs$scenario<-scen
     return(last.freqs)
   }))
-  result<-cbind(colMeans(dat[,1:6]),unique(dat$scenario))
+  result<-as.data.frame(t(c(colMeans(dat[,1:6]),
+                          unique(dat$scenario))))
   return(result)
-}) #this still needs to be tested once I have the actual data!
+}))
 ```
 
 ## Linked additive genetic variance
