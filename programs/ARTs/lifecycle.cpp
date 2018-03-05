@@ -46,13 +46,12 @@ int main(int argc, char*argv[])
 		cout << "\nRunning the ARTs model with default parameters.\n";
 		global_params.set_defaults();
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
-		global_params.parent_trait= true;
+		global_params.parent_trait= false;
 		global_params.court_trait = true;
-		global_params.FD_pref = true;
 		global_params.no_genetics = true;
 		global_params.carrying_capacity = 1000;
-		global_params.num_init_gen = 50;
-		global_params.num_exp_gen = 20;
+		global_params.num_init_gen = 5;
+		global_params.num_exp_gen = 2;
 		global_params.base_name = "../../results/testing";
 		global_params.dependent_params();
 		global_params.verbose = true;
@@ -109,13 +108,13 @@ int main(int argc, char*argv[])
 		{
 			pops[i].d_parentfreq.push_back(pops[i].calc_freq_parent(global_params));
 			if (global_params.verbose)
-				cout << ", " << pops[i].d_parentfreq[0] << " parents" << std::flush;
+				cout << "\n\t" << pops[i].d_parentfreq[0] << " parents" << std::flush;
 		}
 		if (global_params.court_trait)
 		{
 			pops[i].d_courterfreq.push_back(pops[i].calc_freq_courter(global_params));
 			if (global_params.verbose)
-				cout << ", " << pops[i].d_courterfreq[0] << " courters" << std::flush;
+				cout << "\n\t" << pops[i].d_courterfreq[0] << " courters" << std::flush;
 		}
 		eq_reached.push_back(false);
 		//output QTL info

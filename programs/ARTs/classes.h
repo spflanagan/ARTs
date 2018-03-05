@@ -291,7 +291,7 @@ public:
 		if (court_trait || courter_conditional)// if there's a courtship trait then there must be a female preference
 		{
 			if (!cor_prefs && !ind_pref)
-				ind_pref = true;
+				random_mating = false;
 		}
 		//if (parent_conditional || parent_trait)
 		//{
@@ -573,6 +573,13 @@ public:
 		female = alive = parent = courter = bool();
 	}
 
+	//reset
+	void reset(bool living)
+	{
+		mate_id = dad = mom = int();
+		pot_rs = mate_found = lifetime_rs = 0;
+		alive = living;
+	}
 	//phenotype functions
 	void assign_threshold_gt(parameters gp, int id, vector<double>&tempalleles, bool assign_courter)
 	{

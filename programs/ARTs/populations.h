@@ -1799,6 +1799,12 @@ public:
 				num_progeny = (gp.max_fecund*gp.carrying_capacity) - 1;
 
 			progeny[num_progeny].alive = true;
+			progeny[num_progeny].mom = mom_index;
+			progeny[num_progeny].dad = dad_index;
+			if (genrand() < 0.5)
+				progeny[num_progeny].female = true;
+			else
+				progeny[num_progeny].female = false;
 			
 			for (jjj = 0; jjj < gp.num_chrom; jjj++)
 			{
@@ -1828,13 +1834,7 @@ public:
 					progeny[num_progeny].update_traits(gp, courter_thresh, parent_thresh, pref_thresh);
 				}
 				if (progeny[num_progeny].alive)
-				{
-					if (genrand() < 0.5)
-						progeny[num_progeny].female = true;
-					else
-						progeny[num_progeny].female = false;
-					progeny[num_progeny].mom = mom_index;
-					progeny[num_progeny].dad = dad_index;
+				{										
 					num_progeny++;
 				}
 			}
@@ -2001,7 +2001,7 @@ public:
 	}
 	int fertilization(int fem_id,parameters gp)
 	{
-		int k,kk,fecundity, randmale, max_sperm, first_progeny, num_mates;
+		int k,kk,fecundity, randmale, max_sperm, first_progeny, num_mates, num_prog;
 		int male_id = adults[fem_id].mate_id;
 		vector<int> male_ids;
 		vector<double> fecundity_share;	
@@ -2011,7 +2011,7 @@ public:
 		max_sperm = adults[male_id].pot_rs;
 		
 		//identify sneakers/eligible bachelors
-		for (k = 0; k < gp.carrying_capacity; k++)
+		for (k = 0; k < adults.size(); k++)
 		{
 			if (adults[k].alive && !adults[k].female && !adults[k].parent)
 			{
@@ -2019,10 +2019,17 @@ public:
 					sneakers.push_back(k);
 			}
 		}
-		if (sneakers.size() == 0)//if all males are parents
+		if (sneakers.size() == 0)//if all males are parents, no one will sneak
 		{
-			for (kk = 0; kk < adults[fem_id].pot_rs; kk++)
-				making_babies(gp, adults[fem_id].pot_rs, num_progeny, fem_id, male_id);
+			if (adults[male_id].pot_rs > 0)//make sure the male has the sperm to fertilize the offspring
+			{
+				if (adults[male_id].pot_rs >= adults[fem_id].pot_rs)//they can only produce as many offspring as the male has sperm for
+					fecundity = adults[fem_id].pot_rs;
+				else
+					fecundity = adults[male_id].pot_rs;
+				making_babies(gp, fecundity, num_progeny, fem_id, male_id);
+				adults[male_id].pot_rs = adults[male_id].pot_rs - fecundity; //reduce male's RS based on how many babies he's already made.
+			}
 		}
 		else
 		{
@@ -2043,8 +2050,11 @@ public:
 					{
 						fecundity_share.push_back(0);
 						male_ids.push_back(sneakers[randmale]);
-						max_sperm = max_sperm + (gp.sperm_comp_r*adults[sneakers[randmale]].pot_rs);//if sperm_comp_r is 1, they're all equally weighted
-						adults[sneakers[randmale]].mate_found++;//keep track of individual reproductive success
+						int male_sperm = (gp.sperm_comp_r*adults[sneakers[randmale]].pot_rs);
+						if (male_sperm > adults[sneakers[randmale]].pot_rs)
+							male_sperm = adults[sneakers[randmale]].pot_rs;
+						max_sperm = max_sperm + male_sperm;//if sperm_comp_r is 1, they're all equally weighted
+						//adults[sneakers[randmale]].mate_found++;//keep track of individual reproductive success
 					}
 				}
 				tries++;//just to break out of a while loop in case.
@@ -2054,12 +2064,22 @@ public:
 				fecundity_share[k] = double(adults[male_ids[k]].pot_rs*gp.sperm_comp_r) / double(max_sperm);
 
 			//now generate the offspring
+			num_prog = 0;
 			for (k = 0; k < fecundity_share.size(); k++)
 			{
 				fecundity = fecundity_share[k] * adults[fem_id].pot_rs;
-				if(fecundity > 0)
+				if ((num_prog + fecundity) > adults[fem_id].pot_rs)
+					fecundity = adults[fem_id].pot_rs - num_prog;
+				if (fecundity > adults[male_ids[k]].pot_rs)
+					fecundity = min(adults[male_ids[k]].pot_rs, (adults[fem_id].pot_rs - num_prog));
+				if (fecundity > 0)//make sure you can make this baby
+				{
 					making_babies(gp, fecundity, num_progeny, fem_id, male_ids[k]);
-				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - fecundity; //reduce male's RS based on how many babies he's already made.
+					adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - fecundity; //reduce male's RS based on how many babies he's already made.
+					num_prog = num_prog + fecundity;
+				}
+				if ((num_prog > gp.max_fecund) && gp.verbose)
+					cout << "\n\tWARNING:" << num_prog << " were produced.";
 			}
 		}
 		return first_progeny;
@@ -2069,30 +2089,28 @@ public:
 		int k;
 		double surv_rand;
 		if (gp.parent_conditional || gp.parent_trait)//assign survival based on parent trait
-		{
+		{											// otherwise all of them survive (don't need to do anything)
 			for (k = prog_start; k < num_progeny; k++)
 			{
-				surv_rand = genrand();
-				if (adults[mal_id].parent)
+				if (progeny[k].alive)//only deal with ones that are alive at this point
 				{
-					if (surv_rand < gp.egg_surv_parent)
-						progeny[k].alive = true;
+					surv_rand = genrand();
+					if (adults[mal_id].parent)
+					{
+						if (surv_rand < gp.egg_surv_parent)
+							progeny[k].alive = true;
+						else
+							progeny[k].alive = false;
+					}
 					else
-						progeny[k].alive = false;
-				}
-				else
-				{
-					if (surv_rand < gp.egg_surv_noparent)
-						progeny[k].alive = true;
-					else
-						progeny[k].alive = false;
+					{
+						if (surv_rand < gp.egg_surv_noparent)
+							progeny[k].alive = true;
+						else
+							progeny[k].alive = false;
+					}
 				}
 			}
-		}
-		else // all of them survive
-		{
-			for (k = prog_start; k < num_progeny; k++)
-				progeny[k].alive = true;
 		}
 	}
 
@@ -2314,6 +2332,8 @@ public:
 	{
 		adults[adult_index].alive = true;
 		adults[adult_index].mate_found = 0;
+		adults[adult_index].lifetime_rs = 0;
+		adults[adult_index].mate_id = int();
 		pass_on_loci(gp, adult_index, progeny_index);
 		if (progeny[progeny_index].female)
 		{
@@ -2334,7 +2354,6 @@ public:
 		}
 		else
 			adults[adult_index].update_traits(gp, courter_thresh, parent_thresh, pref_thresh);
-		adults[adult_index].lifetime_rs = 0;
 	}
 	void regulate_popsize(parameters gp)
 	{
@@ -2357,10 +2376,13 @@ public:
 			for (p = 0; p < prog_alive; p++)
 			{
 				adult_from_prog(gp, p, itracker[p]);
+				progeny[itracker[p]].reset(false);
 				num_adults_chosen++;
 			}
 			for (p = prog_alive; p < adults.size(); p++) //designate any remainder as dead.
-				adults[p].alive = false;
+				adults[p].reset(false);
+			for (p = prog_alive; p < progeny.size(); p++)
+				progeny[p].reset(false);
 		}
 		else
 		{//all of the progeny survive
@@ -2369,11 +2391,14 @@ public:
 				if (progeny[p].alive)
 				{
 					adult_from_prog(gp, num_adults_chosen, p);
+					progeny[p].reset(false);
 					num_adults_chosen++;
 				}
 			}
 			for (p = num_progeny; p < adults.size(); p++)
-				adults[p].alive = false;
+				adults[p].reset(false);
+			for (p = num_progeny; p < progeny.size(); p++)
+				progeny[p].reset(false);
 		}
 		population_size = num_adults_chosen;
 		if (gp.verbose)
@@ -2497,7 +2522,32 @@ public:
 				adults[progeny[j].dad].lifetime_rs++;
 			}
 		}
-
+		if (gp.verbose)
+		{
+			for (j = 0; j < adults.size(); j++)
+			{
+				if (adults[j].lifetime_rs > gp.rs_c)
+				{
+					if (adults[j].alive)
+						cout << "\n\tLiving ind. " << j;
+					else
+						cout << "\n\tDead ind. " << j;
+					if (adults[j].female)
+						cout << ", female, had lifetime RS " << adults[j].lifetime_rs;
+					else
+					{
+						if (adults[j].courter && adults[j].parent)
+							cout << ", courter/parent, had lifetime RS " << adults[j].lifetime_rs;
+						if (adults[j].courter && !adults[j].parent)
+							cout << ", courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+						if (!adults[j].courter && adults[j].parent)
+							cout << ", non-courter/parent, had lifetime RS " << adults[j].lifetime_rs;
+						if (!adults[j].courter && !adults[j].parent)
+							cout << ", non-courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+					}
+				}
+			}
+		}
 	}
 	vector<double> avg_court_rs(parameters gp)
 	{
@@ -2938,7 +2988,6 @@ public:
 	void output_trait_info(parameters gp, int pop_id, ofstream & output)
 	{
 		int j;
-		eval_rs(gp);
 		for (j = 0; j < population_size; j++)
 		{
 			output << '\n' << pop_id << '\t' << j;// "Pop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";

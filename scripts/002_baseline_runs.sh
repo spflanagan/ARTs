@@ -40,6 +40,9 @@ for i in `seq 1 $NUMREPS`; do
 		./ARTs --courter --no-genetics -b ../../results/courter-nogenetics_${i} --verbose
 	    ./ARTs --parent --no-genetics -b ../../results/parent-nogenetics_${i} --verbose
 		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter-nogenetics_${i} --verbose
+		./ARTs --courter --no-genetics --independent-pref -b ../../results/courter-pref-nogenetics_${i} --verbose
+	    ./ARTs --parent --no-genetics --independent-pref -b ../../results/parent-pref-nogenetics_${i} --verbose
+		./ARTs --courter --no-genetics --independent-pref --parent -b ../../results/parent-courter-pref-nogenetics_${i} --verbose
 		./ARTs --courter --no-genetics --freq-dependent-preference -b ../../results/courter-nogenetics-nfds_${i} --verbose
 		./ARTs --parent --no-genetics --freq-dependent-preference -b ../../results/parent-nogenetics-nfds_${i} --verbose
 		./ARTs --courter --no-genetics --parent --freq-dependent-preference -b ../../results/parent-courter-nogenetics-nfds_${i} --verbose
