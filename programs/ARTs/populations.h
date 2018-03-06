@@ -2988,7 +2988,8 @@ public:
 	void output_trait_info(parameters gp, int pop_id, ofstream & output)
 	{
 		int j;
-		for (j = 0; j < population_size; j++)
+		eval_rs(gp);
+		for (j = 0; j < adults.size(); j++)
 		{
 			output << '\n' << pop_id << '\t' << j;// "Pop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
 			if (adults[j].female)

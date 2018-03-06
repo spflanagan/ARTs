@@ -1,5 +1,5 @@
 ---
-title: "High-level ARTs Debugging"
+title: "Initial ARTs Results"
 output: html_document
 author: "Sarah P. Flanagan"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
@@ -18,24 +18,24 @@ library(RColorBrewer)
 library(scales)
 read_chunk("../R/002_expectationTests.R")
 cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
-cols2<-c('#a1dab4','#41b6c4','#2c7fb8','#253494')
+cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
 ```
 
 
-Based on previous theoretical work, the following expectations exist:
-```{r expecations, echo=FALSE}
-expectations<-data.frame(Scenario=c("Courtship trait", "Parental Trait","Courtship and Parental Traits",
-                                    "Courtship Trait + Neg Freq Dep Sel", "Parental Trait + Neg Freq Dep Sel",
-                                    "Parental Trait and courtship Trait + Neg Freq Dep Sel"),
-                         Expected_Outcome=c("Both alts maintained if costs = benefits","Both alts maintained if costs = benefits",
-                                            "Coevolution of both alts, and both alts maintained if costs = benefits",
-                                            "both alts maintained", "?","?"))
-kable(expectations, caption = "Expected outcomes")
-```
+<!-- Based on previous theoretical work, the following expectations exist: -->
+<!-- ```{r expecations, echo=FALSE} -->
+<!-- expectations<-data.frame(Scenario=c("Courtship trait", "Parental Trait","Courtship and Parental Traits", -->
+<!--                                     "Courtship Trait + Neg Freq Dep Sel", "Parental Trait + Neg Freq Dep Sel", -->
+<!--                                     "Parental Trait and courtship Trait + Neg Freq Dep Sel"), -->
+<!--                          Expected_Outcome=c("Both alts maintained if costs = benefits","Both alts maintained if costs = benefits", -->
+<!--                                             "Coevolution of both alts, and both alts maintained if costs = benefits", -->
+<!--                                             "both alts maintained", "?","?")) -->
+<!-- kable(expectations, caption = "Expected outcomes") -->
+<!-- ``` -->
 
-One caveat to comparing to previous work is that in my model the parental and courtship traits have a trade-off, and I haven't found a model incorporated tradeoffs and negative frequency dependent selection.
+<!-- One caveat to comparing to previous work is that in my model the parental and courtship traits have a trade-off, and I haven't found a model incorporated tradeoffs and negative frequency dependent selection. -->
 
-But we can look at what happens with the runs that I've done *(note that these are individual runs, not averages of multiple runs)*. Let's start with the ones that do not have a genetic architecture.
+<!-- But we can look at what happens with the runs that I've done *(note that these are individual runs, not averages of multiple runs)*. Let's start with the ones that do not have a genetic architecture. -->
 
 ## Overview of the model 
 
@@ -43,15 +43,39 @@ Males can be courters or not-courters and parents or not-parents. When the model
 
 ```{r diagram}
 library(DiagrammeR)
-mermaid("
-  graph LR
-    A[Females Choose a Nest]-->B[Males Fertilize Eggs]
-    B[Males Fertilize Eggs]-->D[Nest Survival]
-    D[Nest Survival]-->E[Viability Selection on Progeny]
-    E[Viability Selection on Progeny]-->F[Stochastic Survival to Adulthood]
-    F-->A
-  ")
+# mermaid("
+#   graph LR
+#     A[Females Choose a Nest]-->B[Males Fertilize Eggs]
+#     B[Males Fertilize Eggs]-->C[Nest Survival]
+#     C[Nest Survival]-->D[Viability Selection on Progeny]
+#     D[Viability Selection on Progeny]-->E[Stochastic Survival to Adulthood]
+#     E-->A
+#   fontsize 2
+#   ")
+
+nodes<-create_node_df(
+  n=5,
+  nodes = LETTERS[1:5],
+  label = c("Females Choose a Nest","Males Fertilize Eggs","Nest Survival",
+            "Viability Selection on Progeny","Stochastic Survival to Adulthood"),
+  shape = "rectangle", fontsize=7, type="lower",width=1.4,height=0.35,
+  x=c(0,0.75,0.6,-1,-0.9),y=c(0.9,0,-0.9,-0.75,0.25)
+)
+
+edges<-create_edge_df(
+  from = c(1,2,3,4,5),
+  to = c(2,3,4,5,1)
+)
+
+graph <-
+  create_graph(
+    nodes_df = nodes,
+    edges_df = edges
+  )
+
+render_graph(graph)
 ```
+
 
 ### Choosing a nest
 
@@ -59,7 +83,7 @@ A female samples 50 males and chooses a male to nest with based on his courtship
 
 ### Fertilization
 
-Once a female decides to nest, up to three males can fertilize the nest. Courters and parental males can contribute more sperm than non-courter and non-parental males -- $r_{courter}=r_{parent}=8$ and $r_{non-courter}=r_{non-parent}=4$. A courter/non-parent has $r_{non-parent}$ and a non-courter/parent has $r_{parent}$. The male with whom the female is nesting gets $r_{parent}/\Sigma{n_{sperm}}$ and additional sneaker males (up to 2) get $(r{non-parent}*0.5/\Sigma{n_{sperm}})$, where $\Sigma{n_{sperm}}$ is the total number of sperm contributed by all of the males, weighted by the sperm competition factor (0.5 is the default for all males except the nesting male). So, when a female mates with one courter and two sneakers, $\Sigma{n_{sperm}}$ = $r_{courter}$ + 2$*$(0.5$*$$r_{sneaker}$), where $r_{courter}$ = 8 and $r_{sneaker}$ = 4, therefore $\Sigma{n_{sperm}}$ = `r sum(8,rep((0.5*4),2))`. 
+Once a female decides to nest, up to three males can fertilize the nest. Courters and parental males can contribute more sperm than non-courter and non-parental males -- $r_{courter}=r_{parent}=8$ and $r_{non-courter}=r_{non-parent}=4$. A courter/non-parent has $r_{non-parent}$ and a non-courter/parent has $r_{parent}$. The male with whom the female is nesting gets $r_{parent}/\Sigma{n_{sperm}}$ and additional sneaker males (up to 2) get $(r_{non-parent}*0.5/\Sigma{n_{sperm}})$, where $\Sigma{n_{sperm}}$ is the total number of sperm contributed by all of the males, weighted by the sperm competition factor (0.5 is the default for all males except the nesting male). So, when a female mates with one courter and two sneakers, $\Sigma{n_{sperm}}$ = $r_{courter}$ + 2$*$(0.5$*$$r_{sneaker}$), where $r_{courter}$ = 8 and $r_{sneaker}$ = 4, therefore $\Sigma{n_{sperm}}$ = `r sum(8,rep((0.5*4),2))`. 
 
 ### Nest Survival
 
@@ -154,46 +178,54 @@ In these cases, the traits are encoded by a number (50) of loci, whose alleles c
 
 ### Courter trait
 
-Females choose nests based on whether the male is a courter or not, and they all prefer courters all of the time. The only way that non-courters produce offspring is through sneaking. Because parental care is not incorporated in this model, all nests survive.
+Females choose nests based on whether the male is a courter or not, and they all prefer courters all of the time (the female preference does not have a genetic basis and does not evolve). The only way that non-courters produce offspring is through sneaking, but all males can be sneakers (both courters and non-courters). Because parental care is not incorporated in this model, all nests survive.
 
 ```{r unlinked_courter}
-courter.files<-list.files(pattern="^courter-nogenetics_\\d+_summary.txt")
-#set up colors
-mycols <- colorRampPalette(c("grey",cols["courter"],"black"))(12)[2:11]
-#set up an empty plot
-plot(0:1,0:1,bty="L",xlab="Generations",ylab="Frequency of Courting Males",
-     type='n',xlim=c(0,12000),ylim=c(0,1))
-#plot each run's output and save it
-s<-lapply(courter.files,function(file){
-  summ<-suppressWarnings(read.delim(file))
-  n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
-  points(summ$Generation,summ$CourterFreq,col=alpha(mycols[n],0.5),
-         lwd=2,type="l")
-  return(summ)
-})
-text(x=10000,y=1.125,xpd=TRUE,"Equilibrium\nevaluated",srt=90)
-clip(x1 = 0,x2=12000,y1=-0.1,y2=1.04)
-abline(v=10000,lty=2,lwd=2)
-
+plot.courter.reps<-function(pattern,cols){
+  courter.files<-list.files(pattern=pattern)
+  #set up colors
+  mycols <- colorRampPalette(c("grey",cols["courter"],"black"))(length(courter.files))[2:(1+length(courter.files))]
+  #set up an empty plot
+  plot(0:1,0:1,bty="L",xlab="Generations",ylab="Frequency of Courting Males",
+       type='n',xlim=c(0,12000),ylim=c(0,1))
+  #plot each run's output and save it
+  s<-lapply(courter.files,function(file){
+    summ<-suppressWarnings(read.delim(file))
+    n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
+    points(summ$Generation,summ$CourterFreq,col=alpha(mycols[n],0.5),
+           lwd=2,type="l")
+    return(summ)
+  })
+  text(x=10000,y=1.1,xpd=TRUE,"Equilibrium\nevaluated")
+  clip(x1 = 0,x2=12000,y1=-0.1,y2=1.04)
+  abline(v=10000,lty=2,lwd=2)
+  return(s)
+}
+s<-plot.courter.reps(pattern="^courter-nogenetics_\\d+_summary.txt",cols)
 ```
 
-Of the `r length(courter.files)` replicates, `r length(unlist(lapply(s,nrow))[unlist(lapply(s,nrow))==10000])` reached an equilibrium by 10000 generations. 
+Of the `r length(s)` replicates, `r length(unlist(lapply(s,nrow))[unlist(lapply(s,nrow))==10000])` reached an equilibrium by 10000 generations. 
 
 ```{r unlinked_courter_final}
-final.freqs<-do.call(rbind,lapply(s,function(dat){
-  last<-dat[nrow(dat),]
-  return(last[,c("Generation","CourterFreq","CourterW","NonCourterW")])
-}))
+get.courter.freqs<-function(s){
+  courter.final.freqs<-do.call(rbind,lapply(s,function(dat){
+    last<-dat[nrow(dat),]
+    return(last[,c("Generation","CourterFreq","CourterW","NonCourterW")])
+  }))
+  rownames(courter.final.freqs)<-unlist(lapply(seq(1:nrow(courter.final.freqs)),function(n){paste("Rep",n,sep="")}))
+  return(courter.final.freqs)
+}
+courter.final.freqs<-get.courter.freqs(s)
 #aggregate the data
-ws<-apply(final.freqs,1,function(rep){ return(c(rep["CourterW"],rep["NonCourterW"]))})
-freqs<-apply(final.freqs,1,function(rep){ return(c(rep["CourterFreq"],1-rep["CourterFreq"]))})
-eq<-apply(final.freqs,1,function(rep){ if(rep["Generation"]==9999) return("E") else return("N")})
+court.ws<-apply(courter.final.freqs,1,function(rep){ return(c(rep["CourterW"],rep["NonCourterW"]))})
+court.freqs<-apply(courter.final.freqs,1,function(rep){ return(c(rep["CourterFreq"],1-rep["CourterFreq"]))})
+court.eq<-apply(courter.final.freqs,1,function(rep){ if(rep["Generation"]==9999) return("E") else return("N")})
 #plot the final fitnesses
-b<-barplot(ws,beside=TRUE,col=c(alpha(cols["courter"],0.75),alpha("darkgrey",0.75)),ylim=c(0,5),
+b<-barplot(court.ws,beside=TRUE,col=c(alpha(cols["courter"],0.75),alpha("darkgrey",0.75)),ylim=c(0,5),
         names.arg = rep("",10),ylab="Average Fitness",border = NA)
-text(x=b[1,],y=1,label=freqs[1,],srt=90)
-text(x=b[2,],y=1,label=freqs[2,],srt=90)
-text(x=seq(2,30,3),y=-0.15,label=eq,xpd=T)
+text(x=b[1,],y=1,label=court.freqs[1,],srt=90)
+text(x=b[2,],y=1,label=court.freqs[2,],srt=90)
+text(x=seq(2,30,3),y=-0.15,label=court.eq,xpd=T)
 text(x=-1,y=-0.175,label="Equilibrium:",xpd=T)
 legend("topright",bty='n',col=c(alpha(cols["courter"],0.75),alpha("darkgrey",0.75)),
        c("Courter","Non-courter"),pch=15)
@@ -201,9 +233,16 @@ legend("topright",bty='n',col=c(alpha(cols["courter"],0.75),alpha("darkgrey",0.7
 
 The numbers in the bars are the frequencies of each morph in the final generation, and "E" below a set of bars means that replicate resulted in an equilibrium and "N" means it did not reach an equilibrium.
 
-Now let's look at the traits of the individuals in the final generation.
+```{r courter_table}
+final.freqs<-courter.final.freqs[,-1]
+kable(final.freqs,caption = "Frequency of courters in final generation",
+      row.names = TRUE)
+```
 
-```{r courter_traits}
+
+
+```{r courter_traits,eval=FALSE,echo=FALSE}
+#Now let's look at the traits of the individuals in the final generation.
 source("../../gwscaR/R/gwscaR_plot.R") #for the gwsca.vioplot function
 #get the files
 trait.files<-list.files(pattern="^courter-nogenetics_\\d+_traits.txt")
@@ -222,8 +261,8 @@ lapply(t,function(traits){
   axis(2,las=1,ylim=c(0,500),at=seq(0,500,100))
   mtext("Number of males",2,line=2.5)
   
-  gwsca.vioplot(males$LifetimeRS[males$Courter==1],males$LifetimeRS[males$Courter==0],
-          col=c(cols["courter"],"darkgrey"),border=c(cols["courter"],"darkgrey"),ylim=c(0,40),plot.axes = FALSE)
+  gwsca.vioplot(traits$LifetimeRS[traits$Sex=="MALE"],traits$LifetimeRS[traits$Sex=="FEMALE"],
+          col=c(cols["courter"],cols["cpref"]),border=c(cols["courter"],cols["cpref"]),ylim=c(0,40),plot.axes = FALSE)
   axis(1,at=c(1,2),labels = c("Courter","Non-courter"),lty=0)
   axis(2,at=seq(0,40,10),las=1)
   mtext("Lifetime Reproductive Success",2,line=2)
@@ -232,35 +271,151 @@ lapply(t,function(traits){
 
 ```
 
-### Parental traits
+### Parental trait
 
-All females nest with parental males, so the only way non-parental males reproduce is through sneaking. Parental males provide care that allows nests to have a 90% chance of survival. 
+All females nest with parental males, so the only way non-parental males reproduce is through sneaking. Parental males provide care that allows nests to have a 90% chance of survival. The female preference does not have a genetic basis and does not evolve.
 
 ```{r parental_nogenetics, echo=FALSE}
-png.sum<-read.delim("parent-nogenetics_summary.txt")
-plot(png.sum$ParentFreq,lwd=2,xlab="Generations",ylab="Frequency of Parental Males",
-     bty="L",type="l",ylim = c(0,1),col=cols["parent"])
+plot.parent.reps<-function(pattern,cols){
+  parent.files<-list.files(pattern=pattern)
+  #set up colors
+  mycols <- colorRampPalette(c("grey",cols["parent"],"black"))(length(parent.files))[2:(1+length(parent.files))]
+  #set up an empty plot
+  plot(0:1,0:1,bty="L",xlab="Generations",ylab="Frequency of Parental Males",
+       type='n',xlim=c(0,12000),ylim=c(0,1))
+  #plot each run's output and save it
+  s<-lapply(parent.files,function(file){
+    summ<-suppressWarnings(read.delim(file))
+    n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
+    points(summ$Generation,summ$ParentFreq,col=alpha(mycols[n],0.5),
+           lwd=2,type="l")
+    return(summ)
+  })
+  text(x=10000,y=1.1,xpd=TRUE,"Equilibrium\nevaluated")
+  clip(x1 = 0,x2=12000,y1=-0.1,y2=1.04)
+  abline(v=10000,lty=2,lwd=2)
+  return(s)
+}
+s<-plot.parent.reps("^parent-nogenetics_\\d+_summary.txt",cols)
 ```
+
+Of the `r length(s)` replicates, `r length(unlist(lapply(s,nrow))[unlist(lapply(s,nrow))==10000])` reached an equilibrium by 10000 generations. 
+
+```{r unlinked_parent_final}
+get.parent.freqs<-function(s){
+  parent.final.freqs<-do.call(rbind,lapply(s,function(dat){
+    last<-dat[nrow(dat),]
+    return(last[,c("Generation","ParentFreq","ParentW","NonParentW")])
+  }))
+  rownames(parent.final.freqs)<-unlist(lapply(seq(1:nrow(parent.final.freqs)),function(n){paste("Rep",n,sep="")}))
+  return(parent.final.freqs)
+}
+parent.final.freqs<-get.parent.freqs(s)
+#aggregate the data
+parent.ws<-apply(parent.final.freqs,1,function(rep){ return(c(rep["ParentW"],rep["NonParentW"]))})
+parent.freqs<-apply(parent.final.freqs,1,function(rep){ return(c(rep["ParentFreq"],1-rep["ParentFreq"]))})
+parent.eq<-apply(parent.final.freqs,1,function(rep){ if(rep["Generation"]==9999) return("E") else return("N")})
+#plot the final fitnesses
+b<-barplot(parent.ws,beside=TRUE,col=c(alpha(cols["parent"],0.75),alpha("darkgrey",0.75)),ylim=c(0,5),
+        names.arg = rep("",10),ylab="Average Fitness",border = NA)
+text(x=b[1,],y=1,label=parent.freqs[1,],srt=90)
+text(x=b[2,],y=1,label=parent.freqs[2,],srt=90)
+text(x=seq(2,30,3),y=-0.15,label=parent.eq,xpd=T)
+text(x=-1,y=-0.175,label="Equilibrium:",xpd=T)
+legend("topright",bty='n',col=c(alpha(cols["parent"],0.75),alpha("darkgrey",0.75)),
+       c("Parent","Non-parent"),pch=15)
+```
+
+The numbers in the bars are the frequencies of each morph in the final generation, and "E" below a set of bars means that replicate resulted in an equilibrium and "N" means it did not reach an equilibrium.
+
+```{r parent_table}
+final.freqs<-parent.final.freqs[,-1]
+kable(final.freqs,caption = "Frequency of parents in final generation",
+      row.names = TRUE)
+```
+
 
 
 ### Courtship and Parental Traits
 
-Females choose nests based on males' courtship trait (they all only nest with courting males), and then the survival of the nest depends on whether the courting male is also a parental male. If the chosen male is a parental male, the nest has a 90% chance of survival. Otherwise, it only has a 10% chance. Non-courters only reproduce through sneaking.
+Females choose nests based on males' courtship trait (they all only nest with courting males, and the female preference does not have a genetic basis and does not evolve), and then the survival of the nest depends on whether the courting male is also a parental male. If the chosen male is a parental male, the nest has a 90% chance of survival. Otherwise, it only has a 10% chance. Non-courters only reproduce through sneaking.
 
-```{r parentalCourtship_nogenetics, echo=FALSE}
-pcng.sum<-read.delim("parent-courter-nogenetics_summary.txt")
-par(mar=c(4,4,1,4))
-plot(pcng.sum$ParentFreq,lwd=2,xlab="Generations",ylab="",
-     bty="u",type="l",ylim = c(0,1),col=alpha(cols["parent"],0.75),las=1)
-points(pcng.sum$CourterFreq,lwd=2,type="l",col=alpha(cols["courter"],0.75))
-axis(4,las=1)
-mtext("Frequency of Courtship Males",4,line=2.5,col=cols["courter"])
-mtext("Frequency of Parental Males",2,line=2.5,col=cols["parent"])
+```{r parentalCourtship_nogenetics, echo=FALSE,fig.cap="Frequency of the two morphs (courter = green, parent = blue)"}
+plot.pc.reps<-function(pattern,cols){
+  pc.files<-list.files(pattern=pattern)
+  #set up colors
+  parent.cols <- colorRampPalette(c("grey",cols["parent"],"black"))(length(pc.files))[2:(1+length(pc.files))]
+  courtr.cols <- colorRampPalette(c("grey",cols["courter"],"black"))(length(pc.files))[2:(1+length(pc.files))]
+  #set up an empty plot
+  par(mar=c(4,4,4,4))
+  plot(0:1,0:1,bty="U",xlab="Generations",ylab="Frequency of Courter Males",
+       type='n',xlim=c(0,12000),ylim=c(0,1))
+  axis(4)
+  mtext("Frequency of Parental Males",4,line=2)
+  #plot each run's output and save it
+  s<-lapply(pc.files,function(file){
+    summ<-suppressWarnings(read.delim(file))
+    n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
+    points(summ$Generation,summ$CourterFreq,col=alpha(courtr.cols[n],0.5),
+           lwd=2,type="l")
+    points(summ$Generation,summ$ParentFreq,col=alpha(parent.cols[n],0.5),
+           lwd=2,type="l")
+    return(summ)
+  })
+  text(x=10000,y=1.1,xpd=TRUE,"Equilibrium\nevaluated")
+  clip(x1 = 0,x2=12000,y1=-0.1,y2=1.09)
+  abline(v=10000,lty=2,lwd=2)
+  return(s)
+}
+s<-plot.pc.reps("^parent-courter-nogenetics_\\d+_summary.txt",cols)
 ```
 
-Both are maintained at a frequency a little above 50%
+The different runs have different outcomes. 
 
-```{r courtParent_rs,echo=FALSE}
+Let's look at the morph frequencies.
+
+```{r courtParent_morphfreqs,echo=FALSE}
+plot.morphs.reps<-function(s,cols2){
+  par(mfrow=c(2,5),mar=c(2,2,2,1),oma=c(2,2,2,2))
+  lapply(s,function(summ){
+    plot(0:1,0:1,bty="L",xlab="",ylab="",
+       type='n',xlim=c(0,12000),ylim=c(0,1))
+    points(summ$Generation, summ$FreqNcNp,type="l",col=cols2["NCNP"],lwd=2)
+    points(summ$Generation, summ$FreqCNp,type="l",col=cols2["CNP"],lwd=2)
+    points(summ$Generation, summ$FreqNcP,type="l",col=cols2["NCP"],lwd=2)
+    points(summ$Generation, summ$FreqCP,type="l",col=cols2["CP"],lwd=2)
+  })
+  mtext("Frequency of Morphs",2,outer=TRUE,cex=0.8)
+  mtext("Generations",1,outer=TRUE,cex=0.8)
+  par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+  plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
+  legend("top",c("Courter/Parent","Non-Courter/Parent","Courter/Non-Parent","Non-courter/Non-parent"),
+         col=cols2,bty='n',ncol = 4,lty=1,lwd=2)
+}
+plot.morphs.reps(s,cols2)
+```
+
+The second panel in the top row shows a run where the population crashed after 12 generations.
+
+We can look at the final frequencies in a table as well:
+
+```{r unlinked_courterParent_final}
+get.morph.freqs<-function(s){
+  pc.final.freqs<-do.call(rbind,lapply(s,function(dat){
+    last<-dat[nrow(dat),]
+    return(last[,11:14])
+  }))
+  rownames(pc.final.freqs)<-unlist(lapply(seq(1:nrow(pc.final.freqs)),function(n){paste("Rep",n,sep="")}))
+  return(pc.final.freqs)
+}
+pc.final.freqs<-get.morph.freqs(s)
+kable(pc.final.freqs,caption = "Frequency of morphs in final generation",
+      row.names = TRUE)
+```
+
+Multiple morphs are maintained in `r nrow(pc.final.freqs)-length(unlist(apply(pc.final.freqs,1,grep,pattern="1")))` of the `r nrow(pc.final.freqs)` replicates, and those morphs contain either a parent or a courter. 
+
+```{r courtParent_rs,echo=FALSE,eval=FALSE}
 ymax<-round(max(pcng.sum$ParentW,pcng.sum$NonParentW,pcng.sum$CourterW,pcng.sum$NonCourterW)+1)
 par(mar=c(4,4,1,4),mfrow=c(2,1))
 plot(pcng.sum$ParentW,lwd=2,xlab="Generations",ylab="Parental Reproductive Success",
@@ -274,11 +429,8 @@ points(pcng.sum$NonCourterW,lwd=2,lty=3,type="l",col=alpha("grey",0.75))
 legend("topright",bty='n',legend=c("Preferred","Not Preferred"),lty=c(1,2),col="darkgrey",lwd=2)
 ```
 
-So, although courting males have lower reproductive success, they're at higher frequency in the population, and parental males are at low frequency. What?!?
 
-Let's look for a correlation between traits. Because these are discrete trait characters, it's a bit wonky to look at. I'm going to add an output for the actual trait values - then I can create a nice landscape. 
-
-```{r courtParent_traits,echo=FALSE}
+```{r courtParent_traitsLandscape,echo=FALSE,eval=FALSE}
 pcng.traits<-read.delim("parent-courter-nogenetics_traits.txt")
 pcng.traits$Morph<-factor(paste(pcng.traits$Courter,pcng.traits$Parent,sep=","))
 rcols<-colorRampPalette(cols)(25)
@@ -290,70 +442,102 @@ text(x=-0.1,y=c(0,1),c("Non-Parent","Parent"),xpd=TRUE,srt=90)
 
 ```
 
-Ok, so it looks like all of the individuals have either one trait or the other - a negative correlation between the two. 
 
 ### Courtship + Negative Frequency Dependent Selection
 
 In this case, the female preference is based on the frequency of the courtship morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; all nests survive since parental care is not incorporated in this model, and courters and parental males are disfavored in viability selection.
 
 ```{r courtship_nogenetics_nfds,echo=FALSE}
-cnng<-read.delim("courter-nogenetics-nfds_summary.txt")
-plot(cnng$CourterFreq,lwd=2,xlab="Generations",ylab="Frequency of Courtship Males",
-     bty="l",type="l",ylim=c(0,1),col=alpha(cols["courter"],0.75))
+cnng<-plot.courter.reps(pattern="^courter-nogenetics-nfds_\\d+_summary.txt",cols)
+```
+```{r courtship_nfds_unlinked_table,echo=FALSE}
+cnng.freqs<-get.courter.freqs(cnng)
+kable(cnng.freqs,caption = "Courter Frequncies with negative frequency dependent preferences",
+      row.names = TRUE)
 ```
 
-### Parental Males + Negative Frequency Dependent Selection
+With negative frequency dependent preferences, both courters and non-courters are maintained in the population.
 
-In this case, the female preference is based on the frequency of the parental morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; nests have a 90% chance of survival, and courters and parental males are disfavored in viability selection.
+### Parenting + Negative Frequency Dependent Selection
+
+In this case, the female preference is based on the frequency of the parental morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; nests given to parents have a 90% chance of survival and a 10% chance of survival if given to non-parents, and courters and parental males are disfavored in viability selection.
 
 ```{r parent_nogenetics_nfds,echo=FALSE}
-pnng<-read.delim("parent-nogenetics-nfds_summary.txt")
-plot(pnng$ParentFreq,lwd=2,xlab="Generations",ylab="Frequency of Parental Males",
-     bty="l",type="l",ylim=c(0,1),col=alpha(cols["parent"],0.75))
+pnng<-plot.parent.reps(pattern="^parent-nogenetics-nfds_\\d+_summary.txt",cols)
+```
+```{r parent_nfds_unlinked_table, echo=FALSE}
+pnng.freqs<-get.parent.freqs(pnng)
+kable(pnng.freqs,caption = "Parent Frequncies with negative frequency dependent preferences",
+      row.names = TRUE)
 ```
 
-### Courtship + Parental Males + Negative Frequency Dependent Selection
+When negative frequency dependent preferences are acting on the parental traits, the population crashes. 
+
+### Courtship + Parenting + Negative Frequency Dependent Selection
 
 In this case, the female preference is based on the frequency of the courtship morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; parental males' nests survive with a probability of 90% and non-parental males' nests survive with a probability of 10%, and courters and parental males are disfavored in viability selection.
 
 ```{r unlinked_parent_courtship_nfds,echo=FALSE}
-pcnng<-read.delim("parent-courter-nogenetics-nfds_summary.txt")
-plot(pcnng$CourterFreq,lwd=2,xlab="Generations",ylab="Frequency of Courtship Males",
-     bty="u",type="l",ylim=c(0,1),col=alpha(cols["courter"],0.75))
-points(pcnng$ParentFreq,lwd=2,type="l",col=alpha(cols["parent"],0.75))
-mtext(text = "Frequency of Parental Males",side=4)
+pcnng<-plot.pc.reps(pattern="^parent-courter-nogenetics-nfds_\\d+_summary.txt",cols)
+```
+```{r unlinked_pcnfds_plotMorphs,echo=FALSE}
+plot.morphs.reps(pcnng,cols2)
+```
+```{r unlinked_pcnfds_table,echo=FALSE}
+pcnng.freqs<-get.morph.freqs(pcnng)
+kable(pcnng.freqs,caption="Morph Frequencies with negative frequency dependent preferences",
+      row.names=TRUE)
 ```
 
-### Comparing multiple runs
+When negative frequency dependent preferences are acting on the courtship traits and there are parent traits as well, the population crashes. 
 
-I ran the model with 10 replicates of each of these sets, and now I can look at the ending frequency of each morph.
+### Courtship + Heritable Female Preferences
 
-```{r get_summary,echo=FALSE}
-files<-list(list.files(pattern="^courter-nogenetics_\\d+_summary.txt"),
-            list.files(pattern="^parent-nogenetics_\\d+_summary.txt"),
-            list.files(pattern="^parent-courter-nogenetics_\\d+_summary.txt"),
-            list.files(pattern="^courter-nogenetics-nfds_\\d+_summary.txt"),
-            list.files(pattern="^parent-nogenetics-nfds_\\d+_summary.txt"),
-            list.files(pattern="^parent-courter-nogenetics-nfds_\\d+_summary.txt"))
+Here, the female preference has unlinked additive genetic variance that is inherited. The traits begin as uncorrelated and are not pleiotropic (i.e., they have different genes underlying them). A threshold is set in the first generation that determines the switch point for when females prefer courters or non-courters. This threshold does not change over the generations. All males can be sneakers, but the male who females choose to nest with get a first male advantage.
 
-summary<-do.call(rbind,lapply(files,function(cat){
-  dat<-do.call(rbind,lapply(cat,function(file){
-    summ<-suppressWarnings(read.delim(file))
-    if(nrow(summ) == 10000){
-      last.freqs<-summ[nrow(summ),c("ParentFreq","CourterFreq","FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")]
-    }else{
-      last.freqs<-data.frame("ParentFreq"=-1,"CourterFreq"=-1,
-                             "FreqNcNp"=-1, "FreqCNp"=-1, "FreqNcP"=-1, "FreqCP"=-1)
-    }
-    scen<-gsub("^(\\w+.*)_\\d+_summary.txt","\\1",file)
-    last.freqs$scenario<-scen
-    return(last.freqs)
-  }))
-  result<-as.data.frame(t(c(colMeans(dat[,1:6]),
-                          unique(dat$scenario))))
-  return(result)
-}))
+```{r courtship_pref_nogenetics,echo=FALSE}
+cpref<-plot.courter.reps(pattern="^courter-pref-nogenetics_\\d+_summary.txt",cols)
 ```
+```{r courtship_pref_unlinked_table,echo=FALSE}
+cpref.freqs<-get.courter.freqs(cpref)
+kable(cpref.freqs,caption = "Courter Frequncies with heritable female preferences",
+      row.names = TRUE)
+```
+
+Evolving female preferences allow variation to be maintained.
+
+### Parenting + Heritable Female Preferences
+
+Here, the female preference has unlinked additive genetic variance that is inherited. The traits begin as uncorrelated and are not pleiotropic (i.e., they have different genes underlying them). A threshold is set in the first generation that determines the switch point for when females prefer parents or non-parents. This threshold does not change over the generations. Only non-parental males can be sneakers, and when females choose to mate with non-parents, the nest has a 10% survival rate.
+
+```{r parent_pref_nogenetics,echo=FALSE}
+ppref<-plot.parent.reps(pattern="^parent-pref-nogenetics_\\d+_summary.txt",cols)
+```
+```{r parent_pref_unlinked_table, echo=FALSE}
+ppref.freqs<-get.parent.freqs(ppref)
+kable(ppref.freqs,caption = "Parent Frequncies with heritable female preferences",
+      row.names = TRUE)
+```
+
+Evolving female preferences maintain variation, although parental traits can lead to population crashes (in 3 of the 10 reps).
+
+### Courthip and Parenting + Heritable Female Preferences
+
+Here, the female preference has unlinked additive genetic variance that is inherited. The traits begin as uncorrelated and are not pleiotropic (i.e., they have different genes underlying them). A threshold is set in the first generation that determines the switch point for when females prefer courters or non-courters. This threshold does not change over the generations. Only non-parental males are sneakers, and when females choose to mate with non-parents, the nest has a 10% survival rate.
+
+```{r unlinked_parent_courtship_pref,echo=FALSE}
+pcpref<-plot.pc.reps(pattern="^parent-courter-pref-nogenetics_\\d+_summary.txt",cols)
+```
+```{r unlinked_pc_pref_plotMorphs,echo=FALSE}
+plot.morphs.reps(pcpref,cols2)
+```
+```{r unlinked_pc_pref_table,echo=FALSE}
+pcpref.freqs<-get.morph.freqs(pcpref)
+kable(pcpref.freqs,caption="Morph Frequencies with heritable preferences",
+      row.names=TRUE)
+```
+
+Again, evolving preferences maintain variation. 2 of the 10 populations crashed, though.
 
 <!-- ## Linked additive genetic variance -->
 
