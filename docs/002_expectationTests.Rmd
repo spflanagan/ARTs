@@ -1,15 +1,19 @@
 ---
 title: "Initial ARTs Results"
-output: html_document
 author: "Sarah P. Flanagan"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-
+output:
+  pdf_document: default
+  html_document: default
+header-includes: #allows you to add in your own Latex packages
+- \usepackage{float} #use the 'float' package
+always_allow_html: yes
 ---
 
 The purpose of this model is to understand how genetic architectures of alternative reproductive tactics impact their maintenance in populations. I'm using an individual-based simulation model with different selection scenarios, types of alternative tactics, and genetic architectures (genome-wide additive genetic variance, supergenes, expression networks) To test the model and make sure that everything has been implemented correctly, I'm first testing to ensure that the model produces the expected results without the genetic architectures.
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H")
 knitr::opts_knit$set(root.dir='../results/')
 ```
 ```{r, echo=FALSE}
@@ -39,7 +43,13 @@ cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
 
 ## Overview of the model 
 
-Males can be courters or not-courters and parents or not-parents. When the model is run with both traits, this results in four possible morphs: courter/parent, courter/not-parent, not-courter/parent, and not-courter/not-parent. In each generation, the population follows the following timeline:
+Males can be courters or not-courters and parents or not-parents. When the model is run with both traits, this results in four possible morphs: courter/parent, courter/not-parent, not-courter/parent, and not-courter/not-parent. In each generation, the population follows the following timeline: 
+
+1. Females choose a nest
+2. Males fertilize eggs
+3. Nests survive or die
+4. Viability selection on progeny
+5. Stochastic survival to adulthood
 
 ```{r diagram}
 library(DiagrammeR)
@@ -77,19 +87,21 @@ render_graph(graph)
 ```
 
 
-### Choosing a nest
+### 1. Choosing a nest
 
 A female samples 50 males and chooses a male to nest with based on his courtship trait. If there are no courtship traits in the model, she chooses based on the male's parental trait. If she does not encouter an acceptable male, she does not nest. If she encounters multiple equally-acceptable males, she randomly selects one of them.  
 
-### Fertilization
+### 2. Fertilization
 
-Once a female decides to nest, up to three males can fertilize the nest. Courters and parental males can contribute more sperm than non-courter and non-parental males -- $r_{courter}=r_{parent}=8$ and $r_{non-courter}=r_{non-parent}=4$. A courter/non-parent has $r_{non-parent}$ and a non-courter/parent has $r_{parent}$. The male with whom the female is nesting gets $r_{parent}/\Sigma{n_{sperm}}$ and additional sneaker males (up to 2) get $(r_{non-parent}*0.5/\Sigma{n_{sperm}})$, where $\Sigma{n_{sperm}}$ is the total number of sperm contributed by all of the males, weighted by the sperm competition factor (0.5 is the default for all males except the nesting male). So, when a female mates with one courter and two sneakers, $\Sigma{n_{sperm}}$ = $r_{courter}$ + 2$*$(0.5$*$$r_{sneaker}$), where $r_{courter}$ = 8 and $r_{sneaker}$ = 4, therefore $\Sigma{n_{sperm}}$ = `r sum(8,rep((0.5*4),2))`. 
+Once a female decides to nest, up to three males can fertilize the nest. Courters and parental males can contribute more sperm than non-courter and non-parental males: $r_{courter}=r_{parent}=8$ and $r_{non-courter}=r_{non-parent}=4$. A courter/non-parent has $r_{non-parent}$ and a non-courter/parent has $r_{parent}$. The male with whom the female is nesting gets $r_{parent}/\Sigma{n_{sperm}}$ and additional sneaker males (up to 2) get $(r_{non-parent}*0.5/\Sigma{n_{sperm}})$, where $\Sigma{n_{sperm}}$ is the total number of sperm contributed by all of the males, weighted by the sperm competition factor (0.5 is the default for all males except the nesting male). So, when a female mates with one courter and two sneakers, $\Sigma{n_{sperm}}$ = $r_{courter}$ + 2$*$(0.5$*$$r_{sneaker}$), where $r_{courter}$ = 8 and $r_{sneaker}$ = 4, therefore $\Sigma{n_{sperm}}$ = `r sum(8,rep((0.5*4),2))`. 
 
-### Nest Survival
+That being said, every time a male mates he uses his sperm, so after one mating where a courter fertilizes 50% of the female's 4 eggs, he only has 6 sperm for his next mating.
+
+### 3. Nest Survival
 
 Before the babies can survive, the nest has to survive. This step is only relevant when parental traits are in the model - if only the courtship trait is specified, then all progeny in the nest survive at this point. When males have the parental trait, if the female has given eggs to a non-parental male (because she chose based on courtship traits), then the nest has a 10% chance of surviving. If the female has given eggs to a parental male, the nest has a 90% chance of surviving. 
 
-### Viability selection and stochastic survival
+### 4. Viability selection and 5. Stochastic survival
 
 Then the offspring experience viability selection. Courters and parental males are disfavored in viability selection, with a survival probability of `r exp(-0.5/(2*50))`. If an individual is both a courter and a parental male, the survival probability is `r exp(-0.5/(2*50))*exp(-0.5/(2*50))`. Non-courters and non-parental males have survival probabilities of 1. Once viability selection has been imposed, individuals die or survive randomly, and the next generation gets a chance to mate.
 
@@ -180,14 +192,14 @@ In these cases, the traits are encoded by a number (50) of loci, whose alleles c
 
 Females choose nests based on whether the male is a courter or not, and they all prefer courters all of the time (the female preference does not have a genetic basis and does not evolve). The only way that non-courters produce offspring is through sneaking, but all males can be sneakers (both courters and non-courters). Because parental care is not incorporated in this model, all nests survive.
 
-```{r unlinked_courter}
-plot.courter.reps<-function(pattern,cols){
+```{r unlinked_courter,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph (each color represents a different replicate)"}
+plot.courter.reps<-function(pattern,cols,x.lim=c(0,12000)){
   courter.files<-list.files(pattern=pattern)
   #set up colors
   mycols <- colorRampPalette(c("grey",cols["courter"],"black"))(length(courter.files))[2:(1+length(courter.files))]
   #set up an empty plot
   plot(0:1,0:1,bty="L",xlab="Generations",ylab="Frequency of Courting Males",
-       type='n',xlim=c(0,12000),ylim=c(0,1))
+       type='n',xlim=x.lim,ylim=c(0,1))
   #plot each run's output and save it
   s<-lapply(courter.files,function(file){
     summ<-suppressWarnings(read.delim(file))
@@ -220,6 +232,8 @@ courter.final.freqs<-get.courter.freqs(s)
 court.ws<-apply(courter.final.freqs,1,function(rep){ return(c(rep["CourterW"],rep["NonCourterW"]))})
 court.freqs<-apply(courter.final.freqs,1,function(rep){ return(c(rep["CourterFreq"],1-rep["CourterFreq"]))})
 court.eq<-apply(courter.final.freqs,1,function(rep){ if(rep["Generation"]==9999) return("E") else return("N")})
+```
+```{r courter_barplot,eval=FALSE,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Fitnesses of each morph with frequncies in the bars. E below the bars means the rep reached equilibrium, N means it did"}
 #plot the final fitnesses
 b<-barplot(court.ws,beside=TRUE,col=c(alpha(cols["courter"],0.75),alpha("darkgrey",0.75)),ylim=c(0,5),
         names.arg = rep("",10),ylab="Average Fitness",border = NA)
@@ -231,7 +245,6 @@ legend("topright",bty='n',col=c(alpha(cols["courter"],0.75),alpha("darkgrey",0.7
        c("Courter","Non-courter"),pch=15)
 ```
 
-The numbers in the bars are the frequencies of each morph in the final generation, and "E" below a set of bars means that replicate resulted in an equilibrium and "N" means it did not reach an equilibrium.
 
 ```{r courter_table}
 final.freqs<-courter.final.freqs[,-1]
@@ -275,14 +288,14 @@ lapply(t,function(traits){
 
 All females nest with parental males, so the only way non-parental males reproduce is through sneaking. Parental males provide care that allows nests to have a 90% chance of survival. The female preference does not have a genetic basis and does not evolve.
 
-```{r parental_nogenetics, echo=FALSE}
-plot.parent.reps<-function(pattern,cols){
+```{r parental_nogenetics, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph (each color represents a different replicate)"}
+plot.parent.reps<-function(pattern,cols,x.lim=c(0,12000)){
   parent.files<-list.files(pattern=pattern)
   #set up colors
   mycols <- colorRampPalette(c("grey",cols["parent"],"black"))(length(parent.files))[2:(1+length(parent.files))]
   #set up an empty plot
   plot(0:1,0:1,bty="L",xlab="Generations",ylab="Frequency of Parental Males",
-       type='n',xlim=c(0,12000),ylim=c(0,1))
+       type='n',xlim=x.lim,ylim=c(0,1))
   #plot each run's output and save it
   s<-lapply(parent.files,function(file){
     summ<-suppressWarnings(read.delim(file))
@@ -315,6 +328,8 @@ parent.final.freqs<-get.parent.freqs(s)
 parent.ws<-apply(parent.final.freqs,1,function(rep){ return(c(rep["ParentW"],rep["NonParentW"]))})
 parent.freqs<-apply(parent.final.freqs,1,function(rep){ return(c(rep["ParentFreq"],1-rep["ParentFreq"]))})
 parent.eq<-apply(parent.final.freqs,1,function(rep){ if(rep["Generation"]==9999) return("E") else return("N")})
+```
+```{r parent_barplot,eval=FALSE,echo=FALSE,fig.cap="Fitnesses of each morph with frequncies in the bars. E below a set of bars means that replicate resulted in an equilibrium and N means it did not reach an equilibrium."}
 #plot the final fitnesses
 b<-barplot(parent.ws,beside=TRUE,col=c(alpha(cols["parent"],0.75),alpha("darkgrey",0.75)),ylim=c(0,5),
         names.arg = rep("",10),ylab="Average Fitness",border = NA)
@@ -325,8 +340,6 @@ text(x=-1,y=-0.175,label="Equilibrium:",xpd=T)
 legend("topright",bty='n',col=c(alpha(cols["parent"],0.75),alpha("darkgrey",0.75)),
        c("Parent","Non-parent"),pch=15)
 ```
-
-The numbers in the bars are the frequencies of each morph in the final generation, and "E" below a set of bars means that replicate resulted in an equilibrium and "N" means it did not reach an equilibrium.
 
 ```{r parent_table}
 final.freqs<-parent.final.freqs[,-1]
@@ -340,8 +353,8 @@ kable(final.freqs,caption = "Frequency of parents in final generation",
 
 Females choose nests based on males' courtship trait (they all only nest with courting males, and the female preference does not have a genetic basis and does not evolve), and then the survival of the nest depends on whether the courting male is also a parental male. If the chosen male is a parental male, the nest has a 90% chance of survival. Otherwise, it only has a 10% chance. Non-courters only reproduce through sneaking.
 
-```{r parentalCourtship_nogenetics, echo=FALSE,fig.cap="Frequency of the two morphs (courter = green, parent = blue)"}
-plot.pc.reps<-function(pattern,cols){
+```{r parentalCourtship_nogenetics, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the two morphs (courter = green, parent = blue)"}
+plot.pc.reps<-function(pattern,cols,x.lim=c(0,12000)){
   pc.files<-list.files(pattern=pattern)
   #set up colors
   parent.cols <- colorRampPalette(c("grey",cols["parent"],"black"))(length(pc.files))[2:(1+length(pc.files))]
@@ -349,7 +362,7 @@ plot.pc.reps<-function(pattern,cols){
   #set up an empty plot
   par(mar=c(4,4,4,4))
   plot(0:1,0:1,bty="U",xlab="Generations",ylab="Frequency of Courter Males",
-       type='n',xlim=c(0,12000),ylim=c(0,1))
+       type='n',xlim=x.lim,ylim=c(0,1))
   axis(4)
   mtext("Frequency of Parental Males",4,line=2)
   #plot each run's output and save it
@@ -374,7 +387,8 @@ The different runs have different outcomes.
 
 Let's look at the morph frequencies.
 
-```{r courtParent_morphfreqs,echo=FALSE}
+
+```{r courtParent_morphfreqs,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep"}
 plot.morphs.reps<-function(s,cols2){
   par(mfrow=c(2,5),mar=c(2,2,2,1),oma=c(2,2,2,2))
   lapply(s,function(summ){
@@ -413,7 +427,7 @@ kable(pc.final.freqs,caption = "Frequency of morphs in final generation",
       row.names = TRUE)
 ```
 
-Multiple morphs are maintained in `r nrow(pc.final.freqs)-length(unlist(apply(pc.final.freqs,1,grep,pattern="1")))` of the `r nrow(pc.final.freqs)` replicates, and those morphs contain either a parent or a courter. 
+Multiple morphs are maintained in `r nrow(pc.final.freqs)-length(unlist(apply(pc.final.freqs,1,grep,pattern="1")))` of the `r nrow(pc.final.freqs)` replicates, and those morphs contain either a parent or a courter. However, one of those reps with variation actually crashed (second panel, top row).
 
 ```{r courtParent_rs,echo=FALSE,eval=FALSE}
 ymax<-round(max(pcng.sum$ParentW,pcng.sum$NonParentW,pcng.sum$CourterW,pcng.sum$NonCourterW)+1)
@@ -447,7 +461,7 @@ text(x=-0.1,y=c(0,1),c("Non-Parent","Parent"),xpd=TRUE,srt=90)
 
 In this case, the female preference is based on the frequency of the courtship morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; all nests survive since parental care is not incorporated in this model, and courters and parental males are disfavored in viability selection.
 
-```{r courtship_nogenetics_nfds,echo=FALSE}
+```{r courtship_nogenetics_nfds,echo=FALSE, fig.cap="Frequency of courter morph"}
 cnng<-plot.courter.reps(pattern="^courter-nogenetics-nfds_\\d+_summary.txt",cols)
 ```
 ```{r courtship_nfds_unlinked_table,echo=FALSE}
@@ -462,7 +476,7 @@ With negative frequency dependent preferences, both courters and non-courters ar
 
 In this case, the female preference is based on the frequency of the parental morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; nests given to parents have a 90% chance of survival and a 10% chance of survival if given to non-parents, and courters and parental males are disfavored in viability selection.
 
-```{r parent_nogenetics_nfds,echo=FALSE}
+```{r parent_nogenetics_nfds,echo=FALSE, fig.cap="Frequency of parental morph"}
 pnng<-plot.parent.reps(pattern="^parent-nogenetics-nfds_\\d+_summary.txt",cols)
 ```
 ```{r parent_nfds_unlinked_table, echo=FALSE}
@@ -471,16 +485,23 @@ kable(pnng.freqs,caption = "Parent Frequncies with negative frequency dependent 
       row.names = TRUE)
 ```
 
-When negative frequency dependent preferences are acting on the parental traits, the population crashes. 
+When negative frequency dependent preferences are acting on the parental traits, the population crashes. If we zoom in on the actual timeframes until population crashes, it becomes clear that in all cases when population crashes occur the frequency of parental males was high or had just been very high.
+
+```{r replot_parentnfds,echo=FALSE, fig.cap="Frequency of parental morph (black dashed line is at frequency of 0.5)"}
+pnng<-plot.parent.reps(pattern="^parent-nogenetics-nfds_\\d+_summary.txt",cols,x.lim=c(0,50))
+abline(h=0.5,lty=2,lwd=2)
+```
+
+Thus, the population crashes are likely due to the very low reproductive potential of the non-parental males (they can contribute 4 sperm instead of the parental males' 8) and the fact that when parental males are more frequent, females prefer non-parental males, and nests left with non-parental males have a 10% survival rate. This low reproductive output from non-parental males means that the population size shrinks, and because the male trait is heritable, the frequency of the parental morph doesn't dip below 0.5 (or at least not often), so females continue to prefer non-parental males.
 
 ### Courtship + Parenting + Negative Frequency Dependent Selection
 
 In this case, the female preference is based on the frequency of the courtship morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; parental males' nests survive with a probability of 90% and non-parental males' nests survive with a probability of 10%, and courters and parental males are disfavored in viability selection.
 
-```{r unlinked_parent_courtship_nfds,echo=FALSE}
+```{r unlinked_parent_courtship_nfds,echo=FALSE, fig.cap="Frequency of courter and parental males"}
 pcnng<-plot.pc.reps(pattern="^parent-courter-nogenetics-nfds_\\d+_summary.txt",cols)
 ```
-```{r unlinked_pcnfds_plotMorphs,echo=FALSE}
+```{r unlinked_pcnfds_plotMorphs,echo=FALSE, fig.cap="Frequency of four morphs per replicate"}
 plot.morphs.reps(pcnng,cols2)
 ```
 ```{r unlinked_pcnfds_table,echo=FALSE}
@@ -491,11 +512,22 @@ kable(pcnng.freqs,caption="Morph Frequencies with negative frequency dependent p
 
 When negative frequency dependent preferences are acting on the courtship traits and there are parent traits as well, the population crashes. 
 
+```{r replot_pcnfds,echo=FALSE, fig.cap="Frequency of parental and courter traits (black dashed line is at frequency of 0.5)"}
+par(mfrow=c(1,2),oma=c(2,2,1,2),mar=c(4,4,1,1))
+pcnng<-plot.parent.reps(pattern="^parent-courter-nogenetics-nfds_\\d+_summary.txt",cols,x.lim=c(0,100))
+abline(h=0.5,lty=2,lwd=2)
+pcnng<-plot.courter.reps(pattern="^parent-courter-nogenetics-nfds_\\d+_summary.txt",cols,x.lim=c(0,100))
+abline(h=0.5,lty=2,lwd=2)
+
+```
+
+It appears that a correlation arises between the two morphs, so that preferences for the courter traits result the same dynamics as seen when females directly prefer parental males (above).
+
 ### Courtship + Heritable Female Preferences
 
 Here, the female preference has unlinked additive genetic variance that is inherited. The traits begin as uncorrelated and are not pleiotropic (i.e., they have different genes underlying them). A threshold is set in the first generation that determines the switch point for when females prefer courters or non-courters. This threshold does not change over the generations. All males can be sneakers, but the male who females choose to nest with get a first male advantage.
 
-```{r courtship_pref_nogenetics,echo=FALSE}
+```{r courtship_pref_nogenetics,echo=FALSE, fig.cap="Courter frequencies"}
 cpref<-plot.courter.reps(pattern="^courter-pref-nogenetics_\\d+_summary.txt",cols)
 ```
 ```{r courtship_pref_unlinked_table,echo=FALSE}
@@ -504,13 +536,13 @@ kable(cpref.freqs,caption = "Courter Frequncies with heritable female preference
       row.names = TRUE)
 ```
 
-Evolving female preferences allow variation to be maintained.
+Evolving female preferences allow variation to be maintained in `r nrow(cpref.freqs[cpref.freqs$CourterFreq<1,])` of `r nrow(cpref.freqs)` replicates.
 
 ### Parenting + Heritable Female Preferences
 
 Here, the female preference has unlinked additive genetic variance that is inherited. The traits begin as uncorrelated and are not pleiotropic (i.e., they have different genes underlying them). A threshold is set in the first generation that determines the switch point for when females prefer parents or non-parents. This threshold does not change over the generations. Only non-parental males can be sneakers, and when females choose to mate with non-parents, the nest has a 10% survival rate.
 
-```{r parent_pref_nogenetics,echo=FALSE}
+```{r parent_pref_nogenetics,echo=FALSE, fig.cap="Parent frequencies"}
 ppref<-plot.parent.reps(pattern="^parent-pref-nogenetics_\\d+_summary.txt",cols)
 ```
 ```{r parent_pref_unlinked_table, echo=FALSE}
@@ -519,16 +551,16 @@ kable(ppref.freqs,caption = "Parent Frequncies with heritable female preferences
       row.names = TRUE)
 ```
 
-Evolving female preferences maintain variation, although parental traits can lead to population crashes (in 3 of the 10 reps).
+Evolving female preferences maintain variation, although parental traits can lead to population crashes (in `r nrow(ppref.freqs[ppref.freqs$Generation < 9999,])` of the `r nrow(ppref.freqs)` reps). In suriving populations, variation was maintained in `r nrow(ppref.freqs[ppref.freqs$ParentFreq<1,])` of `r nrow(ppref.freqs)` replicates.
 
 ### Courthip and Parenting + Heritable Female Preferences
 
 Here, the female preference has unlinked additive genetic variance that is inherited. The traits begin as uncorrelated and are not pleiotropic (i.e., they have different genes underlying them). A threshold is set in the first generation that determines the switch point for when females prefer courters or non-courters. This threshold does not change over the generations. Only non-parental males are sneakers, and when females choose to mate with non-parents, the nest has a 10% survival rate.
 
-```{r unlinked_parent_courtship_pref,echo=FALSE}
+```{r unlinked_parent_courtship_pref,echo=FALSE, fig.cap="Parent and courter frequencies"}
 pcpref<-plot.pc.reps(pattern="^parent-courter-pref-nogenetics_\\d+_summary.txt",cols)
 ```
-```{r unlinked_pc_pref_plotMorphs,echo=FALSE}
+```{r unlinked_pc_pref_plotMorphs,echo=FALSE, fig.cap="Frequency of four morphs per rep"}
 plot.morphs.reps(pcpref,cols2)
 ```
 ```{r unlinked_pc_pref_table,echo=FALSE}
@@ -537,7 +569,7 @@ kable(pcpref.freqs,caption="Morph Frequencies with heritable preferences",
       row.names=TRUE)
 ```
 
-Again, evolving preferences maintain variation. 2 of the 10 populations crashed, though.
+Again, evolving preferences maintain variation in `r length(apply(pcpref.freqs,1,function(r){ length(r[r==0])})[apply(pcpref.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(pcpref.freqs)`. `r length(unlist(lapply(pcpref,nrow))[lapply(pcpref,nrow) < 9999])` of the `r length(pcpref)` populations crashed, though.
 
 <!-- ## Linked additive genetic variance -->
 
