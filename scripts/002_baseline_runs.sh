@@ -10,7 +10,7 @@ NUMREPS=10
 NO_GENETICS=true
 CONDITIONAL=false
 COND_NFDS=false
-GENETIC_ARCH=false
+GENETIC_ARCH=true
 EVOLVING=false
 
 ## move to the correct directories - now you can run it from anywhere ##
@@ -64,13 +64,17 @@ for i in `seq 1 $NUMREPS`; do
 
 	#with a genetic architecture
 	if [ "$GENETIC_ARCH" = true ]; then
-		./ARTs --courter -b ../../results/courter_${i}
-		./ARTs --parent -b ../../results/parent_${i}
-		./ARTs --courter --parent -b ../../results/parent-courter_${i}
+		./ARTs --courter -b ../../results/courter_${i} --verbose
+		./ARTs --parent -b ../../results/parent_${i} --verbose
+		./ARTs --courter --parent -b ../../results/parent-courter_${i} --verbose
 		 
-		./ARTs --courter --freq-dependent-preference -b ../../results/courter_nfds_${i}
-		./ARTs --parent --freq-dependent-preference -b ../../results/parent_nfds_${i}
-		./ARTs --courter --parent --freq-dependent-preference -b ../../results/parent-courter_nfds_${i}
+		./ARTs --courter --freq-dependent-preference -b ../../results/courter_nfds_${i} --verbose
+		./ARTs --parent --freq-dependent-preference -b ../../results/parent_nfds_${i} --verbose
+		./ARTs --courter --parent --freq-dependent-preference -b ../../results/parent-courter_nfds_${i} --verbose
+
+		./ARTs --courter --independent-pref -b ../../results/courter-pref_${i} --verbose
+	    ./ARTs --parent --independent-pref -b ../../results/parent-pref_${i} --verbose
+		./ARTs --courter --independent-pref --parent -b ../../results/parent-courter-pref_${i} --verbose
 	fi
 
 	#Evolving thresholds
