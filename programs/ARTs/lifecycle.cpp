@@ -1,5 +1,5 @@
 //Author: Sarah P. Flanagan (spflanagan.phd@gmail.com)
-//Last Updated: 2 March 2017
+//Last Updated: 12 March 2018
 //Date Started: 2 March 2017
 //Purpose: model alternative reproductive tactics with explicit genetic architectures underlying traits and preferences.
 
@@ -75,7 +75,7 @@ int main(int argc, char*argv[])
 	summary_output_name = global_params.base_name + "_summary.txt";
 	summary_output.open(summary_output_name);
 	summary_output << "Generation\tPop\tParentThresh\tParentFreq\tParentW\tNonParentW\tCourterThresh\tCourterFreq\tCourterW\tNonCourterW"
-		<< "\tFreqNcNp\tFreqCNp\tFreqNcP\tFreqCP";
+		<< "\tFreqNcNp\tFreqCNp\tFreqNcP\tFreqCP\tPrefThresh\tPrefFreq";
 	for (i = 0; i < global_params.num_chrom; i++)
 	{
 		for (ii = 0; ii < global_params.num_markers; ii++)

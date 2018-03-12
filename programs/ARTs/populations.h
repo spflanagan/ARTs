@@ -1204,6 +1204,23 @@ public:
 		freqT = freqT / count;
 		return freqT;
 	}
+	double calc_freq_pref(parameters gp)
+	{
+		int j;
+		double freqT, count;
+		freqT = count = 0;
+		for (j = 0; j < gp.carrying_capacity; j++)
+		{
+			if (adults[j].alive && adults[j].female)
+			{
+				if (adults[j].female_pref==1)
+					freqT++;
+				count++;
+			}
+		}
+		freqT = freqT / count;
+		return freqT;
+	}
 	vector<double> calc_freq_morphs(parameters gp)
 	{
 		int j,male_count;
@@ -2916,6 +2933,13 @@ public:
 		}
 		else
 			summary_output << "\tNA\tNA\tNA\tNA";
+		if (gp.ind_pref || gp.cor_prefs)
+		{
+			dtemp = calc_freq_pref(gp);
+			summary_output << '\t' << pref_thresh << '\t' << dtemp;
+		}
+		else
+			summary_output << "\tNA\tNA";
 		output_allele_freqs(gp, summary_output);
 		summary_output << std::flush;
 	}
