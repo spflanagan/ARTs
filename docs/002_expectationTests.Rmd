@@ -390,7 +390,8 @@ Let's look at the morph frequencies.
 
 ```{r courtParent_morphfreqs,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep"}
 plot.morphs.reps<-function(s,cols2){
-  par(mfrow=c(2,5),mar=c(2,2,2,1),oma=c(2,2,2,2))
+  nrows<-length(s)/5
+  par(mfrow=c(nrows,5),mar=c(2,2,2,1),oma=c(2,2,2,2))
   lapply(s,function(summ){
     plot(0:1,0:1,bty="L",xlab="",ylab="",
        type='n',xlim=c(0,12000),ylim=c(0,1))
@@ -409,15 +410,13 @@ plot.morphs.reps<-function(s,cols2){
 plot.morphs.reps(s,cols2)
 ```
 
-The second panel in the top row shows a run where the population crashed after 12 generations.
-
-We can look at the final frequencies in a table as well:
+In some of the runs the population crashed after few generations. This is obvious when looking at the the final frequencies in a table as well:
 
 ```{r unlinked_courterParent_final}
 get.morph.freqs<-function(s){
   pc.final.freqs<-do.call(rbind,lapply(s,function(dat){
     last<-dat[nrow(dat),]
-    return(last[,11:14])
+    return(last[,c(1,11:14)])
   }))
   rownames(pc.final.freqs)<-unlist(lapply(seq(1:nrow(pc.final.freqs)),function(n){paste("Rep",n,sep="")}))
   return(pc.final.freqs)
@@ -470,7 +469,7 @@ kable(cnng.freqs,caption = "Courter Frequncies with negative frequency dependent
       row.names = TRUE)
 ```
 
-With negative frequency dependent preferences, both courters and non-courters are maintained in the population.
+With negative frequency dependent preferences, both courters and non-courters are maintained in the population - although in some cases the population crashes early on.
 
 ### Parenting + Negative Frequency Dependent Selection
 
@@ -538,6 +537,38 @@ kable(cpref.freqs,caption = "Courter Frequncies with heritable female preference
 
 Evolving female preferences allow variation to be maintained in `r nrow(cpref.freqs[cpref.freqs$CourterFreq<1,])` of `r nrow(cpref.freqs)` replicates.
 
+```{r courtship_prefs,echo=FALSE,fig.cap="Frequencies of preferences for courters when parenting traits do not exist"}
+plot.pref.freqs<-function(pref,col,x.lim=c(0,12000),ylabel="Frequency of Preference for Courter"){
+   mycols <- colorRampPalette(col)(length(pref))[2:(1+length(pref))]
+  #set up an empty plot
+  plot(0:1,0:1,bty="L",xlab="Generations",ylab=ylabel,
+       type='n',xlim=x.lim,ylim=c(0,1))
+  #plot each run's output and save it
+  m<-mapply(function(summ,n){
+    points(summ$Generation,summ$PrefFreq,col=alpha(mycols[n],0.5),
+           lwd=2,type="l")
+  },pref,c(1:length(pref)))
+  text(x=10000,y=1.1,xpd=TRUE,"Equilibrium\nevaluated")
+  clip(x1 = 0,x2=12000,y1=-0.1,y2=1.04)
+  abline(v=10000,lty=2,lwd=2)
+}
+plot.pref.freqs(cpref,col=cols["cpref"])
+
+get.pref.freqs<-function(pref){
+  pref.final.freqs<-do.call(rbind,lapply(pref,function(dat){
+    last<-dat[nrow(dat),]
+    return(last[,c("Generation","PrefFreq","PrefThresh")])
+  }))
+  rownames(pref.final.freqs)<-unlist(lapply(seq(1:nrow(pref.final.freqs)),function(n){paste("Rep",n,sep="")}))
+  return(pref.final.freqs)
+}
+cpref.freqs<-get.pref.freqs(cpref)
+kable(cpref.freqs,caption = "Frequncies of Preference for Courters",
+      row.names = TRUE)
+```
+
+Of the `r nrow(cpref.freqs[cpref.freqs$Generation>=9999,])` populations that survived, `r nrow(cpref.freqs[cpref.freqs$Generation>=9999 & cpref.freqs$PrefFreq==1,])` were fixed for a preference for courters and `r nrow(cpref.freqs[cpref.freqs$Generation>=9999 & cpref.freqs$PrefFreq==0,])` were fixed for a preference against courters. `r nrow(cpref.freqs[cpref.freqs$Generation>=9999 & cpref.freqs$PrefFreq>0 & cpref.freqs$PrefFreq<1,])` maintained variation in female preferences.
+
 ### Parenting + Heritable Female Preferences
 
 Here, the female preference has unlinked additive genetic variance that is inherited. The traits begin as uncorrelated and are not pleiotropic (i.e., they have different genes underlying them). A threshold is set in the first generation that determines the switch point for when females prefer parents or non-parents. This threshold does not change over the generations. Only non-parental males can be sneakers, and when females choose to mate with non-parents, the nest has a 10% survival rate.
@@ -552,6 +583,16 @@ kable(ppref.freqs,caption = "Parent Frequncies with heritable female preferences
 ```
 
 Evolving female preferences maintain variation, although parental traits can lead to population crashes (in `r nrow(ppref.freqs[ppref.freqs$Generation < 9999,])` of the `r nrow(ppref.freqs)` reps). In suriving populations, variation was maintained in `r nrow(ppref.freqs[ppref.freqs$ParentFreq<1,])` of `r nrow(ppref.freqs)` replicates.
+
+```{r parent_prefs,echo=FALSE,fig.cap="Frequencies of Preferences for Parents when no courtship traits exist"}
+plot.pref.freqs(ppref,cols["ppref"],ylabel = "Frequency of Preference for Parents")
+
+ppref.freqs<-get.pref.freqs(ppref)
+kable(ppref.freqs,caption = "Frequncies of Preference for Parents",
+      row.names = TRUE)
+```
+
+Of the `r nrow(ppref.freqs[ppref.freqs$Generation>=9999,])` populations that survived, `r nrow(ppref.freqs[ppref.freqs$Generation>=9999 & ppref.freqs$PrefFreq==1,])` were fixed for a preference for parents and `r nrow(ppref.freqs[ppref.freqs$Generation>=9999 & ppref.freqs$PrefFreq==0,])` were fixed for a preference against parents. `r nrow(ppref.freqs[ppref.freqs$Generation>=9999 & ppref.freqs$PrefFreq>0 & ppref.freqs$PrefFreq<1,])` maintained variation in female preferences.
 
 ### Courthip and Parenting + Heritable Female Preferences
 
@@ -570,6 +611,16 @@ kable(pcpref.freqs,caption="Morph Frequencies with heritable preferences",
 ```
 
 Again, evolving preferences maintain variation in `r length(apply(pcpref.freqs,1,function(r){ length(r[r==0])})[apply(pcpref.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(pcpref.freqs)`. `r length(unlist(lapply(pcpref,nrow))[lapply(pcpref,nrow) < 9999])` of the `r length(pcpref)` populations crashed, though.
+
+```{r courtParent_prefs,echo=FALSE,fig.cap="Frequency of Preference of Courters with both parents and courters in the population"}
+plot.pref.freqs(pcpref,cols["cpref"],ylabel = "Frequency of Preference for Courters")
+
+pcpref.freqs<-get.pref.freqs(pcpref)
+kable(pcpref.freqs,caption = "Frequncies of Preference for Courters",
+      row.names = TRUE)
+```
+
+Of the `r nrow(pcpref.freqs[pcpref.freqs$Generation>=9999,])` populations that survived, `r nrow(pcpref.freqs[pcpref.freqs$Generation>=9999 & pcpref.freqs$PrefFreq==1,])` were fixed for a preference for courters and `r nrow(pcpref.freqs[pcpref.freqs$Generation>=9999 & pcpref.freqs$PrefFreq==0,])` were fixed for a preference against courters. `r nrow(pcpref.freqs[pcpref.freqs$Generation>=9999 & pcpref.freqs$PrefFreq>0 & pcpref.freqs$PrefFreq<1,])` maintained variation in female preferences.
 
 <!-- ## Linked additive genetic variance -->
 

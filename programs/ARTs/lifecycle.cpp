@@ -48,7 +48,7 @@ int main(int argc, char*argv[])
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
 		global_params.parent_trait= false;
 		global_params.court_trait = true;
-		global_params.no_genetics = true;
+		global_params.no_genetics = false;
 		global_params.carrying_capacity = 1000;
 		global_params.num_init_gen = 5;
 		global_params.num_exp_gen = 2;

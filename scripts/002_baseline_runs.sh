@@ -6,11 +6,11 @@
 ### This script will run the programs in the background and produce a log file in the logs/ directory ###
 
 ###----DETERMINE WHAT SHOULD RUN----###
-NUMREPS=10
+NUMREPS=20
 NO_GENETICS=true
 CONDITIONAL=false
 COND_NFDS=false
-GENETIC_ARCH=true
+GENETIC_ARCH=false
 EVOLVING=false
 
 ## move to the correct directories - now you can run it from anywhere ##
