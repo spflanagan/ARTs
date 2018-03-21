@@ -10,6 +10,7 @@
 #include <vector>
 #include <time.h>
 #include <algorithm>
+#include <chrono>
 #include "random_numbers.h"
 #include "populations.h"
 #include "classes.h"
@@ -39,22 +40,22 @@ int main(int argc, char*argv[])
 			return 0;
 		}
 		else
-			cout << "\nRunning the ARTs model with output to base name " << global_params.base_name << '\n';
+			std::cout << "\nRunning the ARTs model with output to base name " << global_params.base_name << '\n';
 	}
 	else
 	{
-		cout << "\nRunning the ARTs model with default parameters.\n";
+		std::cout << "\nRunning the ARTs model with default parameters.\n";
 		global_params.set_defaults();
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
 		global_params.parent_trait= false;
 		global_params.court_trait = true;
-		global_params.no_genetics = false;
-		global_params.carrying_capacity = 1000;
+		global_params.no_genetics = true;
 		global_params.num_init_gen = 5;
 		global_params.num_exp_gen = 2;
 		global_params.base_name = "../../results/testing";
 		global_params.dependent_params();
-		global_params.verbose = true;
+		global_params.verbose = false;
+		global_params.optimize = true;
 	}
 	
 	//output
@@ -83,7 +84,8 @@ int main(int argc, char*argv[])
 	}		
 
 	//Initialize
-	cout << "\nInitializing " << global_params.num_pops << " populations.\n" << std::flush;
+	std::cout << "\nInitializing " << global_params.num_pops << " populations.\n" << std::flush;
+	std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 	for (i = 0; i < global_params.num_pops; i++)
 	{
 		pops.push_back(population());
@@ -97,7 +99,7 @@ int main(int argc, char*argv[])
 				return 0;
 			else
 			{
-				cout << "\nInput integer to close dialogue\n";
+				std::cout << "\nInput integer to close dialogue\n";
 				cin >> ii;
 				return ii;
 			}
@@ -108,13 +110,13 @@ int main(int argc, char*argv[])
 		{
 			pops[i].d_parentfreq.push_back(pops[i].calc_freq_parent(global_params));
 			if (global_params.verbose)
-				cout << "\n\t" << pops[i].d_parentfreq[0] << " parents" << std::flush;
+				std::cout << "\n\t" << pops[i].d_parentfreq[0] << " parents" << std::flush;
 		}
 		if (global_params.court_trait)
 		{
 			pops[i].d_courterfreq.push_back(pops[i].calc_freq_courter(global_params));
 			if (global_params.verbose)
-				cout << "\n\t" << pops[i].d_courterfreq[0] << " courters" << std::flush;
+				std::cout << "\n\t" << pops[i].d_courterfreq[0] << " courters" << std::flush;
 		}
 		eq_reached.push_back(false);
 		//output QTL info
@@ -132,9 +134,13 @@ int main(int argc, char*argv[])
 	}
 	global_params.output_parameters();
 	qtlinfo_output.close();
+	std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
+	if (global_params.optimize)
+		std::cout << "\n   Initialize took " << duration << " seconds.";
 	
 	//Run the program
-	cout << "\nRunning " << global_params.num_init_gen << " initial generations\n" << std::flush;
+	std::cout << "\nRunning " << global_params.num_init_gen << " initial generations\n" << std::flush;
 	for (i = 0; i < global_params.num_init_gen; i++)
 	{
 		for (ii = 0; ii < global_params.num_pops; ii++)
@@ -142,15 +148,15 @@ int main(int argc, char*argv[])
 			if(pops[ii].population_size > 0)
 			{
 				if (global_params.verbose)
-					cout << i << std::flush;
+					std::cout << i << std::flush;
 				else
 				{
 					if (i % 1000 == 0)
-						cout << "\nInitial generation " << i + 1 << " beginning." << std::flush;
+						std::cout << "\nInitial generation " << i + 1 << " beginning." << std::flush;
 				}
 				pops[ii].determine_pop_size(global_params);
 				if (global_params.verbose)
-					cout << ", " << pops[ii].population_size << " adults" << flush;
+					std::cout << ", " << pops[ii].population_size << " adults" << flush;
 				//mating (includes assigning preferences, recombination, and mutation)
 				bool write_to_file = false;
 				string temp_file_name;
@@ -163,27 +169,43 @@ int main(int argc, char*argv[])
 				}
 				else
 					write_to_file = false;*/
+				t1 = std::chrono::high_resolution_clock::now();
 				pops[ii].nest_and_fertilize(global_params, write_to_file, temp_file_name);
-
+				t2 = std::chrono::high_resolution_clock::now();
+				duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
+				if (global_params.optimize)
+					std::cout << "\n   nest_and_fertilize took " << duration << " seconds.";
 				//viability selection
+				t1 = std::chrono::high_resolution_clock::now();
 				pops[ii].viability_selection(global_params);
-
+				t2 = std::chrono::high_resolution_clock::now();
+				duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
+				if (global_params.optimize)
+					std::cout << "\n   viability_selection took " << duration << " seconds.";
 				//output summary stats
 				summary_output << "\n" << i << "\tPop" << ii;
 				pops[ii].output_summary_info(global_params, summary_output);//includes allele freqs and RS
 
 				//stochastic survival
 				//pops[ii].density_regulation(global_params);
+				t1 = std::chrono::high_resolution_clock::now();
 				pops[ii].regulate_popsize(global_params);
+				t2 = std::chrono::high_resolution_clock::now();
+				duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
+				if (global_params.optimize)
+					std::cout << "\n   regulate_popsize took " << duration << " seconds.";
+				//output summary stats
+				summary_output << "\n" << i << "\tPop" << ii;
 				//track frequencies
 				double new_parent, new_courter;
+				t1 = std::chrono::high_resolution_clock::now();
 				if (global_params.parent_trait)
 				{
 					new_parent = pops[ii].calc_freq_parent(global_params);
 					pops[ii].d_parentfreq.push_back((new_parent - parent_freqs[ii]));
 					parent_freqs[ii] = new_parent;
 					if (global_params.verbose)
-						cout << ", " << new_parent << " parents" << std::flush;
+						std::cout << ", " << new_parent << " parents" << std::flush;
 				}
 				if (global_params.court_trait)
 				{
@@ -191,19 +213,23 @@ int main(int argc, char*argv[])
 					pops[ii].d_courterfreq.push_back((new_courter - courter_freqs[ii]));
 					courter_freqs[ii] = new_courter;
 					if (global_params.verbose)
-						cout << ", " << new_courter << " courters" << std::flush;
+						std::cout << ", " << new_courter << " courters" << std::flush;
 				}
+				t2 = std::chrono::high_resolution_clock::now();
+				duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
+				if (global_params.optimize)
+					std::cout << "\n   Calculating frequencies took " << duration << " seconds.";
 			}
 			else
 			{
-				cout << "\nPopulation has crashed at initial generation " << i << '\n' << std::flush;
+				std::cout << "\nPopulation has crashed at initial generation " << i << '\n' << std::flush;
 				summary_output.close();
 				popdyn_output.close();
 				if (command_line)
 					return 0;
 				else
 				{
-					cout << "\nInput integer to close dialogue.\n" << std::flush;
+					std::cout << "\nInput integer to close dialogue.\n" << std::flush;
 					cin >> iii;
 					return 0;
 				}
@@ -211,7 +237,7 @@ int main(int argc, char*argv[])
 			//output population info
 			popdyn_output << '\n' << i << '\t' << ii << '\t' << pops[ii].population_size << '\t' << pops[ii].num_mal << '\t' << pops[ii].num_fem << '\t' << pops[ii].num_progeny << std::flush;
 			if(global_params.verbose)
-				cout << endl;
+				std::cout << endl;
 		}	
 	}
 	//calc variance in change in frequencies
@@ -244,12 +270,13 @@ int main(int argc, char*argv[])
 		}
 	}
 
-	cout << "\nEvaluating equilibrium" << std::flush;
+	std::cout << "\nEvaluating equilibrium" << std::flush;
 	num_eq_tries = 0;
 	trait_output.open(trait_output_name);
 	trait_output << "Pop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
 	while (num_eq_tries < global_params.num_exp_gen)
 	{
+		t1 = std::chrono::high_resolution_clock::now();
 		for (i = 0; i < global_params.num_pops; i++)
 		{
 			if (pops[i].population_size > 0)
@@ -275,11 +302,11 @@ int main(int argc, char*argv[])
 					if (eq_reached[i] == false)//then we try again
 					{
 						if (global_params.verbose)
-							cout << '\n' << i << std::flush;
+							std::cout << '\n' << i << std::flush;
 						else
 						{
 							if (num_eq_tries % 1000 == 0)
-								cout << "\nEquilibrium generation " << num_eq_tries + 1 << " beginning." << std::flush;
+								std::cout << "\nEquilibrium generation " << num_eq_tries + 1 << " beginning." << std::flush;
 						}
 						pops[i].determine_pop_size(global_params);						
 						//mating (includes assiging preferences, recombination, and mutation)
@@ -309,7 +336,7 @@ int main(int argc, char*argv[])
 					}
 					else//output some stuff
 					{
-						cout << "\nEquilibrium reached for population " << i << " at generation " << global_params.num_init_gen + num_eq_tries << std::flush;
+						std::cout << "\nEquilibrium reached for population " << i << " at generation " << global_params.num_init_gen + num_eq_tries << std::flush;
 						pops[i].output_genotypes_vcf(global_params, i);
 						pops[i].output_trait_info(global_params, i, trait_output);
 						num_eq_tries = global_params.num_exp_gen;
@@ -317,7 +344,7 @@ int main(int argc, char*argv[])
 				}
 				else
 				{
-					cout << "\nPopulation has crashed at experimental generation " << num_eq_tries << '\n' << std::flush;
+					std::cout << "\nPopulation has crashed at experimental generation " << num_eq_tries << '\n' << std::flush;
 					summary_output.close();
 					trait_output.close();
 					popdyn_output.close();
@@ -325,7 +352,7 @@ int main(int argc, char*argv[])
 						return 0;
 					else
 					{
-						cout << "\nInput integer to close dialogue.\n" << std::flush;
+						std::cout << "\nInput integer to close dialogue.\n" << std::flush;
 						cin >> ii;
 						return 0;
 					}
@@ -336,13 +363,17 @@ int main(int argc, char*argv[])
 				num_eq_tries++;
 			}
 		}
+		t2 = std::chrono::high_resolution_clock::now();
+		duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
+		if (global_params.optimize)
+			std::cout << "\n   experimental generation " << num_eq_tries << " took " << duration << " seconds.";
 	}
 	//check to see if they reached equilibrium
 	for (i = 0; i < global_params.num_pops; i++)
 	{
 		if (!eq_reached[i])
 		{
-			cout << "\nNo equilibrium could be reached for population " << i << " with population size " << pops[i].population_size << std::flush;
+			std::cout << "\nNo equilibrium could be reached for population " << i << " with population size " << pops[i].population_size << std::flush;
 			pops[i].output_genotypes_vcf(global_params, i);
 			pops[i].output_trait_info(global_params, i, trait_output);
 		}
@@ -353,12 +384,12 @@ int main(int argc, char*argv[])
 	summary_output.close();
 	trait_output.close();
 	popdyn_output.close();
-	cout << "\nDone!\n" << std::flush;
+	std::cout << "\nDone!\n" << std::flush;
 	if (command_line)
 		return 0;
 	else
 	{
-		cout << "\nInput integer to quit.\n" << std::flush;
+		std::cout << "\nInput integer to quit.\n" << std::flush;
 		cin >> i;
 		return 0;
 	}

@@ -527,7 +527,7 @@ public:
 	}
 	void initialize(parameters & gp)
 	{
-		cout << "Initializing a population.\n";
+		std::cout << "Initializing a population.\n";
 		population_size = gp.carrying_capacity;
 		int j, jj, jjj;
 		num_fem = num_mal = 0;
@@ -777,7 +777,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Supergene parameters are insane.";
+				std::cout << "\nERROR: Supergene parameters are insane.";
 				run_program = each_ok;
 			}
 		}
@@ -802,7 +802,7 @@ public:
 			}
 			if (!each_ok)
 			{
-				cout << "\nERROR: Correlated female preference parameters are insane.";
+				std::cout << "\nERROR: Correlated female preference parameters are insane.";
 				run_program = each_ok;
 			}
 		}
@@ -819,7 +819,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Independent female preference parameters are insane.";
+				std::cout << "\nERROR: Independent female preference parameters are insane.";
 				run_program = each_ok;
 			}
 		}
@@ -836,7 +836,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Courtship trait parameters are insane.";
+				std::cout << "\nERROR: Courtship trait parameters are insane.";
 				run_program = each_ok;
 			}
 		}
@@ -853,7 +853,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Parent trait parameters are insane.";
+				std::cout << "\nERROR: Parent trait parameters are insane.";
 				run_program = each_ok;
 			}
 		}
@@ -906,7 +906,7 @@ public:
 			}
 			if (!each_ok)
 			{
-				cout << "\nERROR: Gene network parameters are insane.";
+				std::cout << "\nERROR: Gene network parameters are insane.";
 				run_program = each_ok;
 			}
 		}
@@ -917,7 +917,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Environmental cue parameters are insane.";
+				std::cout << "\nERROR: Environmental cue parameters are insane.";
 				run_program = each_ok;
 			}
 		}
@@ -928,7 +928,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Random mating parameters are insane.";
+				std::cout << "\nERROR: Random mating parameters are insane.";
 				run_program = each_ok;
 			}
 		}
@@ -941,7 +941,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Frequency dependent mate choice is insane.";
+				std::cout << "\nERROR: Frequency dependent mate choice is insane.";
 				run_program = each_ok;
 			}
 		}
@@ -958,7 +958,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Condition dependent mate choice is insane.";
+				std::cout << "\nERROR: Condition dependent mate choice is insane.";
 				run_program = each_ok;
 			}
 		}
@@ -971,7 +971,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Frequency dependent selection on courtship trait is insane.";
+				std::cout << "\nERROR: Frequency dependent selection on courtship trait is insane.";
 				run_program = each_ok;
 			}
 		}
@@ -984,7 +984,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Frequency dependent selection on parent trait is insane.";
+				std::cout << "\nERROR: Frequency dependent selection on parent trait is insane.";
 				run_program = each_ok;
 			}
 		}
@@ -1001,7 +1001,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Condition dependent selection on courtship trait is insane.";
+				std::cout << "\nERROR: Condition dependent selection on courtship trait is insane.";
 				run_program = each_ok;
 			}
 		}
@@ -1018,7 +1018,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Condition dependent selection on parent trait is insane.";
+				std::cout << "\nERROR: Condition dependent selection on parent trait is insane.";
 				run_program = each_ok;
 			}
 		}
@@ -1031,7 +1031,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Conditional courter trait is insane.";
+				std::cout << "\nERROR: Conditional courter trait is insane.";
 				run_program = each_ok;
 			}
 		}
@@ -1044,7 +1044,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Conditional parent trait is insane.";
+				std::cout << "\nERROR: Conditional parent trait is insane.";
 				run_program = each_ok;
 			}
 		}
@@ -1055,7 +1055,7 @@ public:
 				each_ok = false;
 			if (!each_ok)
 			{
-				cout << "\nERROR: Evolving thresholds are insane.";
+				std::cout << "\nERROR: Evolving thresholds are insane.";
 				run_program = each_ok;
 			}
 		}
@@ -1073,7 +1073,7 @@ public:
 				population_size++;
 		}
 		if (population_size == 0)
-			cout << "\nPopulation has crashed!";
+			std::cout << "\nPopulation has crashed!";
 	}
 	void determine_sex_nums(parameters gp)
 	{
@@ -1090,9 +1090,9 @@ public:
 			}
 		}
 		if (num_mal == 0)
-			cout << "\nNo males in the population!";
+			std::cout << "\nNo males in the population!";
 		if (num_fem == 0)
-			cout << "\nNo females in the population!";
+			std::cout << "\nNo females in the population!";
 	}
 
 	//set up male traits
@@ -1892,7 +1892,7 @@ public:
 			adults[j].mate_found = 0;
 		}
 		if(gp.verbose)
-			cout << ", " << num_mal << " males, " << num_fem << " females" << flush;
+			std::cout << ", " << num_mal << " males, " << num_fem << " females" << flush;
 		//mating happens
 		for (j = 0; j < adults.size(); j++)
 		{
@@ -1910,7 +1910,7 @@ public:
 			}
 		}
 		if (gp.verbose)
-			cout <<", and " << fem_ms << " mated" << std::flush;
+			std::cout <<", and " << fem_ms << " mated" << std::flush;
 	}
 	bool choose_nest(int fem_index, vector<int> & male_index, parameters gp)
 	{//females choose one male to give her eggs to.
@@ -2096,7 +2096,7 @@ public:
 					num_prog = num_prog + fecundity;
 				}
 				if ((num_prog > gp.max_fecund) && gp.verbose)
-					cout << "\n\tWARNING:" << num_prog << " were produced.";
+					std::cout << "\n\tWARNING:" << num_prog << " were produced.";
 			}
 		}
 		return first_progeny;
@@ -2210,7 +2210,7 @@ public:
 					}
 					else
 						dSurvProb = 1;
-					//cout<<dSurvProb<<'\n';
+					//std::cout<<dSurvProb<<'\n';
 					drnum1 = genrand();
 					if (drnum1 < dSurvProb)
 					{
@@ -2224,7 +2224,7 @@ public:
 			} // end of j
 		}
 		if (gp.verbose)
-			cout << ", " << ProgAlive << " progeny" << std::flush;
+			std::cout << ", " << ProgAlive << " progeny" << std::flush;
 	}
 
 	//stochastic survival
@@ -2419,7 +2419,7 @@ public:
 		}
 		population_size = num_adults_chosen;
 		if (gp.verbose)
-			cout << ", " << num_adults_chosen << " become adults" << std::flush;
+			std::cout << ", " << num_adults_chosen << " become adults" << std::flush;
 	}
 	
 	void density_regulation(parameters gp)
@@ -2546,21 +2546,21 @@ public:
 				if (adults[j].lifetime_rs > gp.rs_c)
 				{
 					if (adults[j].alive)
-						cout << "\n\tLiving ind. " << j;
+						std::cout << "\n\tLiving ind. " << j;
 					else
-						cout << "\n\tDead ind. " << j;
+						std::cout << "\n\tDead ind. " << j;
 					if (adults[j].female)
-						cout << ", female, had lifetime RS " << adults[j].lifetime_rs;
+						std::cout << ", female, had lifetime RS " << adults[j].lifetime_rs;
 					else
 					{
 						if (adults[j].courter && adults[j].parent)
-							cout << ", courter/parent, had lifetime RS " << adults[j].lifetime_rs;
+							std::cout << ", courter/parent, had lifetime RS " << adults[j].lifetime_rs;
 						if (adults[j].courter && !adults[j].parent)
-							cout << ", courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+							std::cout << ", courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
 						if (!adults[j].courter && adults[j].parent)
-							cout << ", non-courter/parent, had lifetime RS " << adults[j].lifetime_rs;
+							std::cout << ", non-courter/parent, had lifetime RS " << adults[j].lifetime_rs;
 						if (!adults[j].courter && !adults[j].parent)
-							cout << ", non-courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+							std::cout << ", non-courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
 					}
 				}
 			}

@@ -90,7 +90,7 @@ public:
 	double sperm_comp_r, egg_surv_parent, egg_surv_noparent;
 	string base_name;
 	bool court_trait, parent_trait, gene_network, env_cue, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
-	bool supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive;
+	bool supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive,optimize;
 	vector <int> qtl_per_chrom;
 
 	parameters()
@@ -99,7 +99,7 @@ public:
 		num_pops = num_init_gen = num_exp_gen = max_num_mates = int();
 		mutation_rate =recombination_rate = allelic_std_dev = egg_surv_parent = egg_surv_noparent = sperm_comp_r = double();
 		gene_network = env_cue = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
-		random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive =bool();
+		random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive = optimize =bool();
 		qtl_per_chrom = vector<int>();
 	}
 
@@ -147,62 +147,64 @@ public:
 		cond_adj = 0.1;//amount to add/subtract to condition dependent traits (default 0.1)
 		verbose = false; //outputs info about every step during every initial generation -- good for debugging
 		no_genetics = false; //removes genetic architecture, is just unlinked additive genetic variance
+		optimize = false; //if true, it outputs time taken for each step. (default false)
 	}
 
 	void help_message()
 	{
-		cout << "\n\t\tHELP MENU\n";
-		cout << "\nSimulation model of the evolution of alternative reproductive tactics with complex genetic architectures.\n";
-		cout << "Below are the parameters to input to the model. (Defaults in parentheses)\n";
-		cout << "-b:\tBase for output file names (arts)\n";
-		cout << "-K:\tcarrying capacity (1000)\n";
-		cout << "-s:\tnumber of individuals Sampled. (50)\n";
-		cout << "-c:\tnumber of Chromosomes (4)\n";
-		cout << "-x:\tnumber of markers per chromosome (1000)\n";
-		cout << "-q:\ttotal number of Quantitative trait loci. (50)\n";
-		cout << "-eq:\ttotal number of QTL responding the the Environment (half of -q if --plasticity flag included)\n";
-		cout << "-f:\tmaximum Fecundity. (4)\n";
-		cout << "-e:\tmaximum number of Encounters during mating. (50)\n";
-		cout << "-a:\tnumber of alleles (2).\n";
-		cout << "-p:\tnumber of populations. (2)\n";
-		cout << "-i:\tnumber of initial generations. (1000)\n";
-		cout << "-g:\tnumber of experimental generations (200).\n";
-		cout << "-mu:\tmaximum mutation rate (0.0002).\n";
-		cout << "-r:\tRecombination rate. (0.2) \n";
-		cout << "-asd:\tAllelic Standard Deviation (0.5)\n";
-		cout << "-prs:\tParental male reproductive success (8)\n";
-		cout << "-nprs:\tNon-parental male reproductive success (4)\n";
-		cout << "-crs:\tCourter male reproductive success (8)\n";
-		cout << "-ncrs:\tNon-courter male reproductive success (4)\n";
-		cout << "-sprop:\tSupergene proportion of a chromosome (0.1). NOTE: must be > the total number of qtls.\n";
-		cout << "-sperm-r:\tSperm competition r. If r = 1, paternity is determined through a fair raffle. \n\tIf 0 < r < 1, the parental male has a higher share of paternity and the sneakers fertilize with penalty r (rs2/(s1+s2); default 0.5)\n";
-		cout << "-surv-noparent:\tSurvival probability of eggs without a parent (0.1)\n";
-		cout << "-surv-parent:\tSurvival probability with a parent (0.9)\n";
-		cout << "-mm:\tMax number of Mates. This includes the chosen male (3)\n";
-		cout << "-qpc:\tQTLs per chromosome (-q/-c, aka an even distribution of QTLs among chromosomes). To specify different numbers per chromosome separate them by commas.\n\tExample: for 4 chromosomes, input: 4,2,3,0\n";
-		cout << "--gene-network:\tModel a plastic morph, where genotype is determined by interactions between genes.\n";
-		cout << "--env-cue:\tModel a gene network (--gene-network) that incorporates social information as an environmental cue.\n";
-		cout << "--freq-dependent-preference:\tInclude this flag if preferences should be based on the frequency of male morphs (defaults to independent).\n";
-		cout << "--condition-dependent-preference:\tInclude this flag if female preferences are determined by female condition (defaults to independent).\n";
-		cout << "--courter:\tInclude this flag if males should have the courter trait (a trait affecting mating probabilities). Defaults to preference for randomly chosen morph unless other flags included. \n";
-		cout << "--parent:\tInclude this flag if males should have the parental trait (a trait affecting offspring survival). Defaults to preference for randomly chosen morph unless other flags included. \n";
-		cout << "--freq-dependent-courter:\tIf the courter trait is experiencing frequency dependent selection.\n";
-		cout << "--freq-dependent-parent:\tIf the parent trait is experiencing frequency dependent selection.\n";
-		cout << "--condition-dependent-courter:\tIf the courter trait is influenced by male condition.\n";
-		cout << "--condition-dependent-parent:\tIf the parent trait is influenced by male condition.\n";
-		cout << "--independent-pref:\tSpecifies an independent female preference (defaults to Gaussian preference for randomly chosen morph unless other flags included). \n";
-		cout << "--correlated-pref:\tSpecifies a female preference correlated with the male courter trait (defaults to Gaussian preference for randomly chosen morph unless other flags included).\n";
-		cout << "--random-mating:\tSpecifies no female choice (default: true).\n";
-		cout << "--supergene:\tSpecifies whether the QTLs are grouped together in a supergene that has reduced recombination.\n";
-		cout << "--polygyny:\tAllows males to mate multiply (default: false).\n";
-		cout << "--courter-conditional:\tIf the courter trait has no genetic basis and is determined randomly or through environmental effects.\n";
-		cout << "--parent-conditional:\tIf the parent trait has no genetic basis and is determined randomly or through environmental effects.\n";
-		cout << "--thresholds-evolve:\tIf the thresholds are allowed to evolve (i.e., they have a quantitative genetic basis).\n";
-		cout << "--thresholds-in-supergene:\tThe thresholds have a genetic basis and their loci are in the supergene.\n";
-		cout << "--verbose:\tOutputs info about every step during every initial generation -- good for debugging";
-		cout << "--no-genetics:\tRemoves genetic architecture; traits encoded by heritable unlinked additive genetic variance.\n";
-		cout << "--linked-additive:\t(default) Traits are determined by genome-wide additive genetic variance distributed among chromosomes.\n";
-		cout << "-h or --help:\tPrint this help message.\n";
+		std::cout << "\n\t\tHELP MENU\n";
+		std::cout << "\nSimulation model of the evolution of alternative reproductive tactics with complex genetic architectures.\n";
+		std::cout << "Below are the parameters to input to the model. (Defaults in parentheses)\n";
+		std::cout << "-b:\tBase for output file names (arts)\n";
+		std::cout << "-K:\tcarrying capacity (1000)\n";
+		std::cout << "-s:\tnumber of individuals Sampled. (50)\n";
+		std::cout << "-c:\tnumber of Chromosomes (4)\n";
+		std::cout << "-x:\tnumber of markers per chromosome (1000)\n";
+		std::cout << "-q:\ttotal number of Quantitative trait loci. (50)\n";
+		std::cout << "-eq:\ttotal number of QTL responding the the Environment (half of -q if --plasticity flag included)\n";
+		std::cout << "-f:\tmaximum Fecundity. (4)\n";
+		std::cout << "-e:\tmaximum number of Encounters during mating. (50)\n";
+		std::cout << "-a:\tnumber of alleles (2).\n";
+		std::cout << "-p:\tnumber of populations. (2)\n";
+		std::cout << "-i:\tnumber of initial generations. (1000)\n";
+		std::cout << "-g:\tnumber of experimental generations (200).\n";
+		std::cout << "-mu:\tmaximum mutation rate (0.0002).\n";
+		std::cout << "-r:\tRecombination rate. (0.2) \n";
+		std::cout << "-asd:\tAllelic Standard Deviation (0.5)\n";
+		std::cout << "-prs:\tParental male reproductive success (8)\n";
+		std::cout << "-nprs:\tNon-parental male reproductive success (4)\n";
+		std::cout << "-crs:\tCourter male reproductive success (8)\n";
+		std::cout << "-ncrs:\tNon-courter male reproductive success (4)\n";
+		std::cout << "-sprop:\tSupergene proportion of a chromosome (0.1). NOTE: must be > the total number of qtls.\n";
+		std::cout << "-sperm-r:\tSperm competition r. If r = 1, paternity is determined through a fair raffle. \n\tIf 0 < r < 1, the parental male has a higher share of paternity and the sneakers fertilize with penalty r (rs2/(s1+s2); default 0.5)\n";
+		std::cout << "-surv-noparent:\tSurvival probability of eggs without a parent (0.1)\n";
+		std::cout << "-surv-parent:\tSurvival probability with a parent (0.9)\n";
+		std::cout << "-mm:\tMax number of Mates. This includes the chosen male (3)\n";
+		std::cout << "-qpc:\tQTLs per chromosome (-q/-c, aka an even distribution of QTLs among chromosomes). To specify different numbers per chromosome separate them by commas.\n\tExample: for 4 chromosomes, input: 4,2,3,0\n";
+		std::cout << "--gene-network:\tModel a plastic morph, where genotype is determined by interactions between genes.\n";
+		std::cout << "--env-cue:\tModel a gene network (--gene-network) that incorporates social information as an environmental cue.\n";
+		std::cout << "--freq-dependent-preference:\tInclude this flag if preferences should be based on the frequency of male morphs (defaults to independent).\n";
+		std::cout << "--condition-dependent-preference:\tInclude this flag if female preferences are determined by female condition (defaults to independent).\n";
+		std::cout << "--courter:\tInclude this flag if males should have the courter trait (a trait affecting mating probabilities). Defaults to preference for randomly chosen morph unless other flags included. \n";
+		std::cout << "--parent:\tInclude this flag if males should have the parental trait (a trait affecting offspring survival). Defaults to preference for randomly chosen morph unless other flags included. \n";
+		std::cout << "--freq-dependent-courter:\tIf the courter trait is experiencing frequency dependent selection.\n";
+		std::cout << "--freq-dependent-parent:\tIf the parent trait is experiencing frequency dependent selection.\n";
+		std::cout << "--condition-dependent-courter:\tIf the courter trait is influenced by male condition.\n";
+		std::cout << "--condition-dependent-parent:\tIf the parent trait is influenced by male condition.\n";
+		std::cout << "--independent-pref:\tSpecifies an independent female preference (defaults to Gaussian preference for randomly chosen morph unless other flags included). \n";
+		std::cout << "--correlated-pref:\tSpecifies a female preference correlated with the male courter trait (defaults to Gaussian preference for randomly chosen morph unless other flags included).\n";
+		std::cout << "--random-mating:\tSpecifies no female choice (default: true).\n";
+		std::cout << "--supergene:\tSpecifies whether the QTLs are grouped together in a supergene that has reduced recombination.\n";
+		std::cout << "--polygyny:\tAllows males to mate multiply (default: false).\n";
+		std::cout << "--courter-conditional:\tIf the courter trait has no genetic basis and is determined randomly or through environmental effects.\n";
+		std::cout << "--parent-conditional:\tIf the parent trait has no genetic basis and is determined randomly or through environmental effects.\n";
+		std::cout << "--thresholds-evolve:\tIf the thresholds are allowed to evolve (i.e., they have a quantitative genetic basis).\n";
+		std::cout << "--thresholds-in-supergene:\tThe thresholds have a genetic basis and their loci are in the supergene.\n";
+		std::cout << "--verbose:\tOutputs info about every step during every initial generation -- good for debugging";
+		std::cout << "--no-genetics:\tRemoves genetic architecture; traits encoded by heritable unlinked additive genetic variance.\n";
+		std::cout << "--linked-additive:\t(default) Traits are determined by genome-wide additive genetic variance distributed among chromosomes.\n";
+		std::cout << "--optimize:\tOutput time steps for initial generations, for optimizing the code. (default is false)\n";
+		std::cout << "-h or --help:\tPrint this help message.\n";
 	}
 
 	void dependent_params(string qpc ="")
@@ -438,7 +440,9 @@ public:
 						if (tempstring1 == "--no-genetics")
 							no_genetics = true;
 						if (tempstring1 == "--linked-additive")
-							no_genetics = true;
+							linked_additive = true;
+						if (tempstring1 == "--optimize")
+							optimize = true;
 					}
 				}
 				
@@ -744,7 +748,7 @@ public:
 		}
 		else
 		{
-			cout << "\nWARNING: Courter traits not calculated because environmentally responsive QTL are turned on but not specified in function calls.\n";
+			std::cout << "\nWARNING: Courter traits not calculated because environmentally responsive QTL are turned on but not specified in function calls.\n";
 		}
 	}
 	void calc_courter_trait(parameters gp, vector<tracker>& courter_env, double env_cue = 0, bool stability = true)
@@ -790,7 +794,7 @@ public:
 		}
 		else
 		{
-			cout << "\nWARNING: Parent traits not calculated because environmentally responsive QTL are turned on but not specified in function calls.\n";
+			std::cout << "\nWARNING: Parent traits not calculated because environmentally responsive QTL are turned on but not specified in function calls.\n";
 		}
 	}
 	void calc_parent_trait(parameters gp, vector<tracker>& parent_env, double env_cue = 0, bool stability = true)
@@ -840,7 +844,7 @@ public:
 		}
 		else
 		{
-			cout << "\nWARNING: Preference traits not calculated because environmentally responsive QTL are turned on but not specified in function calls.\n";
+			std::cout << "\nWARNING: Preference traits not calculated because environmentally responsive QTL are turned on but not specified in function calls.\n";
 		}
 		if (female_pref < threshold)
 			female_pref = 0;
