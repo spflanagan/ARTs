@@ -188,3 +188,51 @@ get.pref.freqs<-function(pref){
   rownames(pref.final.freqs)<-unlist(lapply(seq(1:nrow(pref.final.freqs)),function(n){paste("Rep",n,sep="")}))
   return(pref.final.freqs)
 }
+
+#' Extract the frequencies of the preferences in the final generation of each rep
+#' @param files A list of summary file names to loop over
+#' @param twocols Two colors, which will alternate as chromosome backgrounds
+#' @param qtl.name The name to look for in the QTL file to extract the correct qtls (e.g. "CourterQTL")
+#' @param court.label A binary variable. If true, the courter frequency is written on the graph
+#' @param parent.label A binary variable. If true, the parent frequency is written on the graph
+#' @param prow A number determining how many rows will be present in the multi-panel plot
+#' @return a list with the allele frequencies in the final generation from each file
+#' @export
+plot.final.maf<-function(files,twocols,qtl.name,qtl.name2=NA,
+                         court.label=TRUE,parent.label=FALSE,prow=2,
+                         qtl.col="purple",qtl.col2="black"){
+  
+  par(mfrow=c(prow,ceiling(length(files)/prow)),mar=c(2,2,2,2),oma=c(2,2,2,2))
+  l<-lapply(files, function(file){
+    summ<-suppressWarnings(read.delim(file))
+    maf<-summ[nrow(summ),which(colnames(summ)%in%grep("Marker",colnames(summ),value = TRUE))]
+    #get the qtl info
+    aqtls<-read.delim(gsub("summary","qtlinfo",file))
+    qtls<-aqtls[,which(colnames(aqtls)%in%grep(qtl.name,colnames(aqtls),value=TRUE))]
+    qtls<-unlist(lapply(qtls,function(q){ paste("Marker",q,sep="") }))
+    
+    #plot
+    plot(0:1,0:1,bty="L",xlab="Position on Chrom",ylab="Major Allele Frequency",
+         type='n',xlim=c(0,ncol(maf)),ylim=c(0,1))
+    for(i in 1:ncol(maf)){
+      chr<-as.numeric(gsub("Marker(\\d+).\\d+","\\1",colnames(maf)[i]))+1
+      if(chr %% 2 == 0) { color<- twocols[1] }else{ color<-twocols[2] }
+      points(i,maf[i],pch=19,col=alpha(color,0.5))
+    }
+    points(which(colnames(maf) %in% qtls),
+           maf[which(colnames(maf) %in% qtls)],pch=8,col=qtl.col,cex=2,lwd=2)
+    if(!is.na(qtl.name2)){
+      qtls2<-aqtls[,which(colnames(aqtls)%in%grep(qtl.name2,colnames(aqtls),value=TRUE))]
+      qtls2<-unlist(lapply(qtls2,function(q){ paste("Marker",q,sep="") }))
+      points(which(colnames(maf) %in% qtls2),
+             maf[which(colnames(maf) %in% qtls2)],pch=8,col=qtl.col2,cex=2,lwd=2)
+    }
+    if(court.label==TRUE)
+      text(x=2000,y=0.2,labels = paste("Courter Frequency = ", summ[nrow(summ),"CourterFreq"]))
+    if(parent.label==TRUE)
+      text(x=2000,y=0.15,labels = paste("Parent Frequency = ", summ[nrow(summ),"ParentFreq"]))
+    rm(summ)
+    return(maf)
+  })
+  return(l)
+}
