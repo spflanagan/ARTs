@@ -7,11 +7,12 @@
 
 ###----DETERMINE WHAT SHOULD RUN----###
 NUMREPS=20
-NO_GENETICS=true
+NO_GENETICS=false
 CONDITIONAL=false
 COND_NFDS=false
 GENETIC_ARCH=false
 EVOLVING=false
+SUPERGENE=true
 
 ## move to the correct directories - now you can run it from anywhere ##
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -28,13 +29,13 @@ if [ "$NO_GENETICS" = true ]; then printf "\t%s\n" "NO_GENETICS"; fi
 if [ "$CONDITIONAL" = true ]; then printf "\t%s\n" "CONDITIONAL"; fi
 if [ "$COND_NFDS" = true ]; then printf "\t%s\n" "COND_NFDS"; fi
 if [ "$GENETIC_ARCH" = true ]; then printf "\t%s\n" "GENETIC_ARCH"; fi
+if [ "$SUPERGENE" = true ]; then printf "\t%s\n" "SUPERGENE"; fi
 if [ "$EVOLVING" = true ]; then printf "\t%s\n" "EVOLVING"; fi
 echo "The program will run in the background."
-echo "Check the status with htop or by looking at logs/002_${DATE}.log"
+echo "Check the status with htop or by looking at logs/002_x_${DATE}.log"
 
 for i in `seq 1 $NUMREPS`; do
 
-	echo "Starting Rep ${i} of $NUMREPS"
 	#No genetic architectures, just additive genetic variance
 	 if [ "$NO_GENETICS" = true ]; then
 		./ARTs --courter --no-genetics -b ../../results/courter-nogenetics_${i} --verbose
@@ -77,6 +78,21 @@ for i in `seq 1 $NUMREPS`; do
 		./ARTs --courter --independent-pref --parent -b ../../results/parent-courter-pref_${i} --verbose
 	fi
 
+	#with a genetic architecture
+	if [ "$SUPERGENE" = true ]; then
+		./ARTs --courter --supergene -b ../../results/courter_supergene_${i} --verbose
+		./ARTs --parent --supergene -b ../../results/parent_supergene_${i} --verbose
+		./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_${i} --verbose
+		 
+		./ARTs --courter --supergene --freq-dependent-preference -b ../../results/courter_supergene_nfds_${i} --verbose
+		./ARTs --parent --supergene --freq-dependent-preference -b ../../results/parent_supergene_nfds_${i} --verbose
+		./ARTs --courter --parent --supergene --freq-dependent-preference -b ../../results/parent-courter_supergene_nfds_${i} --verbose
+
+		./ARTs --courter --independent-pref --supergene -b ../../results/courter-pref_supergene_${i} --verbose
+	    ./ARTs --parent --independent-pref --supergene -b ../../results/parent-pref_supergene_${i} --verbose
+		./ARTs --courter --independent-pref --supergene --parent -b ../../results/parent-courter-pref_supergene_${i} --verbose
+	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
+
 	#Evolving thresholds
 	if [ "$EVOLVING" = true ]; then
 		./ARTs --courter-conditional --thresholds-evolve -b ../../results/courter-conditional_thresholds_${i}
@@ -87,4 +103,9 @@ for i in `seq 1 $NUMREPS`; do
 		./ARTs --parent --thresholds-evolve -b ../../results/parent_thresholds_${i}
 		./ARTs --courter --parent --thresholds-evolve -b ../../results/parent-courter_thresholds_${i}
 	fi
-done >> ../../logs/002_${DATE}.log 2>&1 &
+done 
+
+#concatenate the log files
+cat ../../logs/002_*_${DATE}.log > ../../logs/002_${DATE}.log
+#remove the intermediate log files
+rm ../../logs/002_*_${DATE}.log
