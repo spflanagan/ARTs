@@ -23,6 +23,7 @@ cd $PROGDIR
 DATE=`date +%Y%m%d`
 
 ### --- RUN THE PARAMETER COMBINATIONS --- ###
+{
 echo "Running ${NUMREPS} reps with default parameters with courter, parent, and both traits."
 echo "It will run the following scenarios:"
 if [ "$NO_GENETICS" = true ]; then printf "\t%s\n" "NO_GENETICS"; fi
@@ -33,6 +34,7 @@ if [ "$SUPERGENE" = true ]; then printf "\t%s\n" "SUPERGENE"; fi
 if [ "$EVOLVING" = true ]; then printf "\t%s\n" "EVOLVING"; fi
 echo "The program will run in the background."
 echo "Check the status with htop or by looking at logs/002_x_${DATE}.log"
+} >> ../../logs/002_${DATE}.log 2>&1
 
 for i in `seq 1 $NUMREPS`; do
 
@@ -106,6 +108,6 @@ for i in `seq 1 $NUMREPS`; do
 done 
 
 #concatenate the log files
-cat ../../logs/002_*_${DATE}.log > ../../logs/002_${DATE}.log
+cat ../../logs/002_*_${DATE}.log >> ../../logs/002_${DATE}.log
 #remove the intermediate log files
 rm ../../logs/002_*_${DATE}.log

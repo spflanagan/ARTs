@@ -3,7 +3,8 @@ title: "Initial ARTs Results"
 author: "Sarah P. Flanagan"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
-  pdf_document: default
+  pdf_document: 
+    dev: png
   html_document: default
 header-includes: #allows you to add in your own Latex packages
 - \usepackage{float} #use the 'float' package
@@ -44,7 +45,7 @@ cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
 
 ## Overview of the model 
 
-Males can be courters or not-courters and parents or not-parents. When the model is run with both traits, this results in four possible morphs: courter/parent, courter/not-parent, not-courter/parent, and not-courter/not-parent. In each generation, the population follows the following timeline: 
+Males can be courters or not-courters and parents or not-parents. When the model is run with both traits, this results in four possible morphs: courter/parent, courter/not-parent, not-courter/parent, and not-courter/not-parent. Generations are non-overlapping and there is one reproductive bout per generation. In each generation, the population follows the following timeline: 
 
 1. Females choose a nest
 2. Males fertilize eggs
