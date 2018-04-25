@@ -1857,6 +1857,28 @@ public:
 			}
 		}
 	}
+	void per_female_mating(parameters gp, vector<int> & male_index)
+	{
+		int j, first, first_progeny, fem_ms;
+		bool nest_found;
+		//mating happens
+		fem_ms = 0;
+		for (j = 0; j < adults.size(); j++)
+		{
+			if (adults[j].female && adults[j].alive) //loop through the females.
+			{
+				nest_found = choose_nest(j, male_index, gp);
+				if (nest_found)
+				{
+					if (gp.gene_network)
+						parent_cue_eval(gp, adults[j].mate_id);
+					first_progeny = fertilization(j, gp);
+					nest_survival(gp, first_progeny, adults[j].mate_id);
+					fem_ms++;
+				}
+			}
+		}
+	}
 	void nest_and_fertilize(parameters gp, bool output, string out_name)
 	{
 		int j, first_progeny;
@@ -1893,24 +1915,70 @@ public:
 		}
 		if(gp.verbose)
 			std::cout << ", " << num_mal << " males, " << num_fem << " females" << flush;
-		//mating happens
-		for (j = 0; j < adults.size(); j++)
+		if(gp.per_fem_mating)
+			per_female_mating(gp, male_index);
+		else
 		{
-			if (adults[j].female && adults[j].alive) //loop through the females.
+			for (j = 0; j < adults.size(); j++)
 			{
-				nest_found = choose_nest(j, male_index, gp);
-				if (nest_found)
+				if (adults[j].female && adults[j].alive) //loop through the females.
 				{
-					if (gp.gene_network)
-						parent_cue_eval(gp, adults[j].mate_id);
-					first_progeny = fertilization(j,gp);
-					nest_survival(gp, first_progeny, adults[j].mate_id);
-					fem_ms++;
+					nest_found = choose_nest(j, male_index, gp);
+					if (nest_found)
+					{
+						if (gp.gene_network)
+							parent_cue_eval(gp, adults[j].mate_id);
+						first_progeny = fertilization(j, gp);
+						nest_survival(gp, first_progeny, adults[j].mate_id);
+						fem_ms++;
+					}
 				}
 			}
 		}
 		if (gp.verbose)
 			std::cout <<", and " << fem_ms << " mated" << std::flush;
+	}
+	bool random_mating(parameters gp,int fem_index, vector<int> & male_index)
+	{
+		int male_id, encounters, irndnum;
+		bool mate_found = false;
+		encounters = 0;
+		while (!mate_found && (encounters < gp.max_encounters))//female mates once
+		{
+			irndnum = randnum(num_mal);
+			male_id = male_index[irndnum];
+			if (adults[male_id].alive)
+			{
+				if (gp.polygyny || adults[male_id].mate_found == 0)//either polygyny is ok or if monogamy the male hasn't mated yet
+				{
+					mate_found = true;
+					adults[fem_index].mate_found++;
+					adults[male_id].mate_found++;
+					adults[fem_index].mate_id = male_id;
+				}
+			}
+			encounters++;
+		}
+		if (mate_found)
+		{
+			if (gp.CD_court)
+			{
+				if (adults[male_id].courter)//it decreases
+					adults[male_id].courter_trait = adults[male_id].courter_trait - gp.cond_adj;
+				else//it increases
+					adults[male_id].courter_trait = adults[male_id].courter_trait + gp.cond_adj;
+				adults[male_id].assign_court_morph(gp);
+			}
+			if (gp.CD_parent)
+			{
+				if (adults[male_id].parent)//it decreases
+					adults[male_id].parent_trait = adults[male_id].parent_trait - gp.cond_adj;
+				else//it increases
+					adults[male_id].parent_trait = adults[male_id].parent_trait + gp.cond_adj;
+				adults[male_id].assign_parent_morph(gp);
+			}
+		}
+		return mate_found;
 	}
 	bool choose_nest(int fem_index, vector<int> & male_index, parameters gp)
 	{//females choose one male to give her eggs to.
@@ -1919,44 +1987,10 @@ public:
 		encounters = 0;
 		if (gp.random_mating)//then they randomly find males
 		{
-			while (!mate_found && (encounters < gp.max_encounters))//female mates once
-			{
-				irndnum = randnum(num_mal);
-				male_id = male_index[irndnum];
-				if (adults[male_id].alive)
-				{
-					if (gp.polygyny || adults[male_id].mate_found == 0)//either polygyny is ok or if monogamy the male hasn't mated yet
-					{
-						mate_found = true;
-						adults[fem_index].mate_found++;
-						adults[male_id].mate_found++;
-						adults[fem_index].mate_id = male_id;
-					}
-				}
-				encounters++;
-			}
-			if (mate_found)
-			{
-				if (gp.CD_court)
-				{
-					if (adults[male_id].courter)//it decreases
-						adults[male_id].courter_trait = adults[male_id].courter_trait - gp.cond_adj;
-					else//it increases
-						adults[male_id].courter_trait = adults[male_id].courter_trait + gp.cond_adj;
-					adults[male_id].assign_court_morph(gp);
-				}
-				if (gp.CD_parent)
-				{
-					if (adults[male_id].parent)//it decreases
-						adults[male_id].parent_trait = adults[male_id].parent_trait - gp.cond_adj;
-					else//it increases
-						adults[male_id].parent_trait = adults[male_id].parent_trait + gp.cond_adj;
-					adults[male_id].assign_parent_morph(gp);
-				}
-			}
+			mate_found = random_mating(gp, fem_index, male_index);
 		}//end random mating
-		else
-		{ //preference for one morph or the other 
+		else //preference for one morph or the other 
+		{ 
 			vector <int> acceptable_males;
 			while (encounters < gp.max_encounters)
 			{
@@ -2012,6 +2046,10 @@ public:
 						adults[male_id].parent_trait = adults[male_id].parent_trait + gp.cond_adj;
 					adults[male_id].assign_parent_morph(gp);
 				}
+			}
+			else
+			{
+				mate_found = random_mating(gp, fem_index, male_index);
 			}
 		}//end of finding the mates
 		return mate_found;

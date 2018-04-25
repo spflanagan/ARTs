@@ -89,8 +89,8 @@ public:
 	double mutation_rate, mutational_var, recombination_rate, allelic_std_dev, gaussian_pref_mean, cond_adj, via_sel_strength, supergene_prop;
 	double sperm_comp_r, egg_surv_parent, egg_surv_noparent;
 	string base_name;
-	bool court_trait, parent_trait, gene_network, env_cue, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
-	bool supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive,optimize;
+	bool same_base, court_trait, parent_trait, gene_network, env_cue, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
+	bool per_fem_mating, supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive,optimize;
 	vector <int> qtl_per_chrom;
 
 	parameters()
@@ -98,16 +98,17 @@ public:
 		carrying_capacity = num_sampled = num_chrom = num_markers = num_qtl = max_fecund = max_encounters = num_alleles = int();
 		num_pops = num_init_gen = num_exp_gen = max_num_mates = int();
 		mutation_rate =recombination_rate = allelic_std_dev = egg_surv_parent = egg_surv_noparent = sperm_comp_r = double();
-		gene_network = env_cue = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
-		random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive = optimize =bool();
+		same_base = gene_network = env_cue = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
+		per_fem_mating = random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive = optimize =bool();
 		qtl_per_chrom = vector<int>();
 	}
 
 	void set_defaults()
 	{
+		same_base = true; //does it always start with the same base populations for all of the populations?
+		num_pops = 1; //default 1 
 		num_init_gen = 10000;//10000 normally
-		num_exp_gen = 2000;//2000 normally
-		num_pops = 1; //default 1
+		num_exp_gen = 2000;//2000 normally		
 		carrying_capacity = 1000;//1000
 		num_sampled = 50;//default 50
 		num_chrom = 4;//default 4
@@ -122,7 +123,8 @@ public:
 		recombination_rate = 0.2;//0.2
 		allelic_std_dev = 0.5;//default 0.5
 		supergene_prop = 0.1; //default 0.1 (10% of num_markers = 100)
-		random_mating = true;//default: false
+		random_mating = true;//default: true
+		per_fem_mating = true; //the original implementation of mating
 		supergene =  false; //default: false
 		court_trait = courter_conditional = false; //default: false
 		parent_trait = parent_conditional = false;//default false
@@ -165,9 +167,9 @@ public:
 		std::cout << "-f:\tmaximum Fecundity. (4)\n";
 		std::cout << "-e:\tmaximum number of Encounters during mating. (50)\n";
 		std::cout << "-a:\tnumber of alleles (2).\n";
-		std::cout << "-p:\tnumber of populations. (2)\n";
-		std::cout << "-i:\tnumber of initial generations. (1000)\n";
-		std::cout << "-g:\tnumber of experimental generations (200).\n";
+		std::cout << "-p:\tnumber of populations. (1)\n";
+		std::cout << "-i:\tnumber of initial generations. (10000)\n";
+		std::cout << "-g:\tnumber of experimental generations (2000).\n";
 		std::cout << "-mu:\tmaximum mutation rate (0.0002).\n";
 		std::cout << "-r:\tRecombination rate. (0.2) \n";
 		std::cout << "-asd:\tAllelic Standard Deviation (0.5)\n";
@@ -204,6 +206,7 @@ public:
 		std::cout << "--no-genetics:\tRemoves genetic architecture; traits encoded by heritable unlinked additive genetic variance.\n";
 		std::cout << "--linked-additive:\t(default) Traits are determined by genome-wide additive genetic variance distributed among chromosomes.\n";
 		std::cout << "--optimize:\tOutput time steps for initial generations, for optimizing the code. (default is false)\n";
+		std::cout << "--same-base:\tStart each replicate population with the same base population (default is true)\n";
 		std::cout << "-h or --help:\tPrint this help message.\n";
 	}
 
@@ -443,6 +446,8 @@ public:
 							linked_additive = true;
 						if (tempstring1 == "--optimize")
 							optimize = true;
+						if (tempstring1 == "--same-base")
+							same_base = true;
 					}
 				}
 				

@@ -6,13 +6,13 @@
 ### This script will run the programs in the background and produce a log file in the logs/ directory ###
 
 ###----DETERMINE WHAT SHOULD RUN----###
-NUMREPS=20
-NO_GENETICS=false
+NUMREPS=10
+NO_GENETICS=true
 CONDITIONAL=false
 COND_NFDS=false
 GENETIC_ARCH=false
 EVOLVING=false
-SUPERGENE=true
+SUPERGENE=false
 
 ## move to the correct directories - now you can run it from anywhere ##
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -40,16 +40,16 @@ for i in `seq 1 $NUMREPS`; do
 
 	#No genetic architectures, just additive genetic variance
 	 if [ "$NO_GENETICS" = true ]; then
-		./ARTs --courter --no-genetics -b ../../results/courter-nogenetics_${i} --verbose
-	    ./ARTs --parent --no-genetics -b ../../results/parent-nogenetics_${i} --verbose
-		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter-nogenetics_${i} --verbose
-		./ARTs --courter --no-genetics --independent-pref -b ../../results/courter-pref-nogenetics_${i} --verbose
-	    ./ARTs --parent --no-genetics --independent-pref -b ../../results/parent-pref-nogenetics_${i} --verbose
-		./ARTs --courter --no-genetics --independent-pref --parent -b ../../results/parent-courter-pref-nogenetics_${i} --verbose
-		./ARTs --courter --no-genetics --freq-dependent-preference -b ../../results/courter-nogenetics-nfds_${i} --verbose
-		./ARTs --parent --no-genetics --freq-dependent-preference -b ../../results/parent-nogenetics-nfds_${i} --verbose
-		./ARTs --courter --no-genetics --parent --freq-dependent-preference -b ../../results/parent-courter-nogenetics-nfds_${i} --verbose
-	fi 
+		./ARTs --courter --no-genetics -b ../../results/courter-nogenetics_${i} --verbose --same-base -p 4
+	    ./ARTs --parent --no-genetics -b ../../results/parent-nogenetics_${i} --verbose --same-base -p 4
+		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter-nogenetics_${i} --verbose --same-base -p 4
+		./ARTs --courter --no-genetics --independent-pref -b ../../results/courter-pref-nogenetics_${i} --verbose --same-base -p 4
+	    ./ARTs --parent --no-genetics --independent-pref -b ../../results/parent-pref-nogenetics_${i} --verbose --same-base -p 4
+		./ARTs --courter --no-genetics --independent-pref --parent -b ../../results/parent-courter-pref-nogenetics_${i} --verbose --same-base -p 4
+	# 	./ARTs --courter --no-genetics --freq-dependent-preference -b ../../results/courter-nogenetics-nfds_${i} --verbose
+	# 	./ARTs --parent --no-genetics --freq-dependent-preference -b ../../results/parent-nogenetics-nfds_${i} --verbose
+	# 	./ARTs --courter --no-genetics --parent --freq-dependent-preference -b ../../results/parent-courter-nogenetics-nfds_${i} --verbose
+	 fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
 
 	#Random traits
 	if [ "$CONDITIONAL" = true ]; then
