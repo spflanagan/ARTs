@@ -9,22 +9,28 @@
 plot.courter.reps<-function(pattern,cols,x.lim=c(0,12000)){
   courter.files<-list.files(pattern=pattern)
   #set up colors
-  mycols <- colorRampPalette(c("grey",cols["courter"],"black"))(length(courter.files))[2:(1+length(courter.files))]
+  mycols <- colorRampPalette(c("grey",cols["courter"],"black"))(length(courter.files)+1)[2:(1+length(courter.files))]
   #set up an empty plot
   plot(0:1,0:1,bty="L",xlab="Generations",ylab="Frequency of Courting Males",
        type='n',xlim=x.lim,ylim=c(0,1))
   #plot each run's output and save it
   s<-lapply(courter.files,function(file){
     summ<-suppressWarnings(read.delim(file))
-    summ<-summ[,which(!colnames(summ)%in%grep("Marker",colnames(summ),value = TRUE))] #only keep the frequency data
-    n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
-    points(summ$Generation,summ$CourterFreq,col=alpha(mycols[n],0.5),
-           lwd=2,type="l")
-    return(summ)
+    sp<-by(summ,summ$Pop,function(pop){ #break it into each population in the file
+      pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
+      pop<-pop[!is.na(pop$CourterFreq),]
+      n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
+      points(pop$Generation,pop$CourterFreq,col=alpha(mycols[n],0.5),
+             lwd=2,type="l")
+      return(pop)
+    })
+    names(sp)<-paste(file,1:length(sp),sep="_")
+    return(as.list(sp))
   })
-  text(x=10000,y=1.1,xpd=TRUE,"Equilibrium\nevaluated")
+  text(x=10000,y=1.1,xpd=TRUE,"End of initial\ngenerations")
   clip(x1 = 0,x2=12000,y1=-0.1,y2=1.04)
   abline(v=10000,lty=2,lwd=2)
+  s<-do.call(c,s) #flatten out the list of lists
   return(s)
 }
 
@@ -37,7 +43,12 @@ get.courter.freqs<-function(s){
     last<-dat[nrow(dat),]
     return(last[,c("Generation","CourterFreq","CourterW","NonCourterW")])
   }))
-  rownames(courter.final.freqs)<-unlist(lapply(seq(1:nrow(courter.final.freqs)),function(n){paste("Rep",n,sep="")}))
+  if(is.null(names(s))){
+    rownames(courter.final.freqs)<-unlist(lapply(seq(1:nrow(courter.final.freqs)),
+                                                 function(n){paste("Rep",n,sep="")}))
+  }else{
+    rownames(courter.final.freqs)<-names(s)
+  }
   return(courter.final.freqs)
 }
 
@@ -57,15 +68,21 @@ plot.parent.reps<-function(pattern,cols,x.lim=c(0,12000)){
   #plot each run's output and save it
   s<-lapply(parent.files,function(file){
     summ<-suppressWarnings(read.delim(file))
-    summ<-summ[,which(!colnames(summ)%in%grep("Marker",colnames(summ),value = TRUE))] #only keep the frequency data
-    n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
-    points(summ$Generation,summ$ParentFreq,col=alpha(mycols[n],0.5),
-           lwd=2,type="l")
-    return(summ)
+    sp<-by(summ,summ$Pop,function(pop){ #break it into each population in the file
+      pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
+      pop<-pop[!is.na(pop$ParentFreq),]
+      n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
+      points(pop$Generation,pop$ParentFreq,col=alpha(mycols[n],0.5),
+             lwd=2,type="l")
+      return(pop)
+    })
+    names(sp)<-paste(file,1:length(sp),sep="_")
+    return(as.list(sp))
   })
   text(x=10000,y=1.1,xpd=TRUE,"Equilibrium\nevaluated")
   clip(x1 = 0,x2=12000,y1=-0.1,y2=1.04)
   abline(v=10000,lty=2,lwd=2)
+  s<-do.call(c,s) 
   return(s)
 }
 
@@ -79,7 +96,12 @@ get.parent.freqs<-function(s){
     last<-dat[nrow(dat),]
     return(last[,c("Generation","ParentFreq","ParentW","NonParentW")])
   }))
-  rownames(parent.final.freqs)<-unlist(lapply(seq(1:nrow(parent.final.freqs)),function(n){paste("Rep",n,sep="")}))
+  if(is.null(names(s))){
+    rownames(parent.final.freqs)<-unlist(lapply(seq(1:nrow(parent.final.freqs)),
+                                                function(n){paste("Rep",n,sep="")}))
+  }else{
+    rownames(parent.final.freqs)<-names(s)
+  }
   return(parent.final.freqs)
 }
 
@@ -88,6 +110,7 @@ get.parent.freqs<-function(s){
 #' @param cols A vector of colors to use - must contain one named "parent" and one named "courter"
 #' @param x.lim optional specification of x-axis minimum and maximum (default = c(0,12000))
 #' @return A list of data.frames containing the summary frequencies from all generations. The length of the list = number of files matching pattern.
+#' @note This is often difficult to interpret.
 #' @export
 plot.pc.reps<-function(pattern,cols,x.lim=c(0,12000)){
   pc.files<-list.files(pattern=pattern)
@@ -103,17 +126,23 @@ plot.pc.reps<-function(pattern,cols,x.lim=c(0,12000)){
   #plot each run's output and save it
   s<-lapply(pc.files,function(file){
     summ<-suppressWarnings(read.delim(file))
-    summ<-summ[,which(!colnames(summ)%in%grep("Marker",colnames(summ),value = TRUE))] #only keep the frequency data
-    n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
-    points(summ$Generation,summ$CourterFreq,col=alpha(courtr.cols[n],0.5),
-           lwd=2,type="l")
-    points(summ$Generation,summ$ParentFreq,col=alpha(parent.cols[n],0.5),
-           lwd=2,type="l")
-    return(summ)
+    sp<-by(summ,summ$Pop,function(pop){ #break it into each population in the file
+      pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
+      pop<-pop[!is.na(pop$ParentFreq),]
+      n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
+      points(pop$Generation,pop$CourterFreq,col=alpha(courtr.cols[n],0.5),
+             lwd=2,type="l")
+      points(pop$Generation,pop$ParentFreq,col=alpha(parent.cols[n],0.5),
+             lwd=2,type="l")
+      return(pop)
+    })
+    names(sp)<-paste(file,1:length(sp),sep="_")
+    return(as.list(sp))
   })
   text(x=10000,y=1.1,xpd=TRUE,"Equilibrium\nevaluated")
   clip(x1 = 0,x2=12000,y1=-0.1,y2=1.09)
   abline(v=10000,lty=2,lwd=2)
+  s<-do.call(c,s) 
   return(s)
 }
 
@@ -121,9 +150,9 @@ plot.pc.reps<-function(pattern,cols,x.lim=c(0,12000)){
 #' @param s A list of data.frames containing the frequencies to plot (generated by plot.pc.reps)
 #' @param cols2 A vector of colors to use - must contain names "NCNP","CNP","NCP", and "CP"
 #' @export
-plot.morphs.reps<-function(s,cols2){
-  nrows<-length(s)/5
-  par(mfrow=c(nrows,5),mar=c(2,2,2,1),oma=c(2,2,2,2))
+plot.morphs.reps<-function(s,cols2,ncols=5){
+  nrows<-length(s)/ncols
+  par(mfrow=c(nrows,ncols),mar=c(2,2,2,1),oma=c(2,2,2,2))
   lapply(s,function(summ){
     plot(0:1,0:1,bty="L",xlab="",ylab="",
          type='n',xlim=c(0,12000),ylim=c(0,1))
@@ -131,9 +160,11 @@ plot.morphs.reps<-function(s,cols2){
     points(summ$Generation, summ$FreqCNp,type="l",col=cols2["CNP"],lwd=2)
     points(summ$Generation, summ$FreqNcP,type="l",col=cols2["NCP"],lwd=2)
     points(summ$Generation, summ$FreqCP,type="l",col=cols2["CP"],lwd=2)
+
   })
   mtext("Frequency of Morphs",2,outer=TRUE,cex=0.8)
   mtext("Generations",1,outer=TRUE,cex=0.8)
+  
   par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
   plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
   legend("top",c("Courter/Parent","Non-Courter/Parent","Courter/Non-Parent","Non-courter/Non-parent"),
@@ -150,7 +181,11 @@ get.morph.freqs<-function(s){
     last<-dat[nrow(dat),]
     return(last[,c(1,11:14)])
   }))
-  rownames(pc.final.freqs)<-unlist(lapply(seq(1:nrow(pc.final.freqs)),function(n){paste("Rep",n,sep="")}))
+  if(is.null(names(s))){
+    rownames(pc.final.freqs)<-unlist(lapply(seq(1:nrow(pc.final.freqs)),function(n){paste("Rep",n,sep="")}))
+  }else{
+    rownames(pc.final.freqs)<-names(s)
+  }
   return(pc.final.freqs)
 }
 
@@ -185,7 +220,12 @@ get.pref.freqs<-function(pref){
     last<-dat[nrow(dat),]
     return(last[,c("Generation","PrefFreq","PrefThresh")])
   }))
-  rownames(pref.final.freqs)<-unlist(lapply(seq(1:nrow(pref.final.freqs)),function(n){paste("Rep",n,sep="")}))
+  if(is.null(names(s))){
+    rownames(pref.final.freqs)<-unlist(lapply(seq(1:nrow(pref.final.freqs)),
+                                              function(n){paste("Rep",n,sep="")}))
+  }else{
+    rownames(pref.final.freqs)<-names(s)
+  }
   return(pref.final.freqs)
 }
 

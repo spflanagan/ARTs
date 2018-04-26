@@ -234,8 +234,6 @@ int main(int argc, char*argv[])
 				duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
 				if (global_params.optimize)
 					std::cout << "\n   regulate_popsize took " << duration << " seconds.";
-				//output summary stats
-				summary_output << "\n" << i << "\tPop" << ii;
 			}
 			else
 			{
