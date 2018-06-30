@@ -56,14 +56,14 @@ for i in `seq 1 $NUMREPS`; do
 		./ARTs --courter-conditional -b ../../results/courter-conditional_${i}
 		./ARTs --parent-conditional -b ../../results/parent-conditional_${i}
 		./ARTs --courter-conditional --parent-conditional -b ../../results/parent-courter-conditional_${i}
-	fi
+	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
 
 	#Frequency dependent selection
 	if [ "$COND_NFDS" = true ]; then
 		./ARTs --courter-conditional --freq-dependent-preference -b ../../results/courter-conditional_nfds_${i}
 		./ARTs --parent-conditional --freq-dependent-preference -b ../../results/parent-conditional_nfds_${i}
 		./ARTs --courter-conditional --parent-conditional --freq-dependent-preference -b ../../results/parent-courter-conditional_nfds_${i}
-	fi
+	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
 
 	#with a genetic architecture
 	if [ "$GENETIC_ARCH" = true ]; then
@@ -78,7 +78,7 @@ for i in `seq 1 $NUMREPS`; do
 		./ARTs --courter --independent-pref -b ../../results/courter-pref_${i} --verbose
 	    ./ARTs --parent --independent-pref -b ../../results/parent-pref_${i} --verbose
 		./ARTs --courter --independent-pref --parent -b ../../results/parent-courter-pref_${i} --verbose
-	fi
+	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
 
 	#with a genetic architecture
 	if [ "$SUPERGENE" = true ]; then
@@ -104,10 +104,13 @@ for i in `seq 1 $NUMREPS`; do
 		./ARTs --courter --thresholds-evolve -b ../../results/courter_thresholds_${i}
 		./ARTs --parent --thresholds-evolve -b ../../results/parent_thresholds_${i}
 		./ARTs --courter --parent --thresholds-evolve -b ../../results/parent-courter_thresholds_${i}
-	fi
+	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
 done 
 
 #concatenate the log files
 cat ../../logs/002_*_${DATE}.log >> ../../logs/002_${DATE}.log
 #remove the intermediate log files
 rm ../../logs/002_*_${DATE}.log
+
+# generate the report
+Rscript -e "library(rmarkdown); render('../../scripts/002_expectationTests.Rmd')"
