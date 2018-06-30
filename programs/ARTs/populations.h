@@ -2005,19 +2005,19 @@ public:
 							nesting_cue_eval(gp, male_id, gp.court_trait, adults[fem_index].female_pref);
 							if ((gp.ind_pref || gp.cor_prefs) && gp.court_trait)
 								preference_cue_eval(gp, fem_index, encounters, adults[male_id].courter);
-							if ((gp.ind_pref || gp.cor_prefs) && !gp.court_trait)
-								preference_cue_eval(gp, fem_index, encounters, adults[male_id].parent);
+							/*if ((gp.ind_pref || gp.cor_prefs) && !gp.court_trait)
+								preference_cue_eval(gp, fem_index, encounters, adults[male_id].parent);*/
 						}
 						if (gp.court_trait || gp.courter_conditional)
 						{
 							if (adults[fem_index].female_pref == adults[male_id].courter)	
 								acceptable_males.push_back(male_id);
 						}
-						else//parent_trait
-						{
-							if (adults[fem_index].female_pref == adults[male_id].parent)
-								acceptable_males.push_back(male_id);
-						}
+						//else//parent_trait
+						//{
+						//	if (adults[fem_index].female_pref == adults[male_id].parent)
+						//		acceptable_males.push_back(male_id);
+						//}
 					}
 				}
 				encounters++;
@@ -2064,14 +2064,21 @@ public:
 		first_progeny = num_progeny;//set up this tracker
 		
 		max_sperm = adults[male_id].pot_rs;
-		
 		//identify sneakers/eligible bachelors
 		for (k = 0; k < adults.size(); k++)
 		{
-			if (adults[k].alive && !adults[k].female && !adults[k].parent)
+			if (adults[k].alive && !adults[k].female)
 			{
-				if(adults[k].pot_rs > 0)
-					sneakers.push_back(k);
+				if (gp.all_sneak) 
+				{
+					if (adults[k].pot_rs > 0)
+						sneakers.push_back(k);
+				}
+				else
+				{
+					if(!adults[k].parent && adults[k].pot_rs > 0)
+						sneakers.push_back(k);
+				}
 			}
 		}
 		if (sneakers.size() == 0)//if all males are parents, no one will sneak

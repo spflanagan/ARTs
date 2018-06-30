@@ -90,7 +90,7 @@ public:
 	double sperm_comp_r, egg_surv_parent, egg_surv_noparent;
 	string base_name;
 	bool same_base, court_trait, parent_trait, gene_network, env_cue, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
-	bool per_fem_mating, supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive,optimize;
+	bool all_sneak, per_fem_mating, supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive,optimize;
 	vector <int> qtl_per_chrom;
 
 	parameters()
@@ -99,7 +99,7 @@ public:
 		num_pops = num_init_gen = num_exp_gen = max_num_mates = int();
 		mutation_rate =recombination_rate = allelic_std_dev = egg_surv_parent = egg_surv_noparent = sperm_comp_r = double();
 		same_base = gene_network = env_cue = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
-		per_fem_mating = random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive = optimize =bool();
+		all_sneak = per_fem_mating = random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive = optimize =bool();
 		qtl_per_chrom = vector<int>();
 	}
 
@@ -124,6 +124,7 @@ public:
 		allelic_std_dev = 0.5;//default 0.5
 		supergene_prop = 0.1; //default 0.1 (10% of num_markers = 100)
 		random_mating = true;//default: true
+		all_sneak = false; //default: false
 		per_fem_mating = true; //the original implementation of mating
 		supergene =  false; //default: false
 		court_trait = courter_conditional = false; //default: false
@@ -196,6 +197,7 @@ public:
 		std::cout << "--independent-pref:\tSpecifies an independent female preference (defaults to Gaussian preference for randomly chosen morph unless other flags included). \n";
 		std::cout << "--correlated-pref:\tSpecifies a female preference correlated with the male courter trait (defaults to Gaussian preference for randomly chosen morph unless other flags included).\n";
 		std::cout << "--random-mating:\tSpecifies no female choice (default: true).\n";
+		std::cout << "--all-sneak:\tSpecifies all males sneak, not just sneakers (default: false).\n";
 		std::cout << "--supergene:\tSpecifies whether the QTLs are grouped together in a supergene that has reduced recombination.\n";
 		std::cout << "--polygyny:\tAllows males to mate multiply (default: false).\n";
 		std::cout << "--courter-conditional:\tIf the courter trait has no genetic basis and is determined randomly or through environmental effects.\n";
@@ -421,6 +423,8 @@ public:
 							ind_pref = true;
 						if (tempstring1 == "--correlated-pref")
 							cor_prefs = court_trait = true;
+						if (tempstring1 == "--all-sneak")
+							all_sneak = true;
 						if (tempstring1 == "--random-mating")
 						{
 							cor_prefs = ind_pref = false;
@@ -537,6 +541,8 @@ public:
 			param_out << "\n--no-genetics";
 		if (linked_additive)
 			param_out << "\n--linked-additive";
+		if (all_sneak)
+			param_out << "\n--all-sneak";
 		param_out.close();
 	}
 };
