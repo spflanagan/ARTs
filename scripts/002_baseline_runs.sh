@@ -113,4 +113,4 @@ cat ../../logs/002_*_${DATE}.log >> ../../logs/002_${DATE}.log
 rm ../../logs/002_*_${DATE}.log
 
 # generate the report
-Rscript -e "library(rmarkdown); render('../../scripts/002_expectationTests.Rmd')"
+R -e "rmarkdown::render('../../scripts/002_expectationTests.Rmd')"
