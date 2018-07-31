@@ -398,7 +398,7 @@ Here, the female preference has unlinked additive genetic variance that is inher
 s<-plot.pc.reps(pattern="^parent-courter-pref-nogenetics_\\d+_summary.txt",cols)
 ```
 ```{r unlinked_pc_pref_plotMorphs,echo=FALSE, fig.cap="Frequency of four morphs per rep",fig.height=10,fig.width=6}
-plot.morphs.reps(s,cols2)
+plot.morphs.reps(s,cols2,,ncols = 4)
 ```
 ```{r unlinked_pc_pref_table,echo=FALSE}
 pcpref.freqs<-get.morph.freqs(s)
