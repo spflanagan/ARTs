@@ -7,7 +7,7 @@
 
 ###----DETERMINE WHAT SHOULD RUN----###
 NUMREPS=10
-NO_GENETICS=true
+NO_GENETICS=false
 CONDITIONAL=false
 COND_NFDS=false
 GENETIC_ARCH=true
@@ -53,23 +53,23 @@ for i in `seq 1 $NUMREPS`; do
 
 	#Random traits
 	if [ "$CONDITIONAL" = true ]; then
-		./ARTs --courter-conditional -b ../../results/courter-conditional_${i}
-		./ARTs --parent-conditional -b ../../results/parent-conditional_${i}
-		./ARTs --courter-conditional --parent-conditional -b ../../results/parent-courter-conditional_${i}
+		./ARTs --courter-conditional -b ../../results/courter-conditional_${i} --same-base -p 4
+		./ARTs --parent-conditional -b ../../results/parent-conditional_${i} --same-base -p 4
+		./ARTs --courter-conditional --parent-conditional -b ../../results/parent-courter-conditional_${i} --same-base -p 4
 	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
 
 	#Frequency dependent selection
 	if [ "$COND_NFDS" = true ]; then
-		./ARTs --courter-conditional --freq-dependent-preference -b ../../results/courter-conditional_nfds_${i}
-		./ARTs --parent-conditional --freq-dependent-preference -b ../../results/parent-conditional_nfds_${i}
-		./ARTs --courter-conditional --parent-conditional --freq-dependent-preference -b ../../results/parent-courter-conditional_nfds_${i}
+		./ARTs --courter-conditional --freq-dependent-preference -b ../../results/courter-conditional_nfds_${i} --same-base -p 4
+		./ARTs --parent-conditional --freq-dependent-preference -b ../../results/parent-conditional_nfds_${i} --same-base -p 4
+		./ARTs --courter-conditional --parent-conditional --freq-dependent-preference -b ../../results/parent-courter-conditional_nfds_${i} --same-base -p 4
 	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
 
 	#with a genetic architecture
 	if [ "$GENETIC_ARCH" = true ]; then
-		./ARTs --courter -b ../../results/courter_${i} --verbose
-		./ARTs --parent -b ../../results/parent_${i} --verbose
-		./ARTs --courter --parent -b ../../results/parent-courter_${i} --verbose
+		./ARTs --courter -b ../../results/courter_${i} --verbose --same-base -p 4
+		./ARTs --parent -b ../../results/parent_${i} --verbose --same-base -p 4
+		./ARTs --courter --parent -b ../../results/parent-courter_${i} --verbose --same-base -p 4
 		 
 	#	./ARTs --courter --freq-dependent-preference -b ../../results/courter_nfds_${i} --verbose
 #		./ARTs --parent --freq-dependent-preference -b ../../results/parent_nfds_${i} --verbose
@@ -82,9 +82,9 @@ for i in `seq 1 $NUMREPS`; do
 
 	#with a genetic architecture
 	if [ "$SUPERGENE" = true ]; then
-		./ARTs --courter --supergene -b ../../results/courter_supergene_${i} --verbose
-		./ARTs --parent --supergene -b ../../results/parent_supergene_${i} --verbose
-		./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_${i} --verbose
+		./ARTs --courter --supergene -b ../../results/courter_supergene_${i} --verbose --same-base -p 4
+		./ARTs --parent --supergene -b ../../results/parent_supergene_${i} --verbose --same-base -p 4
+		./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_${i} --verbose --same-base -p 4
 		 
 #		./ARTs --courter --supergene --freq-dependent-preference -b ../../results/courter_supergene_nfds_${i} --verbose
 #		./ARTs --parent --supergene --freq-dependent-preference -b ../../results/parent_supergene_nfds_${i} --verbose
@@ -97,13 +97,13 @@ for i in `seq 1 $NUMREPS`; do
 
 	#Evolving thresholds
 	if [ "$EVOLVING" = true ]; then
-		./ARTs --courter-conditional --thresholds-evolve -b ../../results/courter-conditional_thresholds_${i}
-		./ARTs --parent-conditional --thresholds-evolve -b ../../results/parent-conditional_thresholds_${i}
-		./ARTs --courter-conditional --parent-conditional --thresholds-evolve -b ../../results/parent-courter-conditional_thresholds_${i}
+		./ARTs --courter-conditional --thresholds-evolve -b ../../results/courter-conditional_thresholds_${i} --same-base -p 4
+		./ARTs --parent-conditional --thresholds-evolve -b ../../results/parent-conditional_thresholds_${i} --same-base -p 4
+		./ARTs --courter-conditional --parent-conditional --thresholds-evolve -b ../../results/parent-courter-conditional_thresholds_${i} --same-base -p 4
 		 
-		./ARTs --courter --thresholds-evolve -b ../../results/courter_thresholds_${i}
-		./ARTs --parent --thresholds-evolve -b ../../results/parent_thresholds_${i}
-		./ARTs --courter --parent --thresholds-evolve -b ../../results/parent-courter_thresholds_${i}
+		./ARTs --courter --thresholds-evolve -b ../../results/courter_thresholds_${i} --same-base -p 4
+		./ARTs --parent --thresholds-evolve -b ../../results/parent_thresholds_${i} --same-base -p 4
+		./ARTs --courter --parent --thresholds-evolve -b ../../results/parent-courter_thresholds_${i} --same-base -p 4
 	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
 done 
 
@@ -113,4 +113,4 @@ cat ../../logs/002_*_${DATE}.log >> ../../logs/002_${DATE}.log
 rm ../../logs/002_*_${DATE}.log
 
 # generate the report
-R -e "rmarkdown::render('../../scripts/002_expectationTests.Rmd')"
+#R -e "rmarkdown::render('../../scripts/002_expectationTests.Rmd')"

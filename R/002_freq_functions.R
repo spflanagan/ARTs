@@ -112,17 +112,19 @@ get.parent.freqs<-function(s){
 #' @return A list of data.frames containing the summary frequencies from all generations. The length of the list = number of files matching pattern.
 #' @note This is often difficult to interpret.
 #' @export
-plot.pc.reps<-function(pattern,cols,x.lim=c(0,12000)){
+plot.pc.reps<-function(pattern,cols,x.lim=c(0,12000),make.plot=TRUE){
   pc.files<-list.files(pattern=pattern)
   #set up colors
   parent.cols <- colorRampPalette(c("grey",cols["parent"],"black"))(length(pc.files))[2:(1+length(pc.files))]
   courtr.cols <- colorRampPalette(c("grey",cols["courter"],"black"))(length(pc.files))[2:(1+length(pc.files))]
   #set up an empty plot
-  par(mar=c(4,4,4,4))
-  plot(0:1,0:1,bty="U",xlab="Generations",ylab="Frequency of Courter Males",
-       type='n',xlim=x.lim,ylim=c(0,1))
-  axis(4)
-  mtext("Frequency of Parental Males",4,line=2)
+  if(isTRUE(make.plot)){
+    par(mar=c(4,4,4,4))
+    plot(0:1,0:1,bty="U",xlab="Generations",ylab="Frequency of Courter Males",
+         type='n',xlim=x.lim,ylim=c(0,1))
+    axis(4)
+    mtext("Frequency of Parental Males",4,line=2)
+  }
   #plot each run's output and save it
   s<-lapply(pc.files,function(file){
     summ<-suppressWarnings(read.delim(file))
@@ -130,18 +132,22 @@ plot.pc.reps<-function(pattern,cols,x.lim=c(0,12000)){
       pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
       pop<-pop[!is.na(pop$ParentFreq),]
       n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
-      points(pop$Generation,pop$CourterFreq,col=alpha(courtr.cols[n],0.5),
-             lwd=2,type="l")
-      points(pop$Generation,pop$ParentFreq,col=alpha(parent.cols[n],0.5),
-             lwd=2,type="l")
+      if(isTRUE(make.plot)){
+        points(pop$Generation,pop$CourterFreq,col=alpha(courtr.cols[n],0.5),
+               lwd=2,type="l")
+        points(pop$Generation,pop$ParentFreq,col=alpha(parent.cols[n],0.5),
+               lwd=2,type="l")
+      }
       return(pop)
     })
     names(sp)<-paste(file,1:length(sp),sep="_")
     return(as.list(sp))
   })
-  text(x=10000,y=1.1,xpd=TRUE,"Equilibrium\nevaluated")
-  clip(x1 = 0,x2=12000,y1=-0.1,y2=1.09)
-  abline(v=10000,lty=2,lwd=2)
+  if(isTRUE(make.plot)){
+    text(x=10000,y=1.1,xpd=TRUE,"Equilibrium\nevaluated")
+    clip(x1 = 0,x2=12000,y1=-0.1,y2=1.09)
+    abline(v=10000,lty=2,lwd=2)
+  }
   s<-do.call(c,s) 
   return(s)
 }
