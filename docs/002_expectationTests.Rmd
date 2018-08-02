@@ -17,6 +17,11 @@ The purpose of this model is to understand how genetic architectures of alternat
 knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=300)
 knitr::opts_knit$set(root.dir='../results/')
 ```
+```{r opts, echo = FALSE}
+knitr::opts_chunk$set(
+  fig.path = "figs/"
+)
+```
 ```{r, echo=FALSE}
 library(knitr)
 library(RColorBrewer)
@@ -53,7 +58,7 @@ Males can be courters or not-courters and parents or not-parents. When the model
 4. Viability selection on progeny
 5. Stochastic survival to adulthood
 
-```{r diagram}
+```{r diagram, eval=FALSE}
 library(DiagrammeR)
 # mermaid("
 #   graph LR
