@@ -10,9 +10,9 @@ NUMREPS=10
 NO_GENETICS=true
 CONDITIONAL=false
 COND_NFDS=false
-GENETIC_ARCH=false
+GENETIC_ARCH=true
 EVOLVING=false
-SUPERGENE=false
+SUPERGENE=true
 
 ## move to the correct directories - now you can run it from anywhere ##
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -71,13 +71,13 @@ for i in `seq 1 $NUMREPS`; do
 		./ARTs --parent -b ../../results/parent_${i} --verbose
 		./ARTs --courter --parent -b ../../results/parent-courter_${i} --verbose
 		 
-		./ARTs --courter --freq-dependent-preference -b ../../results/courter_nfds_${i} --verbose
-		./ARTs --parent --freq-dependent-preference -b ../../results/parent_nfds_${i} --verbose
-		./ARTs --courter --parent --freq-dependent-preference -b ../../results/parent-courter_nfds_${i} --verbose
+	#	./ARTs --courter --freq-dependent-preference -b ../../results/courter_nfds_${i} --verbose
+#		./ARTs --parent --freq-dependent-preference -b ../../results/parent_nfds_${i} --verbose
+#		./ARTs --courter --parent --freq-dependent-preference -b ../../results/parent-courter_nfds_${i} --verbose
 
-		./ARTs --courter --independent-pref -b ../../results/courter-pref_${i} --verbose
-	    ./ARTs --parent --independent-pref -b ../../results/parent-pref_${i} --verbose
-		./ARTs --courter --independent-pref --parent -b ../../results/parent-courter-pref_${i} --verbose
+#		./ARTs --courter --independent-pref -b ../../results/courter-pref_${i} --verbose
+#	    ./ARTs --parent --independent-pref -b ../../results/parent-pref_${i} --verbose
+#		./ARTs --courter --independent-pref --parent -b ../../results/parent-courter-pref_${i} --verbose
 	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
 
 	#with a genetic architecture
@@ -86,13 +86,13 @@ for i in `seq 1 $NUMREPS`; do
 		./ARTs --parent --supergene -b ../../results/parent_supergene_${i} --verbose
 		./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_${i} --verbose
 		 
-		./ARTs --courter --supergene --freq-dependent-preference -b ../../results/courter_supergene_nfds_${i} --verbose
-		./ARTs --parent --supergene --freq-dependent-preference -b ../../results/parent_supergene_nfds_${i} --verbose
-		./ARTs --courter --parent --supergene --freq-dependent-preference -b ../../results/parent-courter_supergene_nfds_${i} --verbose
+#		./ARTs --courter --supergene --freq-dependent-preference -b ../../results/courter_supergene_nfds_${i} --verbose
+#		./ARTs --parent --supergene --freq-dependent-preference -b ../../results/parent_supergene_nfds_${i} --verbose
+#		./ARTs --courter --parent --supergene --freq-dependent-preference -b ../../results/parent-courter_supergene_nfds_${i} --verbose
 
-		./ARTs --courter --independent-pref --supergene -b ../../results/courter-pref_supergene_${i} --verbose
-	    ./ARTs --parent --independent-pref --supergene -b ../../results/parent-pref_supergene_${i} --verbose
-		./ARTs --courter --independent-pref --supergene --parent -b ../../results/parent-courter-pref_supergene_${i} --verbose
+#		./ARTs --courter --independent-pref --supergene -b ../../results/courter-pref_supergene_${i} --verbose
+#	    ./ARTs --parent --independent-pref --supergene -b ../../results/parent-pref_supergene_${i} --verbose
+#		./ARTs --courter --independent-pref --supergene --parent -b ../../results/parent-courter-pref_supergene_${i} --verbose
 	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
 
 	#Evolving thresholds
