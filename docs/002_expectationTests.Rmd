@@ -1,13 +1,12 @@
 ---
 title: "Initial ARTs Results"
 author: "Sarah P. Flanagan"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output:
-  pdf_document: 
-    dev: png
   html_document: default
-header-includes: #allows you to add in your own Latex packages
-- \usepackage{float} #use the 'float' package
+  pdf_document:
+    dev: png
+header-includes: \usepackage{float}
 always_allow_html: yes
 ---
 
@@ -403,7 +402,7 @@ Here, the female preference has unlinked additive genetic variance that is inher
 s<-plot.pc.reps(pattern="^parent-courter-pref-nogenetics_\\d+_summary.txt",cols)
 ```
 ```{r unlinked_pc_pref_plotMorphs,echo=FALSE, fig.cap="Frequency of four morphs per rep",fig.height=10,fig.width=6}
-plot.morphs.reps(s,cols2,,ncols = 4)
+plot.morphs.reps(s,cols2,ncols = 4)
 ```
 ```{r unlinked_pc_pref_table,echo=FALSE}
 pcpref.freqs<-get.morph.freqs(s)
