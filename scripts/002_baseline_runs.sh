@@ -7,7 +7,7 @@
 
 ###----DETERMINE WHAT SHOULD RUN----###
 NUMREPS=10
-NO_GENETICS=false
+NO_GENETICS=true
 CONDITIONAL=false
 COND_NFDS=false
 GENETIC_ARCH=true
@@ -40,12 +40,12 @@ for i in `seq 1 $NUMREPS`; do
 
 	#No genetic architectures, just additive genetic variance
 	 if [ "$NO_GENETICS" = true ]; then
-		./ARTs --courter --no-genetics -b ../../results/courter-nogenetics_${i} --verbose --same-base -p 4
-	    ./ARTs --parent --no-genetics -b ../../results/parent-nogenetics_${i} --verbose --same-base -p 4
-		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter-nogenetics_${i} --verbose --same-base -p 4
-		./ARTs --courter --no-genetics --independent-pref -b ../../results/courter-pref-nogenetics_${i} --verbose --same-base -p 4
-	    ./ARTs --parent --no-genetics --independent-pref -b ../../results/parent-pref-nogenetics_${i} --verbose --same-base -p 4
-		./ARTs --courter --no-genetics --independent-pref --parent -b ../../results/parent-courter-pref-nogenetics_${i} --verbose --same-base -p 4
+		./ARTs --courter --no-genetics -b ../../results/courter_unlinked_${i} --verbose --same-base -p 4
+	    ./ARTs --parent --no-genetics -b ../../results/parent_unlinked_${i} --verbose --same-base -p 4
+		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_${i} --verbose --same-base -p 4
+		# ./ARTs --courter --no-genetics --independent-pref -b ../../results/courter-pref-nogenetics_${i} --verbose --same-base -p 4
+	    # ./ARTs --parent --no-genetics --independent-pref -b ../../results/parent-pref-nogenetics_${i} --verbose --same-base -p 4
+		# ./ARTs --courter --no-genetics --independent-pref --parent -b ../../results/parent-courter-pref-nogenetics_${i} --verbose --same-base -p 4
 	# 	./ARTs --courter --no-genetics --freq-dependent-preference -b ../../results/courter-nogenetics-nfds_${i} --verbose
 	# 	./ARTs --parent --no-genetics --freq-dependent-preference -b ../../results/parent-nogenetics-nfds_${i} --verbose
 	# 	./ARTs --courter --no-genetics --parent --freq-dependent-preference -b ../../results/parent-courter-nogenetics-nfds_${i} --verbose
@@ -67,9 +67,9 @@ for i in `seq 1 $NUMREPS`; do
 
 	#with a genetic architecture
 	if [ "$GENETIC_ARCH" = true ]; then
-		./ARTs --courter -b ../../results/courter_${i} --verbose --same-base -p 4
-		./ARTs --parent -b ../../results/parent_${i} --verbose --same-base -p 4
-		./ARTs --courter --parent -b ../../results/parent-courter_${i} --verbose --same-base -p 4
+		./ARTs --courter -b ../../results/courter_linked_${i} --verbose --same-base -p 4
+		./ARTs --parent -b ../../results/parent_linked_${i} --verbose --same-base -p 4
+		./ARTs --courter --parent -b ../../results/parent-courter_linked_${i} --verbose --same-base -p 4
 		 
 	#	./ARTs --courter --freq-dependent-preference -b ../../results/courter_nfds_${i} --verbose
 #		./ARTs --parent --freq-dependent-preference -b ../../results/parent_nfds_${i} --verbose

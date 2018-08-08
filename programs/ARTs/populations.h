@@ -1951,10 +1951,13 @@ public:
 			{
 				if (gp.polygyny || adults[male_id].mate_found == 0)//either polygyny is ok or if monogamy the male hasn't mated yet
 				{
-					mate_found = true;
-					adults[fem_index].mate_found++;
-					adults[male_id].mate_found++;
-					adults[fem_index].mate_id = male_id;
+					if (adults[male_id].alive && adults[male_id].mate_found < gp.max_num_mates)
+					{
+						mate_found = true;
+						adults[fem_index].mate_found++;
+						adults[male_id].mate_found++;
+						adults[fem_index].mate_id = male_id;
+					}
 				}
 			}
 			encounters++;
@@ -2048,7 +2051,7 @@ public:
 				}
 			}
 			else
-			{
+			{ // if the female can't find a preferred male, she will mate at random
 				mate_found = random_mating(gp, fem_index, male_index);
 			}
 		}//end of finding the mates
@@ -2954,6 +2957,8 @@ public:
 	}
 	void output_summary_info(parameters gp, ofstream & summary_output)
 	{
+        //pop info
+        summary_output << population_size << '\t' << num_mal << '\t' << num_fem << '\t' << num_progeny;
 		double dtemp;
 		vector<double> rs = avg_court_rs(gp);
 		if (gp.parent_trait || gp.parent_conditional)
@@ -2985,7 +2990,6 @@ public:
 		}
 		else
 			summary_output << "\tNA\tNA";
-		output_allele_freqs(gp, summary_output);
 		summary_output << std::flush;
 	}
 	void output_genotypes_vcf(parameters gp, int pop_id)

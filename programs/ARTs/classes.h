@@ -90,7 +90,7 @@ public:
 	double sperm_comp_r, egg_surv_parent, egg_surv_noparent;
 	string base_name;
 	bool same_base, court_trait, parent_trait, gene_network, env_cue, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
-	bool all_sneak, per_fem_mating, supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive,optimize;
+	bool all_sneak, per_fem_mating, supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive,optimize, output_vcf;
 	vector <int> qtl_per_chrom;
 
 	parameters()
@@ -99,7 +99,7 @@ public:
 		num_pops = num_init_gen = num_exp_gen = max_num_mates = int();
 		mutation_rate =recombination_rate = allelic_std_dev = egg_surv_parent = egg_surv_noparent = sperm_comp_r = double();
 		same_base = gene_network = env_cue = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
-		all_sneak = per_fem_mating = random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive = optimize =bool();
+		all_sneak = per_fem_mating = random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive = optimize= output_vcf=bool();
 		qtl_per_chrom = vector<int>();
 	}
 
@@ -134,7 +134,7 @@ public:
 		env_cue = gene_network = false;//default false
 		cor_prefs= ind_pref= FD_pref= CD_pref= FD_court= FD_parent= CD_court= CD_parent = false;//no selection
 		cor_mal_traits = false;//default false
-		polygyny = false;//default false
+		polygyny = true;//default false
 		base_name = "../../results/arts";//default: "../../results/arts"
 		num_ld_comparisons = 100;//default 100
 		rs_c = 8;//default 8
@@ -151,6 +151,7 @@ public:
 		verbose = false; //outputs info about every step during every initial generation -- good for debugging
 		no_genetics = false; //removes genetic architecture, is just unlinked additive genetic variance
 		optimize = false; //if true, it outputs time taken for each step. (default false)
+        output_vcf = false; //if true, a vcf will be output
 	}
 
 	void help_message()
@@ -199,7 +200,7 @@ public:
 		std::cout << "--random-mating:\tSpecifies no female choice (default: true).\n";
 		std::cout << "--all-sneak:\tSpecifies all males sneak, not just sneakers (default: false).\n";
 		std::cout << "--supergene:\tSpecifies whether the QTLs are grouped together in a supergene that has reduced recombination.\n";
-		std::cout << "--polygyny:\tAllows males to mate multiply (default: false).\n";
+		std::cout << "--polygyny:\tAllows males to mate multiply (default: true).\n";
 		std::cout << "--courter-conditional:\tIf the courter trait has no genetic basis and is determined randomly or through environmental effects.\n";
 		std::cout << "--parent-conditional:\tIf the parent trait has no genetic basis and is determined randomly or through environmental effects.\n";
 		std::cout << "--thresholds-evolve:\tIf the thresholds are allowed to evolve (i.e., they have a quantitative genetic basis).\n";
@@ -209,6 +210,7 @@ public:
 		std::cout << "--linked-additive:\t(default) Traits are determined by genome-wide additive genetic variance distributed among chromosomes.\n";
 		std::cout << "--optimize:\tOutput time steps for initial generations, for optimizing the code. (default is false)\n";
 		std::cout << "--same-base:\tStart each replicate population with the same base population (default is true)\n";
+        std::cout << "--output-vcf:\tInclude vcf output for all genotypes of individuals (default is false)\n";
 		std::cout << "-h or --help:\tPrint this help message.\n";
 	}
 
@@ -452,6 +454,8 @@ public:
 							optimize = true;
 						if (tempstring1 == "--same-base")
 							same_base = true;
+                        if(tempstring1 == "--output-vcf")
+                            output_vcf = true;
 					}
 				}
 				
@@ -543,6 +547,8 @@ public:
 			param_out << "\n--linked-additive";
 		if (all_sneak)
 			param_out << "\n--all-sneak";
+        if(output_vcf)
+            param_out << "\n--output-vcf";
 		param_out.close();
 	}
 };

@@ -60,14 +60,19 @@ int main(int argc, char*argv[])
 	
 	//output
 
-	string summary_output_name, trait_output_name, qtlinfo_output_name,popdyn_output_name;
-	ofstream summary_output, trait_output, qtlinfo_output, popdyn_output;
+	string summary_output_name, trait_output_name, qtlinfo_output_name,markers_output_name;
+	ofstream summary_output, trait_output, qtlinfo_output, markers_output;
 
 	trait_output_name = global_params.base_name + "_traits.txt";
 
-	popdyn_output_name = global_params.base_name + "_popdyn.txt";
-	popdyn_output.open(popdyn_output_name);
-	popdyn_output << "Generation\tPop\tPopSize\tNumMal\tNumFem\tNumProgeny";
+	markers_output_name = global_params.base_name + "_markers.txt";
+	markers_output.open(markers_output_name);
+	markers_output << "Generation\tPop";
+    for (i = 0; i < global_params.num_chrom; i++)
+    {
+        for (ii = 0; ii < global_params.num_markers; ii++)
+            markers_output << "\tMarker" << i << "." << ii;
+    }
 
 	qtlinfo_output_name = global_params.base_name + "_qtlinfo.txt";
 	qtlinfo_output.open(qtlinfo_output_name);
@@ -75,13 +80,9 @@ int main(int argc, char*argv[])
 
 	summary_output_name = global_params.base_name + "_summary.txt";
 	summary_output.open(summary_output_name);
-	summary_output << "Generation\tPop\tParentThresh\tParentFreq\tParentW\tNonParentW\tCourterThresh\tCourterFreq\tCourterW\tNonCourterW"
+	summary_output << "Generation\tPop\tPopSize\tNumMal\tNumFem\tNumProgeny\tParentThresh\tParentFreq\tParentW\tNonParentW\tCourterThresh\tCourterFreq\tCourterW\tNonCourterW"
 		<< "\tFreqNcNp\tFreqCNp\tFreqNcP\tFreqCP\tPrefThresh\tPrefFreq";
-	for (i = 0; i < global_params.num_chrom; i++)
-	{
-		for (ii = 0; ii < global_params.num_markers; ii++)
-			summary_output << "\tMarker" << i << "." << ii;
-	}		
+	
 
 	//Initialize
 	std::cout << "\nInitializing " << global_params.num_pops << " populations.\n" << std::flush;
@@ -95,7 +96,7 @@ int main(int argc, char*argv[])
 		if (!run)
 		{
 			summary_output.close();
-			popdyn_output.close();
+			markers_output.close();
 			if (command_line)
 				return 0;
 			else
@@ -113,7 +114,7 @@ int main(int argc, char*argv[])
 			if (!run)
 			{
 				summary_output.close();
-				popdyn_output.close();
+				markers_output.close();
 				if (command_line)
 					return 0;
 				else
@@ -135,7 +136,7 @@ int main(int argc, char*argv[])
 			if (!run)
 			{
 				summary_output.close();
-				popdyn_output.close();
+				markers_output.close();
 				if (command_line)
 					return 0;
 				else
@@ -224,7 +225,10 @@ int main(int argc, char*argv[])
 					std::cout << "\n   viability_selection took " << duration << " seconds.";
 				//output summary stats
 				summary_output << "\n" << i << "\tPop" << ii;
-				pops[ii].output_summary_info(global_params, summary_output);//includes allele freqs and RS
+				pops[ii].output_summary_info(global_params, summary_output, markers_output);//includes RS
+                //output allele frequencies
+                markers_output << "\n" << i << "\tPop" << ii;
+                output_allele_freqs(gp, markers_output);
 
 				//stochastic survival
 				//pops[ii].density_regulation(global_params);
@@ -239,7 +243,7 @@ int main(int argc, char*argv[])
 			{
 				std::cout << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n' << std::flush;
 				summary_output.close();
-				popdyn_output.close();
+				markers_output.close();
 				if (command_line)
 					return 0;
 				else
@@ -249,8 +253,6 @@ int main(int argc, char*argv[])
 					return 0;
 				}
 			}
-			//output population info
-			popdyn_output << '\n' << i << '\t' << ii << '\t' << pops[ii].population_size << '\t' << pops[ii].num_mal << '\t' << pops[ii].num_fem << '\t' << pops[ii].num_progeny << std::flush;
 			if(global_params.verbose)
 				std::cout << endl;
 		}	
@@ -276,7 +278,9 @@ int main(int argc, char*argv[])
 				pops[ii].viability_selection(global_params);
 				//output summary stats
 				summary_output << "\n" << global_params.num_init_gen + i << "\tPop" << ii;
-				pops[ii].output_summary_info(global_params, summary_output);//includes allele freqs
+				pops[ii].output_summary_info(global_params, summary_output);
+                markers_output << '\n' <<global_params.num_init_gen + i << "\tPop" << ii;
+                pops[ii].output_allele_freqs(global_params, markers_output);
 				//stochastic survival
 				//pops[i].density_regulation(global_params);
 				pops[ii].regulate_popsize(global_params);
@@ -298,9 +302,6 @@ int main(int argc, char*argv[])
 					if (global_params.verbose)
 						std::cout << ", " << new_courter << " courters" << std::flush;
 				}
-				//output population info
-				popdyn_output << '\n' << global_params.num_init_gen + i << '\t' << ii << '\t' 
-					<< pops[ii].population_size << '\t' << pops[ii].num_mal << '\t' << pops[ii].num_fem << '\t' << pops[ii].num_progeny << std::flush;
 				
 			}//if popsize > 0
 			else
@@ -308,7 +309,7 @@ int main(int argc, char*argv[])
 				std::cout << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n' << std::flush;
 				summary_output.close();
 				trait_output.close();
-				popdyn_output.close();
+				markers_output.close();
 				if (command_line)
 					return 0;
 				else
@@ -372,7 +373,8 @@ int main(int argc, char*argv[])
 		if (!eq_reached[i])
 		{
 			std::cout << "\nNo equilibrium could be reached for population " << i << " with population size " << pops[i].population_size << std::flush;
-			pops[i].output_genotypes_vcf(global_params, i);
+            if(global_params.output_vcf)
+                pops[i].output_genotypes_vcf(global_params, i);
 			pops[i].output_trait_info(global_params, i, trait_output);
 		}
 	}
@@ -380,7 +382,7 @@ int main(int argc, char*argv[])
 	//close output files
 	summary_output.close();
 	trait_output.close();
-	popdyn_output.close();
+	markers_output.close();
 	std::cout << "\nDone!\n" << std::flush;
 	if (command_line)
 		return 0;
