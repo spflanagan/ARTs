@@ -35,7 +35,7 @@ if [ "$EVOLVING" = true ]; then printf "\t%s\n" "EVOLVING"; fi
 echo "The program will run in the background."
 echo "Check the status with htop or by looking at logs/002_x_${DATE}.log"
 } >> ../../logs/002_${DATE}.log 2>&1
-
+{
 for i in `seq 1 $NUMREPS`; do
 
 	#No genetic architectures, just additive genetic variance
@@ -49,21 +49,21 @@ for i in `seq 1 $NUMREPS`; do
 	# 	./ARTs --courter --no-genetics --freq-dependent-preference -b ../../results/courter-nogenetics-nfds_${i} --verbose
 	# 	./ARTs --parent --no-genetics --freq-dependent-preference -b ../../results/parent-nogenetics-nfds_${i} --verbose
 	# 	./ARTs --courter --no-genetics --parent --freq-dependent-preference -b ../../results/parent-courter-nogenetics-nfds_${i} --verbose
-	 fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
+	 fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &!
 
 	#Random traits
 	if [ "$CONDITIONAL" = true ]; then
 		./ARTs --courter-conditional -b ../../results/courter-conditional_${i} --same-base -p 4
 		./ARTs --parent-conditional -b ../../results/parent-conditional_${i} --same-base -p 4
 		./ARTs --courter-conditional --parent-conditional -b ../../results/parent-courter-conditional_${i} --same-base -p 4
-	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
+	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &!
 
 	#Frequency dependent selection
 	if [ "$COND_NFDS" = true ]; then
 		./ARTs --courter-conditional --freq-dependent-preference -b ../../results/courter-conditional_nfds_${i} --same-base -p 4
 		./ARTs --parent-conditional --freq-dependent-preference -b ../../results/parent-conditional_nfds_${i} --same-base -p 4
 		./ARTs --courter-conditional --parent-conditional --freq-dependent-preference -b ../../results/parent-courter-conditional_nfds_${i} --same-base -p 4
-	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
+	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &!
 
 	#with a genetic architecture
 	if [ "$GENETIC_ARCH" = true ]; then
@@ -78,7 +78,7 @@ for i in `seq 1 $NUMREPS`; do
 #		./ARTs --courter --independent-pref -b ../../results/courter-pref_${i} --verbose
 #	    ./ARTs --parent --independent-pref -b ../../results/parent-pref_${i} --verbose
 #		./ARTs --courter --independent-pref --parent -b ../../results/parent-courter-pref_${i} --verbose
-	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
+	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &!
 
 	#with a genetic architecture
 	if [ "$SUPERGENE" = true ]; then
@@ -93,7 +93,7 @@ for i in `seq 1 $NUMREPS`; do
 #		./ARTs --courter --independent-pref --supergene -b ../../results/courter-pref_supergene_${i} --verbose
 #	    ./ARTs --parent --independent-pref --supergene -b ../../results/parent-pref_supergene_${i} --verbose
 #		./ARTs --courter --independent-pref --supergene --parent -b ../../results/parent-courter-pref_supergene_${i} --verbose
-	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
+	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &!
 
 	#Evolving thresholds
 	if [ "$EVOLVING" = true ]; then
@@ -104,8 +104,10 @@ for i in `seq 1 $NUMREPS`; do
 		./ARTs --courter --thresholds-evolve -b ../../results/courter_thresholds_${i} --same-base -p 4
 		./ARTs --parent --thresholds-evolve -b ../../results/parent_thresholds_${i} --same-base -p 4
 		./ARTs --courter --parent --thresholds-evolve -b ../../results/parent-courter_thresholds_${i} --same-base -p 4
-	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &
+	fi >> ../../logs/002_${i}_${DATE}.log 2>&1 &!
 done 
+}
+wait
 
 #concatenate the log files
 cat ../../logs/002_*_${DATE}.log >> ../../logs/002_${DATE}.log
@@ -113,4 +115,7 @@ cat ../../logs/002_*_${DATE}.log >> ../../logs/002_${DATE}.log
 rm ../../logs/002_*_${DATE}.log
 
 # generate the report
-#R -e "rmarkdown::render('../../scripts/002_expectationTests.Rmd')"
+R -e "rmarkdown::render('../../scripts/002_expectationTests.Rmd')"
+
+
+
