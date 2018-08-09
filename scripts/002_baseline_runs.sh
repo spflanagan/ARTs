@@ -45,7 +45,7 @@ echo "Check the status with htop or by looking at logs/002_x_${DATE}.log"
 if [ "$NO_GENETICS" = true ]; then
 	script1=$(mktemp /tmp/.script.XXXXX)
 	cat >$script1 <<END
-	for i in (`seq 1 $NUMREPS`); do
+	for i in `seq -s '' 1 $NUMREPS`; do
 		./ARTs --courter --no-genetics -b ../../results/courter_unlinked_${i} --verbose --same-base -p 4
 		./ARTs --parent --no-genetics -b ../../results/parent_unlinked_${i} --verbose --same-base -p 4
 		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_${i} --verbose --same-base -p 4
@@ -75,7 +75,7 @@ fi
 if [ "$CONDITIONAL" = true ]; then
 	script2=`mktemp /tmp/.script.XXXXX`;
 	cat >$script2 <<END
-	for i in (`seq 1 $NUMREPS`); do
+	for i in `seq -s '' 1 $NUMREPS`; do
 		./ARTs --courter-conditional -b ../../results/courter-conditional_${i} --same-base -p 4
 		./ARTs --parent-conditional -b ../../results/parent-conditional_${i} --same-base -p 4
 		./ARTs --courter-conditional --parent-conditional -b ../../results/parent-courter-conditional_${i} --same-base -p 4
@@ -92,7 +92,7 @@ fi
 if [ "$COND_NFDS" = true ]; then
 	script3=`mktemp /tmp/.script.XXXXX`;
 	cat >$script3 <<END
-	for i in (`seq 1 $NUMREPS`); do
+	for i in `seq -s '' 1 $NUMREPS`; do
 		./ARTs --courter-conditional --freq-dependent-preference -b ../../results/courter-conditional_nfds_${i} --same-base -p 4
 		./ARTs --parent-conditional --freq-dependent-preference -b ../../results/parent-conditional_nfds_${i} --same-base -p 4
 		./ARTs --courter-conditional --parent-conditional --freq-dependent-preference -b ../../results/parent-courter-conditional_nfds_${i} --same-base -p 4
@@ -109,7 +109,7 @@ fi
 if [ "$GENETIC_ARCH" = true ]; then
 	script4=`mktemp /tmp/.script.XXXXX`;
 	cat >$script4 <<END
-	for i in (`seq 1 $NUMREPS`); do
+	for i in `seq -s '' 1 $NUMREPS`; do
 		./ARTs --courter -b ../../results/courter_linked_${i} --verbose --same-base -p 4
 		./ARTs --parent -b ../../results/parent_linked_${i} --verbose --same-base -p 4
 		./ARTs --courter --parent -b ../../results/parent-courter_linked_${i} --verbose --same-base -p 4
@@ -136,20 +136,20 @@ fi
 if [ "$SUPERGENE" = true ]; then
 	script5=`mktemp /tmp/.script.XXXXX`;
 	cat >$script5 <<END
-	for i in (`seq 1 $NUMREPS`); do
+	for i in `seq -s '' 1 $NUMREPS`; do
 		./ARTs --courter --supergene -b ../../results/courter_supergene_${i} --verbose --same-base -p 4
 		./ARTs --parent --supergene -b ../../results/parent_supergene_${i} --verbose --same-base -p 4
 		./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_${i} --verbose --same-base -p 4
-			if [ "$FDS_PREF" = true ]; then
-				./ARTs --courter --supergene --freq-dependent-preference -b ../../results/courter_supergene_nfds_${i} --verbose
-				./ARTs --parent --supergene --freq-dependent-preference -b ../../results/parent_supergene_nfds_${i} --verbose
-				./ARTs --courter --parent --supergene --freq-dependent-preference -b ../../results/parent-courter_supergene_nfds_${i} --verbose
-			fi
-			if [ "$INDEP_PREF" = true ]; then
-				./ARTs --courter --independent-pref --supergene -b ../../results/courter-pref_supergene_${i} --verbose
-				./ARTs --parent --independent-pref --supergene -b ../../results/parent-pref_supergene_${i} --verbose
-				./ARTs --courter --independent-pref --supergene --parent -b ../../results/parent-courter-pref_supergene_${i} --verbose
-			fi
+		if [ "$FDS_PREF" = true ]; then
+			./ARTs --courter --supergene --freq-dependent-preference -b ../../results/courter_supergene_nfds_${i} --verbose
+			./ARTs --parent --supergene --freq-dependent-preference -b ../../results/parent_supergene_nfds_${i} --verbose
+			./ARTs --courter --parent --supergene --freq-dependent-preference -b ../../results/parent-courter_supergene_nfds_${i} --verbose
+		fi
+		if [ "$INDEP_PREF" = true ]; then
+			./ARTs --courter --independent-pref --supergene -b ../../results/courter-pref_supergene_${i} --verbose
+			./ARTs --parent --independent-pref --supergene -b ../../results/parent-pref_supergene_${i} --verbose
+			./ARTs --courter --independent-pref --supergene --parent -b ../../results/parent-courter-pref_supergene_${i} --verbose
+		fi
 	done >> ../../logs/002_SUPERGENE_${DATE}.log 2>&1
 END
 else
@@ -163,7 +163,7 @@ fi
 if [ "$EVOLVING" = true ]; then
 	script6=`mktemp /tmp/.script.XXXXX`;
 	cat >$script6 <<END
-	for i in (`seq 1 $NUMREPS`); do
+	for i in `seq -s '' 1 $NUMREPS`; do
 		./ARTs --courter-conditional --thresholds-evolve -b ../../results/courter-conditional_thresholds_${i} --same-base -p 4
 		./ARTs --parent-conditional --thresholds-evolve -b ../../results/parent-conditional_thresholds_${i} --same-base -p 4
 		./ARTs --courter-conditional --parent-conditional --thresholds-evolve -b ../../results/parent-courter-conditional_thresholds_${i} --same-base -p 4
@@ -199,7 +199,7 @@ rm ../../logs/002_*_${DATE}.log
 /bin/rm $script1 $script2 $script3 $script4 $script5 $script6
 
 # generate the report
-R -e "rmarkdown::render('../../scripts/002_expectationTests.Rmd')"
+#R -e "rmarkdown::render('../../scripts/002_expectationTests.Rmd')"
 
 
 
