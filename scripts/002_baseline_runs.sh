@@ -184,18 +184,22 @@ fi
 chmod u+rx $script1 $script2 $script3 $script4 $script5 $script6
 echo $script1 $script2 $script3 $script4 $script5 $script6
 $script1 &!
+PID1=$!
 $script2 &!
+PID2=$!
 $script3 &!
+PID3=$!
 $script4 &!
+PID4=$!
 $script5 &!
+PID5=$!
 $script6 &!
-wait;
+PID6=$!
+wait $PID1 $PID2 $PID3 $PID4 $PID5 $PID6
 
-#concatenate the log files
-cat ../../logs/002_*_${DATE}.log >> ../../logs/002_${DATE}.log &!
-wait
-#remove the intermediate log files
-rm ../../logs/002_*_${DATE}.log &!
+
+#concatenate the log files & remove the intermediate log files
+cat ../../logs/002_*_${DATE}.log >> ../../logs/002_${DATE}.log && rm ../../logs/002_*_${DATE}.log
 #and the temporary scripts
 /bin/rm $script1 $script2 $script3 $script4 $script5 $script6
 
