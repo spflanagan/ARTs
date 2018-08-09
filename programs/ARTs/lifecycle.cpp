@@ -226,7 +226,7 @@ int main(int argc, char*argv[])
 					std::cout << "\n   viability_selection took " << duration << " seconds.";
 				//output summary stats
 				summary_output << "\n" << i << "\tPop" << ii;
-				pops[ii].output_summary_info(global_params, summary_output, markers_output);//includes RS
+				pops[ii].output_summary_info(global_params, summary_output);//includes RS
                 //output allele frequencies
                 markers_output << "\n" << i << "\tPop" << ii;
                 pops[ii].output_allele_freqs(global_params, markers_output);
