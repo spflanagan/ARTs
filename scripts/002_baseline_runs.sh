@@ -38,7 +38,7 @@ if [ "$INDEP_PREF" = true ]; then printf "\t%s\n" "INDEP_PREF"; fi
 if [ "$FDS_PREF" = true ]; then printf "\t%s\n" "FDS_PREF"; fi
 echo "The program will run in the background."
 echo "Check the status with htop or by looking at logs/002_x_${DATE}.log"
-} >> ../../logs/002_${DATE}.log 2>&1
+} | tee ../../logs/002_${DATE}.log 2>&1
 
 ### --- RUN THE PARAMETER COMBINATIONS --- ###
 #No genetic architectures, just additive genetic variance
