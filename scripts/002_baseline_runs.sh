@@ -43,7 +43,7 @@ echo "Check the status with htop or by looking at logs/002_x_${DATE}.log"
 ### --- RUN THE PARAMETER COMBINATIONS --- ###
 #No genetic architectures, just additive genetic variance
 if [ "$NO_GENETICS" = true ]; then
-	script1=`mktemp /tmp/.script.XXXXX`;
+	script1=$(mktemp /tmp/.script.XXXXX)
 	cat >$script1 <<END
 	for i in `seq 1 $NUMREPS`; do
 		./ARTs --courter --no-genetics -b ../../results/courter_unlinked_${i} --verbose --same-base -p 4
@@ -60,13 +60,13 @@ if [ "$NO_GENETICS" = true ]; then
 			./ARTs --courter --no-genetics --parent --freq-dependent-preference -b ../../results/parent-courter-nogenetics-nfds_${i} --verbose
 		fi
 	done >> ../../logs/002_NOGEN_${DATE}.log 2>&1
-	END
+END
 	
 else
 	script1=`mktemp /tmp/.script.XXXXX`;
 	cat >$script1 <<END
 	echo "NO_GENETICS not run" >> ../../logs/002_NOGEN_${DATE}.log 2>&1
-	END
+END
 	
 
 fi 
@@ -80,7 +80,7 @@ if [ "$CONDITIONAL" = true ]; then
 		./ARTs --parent-conditional -b ../../results/parent-conditional_${i} --same-base -p 4
 		./ARTs --courter-conditional --parent-conditional -b ../../results/parent-courter-conditional_${i} --same-base -p 4
 	done >> ../../logs/002_CONDITIONAL_${DATE}.log 2>&1
-	END
+END
 else
 	script2=`mktemp /tmp/.script.XXXXX`;
 	cat >$script2 <<END
@@ -97,12 +97,12 @@ if [ "$COND_NFDS" = true ]; then
 		./ARTs --parent-conditional --freq-dependent-preference -b ../../results/parent-conditional_nfds_${i} --same-base -p 4
 		./ARTs --courter-conditional --parent-conditional --freq-dependent-preference -b ../../results/parent-courter-conditional_nfds_${i} --same-base -p 4
 	done >> ../../logs/002_CONDNFDS_${DATE}.log 2>&1
-	END
+END
 else
 	script3=`mktemp /tmp/.script.XXXXX`;
 	cat >$script3 <<END
 	echo "COND_NFDS not run" >> ../../logs/002_CONDNFDS_${DATE}.log 2>&1
-	END
+END
 fi 
 
 #with a genetic architecture
@@ -124,12 +124,12 @@ if [ "$GENETIC_ARCH" = true ]; then
 			./ARTs --courter --independent-pref --parent -b ../../results/parent-courter-pref_${i} --verbose
 		fi
 	done >> ../../logs/002_GENETiCS_${DATE}.log 2>&1
-	END
+END
 else
 	script4=`mktemp /tmp/.script.XXXXX`;
 	cat >$script4 <<END
 	echo "GENETIC_ARCH not run" >> ../../logs/002_GENETiCS_${DATE}.log 2>&1
-	END
+END
 fi 
 
 #with a genetic architecture
@@ -150,12 +150,12 @@ if [ "$SUPERGENE" = true ]; then
 			./ARTs --courter --independent-pref --supergene --parent -b ../../results/parent-courter-pref_supergene_${i} --verbose
 		fi
 	done >> ../../logs/002_SUPERGENE_${DATE}.log 2>&1
-	END
+END
 else
 	script5=`mktemp /tmp/.script.XXXXX`;
 	cat >$script5 <<END
 	echo "SUPERGENE not run" >> ../../logs/002_SUPERGENE_${DATE}.log 2>&1
-	END
+END
 fi 
 
 #Evolving thresholds
@@ -171,12 +171,12 @@ if [ "$EVOLVING" = true ]; then
 		./ARTs --parent --thresholds-evolve -b ../../results/parent_thresholds_${i} --same-base -p 4
 		./ARTs --courter --parent --thresholds-evolve -b ../../results/parent-courter_thresholds_${i} --same-base -p 4
 	done >> ../../logs/002_EVOLVING_${DATE}.log 2>&1 
-	END
+END
 else
 	script6=`mktemp /tmp/.script.XXXXX`;
 	cat >$script6 <<END
 	echo "EVOLVING not run" >> ../../logs/002_EVOLVING_${DATE}.log 2>&1
-	END
+END
 fi 
 
 
@@ -194,7 +194,7 @@ cat ../../logs/002_*_${DATE}.log >> ../../logs/002_${DATE}.log
 #remove the intermediate log files
 rm ../../logs/002_*_${DATE}.log
 #and the temporary scripts
-bin/rm $script1 $script2 $script3 $script4 $script5 $script6
+/bin/rm $script1 $script2 $script3 $script4 $script5 $script6
 
 # generate the report
 R -e "rmarkdown::render('../../scripts/002_expectationTests.Rmd')"
