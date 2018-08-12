@@ -501,7 +501,7 @@ The different runs have different outcomes.
 Let's look at the morph frequencies.
 
 
-```{r courtParent_morphfreqs_supergenes,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with supergenes"}
+```{r courtParent_morphfreqs_supergenes,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with supergenes",,fig.width=6,fig.height=10}
 plot.morphs.reps(s,cols2,ncols = 4)
 ```
 
