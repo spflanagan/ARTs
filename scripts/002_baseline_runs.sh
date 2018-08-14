@@ -58,7 +58,7 @@ NUM_ITER=$((NUM_THREADS/NUMREPS/NUM_COMMANDS))
 #No genetic architectures, just additive genetic variance
 if [ "$NO_GENETICS" = true ]; then
 	
-	for i in `seq -s '' ${NUMREPS}`; do
+	for i in `seq ${NUMREPS}`; do
 		./ARTs --courter --no-genetics -b ../../results/courter_unlinked_${i} --verbose --same-base -p 4 &
 		./ARTs --parent --no-genetics -b ../../results/parent_unlinked_${i} --verbose --same-base -p 4 &
 		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_${i} --verbose --same-base -p 4 &
@@ -79,7 +79,7 @@ fi
 #Random traits
 if [ "$CONDITIONAL" = true ]; then
 	
-	for i in `seq -s '' 1 $NUMREPS`; do
+	for i in `seq 1 $NUMREPS`; do
 		./ARTs --courter-conditional -b ../../results/courter-conditional_${i} --same-base -p 4 &
 		./ARTs --parent-conditional -b ../../results/parent-conditional_${i} --same-base -p 4 &
 		./ARTs --courter-conditional --parent-conditional -b ../../results/parent-courter-conditional_${i} --same-base -p 4 &
@@ -90,7 +90,7 @@ fi
 #Frequency dependent selection
 if [ "$COND_NFDS" = true ]; then
 
-	for i in `seq -s '' 1 $NUMREPS`; do
+	for i in `seq 1 $NUMREPS`; do
 		./ARTs --courter-conditional --freq-dependent-preference -b ../../results/courter-conditional_nfds_${i} --same-base -p 4 &
 		./ARTs --parent-conditional --freq-dependent-preference -b ../../results/parent-conditional_nfds_${i} --same-base -p 4 &
 		./ARTs --courter-conditional --parent-conditional --freq-dependent-preference -b ../../results/parent-courter-conditional_nfds_${i} --same-base -p 4 &
@@ -101,7 +101,7 @@ fi
 #with a genetic architecture
 if [ "$GENETIC_ARCH" = true ]; then
 
-	for i in `seq -s '' 1 $NUMREPS`; do
+	for i in `seq 1 $NUMREPS`; do
 		./ARTs --courter -b ../../results/courter_linked_${i} --verbose --same-base -p 4 &
 		./ARTs --parent -b ../../results/parent_linked_${i} --verbose --same-base -p 4 &
 		./ARTs --courter --parent -b ../../results/parent-courter_linked_${i} --verbose --same-base -p 4 &
@@ -122,7 +122,7 @@ fi
 #with a genetic architecture
 if [ "$SUPERGENE" = true ]; then
 
-	for i in `seq -s '' 1 $NUMREPS`; do
+	for i in `seq 1 $NUMREPS`; do
 		./ARTs --courter --supergene -b ../../results/courter_supergene_${i} --verbose --same-base -p 4 &
 		./ARTs --parent --supergene -b ../../results/parent_supergene_${i} --verbose --same-base -p 4 &
 		./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_${i} --verbose --same-base -p 4 &
@@ -142,7 +142,7 @@ fi
 #Evolving thresholds
 if [ "$EVOLVING" = true ]; then
 	
-	for i in `seq -s '' 1 $NUMREPS`; do
+	for i in `seq 1 $NUMREPS`; do
 		./ARTs --courter-conditional --thresholds-evolve -b ../../results/courter-conditional_thresholds_${i} --same-base -p 4 &
 		./ARTs --parent-conditional --thresholds-evolve -b ../../results/parent-conditional_thresholds_${i} --same-base -p 4 &
 		./ARTs --courter-conditional --parent-conditional --thresholds-evolve -b ../../results/parent-courter-conditional_thresholds_${i} --same-base -p 4 &
