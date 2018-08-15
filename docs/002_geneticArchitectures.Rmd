@@ -27,9 +27,9 @@ cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
 
 Get the data (we won't plot this right now)
 ```{r read_data,eval=TRUE}
-u<-plot.pc.reps("^parent-courter-nogenetics_\\d+_summary.txt",cols, make.plot = FALSE)
-l<-plot.pc.reps("^parent-courter_\\d+_summary.txt",cols,make.plot=FALSE)
-s<-plot.pc.reps("^parent-courter_supergene_\\d+_summary.txt",cols,make.plot=FALSE)
+u<-plot.pc.reps("^parent-courter-nogenetics_[1-5]_summary.txt",cols, make.plot = FALSE)
+l<-plot.pc.reps("^parent-courter_[1-5]_summary.txt",cols,make.plot=FALSE)
+s<-plot.pc.reps("^parent-courter_supergene_[1-5]_summary.txt",cols,make.plot=FALSE)
 saveRDS(u,"pc-unlinked.RDS")
 saveRDS(l,"pc-linked.RDS")
 saveRDS(s,"pc-supergenes.RDS")
@@ -43,7 +43,9 @@ s<-readRDS("pc-supergenes.RDS")
 ## Unlinked additive genetic variation
 
 ```{r courtParent_unlinked, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Morph freqs with unlinked SNPs",fig.width=480,fig.height=800}
+png("../figs/parentCourterU_morphs.png",height=8,width=18,units="in",res=300)
 plot.morphs.reps(u,cols2,ncols = 4)
+dev.off()
 ```
 
 I'm going to take a small subset of these to demonstrate the patterns
@@ -57,8 +59,9 @@ dev.off()
 ## Linked additive genetic variation
 
 ```{r courtParent_linked, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Morph freqs with linked SNPs"}
-
+png("../figs/parentCourterL.png",height=8,width=24,units="in",res=300)
 plot.morphs.reps(l,cols2,ncols = 4)
+dev.off()
 ```
 
 ```{r parentCourterL_sub}
@@ -69,8 +72,9 @@ dev.off()
 ## Supergenes
 
 ```{r courtParent_supergenes, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Morph freqs with supergenes"}
-
+png("../figs/parentCourterS.png",height=8,width=28,units="in",res=300)
 plot.morphs.reps(s,cols2,ncols = 4)
+dev.off()
 ```
 ```{r parentCourterS_sub}
 png("../figs/parentCourterS_sub.png",height=8,width=28,units="in",res=300)
