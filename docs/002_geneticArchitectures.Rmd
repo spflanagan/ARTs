@@ -42,7 +42,7 @@ s<-readRDS("pc-supergenes.RDS")
 
 ## Unlinked additive genetic variation
 
-```{r courtParent_unlinked, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Morph freqs with unlinked SNPs",fig.width=480,fig.height=800}
+```{r courtParent_unlinked, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Morph freqs with unlinked SNPs"}
 png("../figs/parentCourterU_morphs.png",height=8,width=18,units="in",res=300)
 plot.morphs.reps(u,cols2,ncols = 4)
 dev.off()
