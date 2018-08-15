@@ -26,7 +26,7 @@ cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
 ```
 
 Get the data (we won't plot this right now)
-```{r read_data,eval=TRUE}
+```{r read_data,eval=FALSE}
 u<-plot.pc.reps("^parent-courter-nogenetics_[1-5]_summary.txt",cols, make.plot = FALSE)
 l<-plot.pc.reps("^parent-courter_[1-5]_summary.txt",cols,make.plot=FALSE)
 s<-plot.pc.reps("^parent-courter_supergene_[1-5]_summary.txt",cols,make.plot=FALSE)
@@ -34,7 +34,7 @@ saveRDS(u,"pc-unlinked.RDS")
 saveRDS(l,"pc-linked.RDS")
 saveRDS(s,"pc-supergenes.RDS")
 ```
-```{r read_RDS,eval=FALSE}
+```{r read_RDS,eval=TRUE}
 u<-readRDS("pc-unlinked.RDS")
 l<-readRDS("pc-linked.RDS")
 s<-readRDS("pc-supergenes.RDS")
@@ -71,7 +71,7 @@ dev.off()
 ```
 ## Supergenes
 
-```{r courtParent_supergenes, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Morph freqs with supergenes"}
+```{r courtParent_supergenes, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Morph freqs with supergenes",fig.height=10,fig.width=10}
 png("../figs/parentCourterS.png",height=8,width=28,units="in",res=300)
 plot.morphs.reps(s,cols2,ncols = 4)
 dev.off()
