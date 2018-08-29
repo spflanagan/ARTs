@@ -143,7 +143,7 @@ public:
 		rs_nc = 4;//default 4
 		rs_p = 8;//default 8
 		rs_np = 4;//default 4
-		max_num_mates = 3;//default 3
+		max_num_mates = 3;//default 3 - used to cap number of sneakers allowed to fertilize a nest
 		egg_surv_noparent = 0.1;//default 0.1
 		egg_surv_parent = 0.9;//default 0.9
 		sperm_comp_r = 0.5; //default 0.5
@@ -176,6 +176,7 @@ public:
 		std::cout << "-i:\tnumber of initial generations. (10000)\n";
 		std::cout << "-g:\tnumber of experimental generations (2000).\n";
 		std::cout << "-mu:\tmaximum mutation rate (0.0002).\n";
+		std::cout << "-v:\tviability selection strength against courters and parents (50).\n";
 		std::cout << "-r:\tRecombination rate. (0.2) \n";
 		std::cout << "-asd:\tAllelic Standard Deviation (0.5)\n";
 		std::cout << "-prs:\tParental male reproductive success (8)\n";
@@ -402,6 +403,8 @@ public:
 							sperm_comp_r = atof(tempstring2.c_str());
 						if (tempstring1 == "-mm")
 							max_num_mates = atoi(tempstring2.c_str());
+						if (tempstring1 == "-v")
+							via_sel_strength = atoid(tempstring.c_str());
 					}
 					else
 					{

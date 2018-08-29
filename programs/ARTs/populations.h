@@ -1951,7 +1951,7 @@ public:
 			{
 				if (gp.polygyny || adults[male_id].mate_found == 0)//either polygyny is ok or if monogamy the male hasn't mated yet
 				{
-					if (adults[male_id].alive && adults[male_id].mate_found < gp.max_num_mates)
+					if (adults[male_id].alive)// && adults[male_id].mate_found < gp.max_num_mates)
 					{
 						mate_found = true;
 						adults[fem_index].mate_found++;
@@ -2001,7 +2001,7 @@ public:
 				male_id = male_index[irndnum];
 				if (adults[male_id].alive)
 				{
-					if (adults[male_id].mate_found < gp.max_num_mates)
+					//if (adults[male_id].mate_found < gp.max_num_mates)
 					{
 						if (gp.gene_network)
 						{//redetermine traits and thresholds, given the mating experience and optimality of trait
