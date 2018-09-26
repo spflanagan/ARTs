@@ -1960,7 +1960,7 @@ public:
 						nest_alive = dd_nest_survival(gp, adults[j].mate_id);
 						if(nest_alive)
 						{
-							nests.push_back(nest);
+							nests.push_back(nest());
 							nests[nest_count].mom = j;
 							nests[nest_count].nest_dad = adults[j].mate_id;
 							//assign paternity proportions						
