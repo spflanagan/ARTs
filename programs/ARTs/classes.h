@@ -421,7 +421,7 @@ public:
 						if (tempstring1 == "-mm")
 							max_num_mates = atoi(tempstring2.c_str());
 						if (tempstring1 == "-v")
-							via_sel_strength = atoid(tempstring.c_str());
+							via_sel_strength = atof(tempstring2.c_str());
 					}
 					else
 					{

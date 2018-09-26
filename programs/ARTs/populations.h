@@ -373,7 +373,7 @@ public:
 			max_potential_fecund = 1;
 		else
 		{
-			max_potential_fecund = max(gp.max_fecund, gp.rs_c)
+			max_potential_fecund = max(gp.max_fecund, gp.rs_c);
 			max_potential_fecund = max(max_potential_fecund, gp.rs_nc);
 			max_potential_fecund = max(max_potential_fecund, gp.rs_np);
 			max_potential_fecund = max(max_potential_fecund, gp.rs_p);
@@ -1964,7 +1964,7 @@ public:
 							nests[nest_count].mom = j;
 							nests[nest_count].nest_dad = adults[j].mate_id;
 							//assign paternity proportions						
-							dd_assign_sneakers(fem_id, gp, nests[nest_count]);
+							dd_assign_sneakers(nests[nest_count].mom, gp, nests[nest_count]);
 							nest_count++;
 							fem_ms++;
 						}
@@ -2109,7 +2109,7 @@ public:
 	}
 	void find_sneakers(vector<int>& sneakers, parameters gp)
 	{
-		for (k = 0; k < adults.size(); k++)
+		for (int k = 0; k < adults.size(); k++)
 		{
 			if (adults[k].alive && !adults[k].female)
 			{
@@ -2140,7 +2140,7 @@ public:
 		if(off_counter < off_to_make)//make sure the nest was filled -- if it wasn't, the nesting male sires the remainder
 		{
 			making_babies(gp, (off_to_make - off_counter), num_progeny, this_nest.mom, this_nest.nest_dad);
-			off_counter = off_to_make
+			off_counter = off_to_make;
 		}	
 		//sanity check
 		if(off_counter != (start_numprog - num_progeny))
@@ -2203,9 +2203,10 @@ public:
 			for (k = 1; k < fecundity_share.size(); k++)
 				fecundity_share[k] = double(adults[male_ids[k]].pot_rs*gp.sperm_comp_r) / double(max_sperm);
 			for(k = 0; k < fecundity_share.size(); k++)
-				this_nest.off_props.push_back(fecundity_share);
+				this_nest.off_props.push_back(fecundity_share[k]);
 			for(k = 0; k < male_ids.size(); k++)
 				this_nest.all_dads.push_back(male_ids[k]);
+		}
 	}
 	int fertilization(int fem_id,parameters gp)
 	{
