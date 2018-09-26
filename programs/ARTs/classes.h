@@ -94,7 +94,7 @@ public:
 		all_dads = vector<int>();
 		off_props = vector<double>();
 	}
-}
+};
 
 class parameters
 {
