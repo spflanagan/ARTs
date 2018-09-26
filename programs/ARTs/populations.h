@@ -368,10 +368,16 @@ public:
 	{
 		int j, jj, jjj;
 		//determine the maximum possible fecundity
-		int max_potential_fecund = max(gp.max_fecund, gp.rs_c);
-		max_potential_fecund = max(max_potential_fecund, gp.rs_nc);
-		max_potential_fecund = max(max_potential_fecund, gp.rs_np);
-		max_potential_fecund = max(max_potential_fecund, gp.rs_p);
+		int max_potential_fecund;
+		if(gp.density_dependent) //if it's density dependent then we only make the carrying capacity number of offspring
+			max_potential_fecund = 1;
+		else
+		{
+			max_potential_fecund = max(gp.max_fecund, gp.rs_c)
+			max_potential_fecund = max(max_potential_fecund, gp.rs_nc);
+			max_potential_fecund = max(max_potential_fecund, gp.rs_np);
+			max_potential_fecund = max(max_potential_fecund, gp.rs_p);
+		}
 		for (j = 0; j < (max_potential_fecund*gp.carrying_capacity); j++)
 		{
 			progeny.push_back(individual());
@@ -1426,7 +1432,7 @@ public:
 		}
 	}
 
-	//calculating cues
+	//calculating cues to determine morph
 	void nesting_cue_eval(parameters gp, int mal_id,bool courter_trait, double fem_opt)
 	{
 		double c;
@@ -1469,7 +1475,7 @@ public:
 			//I could add frequency dependence but I'm not sure how...
 		}
 	}
-	void parent_cue_eval(parameters gp, int mal_id)
+	void parent_cue_eval(parameters gp, int mal_id) 
 	{
 		double c;
 		if (gp.gene_network)
@@ -1812,8 +1818,8 @@ public:
 
 		for (jj = 0; jj < fecundity; jj++)
 		{
-			if (num_progeny >= (gp.max_fecund*gp.carrying_capacity))
-				num_progeny = (gp.max_fecund*gp.carrying_capacity) - 1;
+			if (num_progeny >= progeny.size())
+				num_progeny = progeny.size() - 1;
 
 			progeny[num_progeny].alive = true;
 			progeny[num_progeny].mom = mom_index;
@@ -1881,7 +1887,7 @@ public:
 	}
 	void nest_and_fertilize(parameters gp, bool output, string out_name)
 	{
-		int j, first_progeny;
+		int j, jj, jjj, first_progeny;
 		bool nest_found;
 		vector<int> male_index;
 		ofstream out_file;
@@ -1917,8 +1923,8 @@ public:
 			std::cout << ", " << num_mal << " males, " << num_fem << " females" << flush;
 		if(gp.per_fem_mating)
 			per_female_mating(gp, male_index);
-		else
-		{
+		else if(!gp.density_dependent)
+		{//old version leading to pop crashes
 			for (j = 0; j < adults.size(); j++)
 			{
 				if (adults[j].female && adults[j].alive) //loop through the females.
@@ -1934,6 +1940,50 @@ public:
 					}
 				}
 			}
+		}
+		else
+		{ //THIS IS THE DEFAULT ONE!
+			bool nest_alive;
+			vector<nest> nests;
+			int nest_count = 0;
+			//set up the nests
+			for (j = 0; j < adults.size(); j++)
+			{
+				if (adults[j].female && adults[j].alive) //loop through the females.
+				{
+					nest_found = choose_nest(j, male_index, gp);
+					if (nest_found)
+					{
+						if (gp.gene_network)
+							parent_cue_eval(gp, adults[j].mate_id); //determine the parental male's morph
+						//does the nest survive?
+						nest_alive = dd_nest_survival(gp, adults[j].mate_id);
+						if(nest_alive)
+						{
+							nests.push_back(nest);
+							nests[nest_count].mom = j;
+							nests[nest_count].nest_dad = adults[j].mate_id;
+							//assign paternity proportions						
+							dd_assign_sneakers(fem_id, gp, nests[nest_count]);
+							nest_count++;
+							fem_ms++;
+						}
+					}
+				}
+			}
+			//create offspring in proportion to successful nests
+			int off_remaining = gp.carrying_capacity;
+			int nests_remaining = nest_count;
+			for(j = 0; j < nest_count; j++)
+			{
+				int off_to_make = off_remaining/nests_remaining;
+				int off_made = dd_make_offspring(nests[j], num_progeny, off_to_make, gp);
+				off_remaining = off_remaining - off_made;
+				nests_remaining = nests_remaining - 1;
+			}
+			//sanity check
+			if(num_progeny != gp.carrying_capacity)
+				cout << "\nWARNING! There's something wrong with density dependent selection! " << num_progeny << " were produced but the carrying capacity is " << gp.carrying_capacity << std::flush;
 		}
 		if (gp.verbose)
 			std::cout <<", and " << fem_ms << " mated" << std::flush;
@@ -2057,17 +2107,8 @@ public:
 		}//end of finding the mates
 		return mate_found;
 	}
-	int fertilization(int fem_id,parameters gp)
+	void find_sneakers(vector<int>& sneakers, parameters gp)
 	{
-		int k,kk,fecundity, randmale, max_sperm, first_progeny, num_mates, num_prog;
-		int male_id = adults[fem_id].mate_id;
-		vector<int> male_ids;
-		vector<double> fecundity_share;	
-		vector <int> sneakers;
-		first_progeny = num_progeny;//set up this tracker
-		
-		max_sperm = adults[male_id].pot_rs;
-		//identify sneakers/eligible bachelors
 		for (k = 0; k < adults.size(); k++)
 		{
 			if (adults[k].alive && !adults[k].female)
@@ -2084,6 +2125,100 @@ public:
 				}
 			}
 		}
+	}
+	int dd_make_offspring(nest this_nest,int& num_progeny, int off_to_make, parameters gp) //num_progeny tracks the prog index we're on
+	{
+		int k, kk;
+		int off_counter = 0;	
+		int start_numprog = num_progeny;
+		for(k = 0; k < this_nest.off_props.size(); k++)
+		{//each dad gets babies
+			int fecundity = off_to_make*this_nest.off_props[k];
+			making_babies(gp, fecundity, num_progeny, this_nest.mom, this_nest.all_dads[k]);
+			off_counter = off_counter+ fecundity;
+		}
+		if(off_counter < off_to_make)//make sure the nest was filled -- if it wasn't, the nesting male sires the remainder
+		{
+			making_babies(gp, (off_to_make - off_counter), num_progeny, this_nest.mom, this_nest.nest_dad);
+			off_counter = off_to_make
+		}	
+		//sanity check
+		if(off_counter != (start_numprog - num_progeny))
+			cout << "\nWrong number of offspring created for nest with female " << this_nest.mom << std::flush;
+		return off_counter;
+	}
+	void dd_assign_sneakers(int fem_id, parameters gp, nest this_nest)
+	{
+		int k, fecundity, randmale, max_sperm, first_progeny, num_mates, num_prog;
+		int male_id = adults[fem_id].mate_id;
+		vector<int> male_ids;
+		vector<double> fecundity_share;	
+		vector <int> sneakers;
+		find_sneakers(sneakers, gp);
+		if (sneakers.size() == 0)//if all males are parents, no one will sneak
+		{
+			if (adults[male_id].pot_rs > 0)//make sure the male has the sperm to fertilize the offspring
+			{
+				if (adults[male_id].pot_rs >= adults[fem_id].pot_rs)//they can only produce as many offspring as the male has sperm for, up to what the female can produce
+					fecundity = adults[fem_id].pot_rs;
+				else
+					fecundity = adults[male_id].pot_rs;
+				this_nest.off_props.push_back(fecundity/adults[fem_id].pot_rs); //do this so that a male who's been chosen a bunch of times has depleted sperm
+				this_nest.all_dads.push_back(male_id);
+				adults[male_id].pot_rs = adults[male_id].pot_rs - fecundity; //reduce male's RS based on how many babies he's already made.
+			}
+			else
+			{
+				this_nest.off_props.push_back(0);
+			}
+		}
+		else
+		{
+			male_ids.push_back(male_id);
+			fecundity_share.push_back(0);
+			if (sneakers.size() < gp.max_num_mates)
+				num_mates = sneakers.size() + 1;
+			else
+				num_mates = gp.max_num_mates;
+			int tries = 0;
+			while (male_ids.size() < num_mates && tries < 10000)
+			{
+				randmale = randnum(sneakers.size());
+				if (randmale != male_id)
+				{
+					if (!adults[sneakers[randmale]].parent && (adults[sneakers[randmale]].pot_rs > 0))//if it's a sneaker: sanity check!
+					{
+						fecundity_share.push_back(0);
+						male_ids.push_back(sneakers[randmale]);
+						int male_sperm = (gp.sperm_comp_r*adults[sneakers[randmale]].pot_rs);
+						if (male_sperm > adults[sneakers[randmale]].pot_rs)
+							male_sperm = adults[sneakers[randmale]].pot_rs;
+						max_sperm = max_sperm + male_sperm;//if sperm_comp_r is 1, they're all equally weighted
+						//adults[sneakers[randmale]].mate_found++;//keep track of individual reproductive success
+					}
+				}
+				tries++;//just to break out of a while loop in case.
+			}
+			fecundity_share[0] = double(adults[male_id].pot_rs) / double(max_sperm); //it doesn't get weighted if r <= 1
+			for (k = 1; k < fecundity_share.size(); k++)
+				fecundity_share[k] = double(adults[male_ids[k]].pot_rs*gp.sperm_comp_r) / double(max_sperm);
+			for(k = 0; k < fecundity_share.size(); k++)
+				this_nest.off_props.push_back(fecundity_share);
+			for(k = 0; k < male_ids.size(); k++)
+				this_nest.all_dads.push_back(male_ids[k]);
+	}
+	int fertilization(int fem_id,parameters gp)
+	{
+		int k,kk,fecundity, randmale, max_sperm, first_progeny, num_mates, num_prog;
+		int male_id = adults[fem_id].mate_id;
+		vector<int> male_ids;
+		vector<double> fecundity_share;	
+		vector <int> sneakers;
+		first_progeny = num_progeny;//set up this tracker
+		
+		max_sperm = adults[male_id].pot_rs;
+		//identify sneakers/eligible bachelors
+		find_sneakers(sneakers, gp);
 		if (sneakers.size() == 0)//if all males are parents, no one will sneak
 		{
 			if (adults[male_id].pot_rs > 0)//make sure the male has the sperm to fertilize the offspring
@@ -2152,14 +2287,13 @@ public:
 	void nest_survival(parameters gp, int prog_start, int mal_id)
 	{
 		int k;
-		double surv_rand;
+		double surv_rand= genrand(); //set this for the whole nest
 		if (gp.parent_conditional || gp.parent_trait)//assign survival based on parent trait
 		{											// otherwise all of them survive (don't need to do anything)
 			for (k = prog_start; k < num_progeny; k++)
 			{
 				if (progeny[k].alive)//only deal with ones that are alive at this point
 				{
-					surv_rand = genrand();
 					if (adults[mal_id].parent)
 					{
 						if (surv_rand < gp.egg_surv_parent)
@@ -2177,6 +2311,31 @@ public:
 				}
 			}
 		}
+	}
+	bool dd_nest_survival(parameters gp, int mal_id)
+	{
+		bool alive = true;
+		int k;
+		double surv_rand;
+		if (gp.parent_conditional || gp.parent_trait)//assign survival based on parent trait
+		{											// otherwise all of them survive (don't need to do anything)
+			surv_rand = genrand();
+			if (adults[mal_id].parent)
+			{
+				if (surv_rand < gp.egg_surv_parent)
+					alive = true;
+				else
+					alive = false;
+			}
+			else
+			{
+				if (surv_rand < gp.egg_surv_noparent)
+					alive = true;
+				else
+					alive = false;
+			}
+		}
+		return alive;
 	}
 
 	//selection

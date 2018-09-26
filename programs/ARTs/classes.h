@@ -81,6 +81,21 @@ public:
 
 };
 
+class nest
+{
+public:
+	int mom, nest_dad;
+	vector<int> all_dads;
+	vector<double> off_props;
+
+	nest()
+	{
+		mom = nest_dad = int();
+		all_dads = vector<int>();
+		off_props = vector<double>();
+	}
+}
+
 class parameters
 {
 public:
@@ -90,7 +105,7 @@ public:
 	double sperm_comp_r, egg_surv_parent, egg_surv_noparent;
 	string base_name;
 	bool same_base, court_trait, parent_trait, gene_network, env_cue, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
-	bool all_sneak, per_fem_mating, supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive,optimize, output_vcf;
+	bool density_dependent,all_sneak, per_fem_mating, supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive,optimize, output_vcf;
 	vector <int> qtl_per_chrom;
 	bool log_file;
 
@@ -100,7 +115,7 @@ public:
 		num_pops = num_init_gen = num_exp_gen = max_num_mates = int();
 		mutation_rate =recombination_rate = allelic_std_dev = egg_surv_parent = egg_surv_noparent = sperm_comp_r = double();
 		same_base = gene_network = env_cue = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
-		all_sneak = per_fem_mating = random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive = optimize= output_vcf=bool();
+		density_dependent = all_sneak = per_fem_mating = random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive = optimize= output_vcf=bool();
 		qtl_per_chrom = vector<int>();
 		log_file = bool();
 	}
@@ -125,6 +140,7 @@ public:
 		recombination_rate = 0.2;//0.2
 		allelic_std_dev = 0.5;//default 0.5
 		supergene_prop = 0.1; //default 0.1 (10% of num_markers = 100)
+		density_dependent = true; //default: true (sets density dependent mate choice)
 		random_mating = true;//default: true
 		all_sneak = false; //default: false
 		per_fem_mating = true; //the original implementation of mating
@@ -212,6 +228,7 @@ public:
 		std::cout << "--verbose:\tOutputs info about every step during every initial generation -- good for debugging";
 		std::cout << "--no-genetics:\tRemoves genetic architecture; traits encoded by heritable unlinked additive genetic variance.\n";
 		std::cout << "--linked-additive:\t(default) Traits are determined by genome-wide additive genetic variance distributed among chromosomes.\n";
+		std::cout << "--density-independent:\tTurns off density-dependent selection. This is not recommended as it will likely lead to population crashes.\n";
 		std::cout << "--optimize:\tOutput time steps for initial generations, for optimizing the code. (default is false)\n";
 		std::cout << "--same-base:\tStart each replicate population with the same base population (default is true)\n";
         std::cout << "--output-vcf:\tInclude vcf output for all genotypes of individuals (default is false)\n";
@@ -465,6 +482,8 @@ public:
                             output_vcf = true;
 						if (tempstring1 == "--log-file")
 							log_file = true;
+						if(tempstring1 == "--density-independent")
+							density_dependent = false;
 					}
 				}
 				
@@ -558,6 +577,10 @@ public:
 			param_out << "\n--all-sneak";
         if(output_vcf)
             param_out << "\n--output-vcf";
+		if(density_dependent)
+			param_out << "\ndensity dependent";
+		else
+			param_out << "\ndensity independent";
 		param_out.close();
 	}
 };
