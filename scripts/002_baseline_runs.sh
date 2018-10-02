@@ -155,7 +155,7 @@ fi
 
 
 # generate the report
-#Rscript -e "rmarkdown::render('../../scripts/002_expectationTests.Rmd')"
+#Rscript -e "rmarkdown::render('../../docs/002_expectationTests.Rmd')"
 
 
 

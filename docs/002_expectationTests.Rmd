@@ -369,7 +369,7 @@ The different runs have different outcomes.
 Let's look at the morph frequencies.
 
 
-```{r courtParent_morphfreqs_linked,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with linked QTLs"}
+```{r courtParent_morphfreqs_linked,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with linked QTLs",fig.height=10,fig.width=6}
 plot.morphs.reps(l,cols2,ncols = 4)
 ```
 
@@ -461,7 +461,7 @@ pss<-plot.parent.reps(pattern="^parent_supergene_\\d+_summary.txt",cols)
 
 
 ```{r supergenes_parent_final}
-parent.final.freqs<-get.parent.freqs(ps)
+parent.final.freqs<-get.parent.freqs(pss)
 #aggregate the data
 parent.ws<-apply(parent.final.freqs,1,function(rep){ return(c(rep["ParentW"],rep["NonParentW"]))})
 parent.freqs<-apply(parent.final.freqs,1,function(rep){ return(c(rep["ParentFreq"],1-rep["ParentFreq"]))})
