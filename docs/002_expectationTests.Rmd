@@ -26,26 +26,10 @@ library(knitr)
 library(RColorBrewer)
 library(scales)
 source("../R/002_freq_functions.R")
-read_chunk("../R/002_expectationTests.R")
 cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
 cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
 ```
 
-
-<!-- Based on previous theoretical work, the following expectations exist: -->
-<!-- ```{r expecations, echo=FALSE} -->
-<!-- expectations<-data.frame(Scenario=c("Courtship trait", "Parental Trait","Courtship and Parental Traits", -->
-<!--                                     "Courtship Trait + Neg Freq Dep Sel", "Parental Trait + Neg Freq Dep Sel", -->
-<!--                                     "Parental Trait and courtship Trait + Neg Freq Dep Sel"), -->
-<!--                          Expected_Outcome=c("Both alts maintained if costs = benefits","Both alts maintained if costs = benefits", -->
-<!--                                             "Coevolution of both alts, and both alts maintained if costs = benefits", -->
-<!--                                             "both alts maintained", "?","?")) -->
-<!-- kable(expectations, caption = "Expected outcomes") -->
-<!-- ``` -->
-
-<!-- One caveat to comparing to previous work is that in my model the parental and courtship traits have a trade-off, and I haven't found a model incorporated tradeoffs and negative frequency dependent selection. -->
-
-<!-- But we can look at what happens with the runs that I've done *(note that these are individual runs, not averages of multiple runs)*. Let's start with the ones that do not have a genetic architecture. -->
 
 ## Overview of the model 
 
@@ -128,31 +112,19 @@ Females choose nests based on whether the male is a courter or not, and they all
 cu<-plot.courter.reps(pattern="^courter_unlinked_\\d+_summary.txt",cols)
 ```
 
-Of the `r length(cu)` replicates, `r length(unlist(lapply(cu,nrow))[unlist(lapply(cu,nrow))==9999])` reached an equilibrium by 10000 generations. 
+Of the `r length(cu)` replicates, all of them reached an equilibrium by 10000 generations. 
 
 ```{r unlinked_courter_final}
 courter.final.freqs<-get.courter.freqs(cu)
 #aggregate the data
 court.ws<-apply(courter.final.freqs,1,function(rep){ return(c(rep["CourterW"],rep["NonCourterW"]))})
 court.freqs<-apply(courter.final.freqs,1,function(rep){ return(c(rep["CourterFreq"],1-rep["CourterFreq"]))})
-court.eq<-apply(courter.final.freqs,1,function(rep){ if(rep["Generation"]==9999) return("E") else return("N")})
 ```
-```{r courter_barplot,eval=FALSE,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Fitnesses of each morph with frequncies in the bars. E below the bars means the rep reached equilibrium, N means it did"}
-#plot the final fitnesses
-b<-barplot(court.ws,beside=TRUE,col=c(alpha(cols["courter"],0.75),alpha("darkgrey",0.75)),ylim=c(0,5),
-        names.arg = rep("",10),ylab="Average Fitness",border = NA)
-text(x=b[1,],y=1,label=court.freqs[1,],srt=90)
-text(x=b[2,],y=1,label=court.freqs[2,],srt=90)
-text(x=seq(2,30,3),y=-0.15,label=court.eq,xpd=T)
-text(x=-1,y=-0.175,label="Equilibrium:",xpd=T)
-legend("topright",bty='n',col=c(alpha(cols["courter"],0.75),alpha("darkgrey",0.75)),
-       c("Courter","Non-courter"),pch=15)
-```
+
 
 
 ```{r courter_table}
-final.freqs<-courter.final.freqs[,-1]
-kable(final.freqs,caption = "Frequency of courters in final generation",
+kable(courter.final.freqs,caption = "Frequency of courters in final generation",
       row.names = TRUE)
 ```
 
@@ -162,7 +134,7 @@ kable(final.freqs,caption = "Frequency of courters in final generation",
 #Now let's look at the traits of the individuals in the final generation.
 source("../../gwscaR/R/gwscaR_plot.R") #for the gwsca.vioplot function
 #get the files
-trait.files<-list.files(pattern="^courter-nogenetics_\\d+_traits.txt")
+trait.files<-list.files(pattern="^courter_linked_\\d+_traits.txt")
 t<-lapply(trait.files,function(file){
   summ<-suppressWarnings(read.delim(file))
   return(summ)
@@ -201,7 +173,6 @@ parent.final.freqs<-get.parent.freqs(pu)
 #aggregate the data
 parent.ws<-apply(parent.final.freqs,1,function(rep){ return(c(rep["ParentW"],rep["NonParentW"]))})
 parent.freqs<-apply(parent.final.freqs,1,function(rep){ return(c(rep["ParentFreq"],1-rep["ParentFreq"]))})
-parent.eq<-apply(parent.final.freqs,1,function(rep){ if(rep["Generation"]==9999) return("E") else return("N")})
 ```
 ```{r parent_barplot,eval=FALSE,echo=FALSE,fig.cap="Fitnesses of each morph with frequncies in the bars. E below a set of bars means that replicate resulted in an equilibrium and N means it did not reach an equilibrium."}
 #plot the final fitnesses
@@ -216,12 +187,11 @@ legend("topright",bty='n',col=c(alpha(cols["parent"],0.75),alpha("darkgrey",0.75
 ```
 
 ```{r parent_table}
-final.freqs<-parent.final.freqs[,-1]
-kable(final.freqs,caption = "Frequency of parents in final generation",
+kable(parent.final.freqs,caption = "Frequency of parents in final generation",
       row.names = TRUE)
 ```
 
-Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[r==0])})[apply(final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(final.freqs)`. `r length(unlist(lapply(pu,nrow))[lapply(pu,nrow) < 9999])` of the `r length(pu)` populations crashed, though. Of the `r length(pu)` replicates, `r length(unlist(lapply(pu,nrow))[unlist(lapply(pu,nrow))>=9999])` reached an equilibrium by 10000 generations. 
+Variation was maintained in `r length(apply(parent.final.freqs,1,function(r){ length(r[r==0])})[apply(parent.final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(parent.final.freqs)`. `r length(unlist(lapply(pu,nrow))[lapply(pu,nrow) < 9999])` of the `r length(pu)` populations crashed, though. Of the `r length(pu)` replicates, `r length(unlist(lapply(pu,nrow))[unlist(lapply(pu,nrow))>=9999])` reached an equilibrium by 10000 generations. 
 
 ### Courtship and Parental Traits
 
@@ -287,7 +257,7 @@ text(x=-0.1,y=c(0,1),c("Non-Parent","Parent"),xpd=TRUE,srt=90)
 cl<-plot.courter.reps(pattern="^courter_linked_\\d+_summary.txt",cols)
 ```
 
-Of the `r length(cl)` replicates, `r length(unlist(lapply(cl,nrow))[unlist(lapply(cl,nrow))==10000])` reached an equilibrium by 10000 generations.
+Of the `r length(cl)` replicates, `r length(unlist(lapply(cl,nrow))[unlist(lapply(cl,nrow))>=10000])` reached an equilibrium by 10000 generations.
 
 ```{r linked_courter_final}
 courter.final.freqs<-get.courter.freqs(cl)
@@ -304,19 +274,6 @@ kable(final.freqs,caption = "Frequency of courters with linked QTLs in final gen
 ```
 
 Every rep has the courtship trait go to fixation.
-
-<!-- What do allele frequencies do? -->
-
-<!-- ```{r courter_alleleFreqs, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Major allele frequencies in the final generation of each replicate, with QTLs marked with purple stars"} -->
-<!-- files<-list.files(pattern="^courter_\\d+_summary.txt") -->
-
-<!-- mycols <- colorRampPalette(c("grey",cols["courter"],"black"))(5) -->
-<!-- maf<-plot.final.maf(files,mycols[c(2,4)],"CourterQTL",prow=3,smooth=TRUE) -->
-<!-- ``` -->
-
-<!-- ```{r, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Major allele frequencies in the final generation of each replicate, with qtls in green and marker loci in grey"} -->
-<!-- plot.afs(maf,qtlcol=cols["courter"],prow=3,qtl.name="CourterQTL") -->
-<!-- ``` -->
 
 
 ### Parental trait
@@ -344,17 +301,6 @@ kable(final.freqs,caption = "Frequency of parents with linked QTLs in final gene
 
 
 Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[r==0])})[apply(final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(final.freqs)`. `r length(unlist(lapply(pl,nrow))[lapply(pl,nrow) < 9999])` of the `r length(pl)` populations crashed, though. Of the `r length(pl)` replicates, `r length(unlist(lapply(pl,nrow))[unlist(lapply(pl,nrow))>=9999])` reached an equilibrium by 10000 generations.
-
-<!-- ```{r parent_alleleFreqs, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Major allele frequencies in the final generation of each replicate, with QTLs marked with purple stars"} -->
-<!-- files<-list.files(pattern="^parent_\\d+_summary.txt") -->
-
-<!-- mycols <- colorRampPalette(c("grey",cols["parent"],"black"))(5) -->
-<!-- maf<-plot.final.maf(files,mycols[c(2,4)],"ParentQTL",prow=3,smooth=TRUE) -->
-<!-- ``` -->
-
-<!-- ```{r, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Major allele frequencies in the final generation of each replicate, with qtls in blue and marker loci in grey"} -->
-<!-- plot.afs(maf,qtlcol=cols["parent"],prow=3,qtl.name="ParentQTL") -->
-<!-- ``` -->
 
 ### Courtship and Parental Traits
 
@@ -398,19 +344,6 @@ legend("topright",bty='n',legend=c("Preferred","Not Preferred"),lty=c(1,2),col="
 ```
 
 
-<!-- ```{r courterParent_alleleFreqs, echo=FALSE,out.extra='',fig.pos="H",fig.height=6,fig.width=8,fig.cap="Major allele frequencies in the final generation of each replicate, with courter QTLs marked with green stars and parent QTLs marked with blue stars"} -->
-<!-- files<-list.files(pattern="^parent-courter_\\d+_summary.txt") -->
-
-<!-- mycols <- colorRampPalette(c("grey","black"))(5) -->
-<!-- maf<-plot.final.maf(files,mycols[c(2,4)],"CourterQTL",qtl.name2 = "ParentQTL", -->
-<!--                     qtl.col=cols["courter"],qtl.col2=cols["parent"],prow=3,smooth=TRUE) -->
-<!-- ``` -->
-
-<!-- ```{r, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Major allele frequencies in the final generation of each replicate, with courter qtls in green, parent qtls in blue, and marker loci in grey"} -->
-<!-- plot.afs(maf,qtlcol=cols["courter"],prow=3,qtl.name="CourterQTL", -->
-<!--          qtl.name2 = "ParentQTL",qtlcol2 = cols["parent"]) -->
-<!-- ``` -->
-
 ## Supergenes
 
 
@@ -437,31 +370,17 @@ kable(final.freqs,caption = "Frequency of courters with supergenes in final gene
 ```
 
 
-<!-- What do allele frequencies do? -->
-
-<!-- ```{r courter_alleleFreqs_supergene, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Supergene courter only--Major allele frequencies in the final generation of each replicate, with QTLs marked with purple stars"} -->
-<!-- files<-list.files(pattern="^courter_\\d+_summary.txt") -->
-
-<!-- mycols <- colorRampPalette(c("grey",cols["courter"],"black"))(5) -->
-<!-- maf<-plot.final.maf(files,mycols[c(2,4)],"CourterQTL",prow=3,smooth=TRUE) -->
-<!-- ``` -->
-
-<!-- ```{r, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Supergene courter only -- Major allele frequencies in the final generation of each replicate, with qtls in green and marker loci in grey"} -->
-<!-- plot.afs(maf,qtlcol=cols["courter"],prow=3,qtl.name="CourterQTL") -->
-<!-- ``` -->
-
-
 ### Parental trait
 
 All females nest with parental males, so the only way non-parental males reproduce is through sneaking. Parental males provide care that allows nests to have a 90% chance of survival. The female preference does not have a genetic basis and does not evolve.
 
 ```{r parental_supegene, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph with supergenes (each color represents a different replicate)"}
-pss<-plot.parent.reps(pattern="^parent_supergene_\\d+_summary.txt",cols)
+ps<-plot.parent.reps(pattern="^parent_supergene_\\d+_summary.txt",cols)
 ```
 
 
 ```{r supergenes_parent_final}
-parent.final.freqs<-get.parent.freqs(pss)
+parent.final.freqs<-get.parent.freqs(ps)
 #aggregate the data
 parent.ws<-apply(parent.final.freqs,1,function(rep){ return(c(rep["ParentW"],rep["NonParentW"]))})
 parent.freqs<-apply(parent.final.freqs,1,function(rep){ return(c(rep["ParentFreq"],1-rep["ParentFreq"]))})
@@ -477,17 +396,6 @@ kable(final.freqs,caption = "Frequency of parents with supergenes in final gener
 
 Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[r==0])})[apply(final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(final.freqs)`. `r length(unlist(lapply(ps,nrow))[lapply(ps,nrow) < 9999])` of the `r length(ps)` populations crashed, though. Of the `r length(ps)` replicates, `r length(unlist(lapply(ps,nrow))[unlist(lapply(ps,nrow))>=9999])` reached an equilibrium by 10000 generations.
 
-<!-- ```{r parent_alleleFreqs_supergenes, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Supergene parent only -- Major allele frequencies in the final generation of each replicate, with QTLs marked with purple stars"} -->
-<!-- files<-list.files(pattern="^parent_supeergene_\\d+_summary.txt") -->
-
-<!-- mycols <- colorRampPalette(c("grey",cols["parent"],"black"))(5) -->
-<!-- maf<-plot.final.maf(files,mycols[c(2,4)],"ParentQTL",prow=3,smooth=TRUE) -->
-<!-- ``` -->
-
-<!-- ```{r, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Supergenes parent only -- Major allele frequencies in the final generation of each replicate, with qtls in blue and marker loci in grey"} -->
-<!-- plot.afs(maf,qtlcol=cols["parent"],prow=3,qtl.name="ParentQTL") -->
-<!-- ``` -->
-
 ### Courtship and Parental Traits
 
 Females choose nests based on males' courtship trait (they all only nest with courting males, and the female preference does not have a genetic basis and does not evolve), and then the survival of the nest depends on whether the courting male is also a parental male. If the chosen male is a parental male, the nest has a 90% chance of survival. Otherwise, it only has a 10% chance. Non-courters only reproduce through sneaking.
@@ -501,7 +409,7 @@ The different runs have different outcomes.
 Let's look at the morph frequencies.
 
 
-```{r courtParent_morphfreqs_supergenes,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with supergenes",,fig.width=6,fig.height=10}
+```{r courtParent_morphfreqs_supergenes,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with supergenes",fig.height=10,fig.width=6}
 plot.morphs.reps(s,cols2,ncols = 4)
 ```
 
@@ -529,219 +437,3 @@ points(pcng.sum$NonCourterW,lwd=2,lty=3,type="l",col=alpha("grey",0.75))
 legend("topright",bty='n',legend=c("Preferred","Not Preferred"),lty=c(1,2),col="darkgrey",lwd=2)
 ```
 
-
-<!-- ```{r courterParent_alleleFreqs_supergene, echo=FALSE,out.extra='',fig.pos="H",fig.height=6,fig.width=8,fig.cap="Supergenes -- Major allele frequencies in the final generation of each replicate, with courter QTLs marked with green stars and parent QTLs marked with blue stars"} -->
-<!-- files<-list.files(pattern="^parent-courter_\\d+_summary.txt") -->
-
-<!-- mycols <- colorRampPalette(c("grey","black"))(5) -->
-<!-- maf<-plot.final.maf(files,mycols[c(2,4)],"CourterQTL",qtl.name2 = "ParentQTL", -->
-<!--                     qtl.col=cols["courter"],qtl.col2=cols["parent"],prow=3,smooth=TRUE) -->
-<!-- ``` -->
-
-<!-- ```{r, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Supergenes --Major allele frequencies in the final generation of each replicate, with courter qtls in green, parent qtls in blue, and marker loci in grey"} -->
-<!-- plot.afs(maf,qtlcol=cols["courter"],prow=3,qtl.name="CourterQTL", -->
-<!--          qtl.name2 = "ParentQTL",qtlcol2 = cols["parent"]) -->
-<!-- ``` -->
-
-<!-- ## Linked additive genetic variance -->
-<!-- ### Courtship + Negative Frequency Dependent Selection -->
-
-<!-- In this case, the female preference is based on the frequency of the courtship morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; all nests survive since parental care is not incorporated in this model, and courters and parental males are disfavored in viability selection. -->
-
-<!-- ```{r courtship_genetics_nfds,echo=FALSE, fig.cap="Frequency of courter morph"} -->
-<!-- s<-plot.courter.reps(pattern="^courter_nfds_\\d+_summary.txt",cols) -->
-<!-- ``` -->
-<!-- ```{r courtship_nfds_linked_table,echo=FALSE} -->
-<!-- cnng.freqs<-get.courter.freqs(s) -->
-<!-- kable(cnng.freqs,caption = "Courter Frequncies with negative frequency dependent preferences and linked QTLs", -->
-<!--       row.names = TRUE) -->
-<!-- ``` -->
-
-<!-- With negative frequency dependent preferences, both courters and non-courters are maintained in the population - although in some cases the population crashes early on. -->
-
-<!-- ```{r courterNFDS_alleleFreqs, echo=FALSE,out.extra='',fig.height=4,fig.width=7,fig.pos="H",fig.cap="Major allele frequencies in the final generation of each replicate, with QTLs marked with purple stars"} -->
-<!-- files<-list.files(pattern="^courter_nfds_\\d+_summary.txt") -->
-
-<!-- mycols <- colorRampPalette(c("grey",cols["courter"],"black"))(5) -->
-<!-- maf<-plot.final.maf(files,mycols[c(2,4)],"CourterQTL",prow=3,smooth=TRUE) -->
-<!-- ``` -->
-
-<!-- ```{r, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Major allele frequencies in the final generation of each replicate, with qtls in green and marker loci in grey"} -->
-<!-- plot.afs(maf,qtlcol=cols["courter"],prow=3,qtl.name="CourterQTL") -->
-<!-- ``` -->
-
-<!-- ### Parenting + Negative Frequency Dependent Selection -->
-
-<!-- In this case, the female preference is based on the frequency of the parental morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; nests given to parents have a 90% chance of survival and a 10% chance of survival if given to non-parents, and courters and parental males are disfavored in viability selection. -->
-
-<!-- ```{r parent_genetics_nfds,echo=FALSE, fig.cap="Frequency of parental morph with linked QTLs"} -->
-<!-- s<-plot.parent.reps(pattern="^parent_nfds_\\d+_summary.txt",cols) -->
-<!-- ``` -->
-<!-- ```{r parent_nfds_linked_table, echo=FALSE} -->
-<!-- pnng.freqs<-get.parent.freqs(s) -->
-<!-- kable(pnng.freqs,caption = "Parent Frequncies with negative frequency dependent preferences and linked QTLs", -->
-<!--       row.names = TRUE) -->
-<!-- ``` -->
-
-<!-- When negative frequency dependent preferences are acting on the parental traits, the population crashes. If we zoom in on the actual timeframes until population crashes, it becomes clear that in all cases when population crashes occur the frequency of parental males was high or had just been very high. -->
-
-<!-- ```{r replot_parentnfds_linked,echo=FALSE, fig.cap="Frequency of parental morph with linked QTLs (black dashed line is at frequency of 0.5)"} -->
-<!-- s<-plot.parent.reps(pattern="^parent_nfds_\\d+_summary.txt",cols,x.lim=c(0,50)) -->
-<!-- abline(h=0.5,lty=2,lwd=2) -->
-<!-- ``` -->
-
-<!-- Thus, the population crashes are likely due to the very low reproductive potential of the non-parental males (they can contribute 4 sperm instead of the parental males' 8) and the fact that when parental males are more frequent, females prefer non-parental males, and nests left with non-parental males have a 10% survival rate. This low reproductive output from non-parental males means that the population size shrinks, and because the male trait is heritable, the frequency of the parental morph doesn't dip below 0.5 (or at least not often), so females continue to prefer non-parental males. -->
-
-<!-- ### Courtship + Parenting + Negative Frequency Dependent Selection -->
-
-<!-- In this case, the female preference is based on the frequency of the courtship morphs in the population - females prefer the *less frequent* morph. Everything else is the same as above; parental males' nests survive with a probability of 90% and non-parental males' nests survive with a probability of 10%, and courters and parental males are disfavored in viability selection. -->
-
-<!-- ```{r linked_parent_courtship_nfds,echo=FALSE, fig.cap="Frequency of courter and parental males with linked QTLs"} -->
-<!-- s<-plot.pc.reps(pattern="^parent-courter_nfds_\\d+_summary.txt",cols) -->
-<!-- ``` -->
-<!-- ```{r linked_pcnfds_plotMorphs,echo=FALSE, fig.cap="Frequency of four morphs per replicate with linked QTLs"} -->
-<!-- plot.morphs.reps(s,cols2) -->
-<!-- ``` -->
-<!-- ```{r linked_pcnfds_table,echo=FALSE} -->
-<!-- pcnng.freqs<-get.morph.freqs(s) -->
-<!-- kable(pcnng.freqs,caption="Morph Frequencies with negative frequency dependent preferences and linked QTLs", -->
-<!--       row.names=TRUE) -->
-<!-- ``` -->
-
-
-<!-- ```{r replot_pcnfds_linked,echo=FALSE, fig.cap="Frequency of parental and courter traits with linked QTLs (black dashed line is at frequency of 0.5)"} -->
-<!-- par(mfrow=c(1,2),oma=c(2,2,1,2),mar=c(4,4,1,1)) -->
-<!-- c<-plot.parent.reps(pattern="^parent-courter_nfds_\\d+_summary.txt",cols,x.lim=c(0,100)) -->
-<!-- abline(h=0.5,lty=2,lwd=2) -->
-<!-- p<-plot.courter.reps(pattern="^parent-courter_nfds_\\d+_summary.txt",cols,x.lim=c(0,100)) -->
-<!-- abline(h=0.5,lty=2,lwd=2) -->
-
-<!-- ``` -->
-
-<!-- Unlike with unlinked additive genetic variance, only `r length(unlist(lapply(s,nrow))[lapply(s,nrow) < 9999])` of those reps crashed. Multiple morphs are maintained in `r length(apply(pc.final.freqs[pc.final.freqs$Generation >=9999,],1,function(r){ length(r[r==0])})[apply(pc.final.freqs[pc.final.freqs$Generation >=9999,],1,function(r){ length(r[r==0])})<3])` of the `r nrow(pc.final.freqs[pc.final.freqs$Generation >=9999,])` surviving replicates, and in all cases the parental trait is fixed but the courtship trait maintains variation. -->
-
-<!-- ```{r, echo=FALSE,out.extra='',fig.pos="H",fig.height=6,fig.width=8,fig.cap="Major allele frequencies in the final generation of each replicate, with courter QTLs marked with green stars and parent QTLs marked with blue stars"} -->
-<!-- files<-list.files(pattern="^parent-courter_nfds_\\d+_summary.txt") -->
-
-<!-- mycols <- colorRampPalette(c("grey","black"))(5) -->
-<!-- maf<-plot.final.maf(files,mycols[c(2,4)],"CourterQTL",qtl.name2 = "ParentQTL", -->
-<!--                     qtl.col=cols["courter"],qtl.col2=cols["parent"],prow=3,smooth=TRUE) -->
-<!-- ``` -->
-
-<!-- ```{r, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Major allele frequencies in the final generation of each replicate, with courter qtls in green, parent qtls in blue, and marker loci in grey"} -->
-<!-- plot.afs(maf,qtlcol=cols["courter"],prow=3,qtl.name="CourterQTL", -->
-<!--          qtl.name2 = "ParentQTL",qtlcol2 = cols["parent"]) -->
-<!-- ``` -->
-<!-- ### Courtship + Heritable Female Preferences -->
-
-<!-- Here, the female preference has unlinked additive genetic variance that is inherited. The traits begin as uncorrelated and are not pleiotropic (i.e., they have different genes underlying them). A threshold is set in the first generation that determines the switch point for when females prefer courters or non-courters. This threshold does not change over the generations. All males can be sneakers, but the male who females choose to nest with get a first male advantage. -->
-
-<!-- ```{r courtship_pref_genetics,echo=FALSE, fig.cap="Courter frequencies with female preferences and linked qtls"} -->
-<!-- s<-plot.courter.reps(pattern="^courter-pref_\\d+_summary.txt",cols) -->
-<!-- ``` -->
-<!-- ```{r courtship_pref_linked_table,echo=FALSE} -->
-<!-- cpref.freqs<-get.courter.freqs(s) -->
-<!-- kable(cpref.freqs,caption = "Courter Frequncies with heritable female preferences and linked QTLs", -->
-<!--       row.names = TRUE) -->
-<!-- ``` -->
-
-<!-- Evolving female preferences allow variation to be maintained in `r nrow(cpref.freqs[cpref.freqs$CourterFreq<1,])` of `r nrow(cpref.freqs)` replicates. -->
-
-<!-- ```{r courtship_prefs_linked,echo=FALSE,fig.cap="Frequencies of preferences for courters when parenting traits do not exist and QTLs are linked"} -->
-
-<!-- plot.pref.freqs(s,col=cols["cpref"]) -->
-
-<!-- cpref.freqs<-get.pref.freqs(s) -->
-<!-- kable(cpref.freqs,caption = "Frequncies of Preference for Courters", -->
-<!--       row.names = TRUE) -->
-<!-- ``` -->
-
-<!-- Of the `r nrow(cpref.freqs[cpref.freqs$Generation>=9999,])` populations that survived, `r nrow(cpref.freqs[cpref.freqs$Generation>=9999 & cpref.freqs$PrefFreq==1,])` were fixed for a preference for courters and `r nrow(cpref.freqs[cpref.freqs$Generation>=9999 & cpref.freqs$PrefFreq==0,])` were fixed for a preference against courters. `r nrow(cpref.freqs[cpref.freqs$Generation>=9999 & cpref.freqs$PrefFreq>0 & cpref.freqs$PrefFreq<1,])` maintained variation in female preferences. -->
-
-<!-- ```{r courterPref_alleleFreqs, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Major allele frequencies in the final generation of each replicate, with QTLs marked with purple stars"} -->
-<!-- files<-list.files(pattern="^courter-pref_\\d+_summary.txt") -->
-
-<!-- mycols <- colorRampPalette(c("grey",cols["courter"],"black"))(5) -->
-<!-- maf<-plot.final.maf(files,mycols[c(2,4)],"CourterQTL",prow=3,smooth=TRUE) -->
-<!-- ``` -->
-
-<!-- ```{r, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Major allele frequencies in the final generation of each replicate, with qtls in green and marker loci in grey"} -->
-<!-- plot.afs(maf,qtlcol=cols["courter"],prow=3,qtl.name="CourterQTL") -->
-<!-- ``` -->
-
-<!-- ### Parenting + Heritable Female Preferences -->
-
-<!-- Here, the female preference has unlinked additive genetic variance that is inherited. The traits begin as uncorrelated and are not pleiotropic (i.e., they have different genes underlying them). A threshold is set in the first generation that determines the switch point for when females prefer parents or non-parents. This threshold does not change over the generations. Only non-parental males can be sneakers, and when females choose to mate with non-parents, the nest has a 10% survival rate. -->
-
-<!-- ```{r parent_pref_genetics,echo=FALSE, fig.cap="Parent frequencies with linkage"} -->
-<!-- s<-plot.parent.reps(pattern="^parent-pref_\\d+_summary.txt",cols) -->
-<!-- ``` -->
-<!-- ```{r parent_pref_linked_table, echo=FALSE} -->
-<!-- ppref.freqs<-get.parent.freqs(s) -->
-<!-- kable(ppref.freqs,caption = "Parent Frequncies with heritable female preferences and linkage", -->
-<!--       row.names = TRUE) -->
-<!-- ``` -->
-
-<!-- Evolving female preferences maintain variation, although parental traits can lead to population crashes (in `r nrow(ppref.freqs[ppref.freqs$Generation < 9999,])` of the `r nrow(ppref.freqs)` reps). In suriving populations, variation was maintained in `r nrow(ppref.freqs[ppref.freqs$ParentFreq<1,])` of `r nrow(ppref.freqs)` replicates. -->
-
-<!-- ```{r parent_prefs_linked,echo=FALSE,fig.cap="Frequencies of Preferences for Parents when no courtship traits exist and QTLs are linked"} -->
-<!-- plot.pref.freqs(s,cols["ppref"],ylabel = "Frequency of Preference for Parents") -->
-
-<!-- ppref.freqs<-get.pref.freqs(s) -->
-<!-- kable(ppref.freqs,caption = "Frequncies of Preference for Parents when QTLs are linked", -->
-<!--       row.names = TRUE) -->
-<!-- ``` -->
-
-<!-- Of the `r nrow(ppref.freqs[ppref.freqs$Generation>=9999,])` populations that survived, `r nrow(ppref.freqs[ppref.freqs$Generation>=9999 & ppref.freqs$PrefFreq==1,])` were fixed for a preference for parents and `r nrow(ppref.freqs[ppref.freqs$Generation>=9999 & ppref.freqs$PrefFreq==0,])` were fixed for a preference against parents. `r nrow(ppref.freqs[ppref.freqs$Generation>=9999 & ppref.freqs$PrefFreq>0 & ppref.freqs$PrefFreq<1,])` maintained variation in female preferences. -->
-
-<!-- ```{r parentPref_alleleFreqs, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Major allele frequencies in the final generation of each replicate, with QTLs marked with purple stars"} -->
-<!-- files<-list.files(pattern="^parent-pref_\\d+_summary.txt") -->
-
-<!-- mycols <- colorRampPalette(c("grey",cols["parent"],"black"))(5) -->
-<!-- maf<-plot.final.maf(files,mycols[c(2,4)],"ParentQTL",prow=3,smooth=TRUE) -->
-<!-- ``` -->
-
-<!-- ```{r, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Major allele frequencies in the final generation of each replicate, with qtls in blue and marker loci in grey"} -->
-<!-- plot.afs(maf,qtlcol=cols["parent"],prow=3,qtl.name="ParentQTL") -->
-<!-- ``` -->
-
-<!-- ### Courthip and Parenting + Heritable Female Preferences -->
-
-<!-- Here, the female preference has unlinked additive genetic variance that is inherited. The traits begin as uncorrelated and are not pleiotropic (i.e., they have different genes underlying them). A threshold is set in the first generation that determines the switch point for when females prefer courters or non-courters. This threshold does not change over the generations. Only non-parental males are sneakers, and when females choose to mate with non-parents, the nest has a 10% survival rate. -->
-
-<!-- ```{r linked_parent_courtship_pref,echo=FALSE, fig.cap="Parent and courter frequencies when QTLs are linked"} -->
-<!-- s<-plot.pc.reps(pattern="^parent-courter-pref_\\d+_summary.txt",cols) -->
-<!-- ``` -->
-<!-- ```{r linked_pc_pref_plotMorphs,echo=FALSE, fig.cap="Frequency of four morphs per rep with linkage"} -->
-<!-- plot.morphs.reps(s,cols2) -->
-<!-- ``` -->
-<!-- ```{r linked_pc_pref_table,echo=FALSE} -->
-<!-- pcpref.freqs<-get.morph.freqs(s) -->
-<!-- kable(pcpref.freqs,caption="Morph Frequencies with heritable preferences with linkage", -->
-<!--       row.names=TRUE) -->
-<!-- ``` -->
-
-<!-- Again, evolving preferences maintain variation in `r length(apply(pcpref.freqs,1,function(r){ length(r[r==0])})[apply(pcpref.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(pcpref.freqs)`. `r length(unlist(lapply(s,nrow))[lapply(s,nrow) < 9999])` of the `r length(s)` populations crashed, though. -->
-
-<!-- ```{r courtParent_prefs_linkage,echo=FALSE,fig.cap="Frequency of Preference of Courters with both parents and courters in the population and linkage"} -->
-<!-- plot.pref.freqs(s,cols["cpref"],ylabel = "Frequency of Preference for Courters") -->
-
-<!-- pcpref.freqs<-get.pref.freqs(s) -->
-<!-- kable(pcpref.freqs,caption = "Frequncies of Preference for Courters with linkage", -->
-<!--       row.names = TRUE) -->
-<!-- ``` -->
-
-<!-- Of the `r nrow(pcpref.freqs[pcpref.freqs$Generation>=9999,])` populations that survived, `r nrow(pcpref.freqs[pcpref.freqs$Generation>=9999 & pcpref.freqs$PrefFreq==1,])` were fixed for a preference for courters and `r nrow(pcpref.freqs[pcpref.freqs$Generation>=9999 & pcpref.freqs$PrefFreq==0,])` were fixed for a preference against courters. `r nrow(pcpref.freqs[pcpref.freqs$Generation>=9999 & pcpref.freqs$PrefFreq>0 & pcpref.freqs$PrefFreq<1,])` maintained variation in female preferences. -->
-
-<!-- ```{r, echo=FALSE,out.extra='',fig.pos="H",fig.height=6,fig.width=8,fig.cap="Major allele frequencies in the final generation of each replicate, with courter QTLs marked with green stars and parent QTLs marked with blue stars"} -->
-<!-- files<-list.files(pattern="^parent-courter-pref_\\d+_summary.txt") -->
-
-<!-- mycols <- colorRampPalette(c("grey","black"))(5) -->
-<!-- maf<-plot.final.maf(files,mycols[c(2,4)],"CourterQTL",qtl.name2 = "ParentQTL", -->
-<!--                     qtl.col=cols["courter"],qtl.col2=cols["parent"],prow=3,smooth=TRUE) -->
-<!-- ``` -->
-
-<!-- ```{r, echo=FALSE,out.extra='',fig.height=6,fig.width=8,fig.pos="H",fig.cap="Major allele frequencies in the final generation of each replicate, with courter qtls in green, parent qtls in blue, and marker loci in grey"} -->
-<!-- plot.afs(maf,qtlcol=cols["courter"],prow=3,qtl.name="CourterQTL", -->
-<!--          qtl.name2 = "ParentQTL",qtlcol2 = cols["parent"]) -->
-<!-- ``` -->
