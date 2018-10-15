@@ -2463,8 +2463,6 @@ public:
 				progeny[p].reset(false);
 		}
 		population_size = num_adults_chosen;
-		if (gp.verbose)
-			std::cout << ", " << num_adults_chosen << " become adults" << std::flush;
 	}
 	
 	void density_regulation(parameters gp)
