@@ -2955,7 +2955,7 @@ public:
 	void output_summary_info(parameters gp, ofstream & summary_output)
 	{
         //pop info
-        summary_output << <<'\t' << population_size << '\t' << num_mal << '\t' << num_fem << '\t' << num_progeny;
+        summary_output <<'\t' << population_size << '\t' << num_mal << '\t' << num_fem << '\t' << num_progeny;
 		double dtemp;
 		vector<double> rs = avg_court_rs(gp);
 		if (gp.parent_trait || gp.parent_conditional)
