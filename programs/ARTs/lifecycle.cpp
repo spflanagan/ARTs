@@ -31,8 +31,7 @@ int main(int argc, char*argv[])
 	string log_name;
 	ofstream log_out;
 	log_name = global_params.base_name + ".log";
-	if (global_params.log_file)
-		log_out.open(log_name);
+	
 
 	//parse parameters
 	if (argc == 1)
@@ -49,7 +48,10 @@ int main(int argc, char*argv[])
 		else
 		{
 			if (global_params.log_file)
+            {
+                log_out.open(log_name);
 				log_out << "\nRunning the ARTs model with output to base name " << global_params.base_name << '\n';
+            }
 			else
 				std::cout << "\nRunning the ARTs model with output to base name " << global_params.base_name << '\n';
 		}
@@ -513,6 +515,7 @@ int main(int argc, char*argv[])
 		log_out<< "\nDone!\n";
 	else
 		std::cout << "\nDone!\n" << std::flush;
+    log_out.close();
 	if (command_line)
 		return 0;
 	else
