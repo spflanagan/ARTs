@@ -582,7 +582,7 @@ public:
 		else
 			param_out << "\ndensity independent";
         if(log_file)
-            log_file << "\n--log-file ";
+            param_out << "\n--log-file ";
 		param_out.close();
 	}
 };
