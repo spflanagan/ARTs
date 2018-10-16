@@ -5,7 +5,8 @@
 
 ### --- TO RUN THE SCRIPT --- ###
 
-#  nohup ./scripts/002_baseline_runs.sh > ./logs/002_DATE.log 2>&1 &
+# in scripts/
+#  nohup ./002_baseline_runs.sh > ./logs/002_DATE.log 2>&1 &
 
 
 ###----DETERMINE WHAT SHOULD RUN----###
@@ -24,6 +25,7 @@ NUM_COMMANDS=0
 
 ### --- MOVE TO THE CORRECT DIRECTORIES --- ###
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"  pwd )"
+printf "$DIR"
 PROGDIR="../programs/ARTs"
 cd $DIR
 cd $PROGDIR
