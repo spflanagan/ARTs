@@ -60,7 +60,7 @@ if [ "$EVOLVING" = true ]; then printf NUM_COMMANDS=$((NUM_COMMANDS+1)); fi
 
 ### --- RUN THE PARAMETER COMBINATIONS --- ###
 
-for iters in `seq 6`; then
+for iters in `seq 6`; do
 #No genetic architectures, just additive genetic variance
 if [ "$iters" = 1 ]; then
     if [ "$NO_GENETICS" = true ]; then
