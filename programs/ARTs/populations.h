@@ -1913,7 +1913,7 @@ public:
 			}
 			adults[j].mate_found = 0;
 		}
-		if(gp.verbose)
+		if(gp.verbose && !gp.log_file)
 			std::cout << ", " << num_mal << " males, " << num_fem << " females" << flush;
 		if(gp.per_fem_mating)
 			per_female_mating(gp, male_index);
