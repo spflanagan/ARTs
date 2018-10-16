@@ -257,9 +257,9 @@ int main(int argc, char*argv[])
 				if (global_params.verbose)
 				{
 					if (global_params.log_file)
-						log_out<< ", " << pops[ii].population_size << " adults";
+                        log_out<< ", " << pops[ii].population_size << " adults; ";
 					else
-						std::cout << ", " << pops[ii].population_size << " adults" << std::flush;
+                        std::cout << ", " << pops[ii].population_size << " adults; " << std::flush;
 				}
 				//mating (includes assigning preferences, recombination, and mutation)
 				bool write_to_file = false;
