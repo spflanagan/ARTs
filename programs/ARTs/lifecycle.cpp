@@ -30,7 +30,6 @@ int main(int argc, char*argv[])
 	//set up log file
 	string log_name;
 	ofstream log_out;
-	log_name = global_params.base_name + ".log";
 	
 
 	//parse parameters
@@ -40,6 +39,7 @@ int main(int argc, char*argv[])
 		command_line = true;
 	if (command_line)
 	{
+        std::cout << "\nRunning ARTs from the command line." << std::flush;
 		run = global_params.parse_parameters(argc, argv);
 		if (!run)
 		{
@@ -49,11 +49,12 @@ int main(int argc, char*argv[])
 		{
 			if (global_params.log_file)
             {
+                log_name = global_params.base_name + ".log";
                 log_out.open(log_name);
-				log_out << "\nRunning the ARTs model with output to base name " << global_params.base_name << '\n';
+                log_out << "\nRunning the ARTs model with output to base name " << global_params.base_name << '\n' <<std::flush;
             }
 			else
-				std::cout << "\nRunning the ARTs model with output to base name " << global_params.base_name << '\n';
+                std::cout << "\nRunning the ARTs model with output to base name " << global_params.base_name << '\n'<<std::flush;
 		}
 	}
 	else
