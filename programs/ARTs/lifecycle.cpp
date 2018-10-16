@@ -250,8 +250,7 @@ int main(int argc, char*argv[])
 					{
 						if(global_params.log_file)
 							log_out << "\nInitial generation " << i + 1 << " beginning.";
-						else
-							std::cout << "\nInitial generation " << i + 1 << " beginning." << std::flush;
+						std::cout << "\nInitial generation " << i + 1 << " beginning." << std::flush;
 					}
 				}
 				pops[ii].determine_pop_size(global_params);
@@ -360,7 +359,15 @@ int main(int argc, char*argv[])
 					else
 						std::cout << '\n' << global_params.num_init_gen + i << std::flush;
 				}
-					
+                else
+                {
+                    if (i % 1000 == 0)
+                    {
+                        if(global_params.log_file)
+                            log_out << "\nExperimental generation " << i + 1 << " beginning.";
+                        std::cout << "\nexperimental generation " << i + 1 << " beginning." << std::flush;
+                    }
+                }
 					
 				pops[ii].determine_pop_size(global_params);						
 				//mating (includes assiging preferences, recombination, and mutation)
