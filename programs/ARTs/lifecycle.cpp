@@ -39,7 +39,6 @@ int main(int argc, char*argv[])
 		command_line = true;
 	if (command_line)
 	{
-        std::cout << "\nRunning ARTs from the command line." << std::flush;
 		run = global_params.parse_parameters(argc, argv);
 		if (!run)
 		{
@@ -51,10 +50,10 @@ int main(int argc, char*argv[])
             {
                 log_name = global_params.base_name + ".log";
                 log_out.open(log_name);
-                log_out << "\nRunning the ARTs model with output to base name " << global_params.base_name << '\n' <<std::flush;
+                log_out << "\nRunning the ARTs model (from the command line) with output to base name " << global_params.base_name << '\n' <<std::flush;
             }
 			else
-                std::cout << "\nRunning the ARTs model with output to base name " << global_params.base_name << '\n'<<std::flush;
+                std::cout << "\nRunning the ARTs model (from the command line) with output to base name " << global_params.base_name << '\n'<<std::flush;
 		}
 	}
 	else
