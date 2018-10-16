@@ -1935,7 +1935,7 @@ public:
 				}
 			}
 		}
-		if (gp.verbose)
+		if (gp.verbose && !gp.log_file)
 			std::cout <<", and " << fem_ms << " mated" << std::flush;
 	}
 	bool random_mating(parameters gp,int fem_index, vector<int> & male_index)
@@ -2268,7 +2268,7 @@ public:
 				}
 			} // end of j
 		}
-		if (gp.verbose)
+		if (gp.verbose && !gp.log_file)
 			std::cout << ", " << ProgAlive << " progeny" << std::flush;
 	}
 
@@ -2582,7 +2582,7 @@ public:
 				adults[progeny[j].dad].lifetime_rs++;
 			}
 		}
-		if (gp.verbose)
+		if (gp.verbose && !gp.log_file)
 		{
 			for (j = 0; j < adults.size(); j++)
 			{
