@@ -24,7 +24,7 @@ FDS_PREF=false
 NUM_COMMANDS=0
 
 ### --- MOVE TO THE CORRECT DIRECTORIES --- ###
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"  pwd )"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 printf "$DIR"
 PROGDIR="../programs/ARTs"
 cd $DIR
