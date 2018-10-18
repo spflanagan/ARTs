@@ -11,7 +11,7 @@
 
 ###----DETERMINE WHAT SHOULD RUN----###
 NUMREPS=5
-NUM_THREADS=8
+NUM_THREADS=6
 NO_GENETICS=false
 NO_GENETICS=true
 CONDITIONAL=false
@@ -25,7 +25,7 @@ NUM_COMMANDS=0
 
 ### --- MOVE TO THE CORRECT DIRECTORIES --- ###
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-printf "$DIR"
+echo "$DIR"
 PROGDIR="../programs/ARTs"
 cd $DIR
 cd $PROGDIR
@@ -47,27 +47,26 @@ if [ "$EVOLVING" = true ]; then printf "\t%s\n" "EVOLVING"; fi
 if [ "$INDEP_PREF" = true ]; then printf "\t%s\n" "INDEP_PREF"; fi
 if [ "$FDS_PREF" = true ]; then printf "\t%s\n" "FDS_PREF"; fi
 echo "The program will run in the background."
-echo "Check the status with htop or by looking at logs/002_x_${DATE}.log"
+echo "Check the status with htop or by looking at logs/002_${DATE}.log"
 } #| tee ../../logs/002_${DATE}.log 2>1
 
 
 ### --- FIGURE OUT HOW MANY TO RUN --- ###
 if [ "$NO_GENETICS" = true ]; then NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
 if [ "$CONDITIONAL" = true ]; then NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
-if [ "$COND_NFDS" = true ]; then printf NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
-if [ "$GENETIC_ARCH" = true ]; then printf NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
-if [ "$SUPERGENE" = true ]; then printf NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
-if [ "$EVOLVING" = true ]; then printf NUM_COMMANDS=$((NUM_COMMANDS+6)); fi
-if [ "$INDEP_PREF" = true ] && [ "$NO_GENETICS" = true  ]; then printf NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
-if [ "$FDS_PREF" = true ] && [ "$NO_GENETICS" = true ]; then printf NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
-if [ "$INDEP_PREF" = true ] && [ "$GENETIC_ARCH" = true = true  ]; then printf NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
-if [ "$FDS_PREF" = true ] && [ "$GENETIC_ARCH" = true ]; then printf NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
-if [ "$INDEP_PREF" = true ] && [ "$SUPERGENE" = true  ]; then printf NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
-if [ "$FDS_PREF" = true ] && [ "$SUPERGENE" = true ]; then printf NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
+if [ "$COND_NFDS" = true ]; then NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
+if [ "$GENETIC_ARCH" = true ]; then NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
+if [ "$SUPERGENE" = true ]; then NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
+if [ "$EVOLVING" = true ]; then NUM_COMMANDS=$((NUM_COMMANDS+6)); fi
+if [ "$INDEP_PREF" = true ] && [ "$NO_GENETICS" = true  ]; then NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
+if [ "$FDS_PREF" = true ] && [ "$NO_GENETICS" = true ]; then NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
+if [ "$INDEP_PREF" = true ] && [ "$GENETIC_ARCH" = true  ]; then NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
+if [ "$FDS_PREF" = true ] && [ "$GENETIC_ARCH" = true ]; then NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
+if [ "$INDEP_PREF" = true ] && [ "$SUPERGENE" = true  ]; then NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
+if [ "$FDS_PREF" = true ] && [ "$SUPERGENE" = true ]; then NUM_COMMANDS=$((NUM_COMMANDS+3)); fi
 
-N=$((NUM_THREADS/NUM_COMMANDS))
-
-echo $N
+N=$((NUM_THREADS))
+#printf "${NUM_COMMANDS} commands split over ${NUM_THREADS} means ${N} run at a time"
 
 ### --- RUN THE PARAMETER COMBINATIONS --- ###
 
