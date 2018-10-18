@@ -81,7 +81,7 @@ if [ "$iters" = 1 ]; then
                 ./ARTs --parent --no-genetics --freq-dependent-preference -b ../../results/parent-nogenetics-nfds_${i} --verbose -p 4
                 ./ARTs --courter --no-genetics --parent --freq-dependent-preference -b ../../results/parent-courter-nogenetics-nfds_${i} --verbose -p 4
             fi
-        done
+        done &
 
     fi
 fi
@@ -94,7 +94,7 @@ if [ "$iters" = 2 ]; then
             ./ARTs --courter-conditional -b ../../results/courter-conditional_${i} --same-base -p 4
             ./ARTs --parent-conditional -b ../../results/parent-conditional_${i} --same-base -p 4
             ./ARTs --courter-conditional --parent-conditional -b ../../results/parent-courter-conditional_${i} --same-base -p 4
-        done
+        done &
 
     fi
 fi
@@ -106,7 +106,7 @@ if [ "$iters" = 3 ]; then
             ./ARTs --courter-conditional --freq-dependent-preference -b ../../results/courter-conditional_nfds_${i} --same-base -p 4
             ./ARTs --parent-conditional --freq-dependent-preference -b ../../results/parent-conditional_nfds_${i} --same-base -p 4
             ./ARTs --courter-conditional --parent-conditional --freq-dependent-preference -b ../../results/parent-courter-conditional_nfds_${i} --same-base -p 4
-        done >> ../../logs/002_CONDNFDS_${DATE}.log 2>1
+        done &
 
     fi
 fi
@@ -128,7 +128,7 @@ if [ "$iters" = 4 ]; then
                 ./ARTs --parent --independent-pref -b ../../results/parent-pref_${i} --verbose -p 4
                 ./ARTs --courter --independent-pref --parent -b ../../results/parent-courter-pref_${i} --verbose -p 4
             fi
-        done
+        done &
 
     fi
 fi
@@ -150,7 +150,7 @@ if [ "$iters" = 5 ]; then
                 ./ARTs --parent --independent-pref --supergene -b ../../results/parent-pref_supergene_${i} --verbose -p 4
                 ./ARTs --courter --independent-pref --supergene --parent -b ../../results/parent-courter-pref_supergene_${i} --verbose -p 4
             fi
-        done
+        done &
     fi
 fi
     #Evolving thresholds
@@ -165,11 +165,12 @@ if [ "$iters" = 6 ]; then
             ./ARTs --courter --thresholds-evolve -b ../../results/courter_thresholds_${i} --same-base -p 4
             ./ARTs --parent --thresholds-evolve -b ../../results/parent_thresholds_${i} --same-base -p 4
             ./ARTs --courter --parent --thresholds-evolve -b ../../results/parent-courter_thresholds_${i} --same-base -p 4
-        done
+        done &
     fi
 fi
 done
 
+wait
 # generate the report
 #Rscript -e "rmarkdown::render('../../docs/002_expectationTests.Rmd')"
 
