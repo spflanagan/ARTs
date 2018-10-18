@@ -17,6 +17,7 @@ plot.courter.reps<-function(pattern,cols,x.lim=c(0,12000)){
   s<-lapply(courter.files,function(file){
     summ<-suppressWarnings(read.delim(file))
     sp<-by(summ,summ$Pop,function(pop){ #break it into each population in the file
+      pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
       pop<-pop[!is.na(pop$CourterFreq),]
       n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
       points(pop$Generation,pop$CourterFreq,col=alpha(mycols[n],0.5),
@@ -68,6 +69,7 @@ plot.parent.reps<-function(pattern,cols,x.lim=c(0,12000)){
   s<-lapply(parent.files,function(file){
     summ<-suppressWarnings(read.delim(file))
     sp<-by(summ,summ$Pop,function(pop){ #break it into each population in the file
+      pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
       pop<-pop[!is.na(pop$ParentFreq),]
       n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
       points(pop$Generation,pop$ParentFreq,col=alpha(mycols[n],0.5),
@@ -127,6 +129,7 @@ plot.pc.reps<-function(pattern,cols,x.lim=c(0,12000),make.plot=TRUE){
   s<-lapply(pc.files,function(file){
     summ<-suppressWarnings(read.delim(file))
     sp<-by(summ,summ$Pop,function(pop){ #break it into each population in the file
+      pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
       pop<-pop[!is.na(pop$ParentFreq),]
       n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
       if(isTRUE(make.plot)){
