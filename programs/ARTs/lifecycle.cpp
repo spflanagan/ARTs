@@ -235,6 +235,7 @@ int main(int argc, char*argv[])
 		crash_counter = 0;
 		for (ii = 0; ii < global_params.num_pops; ii++)
 		{
+			pops[ii].determine_pop_size(global_params);
 			if(pops[ii].population_size > 0)
 			{
 				if (global_params.verbose)
@@ -253,7 +254,6 @@ int main(int argc, char*argv[])
 						std::cout << "\nInitial generation " << i + 1 << " beginning." << std::flush;
 					}
 				}
-				pops[ii].determine_pop_size(global_params);
 				if (global_params.verbose)
 				{
 					if (global_params.log_file)
@@ -308,35 +308,32 @@ int main(int argc, char*argv[])
 						std::cout << "\n   regulate_popsize took " << duration << " seconds." << std::flush;
 				}
 			}
-			else
+			else //if the population size is 0 the population has crashed
 			{
-				if (!pops[ii].extinct)
-				{
-					if (global_params.log_file)
-						log_out << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n';
-					else
-						std::cout << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n' << std::flush;
-				}
-				pops[ii].extinct = true;
+				if (global_params.log_file)
+					log_out << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n';
+				else
+					std::cout << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n' << std::flush;
 				crash_counter++;
-				if (crash_counter == global_params.num_pops)
-				{
-					if (global_params.log_file)
-						log_out << "\n" << global_params.base_name << ": All populations have crashed at experimental generation " << i << '\n';
-					else
-						std::cout << "\n" << global_params.base_name << ": All populations have crashed at experimental generation " << i << '\n' << std::flush;
-					summary_output.close();
-					markers_output.close();
-					if (command_line)
-						return 0;
-					else
-					{
-						std::cout << "\nInput integer to close dialogue.\n" << std::flush;
-						cin >> iii;
-						return 0;
-					}
-				}				
 			}
+			if (crash_counter == global_params.num_pops)
+			{
+				if (global_params.log_file)
+					log_out << "\n" << global_params.base_name << ": All populations have crashed at experimental generation " << i << '\n';
+				else
+					std::cout << "\n" << global_params.base_name << ": All populations have crashed at experimental generation " << i << '\n' << std::flush;
+				summary_output.close();
+				markers_output.close();
+				if (command_line)
+					return 0;
+				else
+				{
+					std::cout << "\nInput integer to close dialogue.\n" << std::flush;
+					cin >> iii;
+					return 0;
+				}
+			}				
+			
 			if(global_params.verbose && !global_params.log_file)
 				std::cout << endl;
 		}	

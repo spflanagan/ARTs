@@ -1941,9 +1941,6 @@ public:
 				}
 			}
 		}
-<<<<<<< HEAD
-		if (gp.verbose && !gp.log_file)
-=======
 		else
 		{ //THIS IS THE DEFAULT ONE!
 			bool nest_alive;
@@ -1988,8 +1985,7 @@ public:
 			if(num_progeny != gp.carrying_capacity)
 				cout << "\nWARNING! There's something wrong with density dependent selection! " << num_progeny << " were produced but the carrying capacity is " << gp.carrying_capacity << std::flush;
 		}
-		if (gp.verbose)
->>>>>>> parent of 7d3d927... analyzing density dependent results
+		if (gp.verbose && !gp.log_file)
 			std::cout <<", and " << fem_ms << " mated" << std::flush;
 	}
 	bool random_mating(parameters gp,int fem_index, vector<int> & male_index)
@@ -3120,11 +3116,8 @@ public:
 	void output_summary_info(parameters gp, ofstream & summary_output)
 	{
         //pop info
-<<<<<<< HEAD
         summary_output <<'\t' << population_size << '\t' << num_mal << '\t' << num_fem << '\t' << num_progeny;
-=======
-        summary_output << population_size << '\t' << num_mal << '\t' << num_fem << '\t' << num_progeny;
->>>>>>> parent of 7d3d927... analyzing density dependent results
+
 		double dtemp;
 		vector<double> rs = avg_court_rs(gp);
 		if (gp.parent_trait || gp.parent_conditional)
