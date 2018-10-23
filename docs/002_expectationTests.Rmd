@@ -125,7 +125,7 @@ In these cases, the traits are encoded by a number (50) of loci, whose alleles c
 Females choose nests based on whether the male is a courter or not, and they all prefer courters all of the time (the female preference does not have a genetic basis and does not evolve). The only way that non-courters produce offspring is through sneaking, but all males can be sneakers (both courters and non-courters). Because parental care is not incorporated in this model, all nests survive.
 
 ```{r unlinked_courter,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph (each color represents a different replicate)"}
-cu<-plot.courter.reps(pattern="^courter_unlinked_\\d+_summary.txt",cols)
+cu<-plot.courter.reps(pattern="^courter_unlinked_[1-5]_summary.txt",cols)
 ```
 
 Of the `r length(cu)` replicates, `r length(unlist(lapply(cu,nrow))[unlist(lapply(cu,nrow))==9999])` reached an equilibrium by 10000 generations. 
@@ -193,7 +193,7 @@ lapply(t,function(traits){
 All females nest with parental males, so the only way non-parental males reproduce is through sneaking. Parental males provide care that allows nests to have a 90% chance of survival. The female preference does not have a genetic basis and does not evolve.
 
 ```{r parental_nogenetics, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph (each color represents a different replicate)"}
-pu<-plot.parent.reps("^parent_unlinked_\\d+_summary.txt",cols)
+pu<-plot.parent.reps("^parent_unlinked_[1-5]_summary.txt",cols)
 ```
 
 ```{r unlinked_parent_final}
@@ -228,7 +228,7 @@ Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[
 Females choose nests based on males' courtship trait (they all only nest with courting males, and the female preference does not have a genetic basis and does not evolve), and then the survival of the nest depends on whether the courting male is also a parental male. If the chosen male is a parental male, the nest has a 90% chance of survival. Otherwise, it only has a 10% chance. Non-courters only reproduce through sneaking.
 
 ```{r parentalCourtship_nogenetics, echo=FALSE,out.extra='',fig.keep=FALSE}
-u<-plot.pc.reps("^parent-courter_unlinked_\\d+_summary.txt",cols)
+u<-plot.pc.reps("^parent-courter_unlinked_[1-5]_summary.txt",cols)
 ```
 
 The different runs have different outcomes. 
@@ -284,7 +284,7 @@ text(x=-0.1,y=c(0,1),c("Non-Parent","Parent"),xpd=TRUE,srt=90)
 ### Courter trait
 
 ```{r linked_courter,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph with linked QTLs (each color represents a different replicate)"}
-cl<-plot.courter.reps(pattern="^courter_linked_\\d+_summary.txt",cols)
+cl<-plot.courter.reps(pattern="^courter_linked_[1-5]_summary.txt",cols)
 ```
 
 Of the `r length(cl)` replicates, `r length(unlist(lapply(cl,nrow))[unlist(lapply(cl,nrow))==10000])` reached an equilibrium by 10000 generations.
@@ -324,7 +324,7 @@ Every rep has the courtship trait go to fixation.
 All females nest with parental males, so the only way non-parental males reproduce is through sneaking. Parental males provide care that allows nests to have a 90% chance of survival. The female preference does not have a genetic basis and does not evolve.
 
 ```{r parental_genetics, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph with linked QTLs (each color represents a different replicate)"}
-pl<-plot.parent.reps(pattern="^parent_linked_\\d+_summary.txt",cols)
+pl<-plot.parent.reps(pattern="^parent_linked_[1-5]_summary.txt",cols)
 ```
 
 
@@ -361,7 +361,7 @@ Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[
 Females choose nests based on males' courtship trait (they all only nest with courting males, and the female preference does not have a genetic basis and does not evolve), and then the survival of the nest depends on whether the courting male is also a parental male. If the chosen male is a parental male, the nest has a 90% chance of survival. Otherwise, it only has a 10% chance. Non-courters only reproduce through sneaking.
 
 ```{r parentalCourtship_genetics, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the two morphs with linked QTLs (courter = green, parent = blue)"}
-l<-plot.pc.reps("^parent-courter_linked_\\d+_summary.txt",cols)
+l<-plot.pc.reps("^parent-courter_linked_[1-5]_summary.txt",cols)
 ```
 
 The different runs have different outcomes.
@@ -417,7 +417,7 @@ legend("topright",bty='n',legend=c("Preferred","Not Preferred"),lty=c(1,2),col="
 ### Courter trait
 
 ```{r supergenes_courter,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph with supergenes (each color represents a different replicate)"}
-cs<-plot.courter.reps(pattern="^courter_supergene_\\d+_summary.txt",cols)
+cs<-plot.courter.reps(pattern="^courter_supergene_[1-5]_summary.txt",cols)
 ```
 
 Of the `r length(cs)` replicates, `r length(unlist(lapply(cs,nrow))[unlist(lapply(cs,nrow))==10000])` reached an equilibrium by 10000 generations.
@@ -456,7 +456,7 @@ kable(final.freqs,caption = "Frequency of courters with supergenes in final gene
 All females nest with parental males, so the only way non-parental males reproduce is through sneaking. Parental males provide care that allows nests to have a 90% chance of survival. The female preference does not have a genetic basis and does not evolve.
 
 ```{r parental_supegene, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph with supergenes (each color represents a different replicate)"}
-pss<-plot.parent.reps(pattern="^parent_supergene_\\d+_summary.txt",cols)
+pss<-plot.parent.reps(pattern="^parent_supergene_[1-5]_summary.txt",cols)
 ```
 
 
@@ -493,7 +493,7 @@ Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[
 Females choose nests based on males' courtship trait (they all only nest with courting males, and the female preference does not have a genetic basis and does not evolve), and then the survival of the nest depends on whether the courting male is also a parental male. If the chosen male is a parental male, the nest has a 90% chance of survival. Otherwise, it only has a 10% chance. Non-courters only reproduce through sneaking.
 
 ```{r parentalCourtship_supergenes, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the two morphs with linked QTLs (courter = green, parent = blue)"}
-s<-plot.pc.reps("^parent-courter_supergene_\\d+_summary.txt",cols)
+s<-plot.pc.reps("^parent-courter_supergene_[1-5]_summary.txt",cols)
 ```
 
 The different runs have different outcomes.
