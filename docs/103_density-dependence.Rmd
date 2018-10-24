@@ -397,7 +397,9 @@ kable(final.freqs,caption = "Frequency of parents with supergenes in final gener
 ```
 
 
-Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[r==0])})[apply(final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(final.freqs)`. `r length(unlist(lapply(pss,nrow))[lapply(ps,nrow) < 9999])` of the `r length(pss)` populations crashed, though. Of the `r length(pss)` replicates, `r length(unlist(lapply(pss,nrow))[unlist(lapply(pss,nrow))>=9999])` reached an equilibrium by 10000 generations.
+Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[r==0])})[apply(final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(final.freqs)`. `r length(unlist(lapply(pss,nrow))[lapply(pss,nrow) < 9999])` of the `r length(pss)` populations crashed, though. Of the `r length(pss)` replicates, `r length(unlist(lapply(pss,nrow))[unlist(lapply(pss,nrow))>=9999])` reached an equilibrium by 10000 generations.
+
+
 ### Courtship and Parental Traits
 
 Females choose nests based on males' courtship trait (they all only nest with courting males, and the female preference does not have a genetic basis and does not evolve), and then the survival of the nest depends on whether the courting male is also a parental male. If the chosen male is a parental male, the nest has a 90% chance of survival. Otherwise, it only has a 10% chance. Non-courters only reproduce through sneaking.
