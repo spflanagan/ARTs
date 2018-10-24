@@ -276,17 +276,20 @@ int main(int argc, char*argv[])
 						std::cout << "\n   nest_and_fertilize took " << duration << " seconds." << std::flush;
 				}
 				//viability selection
-				t1 = std::chrono::high_resolution_clock::now();
-				pops[ii].viability_selection(global_params);
-				t2 = std::chrono::high_resolution_clock::now();
-				duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
-				if (global_params.optimize)
-				{
-					if (global_params.log_file)
-						log_out<< "\n   viability_selection took " << duration << " seconds.";
-					else
-						std::cout << "\n   viability_selection took " << duration << " seconds." << std::flush;
-				}
+                if(global_params.viability_selection)
+                {
+                    t1 = std::chrono::high_resolution_clock::now();
+                    pops[ii].viability_selection(global_params);
+                    t2 = std::chrono::high_resolution_clock::now();
+                    duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
+                    if (global_params.optimize)
+                    {
+                        if (global_params.log_file)
+                            log_out<< "\n   viability_selection took " << duration << " seconds.";
+                        else
+                            std::cout << "\n   viability_selection took " << duration << " seconds." << std::flush;
+                    }
+                }
 				//output summary stats
 				summary_output << "\n" << i << "\tPop" << ii;
 				pops[ii].output_summary_info(global_params, summary_output);//includes RS
@@ -370,7 +373,8 @@ int main(int argc, char*argv[])
 				//mating (includes assiging preferences, recombination, and mutation)
 				pops[ii].nest_and_fertilize(global_params, false, "temp");
 				//selection
-				pops[ii].viability_selection(global_params);
+                if(global_params.viability_selection)
+                    pops[ii].viability_selection(global_params);
 				//output summary stats
 				summary_output << "\n" << global_params.num_init_gen + i << "\tPop" << ii;
 				pops[ii].output_summary_info(global_params, summary_output);

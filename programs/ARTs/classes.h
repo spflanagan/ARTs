@@ -105,7 +105,7 @@ public:
 	double sperm_comp_r, egg_surv_parent, egg_surv_noparent;
 	string base_name;
 	bool same_base, court_trait, parent_trait, gene_network, env_cue, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
-	bool density_dependent,all_sneak, per_fem_mating, supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive,optimize, output_vcf;
+    bool density_dependent,all_sneak, per_fem_mating, supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive,optimize, output_vcf, viability_selection;
 	vector <int> qtl_per_chrom;
 	bool log_file;
 
@@ -115,7 +115,7 @@ public:
 		num_pops = num_init_gen = num_exp_gen = max_num_mates = int();
 		mutation_rate =recombination_rate = allelic_std_dev = egg_surv_parent = egg_surv_noparent = sperm_comp_r = double();
 		same_base = gene_network = env_cue = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
-		density_dependent = all_sneak = per_fem_mating = random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive = optimize= output_vcf=bool();
+		density_dependent = all_sneak = per_fem_mating = random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive = optimize= output_vcf=viability_selection = bool();
 		qtl_per_chrom = vector<int>();
 		log_file = bool();
 	}
@@ -170,6 +170,7 @@ public:
 		no_genetics = false; //removes genetic architecture, is just unlinked additive genetic variance
 		optimize = false; //if true, it outputs time taken for each step. (default false)
         output_vcf = false; //if true, a vcf will be output
+        viability_selection = false; // if true, viability selection will act on offspring
 		log_file = true; //saves std out to log instead of outputting it to the console
 	}
 
