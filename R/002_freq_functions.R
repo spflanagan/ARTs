@@ -185,7 +185,7 @@ plot.morphs.reps<-function(s,cols2,ncols=5,lwd=2,...){
 get.morph.freqs<-function(s){
   pc.final.freqs<-do.call(rbind,lapply(s,function(dat){
     last<-dat[nrow(dat),]
-    return(last[,c(1,11:14)])
+    return(last)
   }))
   if(is.null(names(s))){
     rownames(pc.final.freqs)<-unlist(lapply(seq(1:nrow(pc.final.freqs)),function(n){paste("Rep",n,sep="")}))
