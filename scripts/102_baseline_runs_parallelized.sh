@@ -6,7 +6,7 @@
 ### --- TO RUN THE SCRIPT --- ###
 
 # in scripts/
-#  nohup ./002_baseline_runs.sh > ./logs/002_DATE.log 2>&1 &
+#  nohup ./102_baseline_runs.sh > ./logs/002_DATE.log 2>&1 &
 
 
 ###----DETERMINE WHAT SHOULD RUN----###
