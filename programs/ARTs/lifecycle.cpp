@@ -350,6 +350,8 @@ int main(int argc, char*argv[])
 		t1 = std::chrono::high_resolution_clock::now();
 		for (ii = 0; ii < global_params.num_pops; ii++)
 		{
+            
+            pops[ii].determine_pop_size(global_params);    
 			if (pops[ii].population_size > 0)
 			{
 				if (global_params.verbose)
@@ -368,8 +370,7 @@ int main(int argc, char*argv[])
                         std::cout << "\nexperimental generation " << i + 1 << " beginning." << std::flush;
                     }
                 }
-					
-				pops[ii].determine_pop_size(global_params);						
+										
 				//mating (includes assiging preferences, recombination, and mutation)
 				pops[ii].nest_and_fertilize(global_params, false, "temp");
 				//selection
@@ -511,10 +512,10 @@ int main(int argc, char*argv[])
 				std::cout << "\nNo equilibrium could be reached for population " << i << " with population size " << pops[i].population_size << std::flush;
             if(global_params.output_vcf)
                 pops[i].output_genotypes_vcf(global_params, i);
-			pops[i].output_trait_info(global_params, i, trait_output);
+			
 		}
 	}
-	
+	pops[i].output_trait_info(global_params, i, trait_output);
 	//close output files
 	summary_output.close();
 	trait_output.close();
