@@ -80,7 +80,9 @@ int main(int argc, char*argv[])
 	
 
 	trait_output_name = global_params.base_name + "_traits.txt";
-
+    trait_output.open(trait_output_name);
+    trait_output << "Pop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
+    
 	markers_output_name = global_params.base_name + "_markers.txt";
 	markers_output.open(markers_output_name);
 	markers_output << "Generation\tPop";
@@ -96,7 +98,7 @@ int main(int argc, char*argv[])
 
 	summary_output_name = global_params.base_name + "_summary.txt";
 	summary_output.open(summary_output_name);
-	summary_output << "Generation\tPop\tPopSize\tNumMal\tNumFem\tNumProgeny\tParentThresh\tParentFreq\tParentW\tNonParentW\tCourterThresh\tCourterFreq\tCourterW\tNonCourterW"
+	summary_output << "Generation\tPop\tPopSize\tNumMal\tNumFem\tNumProgeny\tParentThresh\tParentAEmean\tParentAEsd\tParentFreq\tParentW\tNonParentW\tCourterThresh\tCourterAEmean\tCourterAEsd\tCourterFreq\tCourterW\tNonCourterW"
 		<< "\tFreqNcNp\tFreqCNp\tFreqNcP\tFreqCP\tPrefThresh\tPrefFreq";
 	
 
@@ -342,8 +344,6 @@ int main(int argc, char*argv[])
 		}	
 	}
 	
-	trait_output.open(trait_output_name);
-	trait_output << "Pop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
 	//run the last 2000 generations
 	for(i = 0; i < global_params.num_exp_gen; i++)
 	{

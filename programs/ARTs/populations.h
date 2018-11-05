@@ -3123,17 +3123,21 @@ public:
 		if (gp.parent_trait || gp.parent_conditional)
 		{
 			dtemp = calc_freq_parent(gp);
-			summary_output << "\t" << parent_thresh << '\t' << dtemp << '\t' << rs[2] << '\t' << rs[3];
+            double par_mu = calc_mean_parent_ae(gp);
+            double par_sd = calc_parent_sd(gp);
+			summary_output << "\t" << parent_thresh << '\t' << dtemp << '\t' << par_mu << '\t' << par_sd << '\t' << rs[2] << '\t' << rs[3];
 		}
 		else
-			summary_output << "\tNA\tNA\tNA\tNA";
+			summary_output << "\tNA\tNA\tNA\tNA\tNA\tNA";
 		if (gp.court_trait || gp.courter_conditional)
 		{
 			dtemp = calc_freq_courter(gp);
-			summary_output << "\t" << courter_thresh << '\t' << dtemp << '\t' << rs[0] << '\t' << rs[1];
+            double crt_mu = calc_mean_courter_ae(gp);
+            double crt_sd = calc_courter_sd(gp);
+			summary_output << "\t" << courter_thresh << '\t' crt_mu << '\t' << crt_sd << '\t' << dtemp << '\t' << rs[0] << '\t' << rs[1];
 		}
 		else
-			summary_output << "\tNA\tNA\tNA\tNA";
+			summary_output << "\tNA\tNA\tNA\tNA\tNA\tNA";
 		if ((gp.parent_trait || gp.parent_conditional) && (gp.court_trait || gp.courter_conditional))
 		{
 			vector<double> morph_freqs = calc_freq_morphs(gp);
