@@ -98,7 +98,7 @@ int main(int argc, char*argv[])
 
 	summary_output_name = global_params.base_name + "_summary.txt";
 	summary_output.open(summary_output_name);
-	summary_output << "Generation\tPop\tPopSize\tNumMal\tNumFem\tNumProgeny\tParentThresh\tParentAEmean\tParentAEsd\tParentFreq\tParentW\tNonParentW\tCourterThresh\tCourterAEmean\tCourterAEsd\tCourterFreq\tCourterW\tNonCourterW"
+	summary_output << "Generation\tPop\tPopSize\tNumMal\tNumFem\tNumProgeny\tParentThresh\tParentFreq\tParentAEmean\tParentAEsd\tParentW\tNonParentW\tCourterThresh\tCourterFreq\tCourterAEmean\tCourterAEsd\tCourterW\tNonCourterW"
 		<< "\tFreqNcNp\tFreqCNp\tFreqNcP\tFreqCP\tPrefThresh\tPrefFreq";
 	
 

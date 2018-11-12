@@ -8,6 +8,8 @@ output:
     dev: png
 header-includes: \usepackage{float}
 always_allow_html: yes
+editor_options: 
+  chunk_output_type: console
 ---
 
 The purpose of this model is to understand how genetic architectures of alternative reproductive tactics impact their maintenance in populations. I'm using an individual-based simulation model with different selection scenarios, types of alternative tactics, and genetic architectures (genome-wide additive genetic variance, supergenes, expression networks).
@@ -376,6 +378,13 @@ kable(final.freqs,caption = "Frequency of courters with supergenes in final gene
 ```
 
 
+```{r}
+par(mfrow=c(5,4),mar=c(2,2,2,2),oma=c(2,2,2,2))
+l<-lapply(cs,function(rep.summ){
+  plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"])
+  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["courter"])
+})
+```
 
 ### Parental trait
 
@@ -403,13 +412,22 @@ kable(final.freqs,caption = "Frequency of parents with supergenes in final gener
 
 Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[r==0])})[apply(final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(final.freqs)`. `r length(unlist(lapply(pss,nrow))[lapply(pss,nrow) < 9999])` of the `r length(pss)` populations crashed, though. Of the `r length(pss)` replicates, `r length(unlist(lapply(pss,nrow))[unlist(lapply(pss,nrow))>=9999])` reached an equilibrium by 10000 generations.
 
+Let's look at the trajectories of the parent traits.
+
+```{r}
+par(mfrow=c(5,4),mar=c(2,2,2,2),oma=c(2,2,2,2))
+l<-lapply(pss,function(rep.summ){
+  plot(rep.summ$Generation,rep.summ$ParentAEsd,type="l",col=cols["parent"])
+  abline(h=rep.summ$ParentThresh[1],lty=2,col="red")
+})
+```
 
 ### Courtship and Parental Traits
 
 Females choose nests based on males' courtship trait (they all only nest with courting males, and the female preference does not have a genetic basis and does not evolve), and then the survival of the nest depends on whether the courting male is also a parental male. If the chosen male is a parental male, the nest has a 90% chance of survival. Otherwise, it only has a 10% chance. Non-courters only reproduce through sneaking.
 
 ```{r parentalCourtship_supergenes, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the two morphs with linked QTLs (courter = green, parent = blue)"}
-s<-plot.pc.reps("^parent-courter_supergene_[1-5]_summary.txt",cols)
+s<-plot.pc.reps("^parent-courter_supergene_[1-5]_summary.txt",cols,make.plot=FALSE)
 ```
 
 The different runs have different outcomes.
@@ -446,4 +464,15 @@ legend("topright",bty='n',legend=c("Preferred","Not Preferred"),lty=c(1,2),col="
 ```
 
 
+```{r}
+par(mfrow=c(5,4),mar=c(2,2,2,2),oma=c(2,2,2,2))
+l<-lapply(s,function(rep.summ){
+  plot(rep.summ$Generation,rep.summ$ParentAEsd,type="l",col=cols["parent"],
+       ylim=c(min(rep.summ$ParentAEsd,rep.summ$CourterAEmean)-0.1,
+              max(rep.summ$ParentAEsd,rep.summ$CourterAEmean)+0.1))
+  points(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"])
+  abline(h=rep.summ$ParentThresh[1],lty=2,col=cols["parent"],lwd=2)
+  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["courter"],lwd=2)
+})
+```
 

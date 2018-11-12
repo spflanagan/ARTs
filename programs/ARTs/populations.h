@@ -3134,7 +3134,7 @@ public:
 			dtemp = calc_freq_courter(gp);
             double crt_mu = calc_mean_courter_ae(gp);
             double crt_sd = calc_courter_sd(gp, courter_thresh);
-			summary_output << "\t" << courter_thresh << '\t' << crt_mu << '\t' << crt_sd << '\t' << dtemp << '\t' << rs[0] << '\t' << rs[1];
+			summary_output << "\t" << courter_thresh << '\t' << dtemp <<'\t' << crt_mu << '\t' << crt_sd  << '\t' << rs[0] << '\t' << rs[1];
 		}
 		else
 			summary_output << "\tNA\tNA\tNA\tNA\tNA\tNA";
