@@ -228,6 +228,9 @@ text(x=-0.1,y=c(0,1),c("Non-Parent","Parent"),xpd=TRUE,srt=90)
 
 ## Linked additive genetic variance
 
+
+In these cases, the traits are encoded by a number (50) of loci, whose alleles contribute additively to determine the trait value. These alleles anchored on chromosomes, equally distributed among the chromosomes (4). The overall trait value is compared to a population-level threshold (which is static, in these cases), and if the trait value is above the threshold the male takes the parent or courter morph and if it is below he does not. Below, I'm showing the results from 10 replicates of each scenario. 
+
 ### Courter trait
 
 ```{r linked_courter,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph with linked QTLs (each color represents a different replicate)"}
@@ -348,6 +351,7 @@ legend("topright",bty='n',legend=c("Preferred","Not Preferred"),lty=c(1,2),col="
 
 ## Supergenes
 
+In these cases, the loci (50) are all located in one region of a chromosome, and that region has reduced recombination. As above, the overall trait value is compared to a population-level threshold (which is static, in these cases), and if the trait value is above the threshold the male takes the parent or courter morph and if it is below he does not. Below, I'm showing the results from 10 replicates of each scenario. 
 
 ### Courter trait
 

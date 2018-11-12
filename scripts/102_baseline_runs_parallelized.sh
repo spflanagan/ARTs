@@ -17,7 +17,7 @@ CONDITIONAL=false
 COND_NFDS=false
 GENETIC_ARCH=true
 EVOLVING=false
-SUPERGENE=false
+SUPERGENE=true
 INDEP_PREF=false
 FDS_PREF=false
 

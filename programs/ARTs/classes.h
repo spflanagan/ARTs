@@ -170,7 +170,7 @@ public:
 		no_genetics = false; //removes genetic architecture, is just unlinked additive genetic variance
 		optimize = false; //if true, it outputs time taken for each step. (default false)
         output_vcf = false; //if true, a vcf will be output
-        viability_selection = false; // if true, viability selection will act on offspring
+        viability_selection = true; // if true, viability selection will act on offspring
 		log_file = true; //saves std out to log instead of outputting it to the console
 	}
 
