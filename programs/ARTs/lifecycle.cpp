@@ -511,11 +511,12 @@ int main(int argc, char*argv[])
 			else
 				std::cout << "\nNo equilibrium could be reached for population " << i << " with population size " << pops[i].population_size << std::flush;
             if(global_params.output_vcf)
-                pops[i].output_genotypes_vcf(global_params, i);
-			
+                pops[i].output_genotypes_vcf(global_params, i);	
 		}
+		//output the trait values for the final generation of each population
+		pops[i].output_trait_info(global_params, i, trait_output);
 	}
-	pops[i].output_trait_info(global_params, i, trait_output);
+	
 	//close output files
 	summary_output.close();
 	trait_output.close();
