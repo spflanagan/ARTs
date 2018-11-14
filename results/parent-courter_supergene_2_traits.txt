@@ -1,1 +1,0 @@
-Pop	Individual	Sex	Courter	CourtTrait	Parent	ParentTrait	Preference	PrefTrait	MateFound	PotRS	LifetimeRS	Alive
