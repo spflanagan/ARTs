@@ -229,7 +229,7 @@ public:
 		std::cout << "--verbose:\tOutputs info about every step during every initial generation -- good for debugging";
 		std::cout << "--no-genetics:\tRemoves genetic architecture; traits encoded by heritable unlinked additive genetic variance.\n";
 		std::cout << "--linked-additive:\t(default) Traits are determined by genome-wide additive genetic variance distributed among chromosomes.\n";
-		std::cout << "--viability:\tIf included, viability selection acts on offspring. If not, viability selection is turned off.\n"
+		std::cout << "--viability:\tIf included, viability selection acts on offspring. If not, viability selection is turned off.\n";
 		std::cout << "--density-independent:\tTurns off density-dependent selection. This is not recommended as it will likely lead to population crashes.\n";
 		std::cout << "--optimize:\tOutput time steps for initial generations, for optimizing the code. (default is false)\n";
 		std::cout << "--same-base:\tStart each replicate population with the same base population (default is true)\n";
