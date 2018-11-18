@@ -170,7 +170,7 @@ public:
 		no_genetics = false; //removes genetic architecture, is just unlinked additive genetic variance
 		optimize = false; //if true, it outputs time taken for each step. (default false)
         output_vcf = false; //if true, a vcf will be output
-        viability_selection = true; // if true, viability selection will act on offspring
+        viability_selection = false; // if true, viability selection will act on offspring
 		log_file = true; //saves std out to log instead of outputting it to the console
 	}
 
@@ -229,6 +229,7 @@ public:
 		std::cout << "--verbose:\tOutputs info about every step during every initial generation -- good for debugging";
 		std::cout << "--no-genetics:\tRemoves genetic architecture; traits encoded by heritable unlinked additive genetic variance.\n";
 		std::cout << "--linked-additive:\t(default) Traits are determined by genome-wide additive genetic variance distributed among chromosomes.\n";
+		std::cout << "--viability:\tIf included, viability selection acts on offspring. If not, viability selection is turned off.\n"
 		std::cout << "--density-independent:\tTurns off density-dependent selection. This is not recommended as it will likely lead to population crashes.\n";
 		std::cout << "--optimize:\tOutput time steps for initial generations, for optimizing the code. (default is false)\n";
 		std::cout << "--same-base:\tStart each replicate population with the same base population (default is true)\n";
@@ -485,6 +486,8 @@ public:
 							log_file = true;
 						if(tempstring1 == "--density-independent")
 							density_dependent = false;
+						if(tempstring1 == "--viability")
+							viability_selection = true;
 					}
 				}
 				
@@ -582,6 +585,8 @@ public:
 			param_out << "\ndensity dependent";
 		else
 			param_out << "\ndensity independent";
+		if(viability_selection)
+			param_out <<"\nviability selection";
         if(log_file)
             param_out << "\n--log-file ";
 		param_out.close();
