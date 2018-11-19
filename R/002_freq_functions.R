@@ -174,7 +174,7 @@ plot.morphs.reps<-function(s,cols2,ncols=5,lwd=2,...){
   par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
   plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
   legend("top",c("Courter/Parent","Non-Courter/Parent","Courter/Non-Parent","Non-courter/Non-parent"),
-         col=cols2,bty='n',ncol = 2,lty=1,lwd=lwd,cex=0.5*par()$cex)
+         col=cols2,bty='n',ncol = 2,lty=1,lwd=lwd)
 }
 
 
