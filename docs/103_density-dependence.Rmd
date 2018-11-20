@@ -42,7 +42,7 @@ cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
 
 Males can be courters or not-courters and parents or not-parents. When the model is run with both traits, this results in four possible morphs: courter/parent, courter/not-parent, not-courter/parent, and not-courter/not-parent. Generations are non-overlapping and there is one reproductive bout per generation. In each generation, the population follows the following timeline: 
 
-![Fig. 1 Flowchart of simulation]("../figs/density-dependent-flowchart.jpg")
+![Fig. 1 Flowchart of simulation](../figs/density-dependent-flowchart.jpg)
 
 each step is explained in further detail below. 
 
