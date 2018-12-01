@@ -14,7 +14,8 @@ editor_options:
 
 <style>
 p.caption {
-  font-size: 0.6em;
+  font-size: 0.9em;
+  background-color: #afadad
 }
 </style>
 
@@ -83,11 +84,13 @@ Females choose nests based on whether the male is a courter or not, and they all
 
 #### With viability selection
 
-```{r unlinked_courter,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph with unlinked additive genetic variances (each color represents a different replicate)"}
+```{r unlinked_courter,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph with unlinked additive genetic variances in all of the replicates"}
 cu<-plot.courter.reps(pattern="^courter_unlinked_[1-5]_summary.txt",cols)
 ```
 
 Of the `r length(cu)` replicates, `r length(cu)-length(unlist(lapply(cu,nrow))[unlist(lapply(cu,nrow))<9999])` reached a steady state by 10000 generations. The different runs all overlap, suggesting that they all converge on the same outcome: all males are courters. This result is also obvious by inspecting a table of courter frequencies and fitnesses in the final generation of the runs.
+
+**In some cases, major differences emerge between scenarios with viability selection and without, so below I present each case with and without viability selection**
 
 
 ```{r unlinked_courter_final}
@@ -119,20 +122,22 @@ kable(final.freqs,caption = "Frequency of courters in final generation of runs w
 We may also be interested in the evolution of the courter trait values, which reflects the additive effects of all loci. 
 
 
-```{r,fig.pos="H",fig.cap="Evolution of courtship trait with unlinked loci",fig.width=6,fig.height=10}
+```{r,fig.pos="H",fig.cap="Evolution of courtship trait with unlinked loci. Green dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(cu,function(rep.summ){
-  plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"])
+  plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"],
+       ylim=c(min(rep.summ$CourterAEmean-rep.summ$CourterAEsd)-0.05,
+              max(rep.summ$CourterAEmean+rep.summ$CourterAEsd)+0.05))
   lines(rep.summ$Generation,rep.summ$CourterAEmean+rep.summ$CourterAEsd,type="l",col=alpha(cols["courter"],0.5),lty=3)
   lines(rep.summ$Generation,rep.summ$CourterAEmean-rep.summ$CourterAEsd,type="l",col=alpha(cols["courter"],0.5),lty=3)
-  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["courter"])
+  abline(h=rep.summ$CourterThresh[1],lty=2,col="black")
 })
 ```
 
 
 #### Without viability selection
 
-```{r unlinked_courter_nv,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph with unlinked additive genetic variances and without viability selection (each color represents a different replicate)"}
+```{r unlinked_courter_nv,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph with unlinked additive genetic variances and without viability selection in all of the replicates"}
 cu<-plot.courter.reps(pattern="^courter_unlinked_novs_[1-5]_summary.txt",cols)
 ```
 
@@ -157,13 +162,15 @@ kable(final.freqs,caption = "Frequency of courters in final generation of runs w
 We may also be interested in the evolution of the courter trait values, which reflects the additive effects of all loci. 
 
 
-```{r,fig.pos="H",fig.cap="Evolution of courtship trait with unlinked loci and no viability selection",fig.width=6,fig.height=10}
+```{r,fig.pos="H",fig.cap="Evolution of courtship trait with unlinked loci and no viability selection. Green dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(cu,function(rep.summ){
-  plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"])
+  plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"],
+       ylim=c(min(rep.summ$CourterAEmean-rep.summ$CourterAEsd)-0.05,
+              max(rep.summ$CourterAEmean+rep.summ$CourterAEsd)+0.05))
   lines(rep.summ$Generation,rep.summ$CourterAEmean+rep.summ$CourterAEsd,type="l",col=alpha(cols["courter"],0.5),lty=3)
   lines(rep.summ$Generation,rep.summ$CourterAEmean-rep.summ$CourterAEsd,type="l",col=alpha(cols["courter"],0.5),lty=3)
-  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["courter"])
+  abline(h=rep.summ$CourterThresh[1],lty=2,col="black")
 })
 ```
 
@@ -198,19 +205,21 @@ Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[
 
 Let's take a look at how the parent trait values evolve
 
-```{r parent_nogenetics_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with additive genetic variation",fig.width=6,fig.height=10}
+```{r parent_nogenetics_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with additive genetic variation. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(pu,function(rep.summ){
-  plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"])
+  plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
+       ylim=c(min(rep.summ$ParentAEmean-rep.summ$ParentAEsd)-0.05,
+              max(rep.summ$ParentAEmean+rep.summ$ParentAEsd)+0.05))
   lines(rep.summ$Generation,rep.summ$ParentAEmean+rep.summ$ParentAEsd,type="l",col=alpha(cols["parent"],0.5),lty=3)
   lines(rep.summ$Generation,rep.summ$ParentAEmean-rep.summ$ParentAEsd,type="l",col=alpha(cols["parent"],0.5),lty=3)
-  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["parent"])
+  abline(h=rep.summ$CourterThresh[1],lty=2,col="black")
 })
 ```
 
 #### Without viability selection
 
-```{r parental_nogenetics_nv, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph with unlinked loci without viability selection (each color represents a different replicate)"}
+```{r parental_nogenetics_nv, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph with unlinked loci without viability selection for all replicates"}
 pu<-plot.parent.reps("^parent_unlinked_novs_[1-5]_summary.txt",cols)
 ```
 
@@ -223,7 +232,7 @@ parent.eq<-apply(parent.final.freqs,1,function(rep){ if(rep["Generation"]==9999)
 ```
 
 
-Again, inference is facilitated by looking at the final frequencies and fitnesses in each replicate: 
+Again, let's look at the final frequencies and fitnesses in each replicate: 
 
 ```{r parent_table_nv}
 final.freqs<-parent.final.freqs[,-1]
@@ -235,13 +244,15 @@ Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[
 
 Let's take a look at how the parent trait values evolve
 
-```{r parent_nogenetics_traits_nv ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with additive genetic variation and no viability selection",fig.width=6,fig.height=10}
+```{r parent_nogenetics_traits_nv ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with additive genetic variation and no viability selection. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(pu,function(rep.summ){
-  plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"])
+  plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
+       ylim=c(min(rep.summ$ParentAEmean-rep.summ$ParentAEsd)-0.05,
+              max(rep.summ$ParentAEmean+rep.summ$ParentAEsd)+0.05))
   lines(rep.summ$Generation,rep.summ$ParentAEmean+rep.summ$ParentAEsd,type="l",col=alpha(cols["parent"],0.5),lty=3)
   lines(rep.summ$Generation,rep.summ$ParentAEmean-rep.summ$ParentAEsd,type="l",col=alpha(cols["parent"],0.5),lty=3)
-  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["parent"])
+  abline(h=rep.summ$CourterThresh[1],lty=2,col="black")
 })
 ```
 
@@ -274,6 +285,8 @@ kable(pc.final.freqs,caption = "Frequency of morphs in final generation",
 
 Multiple morphs are maintained in `r length(apply(pc.final.freqs,1,function(r){ length(r[r==0])})[apply(pc.final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(pc.final.freqs)` replicates, and those morphs contain either a parent or a courter. 
 
+
+
 ```{r courtParent_rs,echo=FALSE,eval=FALSE}
 ymax<-round(max(pcng.sum$ParentW,pcng.sum$NonParentW,pcng.sum$CourterW,pcng.sum$NonCourterW)+1)
 par(mar=c(4,4,1,4),mfrow=c(2,1))
@@ -288,13 +301,15 @@ points(pcng.sum$NonCourterW,lwd=2,lty=3,type="l",col=alpha("grey",0.75))
 legend("topright",bty='n',legend=c("Preferred","Not Preferred"),lty=c(1,2),col="darkgrey",lwd=2)
 ```
 
+If we look at how the two traits evolved, we see that in the runs when the population crashed the trait values did not immediately evolve above the thresholds (unlike in the other runs) -- and that the parent threshold started out much lower than the courter threshold. It may be that the threshold value plays a key role in determining the fate of the populations.
 
-```{r courtparent_traits_unlinked,out.extra='',fig.pos="H",fig.cap="Evolution of the courter and parenting trait values in each rep with unlinked genetic variation",fig.width=6,fig.height=10}
+```{r courtparent_traits_unlinked,out.extra='',fig.pos="H",fig.cap="Evolution of the courter and parenting trait values in each rep with unlinked genetic variation. Dotted line shows the thresholds determining if males become courters (green) or parents (blue)",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(u,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
        ylim=c(min(rep.summ$ParentAEmean,rep.summ$CourterAEmean)-0.1,
-              max(rep.summ$ParentAEmean,rep.summ$CourterAEmean)+0.1))
+              max(rep.summ$ParentAEmean,rep.summ$CourterAEmean)+0.1),
+       xlim=c(0,12000))
   points(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"])
   abline(h=rep.summ$ParentThresh[1],lty=2,col=cols["parent"],lwd=2)
   abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["courter"],lwd=2)
@@ -303,11 +318,13 @@ out<-lapply(u,function(rep.summ){
 
 #### Without viability selection
 
+This scenario -- unlinked loci contributing to the additive genetic variances of courtship and parental traits -- is one where having viability selection or not having viability selection is important.
+
 ```{r parentalCourtship_nogenetics_nv, echo=FALSE,out.extra='',fig.keep=FALSE}
 u<-plot.pc.reps("^parent-courter_unlinked_novs_[1-5]_summary.txt",cols)
 ```
 
-The different runs have different outcomes. 
+The different runs have different outcomes, but none of the runs crashed. Clearly, the crashing of the populations seen above is due to viability selection. 
 
 Let's look at the morph frequencies for each run.
 
@@ -316,7 +333,6 @@ Let's look at the morph frequencies for each run.
 plot.morphs.reps(u,cols2,ncols = 4)
 ```
 
-In some of the runs the population crashed after few generations. This is obvious when looking at the the final frequencies in a table as well:
 
 ```{r unlinked_courterParent_final_nv}
 pc.final.freqs<-get.morph.freqs(u)
@@ -341,7 +357,7 @@ legend("topright",bty='n',legend=c("Preferred","Not Preferred"),lty=c(1,2),col="
 ```
 
 
-```{r courtparent_traits_unlinked_nv,out.extra='',fig.pos="H",fig.cap="Evolution of the courter and parenting trait values in each rep with unlinked genetic variation and without viability selection",fig.width=6,fig.height=10}
+```{r courtparent_traits_unlinked_nv,out.extra='',fig.pos="H",fig.cap="Evolution of the courter and parenting trait values in each rep with unlinked genetic variation and without viability selection. Green represents courtship trait values and blue represents parental trait values, and the dotted lines are the thresholds",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(u,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
@@ -353,7 +369,7 @@ out<-lapply(u,function(rep.summ){
 })
 ```
 
-
+When the courter/parent and non-courter/non-parent morphs are maintained in populations, the courter threshold is higher than the parental threshold. When the non-courter/parent and courter/non-parent morphs are maintained, the parental threshold is higher than the courter threshold.
 
 ## Linked additive genetic variance
 
@@ -368,7 +384,7 @@ In these cases, the traits are encoded by a number (50) of loci, whose alleles c
 cl<-plot.courter.reps(pattern="^courter_linked_[1-5]_summary.txt",cols)
 ```
 
-When only the courtship trait is included in the simulation, `r length(unlist(lapply(cl,nrow))[unlist(lapply(cl,nrow))==10000])` of the `r length(cl)` replicates reached an equilibrium by 10000 generations.
+When only the courtship trait is included in the simulation, `r length(unlist(lapply(cl,nrow))[unlist(lapply(cl,nrow))>=9999])` of the `r length(cl)` replicates reached an equilibrium by 10000 generations.
 
 ```{r linked_courter_final}
 courter.final.freqs<-get.courter.freqs(cl)
@@ -386,19 +402,23 @@ kable(final.freqs,caption = "Frequency of courters with linked QTLs in final gen
       row.names = TRUE)
 ```
 
-Every rep has the courtship trait go to fixation.
+Every replicate has the courtship trait go to fixation.
 
 Let's also evaluate the evolution of the courtship trait values:
 
-```{r,fig.pos="H",fig.cap="Evolution of courtship trait with linked loci",fig.width=6,fig.height=10}
+```{r,fig.pos="H",fig.cap="Evolution of courtship trait with linked loci. Green dotted lines are the standard deviations of the traits and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(cl,function(rep.summ){
-  plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"])
+  plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"],
+       ylim=c(min(rep.summ$CourterAEmean-rep.summ$CourterAEsd)-0.05,
+              max(rep.summ$CourterAEmean+rep.summ$CourterAEsd)+0.05))
   lines(rep.summ$Generation,rep.summ$CourterAEmean+rep.summ$CourterAEsd,type="l",col=alpha(cols["courter"],0.5),lty=3)
   lines(rep.summ$Generation,rep.summ$CourterAEmean-rep.summ$CourterAEsd,type="l",col=alpha(cols["courter"],0.5),lty=3)
-  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["courter"])
+  abline(h=rep.summ$CourterThresh[1],lty=2,col="black")
 })
 ```
+
+In every case, the trait values evolve above the threshold.
 
 #### Without viability selection
 
@@ -428,15 +448,19 @@ Every rep has the courtship trait go to fixation.
 
 Let's also evaluate the evolution of the courtship trait values:
 
-```{r,fig.pos="H",fig.cap="Evolution of courtship trait with linked loci and without viability selection",fig.width=6,fig.height=10}
+```{r,fig.pos="H",fig.cap="Evolution of courtship trait with linked loci and without viability selection. Green dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(cl,function(rep.summ){
-  plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"])
+  plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"],
+       ylim=c(min(rep.summ$CourterAEmean-rep.summ$CourterAEsd)-0.05,
+              max(rep.summ$CourterAEmean+rep.summ$CourterAEsd)+0.05))
   lines(rep.summ$Generation,rep.summ$CourterAEmean+rep.summ$CourterAEsd,type="l",col=alpha(cols["courter"],0.5),lty=3)
   lines(rep.summ$Generation,rep.summ$CourterAEmean-rep.summ$CourterAEsd,type="l",col=alpha(cols["courter"],0.5),lty=3)
-  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["courter"])
+  abline(h=rep.summ$CourterThresh[1],lty=2,col="black")
 })
 ```
+
+The case with only the courtship trait does not differ qualitatively with or without viability selection.
 
 ### Parental trait
 
@@ -467,15 +491,19 @@ Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[
 
 The evolution of the trait values may shed light on the variable outcomes:
 
-```{r parent_linkedgenetics_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with linked QTLs",fig.width=6,fig.height=10}
+```{r parent_linkedgenetics_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with linked QTLs. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(pl,function(rep.summ){
-  plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"])
+  plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
+       ylim=c(min(rep.summ$ParentAEmean-rep.summ$ParentAEsd)-0.05,
+              max(rep.summ$ParentAEmean+rep.summ$ParentAEsd)+0.05))
   lines(rep.summ$Generation,rep.summ$ParentAEmean+rep.summ$ParentAEsd,type="l",col=alpha(cols["parent"],0.5),lty=3)
   lines(rep.summ$Generation,rep.summ$ParentAEmean-rep.summ$ParentAEsd,type="l",col=alpha(cols["parent"],0.5),lty=3)
-  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["parent"])
+  abline(h=rep.summ$CourterThresh[1],lty=2,col="black")
 })
 ```
+
+Fluctuations around a relatively stable trait mean match the fluctuations around a fairly stable frequency of parental males.
 
 #### Without viability selection
 
@@ -502,21 +530,23 @@ kable(final.freqs,caption = "Frequency of parents with linked QTLs in final gene
 
 Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[r==0])})[apply(final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(final.freqs)`. `r length(unlist(lapply(pl,nrow))[lapply(pl,nrow) < 9999])` of the `r length(pl)` populations crashed. Of the `r length(pl)` replicates, `r length(unlist(lapply(pl,nrow))[unlist(lapply(pl,nrow))>=9999])` reached an equilibrium by 10000 generations.
 
-The evolution of the trait values may shed light on the variable outcomes:
+Looking at the evolution of trait values reflects the same patterns:
 
-```{r parent_linkedgenetics_traits_nv ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with linked QTLs and without viability selection",fig.width=6,fig.height=10}
+```{r parent_linkedgenetics_traits_nv ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with linked QTLs and without viability selection. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(pl,function(rep.summ){
-  plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"])
+  plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
+       ylim=c(min(rep.summ$ParentAEmean-rep.summ$ParentAEsd)-0.05,
+              max(rep.summ$ParentAEmean+rep.summ$ParentAEsd)+0.05))
   lines(rep.summ$Generation,rep.summ$ParentAEmean+rep.summ$ParentAEsd,type="l",col=alpha(cols["parent"],0.5),lty=3)
   lines(rep.summ$Generation,rep.summ$ParentAEmean-rep.summ$ParentAEsd,type="l",col=alpha(cols["parent"],0.5),lty=3)
-  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["parent"])
+  abline(h=rep.summ$CourterThresh[1],lty=2,col="black")
 })
 ```
 
 ### Courtship and Parental Traits
 
-Including both courtship and parental traits, along with linked loci, causes the outcomes to be even less predictable.
+Including both courtship and parental traits, along with linked loci, causes the outcomes to be less predictable -- same as in the case of unanchored/unlinked genetic loci.
 
 #### With viability selection
 
@@ -541,6 +571,8 @@ kable(pc.final.freqs,caption = "Frequency of morphs in final generation (linked 
 
 Multiple morphs are maintained in `r length(apply(pc.final.freqs,1,function(r){ length(r[r==0])})[apply(pc.final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(pc.final.freqs)` replicates, and those morphs contain either a parent or a courter. However, `r length(unlist(lapply(l,nrow))[lapply(l,nrow) < 9999])` of those reps with variation actually crashed.
 
+The problems arixe withe courter/non-parent and non-courter/parent morphs start to coexist.
+
 Looking at the trait value evolution may help us understand why some of the runs resulted in extinction:
 
 ```{r courtparent_traits_linked,out.extra='',fig.pos="H",fig.cap="Evolution of the courter and parenting trait values in each rep with linked genetic variation",fig.width=6,fig.height=10}
@@ -557,6 +589,8 @@ out<-lapply(l,function(rep.summ){
 
 
 #### Without viability selection
+
+Same as in the case of unlinked genetic variances, removing viability selection prevents the populations from crashing.
 
 ```{r parentalCourtship_genetics_nv, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the two morphs with linked QTLs and without viability selection (courter = green, parent = blue)"}
 l<-plot.pc.reps("^parent-courter_linked_novs_[1-5]_summary.txt",cols)
@@ -577,7 +611,7 @@ kable(pc.final.freqs,caption = "Frequency of morphs in final generation (linked 
       row.names = TRUE)
 ```
 
-Multiple morphs are maintained in `r length(apply(pc.final.freqs,1,function(r){ length(r[r==0])})[apply(pc.final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(pc.final.freqs)` replicates, and those morphs contain either a parent or a courter. However, `r length(unlist(lapply(l,nrow))[lapply(l,nrow) < 9999])` of those reps with variation actually crashed.
+Multiple morphs are maintained in `r length(apply(pc.final.freqs,1,function(r){ length(r[r==0])})[apply(pc.final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(pc.final.freqs)` replicates, and those morphs have two morphs coexisting. 
 
 Looking at the trait value evolution may help us understand why some of the runs resulted in extinction:
 
@@ -593,6 +627,8 @@ out<-lapply(l,function(rep.summ){
 })
 ```
 
+Same as with unlinked variation, when the parental threshold is higher than the courtship threshold, the non-courter/parent and parent/non-courter coexist.
+
 ## Supergenes
 
 In these cases, the loci (50) are all located in one region of a chromosome, and that region has reduced recombination. As above, the overall trait value is compared to a population-level threshold (which is static, in these cases), and if the trait value is above the threshold the male takes the parent or courter morph and if it is below he does not. Below, I'm showing the results from 10 replicates of each scenario. 
@@ -605,7 +641,7 @@ In these cases, the loci (50) are all located in one region of a chromosome, and
 cs<-plot.courter.reps(pattern="^courter_supergene_[1-5]_summary.txt",cols)
 ```
 
-Of the `r length(cs)` replicates, `r length(unlist(lapply(cs,nrow))[unlist(lapply(cs,nrow))==10000])` reached an equilibrium by 10000 generations.
+Of the `r length(cs)` replicates, `r length(unlist(lapply(cs,nrow))[unlist(lapply(cs,nrow))==9999])` reached an equilibrium by 10000 generations.
 
 ```{r supergenes_courter_final}
 courter.final.freqs<-get.courter.freqs(cs)
@@ -623,13 +659,15 @@ kable(final.freqs,caption = "Frequency of courters with supergenes in final gene
 
 Looking at the evolution of the trait values: 
 
-```{r,fig.pos="H",fig.cap="Evolution of courtship trait with a supergene",fig.width=6,fig.height=10}
+```{r,fig.pos="H",fig.cap="Evolution of courtship trait with a supergene. Green dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(cu,function(rep.summ){
-  plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"])
+  plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"],
+       ylim=c(min(rep.summ$CourterAEmean-rep.summ$CourterAEsd)-0.05,
+              max(rep.summ$CourterAEmean+rep.summ$CourterAEsd)+0.05))
   lines(rep.summ$Generation,rep.summ$CourterAEmean+rep.summ$CourterAEsd,type="l",col=alpha(cols["courter"],0.5),lty=3)
   lines(rep.summ$Generation,rep.summ$CourterAEmean-rep.summ$CourterAEsd,type="l",col=alpha(cols["courter"],0.5),lty=3)
-  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["courter"])
+  abline(h=rep.summ$CourterThresh[1],lty=2,col="black")
 })
 ```
 
@@ -639,7 +677,7 @@ out<-lapply(cu,function(rep.summ){
 cs<-plot.courter.reps(pattern="^courter_supergene_novs_[1-5]_summary.txt",cols)
 ```
 
-Of the `r length(cs)` replicates, `r length(unlist(lapply(cs,nrow))[unlist(lapply(cs,nrow))==10000])` reached an equilibrium by 10000 generations.
+Of the `r length(cs)` replicates, `r length(unlist(lapply(cs,nrow))[unlist(lapply(cs,nrow))==9999])` reached an equilibrium by 10000 generations.
 
 ```{r supergenes_courter_final_nv}
 courter.final.freqs<-get.courter.freqs(cs)
@@ -657,13 +695,15 @@ kable(final.freqs,caption = "Frequency of courters with supergenes in final gene
 
 Looking at the evolution of the trait values: 
 
-```{r,fig.pos="H",fig.cap="Evolution of courtship trait with a supergene and without viability selection",fig.width=6,fig.height=10}
+```{r,fig.pos="H",fig.cap="Evolution of courtship trait with a supergene and without viability selection. Green dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(cu,function(rep.summ){
-  plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"])
+  plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"],
+       ylim=c(min(rep.summ$CourterAEmean-rep.summ$CourterAEsd)-0.05,
+              max(rep.summ$CourterAEmean+rep.summ$CourterAEsd)+0.05))
   lines(rep.summ$Generation,rep.summ$CourterAEmean+rep.summ$CourterAEsd,type="l",col=alpha(cols["courter"],0.5),lty=3)
   lines(rep.summ$Generation,rep.summ$CourterAEmean-rep.summ$CourterAEsd,type="l",col=alpha(cols["courter"],0.5),lty=3)
-  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["courter"])
+  abline(h=rep.summ$CourterThresh[1],lty=2,col="black")
 })
 ```
 
@@ -695,13 +735,15 @@ Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[
 
 Let's look at the trajectories of the parent traits.
 
-```{r parent_supergene_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with a supergene",fig.width=6,fig.height=10}
+```{r parent_supergene_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with a supergene. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(pl,function(rep.summ){
-  plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"])
+  plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
+       ylim=c(min(rep.summ$ParentAEmean-rep.summ$ParentAEsd)-0.05,
+              max(rep.summ$ParentAEmean+rep.summ$ParentAEsd)+0.05))
   lines(rep.summ$Generation,rep.summ$ParentAEmean+rep.summ$ParentAEsd,type="l",col=alpha(cols["parent"],0.5),lty=3)
   lines(rep.summ$Generation,rep.summ$ParentAEmean-rep.summ$ParentAEsd,type="l",col=alpha(cols["parent"],0.5),lty=3)
-  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["parent"])
+  abline(h=rep.summ$CourterThresh[1],lty=2,col="blue")
 })
 ```
 
@@ -731,13 +773,15 @@ Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[
 
 Let's look at the trajectories of the parent traits.
 
-```{r parent_supergene_traits_nv ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with a supergene without viability selection",fig.width=6,fig.height=10}
+```{r parent_supergene_traits_nv ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with a supergene without viability selection. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(pl,function(rep.summ){
-  plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"])
+  plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
+       ylim=c(min(rep.summ$ParentAEmean-rep.summ$ParentAEsd)-0.05,
+              max(rep.summ$ParentAEmean+rep.summ$ParentAEsd)+0.05))
   lines(rep.summ$Generation,rep.summ$ParentAEmean+rep.summ$ParentAEsd,type="l",col=alpha(cols["parent"],0.5),lty=3)
   lines(rep.summ$Generation,rep.summ$ParentAEmean-rep.summ$ParentAEsd,type="l",col=alpha(cols["parent"],0.5),lty=3)
-  abline(h=rep.summ$CourterThresh[1],lty=2,col=cols["parent"])
+  abline(h=rep.summ$CourterThresh[1],lty=2,col="black")
 })
 ```
 
@@ -842,4 +886,13 @@ out<-lapply(s,function(rep.summ){
 ```
 
 
+In the case of supergenes, the qualitative outcomes differ substantially between the viability and no-viability runs, but not in terms of populations crashing or surviving -- different types of variation can be maintained!
+
+## Preliminary conclusions
+
+* Viability selection may be an important factor ofr the model when both parental and coursthip traits are present. 
+
+* When single traits are present, the mechanism of inheritance doesn't seem to play a major role.
+
+* Supergenes may facilitate different amounts of variation to be maintained -- but it depends on the selective environment. 
 

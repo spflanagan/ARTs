@@ -12,12 +12,14 @@
 ###----DETERMINE WHAT SHOULD RUN----###
 NUMREPS=5
 NUM_THREADS=25
+
 NO_GENETICS=true
+GENETIC_ARCH=true
+SUPERGENE=true
+
 CONDITIONAL=false
 COND_NFDS=false
-GENETIC_ARCH=true
 EVOLVING=false
-SUPERGENE=true
 INDEP_PREF=false
 FDS_PREF=false
 
@@ -47,7 +49,7 @@ if [ "$INDEP_PREF" = true ]; then printf "\t%s\n" "INDEP_PREF"; fi
 if [ "$FDS_PREF" = true ]; then printf "\t%s\n" "FDS_PREF"; fi
 echo "The program will run in the background."
 echo "Check the status with htop or by looking at logs/002_${DATE}.log"
-} | tee ../../logs/002_${DATE}.log 2>1
+} | tee ../../logs/102_${DATE}.log 2>1
 
 
 ### --- FIGURE OUT HOW MANY TO RUN --- ###
@@ -76,6 +78,9 @@ for i in `seq ${NUMREPS}`; do
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --no-genetics -b ../../results/courter_unlinked_${i} --verbose --viability --same-base -p 4 &
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --parent --no-genetics -b ../../results/parent_unlinked_${i} --verbose --viability --same-base -p 4 &
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_${i} --verbose --viability --same-base -p 4 &
+		((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --no-genetics -b ../../results/courter_unlinked_novs_${i} --verbose --same-base -p 4 &
+        ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --parent --no-genetics -b ../../results/parent_unlinked_novs_${i} --verbose --same-base -p 4 &
+        ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_novs_${i} --verbose --same-base -p 4 &
         if [ "$INDEP_PREF" = true ]; then
             ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --no-genetics --independent-pref -b ../../results/courter-pref-nogenetics_${i} --verbose --viability --same-base -p 4 &
             ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --parent --no-genetics --independent-pref -b ../../results/parent-pref-nogenetics_${i} --verbose --viability --same-base -p 4 &
@@ -108,7 +113,10 @@ for i in `seq ${NUMREPS}`; do
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter -b ../../results/courter_linked_${i} --verbose --viability --same-base -p 4 &
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --parent -b ../../results/parent_linked_${i} --verbose --viability --same-base -p 4 &
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --parent -b ../../results/parent-courter_linked_${i} --verbose --viability --same-base -p 4 &
-        if [ "$FDS_PREF" = true ]; then
+        ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter -b ../../results/courter_linked_novs_${i} --verbose --same-base -p 4 &
+        ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --parent -b ../../results/parent_linked_novs_${i} --verbose --same-base -p 4 &
+        ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --parent -b ../../results/parent-courter_linked_novw_${i} --verbose --same-base -p 4 &
+		if [ "$FDS_PREF" = true ]; then
             ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --freq-dependent-preference -b ../../results/courter_nfds_${i} --verbose --viability -p 4 &
             ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --parent --freq-dependent-preference -b ../../results/parent_nfds_${i} --verbose --viability -p 4 &
             ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --parent --freq-dependent-preference -b ../../results/parent-courter_nfds_${i} --verbose --viability -p 4 &
@@ -125,6 +133,9 @@ for i in `seq ${NUMREPS}`; do
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --supergene -b ../../results/courter_supergene_${i} --verbose --viability --same-base -p 4 &
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --parent --supergene -b ../../results/parent_supergene_${i} --verbose --viability --same-base -p 4 &
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_${i} --verbose --viability --same-base -p 4 &
+        ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --supergene -b ../../results/courter_supergene_novs_${i} --verbose --same-base -p 4 &
+        ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --parent --supergene -b ../../results/parent_supergene_novs_${i} --verbose --same-base -p 4 &
+        ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_novs_${i} --verbose --same-base -p 4 &
         if [ "$FDS_PREF" = true ]; then
             ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --supergene --freq-dependent-preference -b ../../results/courter_supergene_nfds_${i} --verbose --viability -p 4 &
             ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --parent --supergene --freq-dependent-preference -b ../../results/parent_supergene_nfds_${i} --verbose --viability -p 4 &
@@ -147,11 +158,11 @@ for i in `seq ${NUMREPS}`; do
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --parent --thresholds-evolve -b ../../results/parent_thresholds_${i} --same-base -p 4 &
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --parent --thresholds-evolve -b ../../results/parent-courter_thresholds_${i} --same-base -p 4 &
     fi
-done | tee ../../logs/002_${DATE}.log 2>1
+done | tee ../../logs/102_${DATE}.log 2>1
 
 wait
 # generate the report
-Rscript -e "rmarkdown::render('../../docs/002_expectationTests.Rmd')"
+Rscript -e "rmarkdown::render('../../docs/103_density-dependence.Rmd')" &
 
 
 
