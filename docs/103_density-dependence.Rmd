@@ -87,7 +87,7 @@ Females choose nests based on whether the male is a courter or not, and they all
 
 #### With viability selection
 
-```{r unlinked_courter,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph with unlinked additive genetic variances in all of the replicates", optipng=''}
+```{r unlinked_courter,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph with unlinked additive genetic variances in all of the replicates"}
 cu<-plot.courter.reps(pattern="^courter_unlinked_[1-5]_summary.txt",cols)
 ```
 
@@ -125,7 +125,7 @@ kable(final.freqs,caption = "Frequency of courters in final generation of runs w
 We may also be interested in the evolution of the courter trait values, which reflects the additive effects of all loci. 
 
 
-```{r,fig.pos="H",fig.cap="Evolution of courtship trait with unlinked loci. Green dotted lines are the standard deviations around the mean and the black dotted line is the threshold", optipng=''}
+```{r,fig.pos="H",fig.cap="Evolution of courtship trait with unlinked loci. Green dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(cu,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"],
@@ -140,7 +140,7 @@ out<-lapply(cu,function(rep.summ){
 
 #### Without viability selection
 
-```{r unlinked_courter_nv,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph with unlinked additive genetic variances and without viability selection in all of the replicates", optipng=''}
+```{r unlinked_courter_nv,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph with unlinked additive genetic variances and without viability selection in all of the replicates"}
 cu<-plot.courter.reps(pattern="^courter_unlinked_novs_[1-5]_summary.txt",cols)
 ```
 
@@ -165,7 +165,7 @@ kable(final.freqs,caption = "Frequency of courters in final generation of runs w
 We may also be interested in the evolution of the courter trait values, which reflects the additive effects of all loci. 
 
 
-```{r,fig.pos="H",fig.cap="Evolution of courtship trait with unlinked loci and no viability selection. Green dotted lines are the standard deviations around the mean and the black dotted line is the threshold", optipng=''}
+```{r,fig.pos="H",fig.cap="Evolution of courtship trait with unlinked loci and no viability selection. Green dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 #,fig.width=6,fig.height=10
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(cu,function(rep.summ){
@@ -184,7 +184,7 @@ In this case, there are no courtship traits so females lay eggs in nests randoml
 
 #### With viability selection
 
-```{r parental_nogenetics, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph with unlinked loci (each color represents a different replicate)", optipng=''}
+```{r parental_nogenetics, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph with unlinked loci (each color represents a different replicate)"}
 pu<-plot.parent.reps("^parent_unlinked_[1-5]_summary.txt",cols)
 ```
 
@@ -209,7 +209,7 @@ Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[
 
 Let's take a look at how the parent trait values evolve
 
-```{r parent_nogenetics_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with additive genetic variation. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold", optipng=''}
+```{r parent_nogenetics_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with additive genetic variation. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(pu,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
@@ -223,7 +223,7 @@ out<-lapply(pu,function(rep.summ){
 
 #### Without viability selection
 
-```{r parental_nogenetics_nv, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph with unlinked loci without viability selection for all replicates", optipng=''}
+```{r parental_nogenetics_nv, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph with unlinked loci without viability selection for all replicates"}
 pu<-plot.parent.reps("^parent_unlinked_novs_[1-5]_summary.txt",cols)
 ```
 
@@ -248,7 +248,7 @@ Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[
 
 Let's take a look at how the parent trait values evolve
 
-```{r parent_nogenetics_traits_nv ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with additive genetic variation and no viability selection. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold", optipng=''}
+```{r parent_nogenetics_traits_nv ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with additive genetic variation and no viability selection. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(pu,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
@@ -275,7 +275,7 @@ The different runs have different outcomes.
 Let's look at the morph frequencies for each run.
 
 
-```{r courtParent_morphfreqs,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with unlinked genetic variation", optipng=''}
+```{r courtParent_morphfreqs,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with unlinked genetic variation",fig.width=6,fig.height=10}
 plot.morphs.reps(u,cols2,ncols = 4)
 ```
 
@@ -307,7 +307,7 @@ legend("topright",bty='n',legend=c("Preferred","Not Preferred"),lty=c(1,2),col="
 
 If we look at how the two traits evolved, we see that in the runs when the population crashed the trait values did not immediately evolve above the thresholds (unlike in the other runs) -- and that the parent threshold started out much lower than the courter threshold. It may be that the threshold value plays a key role in determining the fate of the populations.
 
-```{r courtparent_traits_unlinked,out.extra='',fig.pos="H",fig.cap="Evolution of the courter and parenting trait values in each rep with unlinked genetic variation. Dotted line shows the thresholds determining if males become courters (green) or parents (blue)", optipng=''}
+```{r courtparent_traits_unlinked,out.extra='',fig.pos="H",fig.cap="Evolution of the courter and parenting trait values in each rep with unlinked genetic variation. Dotted line shows the thresholds determining if males become courters (green) or parents (blue)",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(u,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
