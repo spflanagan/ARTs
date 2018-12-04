@@ -115,7 +115,7 @@ for i in `seq ${NUMREPS}`; do
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --parent -b ../../results/parent-courter_linked_${i} --verbose --viability --same-base -p 4 &
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter -b ../../results/courter_linked_novs_${i} --verbose --same-base -p 4 &
         ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --parent -b ../../results/parent_linked_novs_${i} --verbose --same-base -p 4 &
-        ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --parent -b ../../results/parent-courter_linked_novw_${i} --verbose --same-base -p 4 &
+        ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --parent -b ../../results/parent-courter_linked_novs_${i} --verbose --same-base -p 4 &
 		if [ "$FDS_PREF" = true ]; then
             ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --courter --freq-dependent-preference -b ../../results/courter_nfds_${i} --verbose --viability -p 4 &
             ((ii=ii%N)); ((ii++==0)) && wait; ./ARTs --parent --freq-dependent-preference -b ../../results/parent_nfds_${i} --verbose --viability -p 4 &
