@@ -6,7 +6,7 @@ output:
   pdf_document:
     toc: true
     dev: png
- html_document: 
+  html_document: 
     toc: true  
 header-includes: \usepackage{float}
 always_allow_html: yes
