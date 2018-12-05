@@ -32,7 +32,6 @@ library(knitr)
 knitr::opts_chunk$set(
   fig.path = "figs/"
 )
-knitr::knit_hooks$set(optipng = hook_optipng)
 ```
 ```{r, echo=FALSE}
 library(RColorBrewer)
