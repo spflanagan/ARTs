@@ -143,7 +143,7 @@ public:
 		density_dependent = true; //default: true (sets density dependent mate choice)
 		random_mating = true;//default: true
 		all_sneak = false; //default: false
-		per_fem_mating = true; //the original implementation of mating
+		per_fem_mating = false; //the original implementation of mating
 		supergene =  false; //default: false
 		court_trait = courter_conditional = false; //default: false
 		parent_trait = parent_conditional = false;//default false
@@ -338,6 +338,8 @@ public:
 			linked_additive = true;
 		else
 			linked_additive = false;
+		if(per_fem_mating && density_dependent)
+			per_fem_mating = false;
 	}
 
 	bool parse_parameters(int argc, char*argv[])
@@ -585,6 +587,8 @@ public:
 			param_out << "\ndensity dependent";
 		else
 			param_out << "\ndensity independent";
+		if(per_fem_mating)
+			param_out << "\nper-female mating (deprecated)";
 		if(viability_selection)
 			param_out <<"\nviability selection";
         if(log_file)
