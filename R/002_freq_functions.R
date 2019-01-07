@@ -6,13 +6,15 @@
 #' @param x.lim optional specification of x-axis minimum and maximum (default = c(0,12000))
 #' @return A list of data.frames containing the summary frequencies from all generations. The length of the list = number of files matching pattern.
 #' @export
-plot.courter.reps<-function(pattern,cols,x.lim=c(0,12000)){
+plot.courter.reps<-function(pattern,cols,x.lim=c(0,12000),make.plot=FALSE){
   courter.files<-list.files(pattern=pattern)
   #set up colors
   mycols <- colorRampPalette(c("grey",cols["courter"],"black"))(length(courter.files)+1)[2:(1+length(courter.files))]
   #set up an empty plot
-  plot(0:1,0:1,bty="L",xlab="Generations",ylab="Frequency of Courting Males",
+  if(isTRUE(make.plot)){
+    plot(0:1,0:1,bty="L",xlab="Generations",ylab="Frequency of Courting Males",
        type='n',xlim=x.lim,ylim=c(0,1))
+  }
   #plot each run's output and save it
   s<-lapply(courter.files,function(file){
     summ<-suppressWarnings(read.delim(file))
@@ -20,16 +22,20 @@ plot.courter.reps<-function(pattern,cols,x.lim=c(0,12000)){
       pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
       pop<-pop[!is.na(pop$CourterFreq),]
       n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
-      points(pop$Generation,pop$CourterFreq,col=alpha(mycols[n],0.5),
+      if(isTRUE(make.plot)){
+        points(pop$Generation,pop$CourterFreq,col=alpha(mycols[n],0.5),
              lwd=2,type="l")
+      }
       return(pop)
     })
     names(sp)<-paste(file,1:length(sp),sep="_")
     return(as.list(sp))
   })
-  text(x=10000,y=1.1,xpd=TRUE,"End of initial\ngenerations")
-  clip(x1 = 0,x2=12000,y1=-0.1,y2=1.04)
-  abline(v=10000,lty=2,lwd=2)
+  if(isTRUE(make.plot)){
+    text(x=10000,y=1.1,xpd=TRUE,"End of initial\ngenerations")
+    clip(x1 = 0,x2=12000,y1=-0.1,y2=1.04)
+    abline(v=10000,lty=2,lwd=2)
+  }
   s<-do.call(c,s) #flatten out the list of lists
   return(s)
 }
@@ -58,13 +64,15 @@ get.courter.freqs<-function(s){
 #' @param x.lim optional specification of x-axis minimum and maximum (default = c(0,12000))
 #' @return A list of data.frames containing the summary frequencies from all generations. The length of the list = number of files matching pattern.
 #' @export
-plot.parent.reps<-function(pattern,cols,x.lim=c(0,12000)){
+plot.parent.reps<-function(pattern,cols,x.lim=c(0,12000),make.plot=FALSE){
   parent.files<-list.files(pattern=pattern)
   #set up colors
   mycols <- colorRampPalette(c("grey",cols["parent"],"black"))(length(parent.files))[2:(1+length(parent.files))]
   #set up an empty plot
-  plot(0:1,0:1,bty="L",xlab="Generations",ylab="Frequency of Parental Males",
+  if(isTRUE(make.plot)){
+    plot(0:1,0:1,bty="L",xlab="Generations",ylab="Frequency of Parental Males",
        type='n',xlim=x.lim,ylim=c(0,1))
+  }
   #plot each run's output and save it
   s<-lapply(parent.files,function(file){
     summ<-suppressWarnings(read.delim(file))
@@ -72,16 +80,20 @@ plot.parent.reps<-function(pattern,cols,x.lim=c(0,12000)){
       pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
       pop<-pop[!is.na(pop$ParentFreq),]
       n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
-      points(pop$Generation,pop$ParentFreq,col=alpha(mycols[n],0.5),
+      if(isTRUE(make.plot)){
+        points(pop$Generation,pop$ParentFreq,col=alpha(mycols[n],0.5),
              lwd=2,type="l")
+      }
       return(pop)
     })
     names(sp)<-paste(file,1:length(sp),sep="_")
     return(as.list(sp))
   })
-  text(x=10000,y=1.1,xpd=TRUE,"Equilibrium\nevaluated")
-  clip(x1 = 0,x2=12000,y1=-0.1,y2=1.04)
-  abline(v=10000,lty=2,lwd=2)
+  if(isTRUE(make.plot)){
+    text(x=10000,y=1.1,xpd=TRUE,"Equilibrium\nevaluated")
+    clip(x1 = 0,x2=12000,y1=-0.1,y2=1.04)
+    abline(v=10000,lty=2,lwd=2)
+  }
   s<-do.call(c,s) 
   return(s)
 }
