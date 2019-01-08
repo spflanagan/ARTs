@@ -5,8 +5,8 @@
 
 ### --- TO RUN THE SCRIPT --- ###
 
-# in scripts/
-#  nohup ./103_density-dependence.sh > ./logs/103_DDMMYY.log 2>&1 &
+# in ARTs/
+#  nohup ./scripts/103_density-dependence.sh > ./logs/103_DDMMYY.log 2>&1 &
 
 
 ###----DETERMINE WHAT SHOULD RUN----###
