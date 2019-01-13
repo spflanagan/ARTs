@@ -1,14 +1,20 @@
 ---
-title: "Density-dependent ARTs Analysis"
+title: "Density-dependent ARTs Analysis: Initial results"
 author: "Sarah P. Flanagan"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   pdf_document:
     toc: true
     dev: png
+    fig_caption: true
+    
   html_document: 
     toc: true  
-header-includes: \usepackage{float}
+header-includes: 
+  \usepackage{float}
+  \usepackage{caption}
+  \captionsetup[figure]{labelfont=it,textfont=it}
+  \captionsetup[table]{labelfont=it,textfont=it}
 always_allow_html: yes
 editor_options: 
   chunk_output_type: console
@@ -17,7 +23,8 @@ editor_options:
 <style>
 p.caption {
   font-size: 0.85em;
-  background-color: #f5f5f5
+  font-style: italic;
+  color: grey;
 }
 </style>
 
@@ -45,23 +52,27 @@ cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
 
 Males can be courters or not-courters and parents or not-parents. When the model is run with both traits, this results in four possible morphs: courter/parent, courter/not-parent, not-courter/parent, and not-courter/not-parent. Generations are non-overlapping and there is one reproductive bout per generation. In each generation, the population follows the following timeline: 
 
-![Fig. 1 Flowchart of simulation](../figs/density-dependent-flowchart.jpg){'H'}
+![Flowchart of simulation](../figs/density-dependent-flowchart.jpg)
 
-each step is explained in further detail below. 
+Each step is explained in further detail below. 
+
+\newpage
 
 ### 1. Choosing a nest
 
-A female samples 50 males and chooses a male to nest with based on his courtship trait. If there are no courtship traits in the model, she chooses based on the male's parental trait. If she does not encouter an acceptable male, she does not nest. If she encounters multiple equally-acceptable males, she randomly selects one of them.  
+A female samples 50 males and chooses a male to nest with based on his courtship trait. If there are no courtship traits in the model, she chooses based on the male's parental trait. If she does not encouter an acceptable male, she nests with a randomly chosen male. If she encounters multiple equally-acceptable males, she randomly selects one of them.  
 
 ### 2. Fertilization
 
 Once a female decides to nest, up to three males can fertilize the nest. Courters and parental males can contribute more sperm than non-courter and non-parental males: $r_{courter}=r_{parent}=8$ and $r_{non-courter}=r_{non-parent}=4$. A courter/non-parent has $r_{non-parent}$ and a non-courter/parent has $r_{parent}$. The male with whom the female is nesting gets $r_{parent}/\Sigma{n_{sperm}}$ and additional non-parental males (up to 2) get $(r_{non-parent}*0.5/\Sigma{n_{sperm}})$, where $\Sigma{n_{sperm}}$ is the total number of sperm contributed by all of the males, weighted by the sperm competition factor (0.5 is the default for all males except the nesting male). So, when a female mates with one courter and two non-parentals, $\Sigma{n_{sperm}}$ = $r_{courter}$ + 2$*$(0.5$*$$r_{sneaker}$), where $r_{courter}$ = 8 and $r_{sneaker}$ = 4, therefore $\Sigma{n_{sperm}}$ = `r sum(8,rep((0.5*4),2))`. 
 
-That being said, every time a male mates he uses his sperm, so after one mating where a courter fertilizes 50% of the female's 4 eggs, he only has 6 sperm for his next mating.
+That being said, every time a male mates he uses his sperm, so after one mating where a courter fertilizes 50% of the female's 4 eggs, he only has 6 sperm for his next mating. 
+
+In these runs, males who are courters cannot sneak fertilizations.
 
 ### 3. Nest Survival
 
-Before the babies can survive, the nest has to survive. This step is only relevant when parental traits are in the model - if only the courtship trait is specified, then all progeny in the nest survive at this point. When males have the parental trait, if the female has given eggs to a non-parental male (because she chose based on courtship traits), then the nest has a 10% chance of surviving. If the female has given eggs to a parental male, the nest has a 90% chance of surviving. 
+Before the offspring can survive, the nest has to survive. This step is only relevant when parental traits are in the model - if only the courtship trait is specified, then all progeny in the nest survive at this point. When males have the parental trait, if the female has given eggs to a non-parental male (because she chose based on courtship traits), then the nest has a 10% chance of surviving. If the female has given eggs to a parental male, the nest has a 90% chance of surviving. 
 
 ### 4. Density-dependent survival
 
@@ -75,6 +86,9 @@ Before becoming adults, the offspring experience viability selection. Courters a
 
 After 10000 generations, I begin tracking the change in frequency of the courter and parent traits, and do so for 2000 additional generations. I calculate the variance in the change in frequency over those 2000 generations. I declare an equilibrium ('stasis') has been reached if the last change in frequency of both traits is less than the variance in changes in frequency. 
 
+### Replicates
+
+I ran five independent instances of the model, each of which had four replicates spawned from identical starting conditions. This approach was chosen to reduce the effects of stochasticity in this type of model. In the multi-panel figures below, each row contains the four replicates that originated with identical starting conditions. 
 
 ## Unlinked additive genetic variance
 
@@ -85,8 +99,8 @@ In these cases, the traits are encoded by a number (50) of loci, whose alleles c
 Females choose nests based on whether the male is a courter or not, and they all prefer courters all of the time (the female preference does not have a genetic basis and does not evolve). The only way that non-courters produce offspring is through sneaking, but all males can be sneakers (both courters and non-courters). Because parental care is not incorporated in this model, all nests survive.
 
 
-```{r unlinked_courter,out.extra=''}
-cu<-plot.courter.reps(pattern="^courter_unlinked_[1-5]_summary.txt",cols,make.plot=FALSE)
+```{r unlinked_courter,out.extra='',fig.cap="Frequency of the courter morph with unlinked QTLs (each line represents a different replicate)"}
+cu<-plot.courter.reps(pattern="^courter_unlinked_novs_[1-5]_summary.txt",cols)
 ```
 
 Of the `r length(cu)` replicates, `r length(cu)-length(unlist(lapply(cu,nrow))[unlist(lapply(cu,nrow))<9999])` reached a steady state by 10000 generations. The different runs all overlap, suggesting that they all converge on the same outcome: all males are courters. This result is also obvious by inspecting a table of courter frequencies and fitnesses in the final generation of the runs.
@@ -118,10 +132,11 @@ kable(final.freqs,caption = "Frequency of courters in final generation of runs w
       row.names = TRUE)
 ```
 
-We may also be interested in the evolution of the courter trait values, which reflects the additive effects of all loci. 
 
 
-```{r,fig.pos="H",fig.cap="Evolution of courtship trait with unlinked loci. Green dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
+```{r,fig.pos="H",fig.cap="Evolution of courtship trait with unlinked loci. Green dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10,eval=FALSE,echo=FALSE}
+#We may also be interested in the evolution of the courter trait values, which reflects the additive effects of all loci. 
+
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(cu,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"],
@@ -139,7 +154,7 @@ out<-lapply(cu,function(rep.summ){
 In this case, there are no courtship traits so females lay eggs in nests randomly. Non-parental males will sneak fertilizations in parental males' nests. Parental males provide care that allows nests to have a 90% chance of survival. The female preference does not have a genetic basis and does not evolve.
 
 ```{r parental_nogenetics, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph with unlinked loci (each color represents a different replicate)"}
-pu<-plot.parent.reps("^parent_unlinked_[1-5]_summary.txt",cols,make.plot=FALSE)
+pu<-plot.parent.reps("^parent_unlinked_novs_[1-5]_summary.txt",cols)
 ```
 
 ```{r unlinked_parent_final}
@@ -151,7 +166,7 @@ parent.eq<-apply(parent.final.freqs,1,function(rep){ if(rep["Generation"]==9999)
 ```
 
 
-Again, inference is facilitated by looking at the final frequencies and fitnesses in each replicate: 
+All of the populations resulted in the parentage trait going to fixation, as can be also seen in a table of the final frequencies and fitnesses in each replicate: 
 
 ```{r parent_table}
 final.freqs<-parent.final.freqs[,-1]
@@ -159,11 +174,9 @@ kable(final.freqs,caption = "Frequency of parents in final generation",
       row.names = TRUE)
 ```
 
-Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[r==0])})[apply(final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(final.freqs)`. `r length(unlist(lapply(pu,nrow))[lapply(pu,nrow) < 9999])` of the `r length(pu)` populations crashed. Of the `r length(pu)` replicates, `r length(unlist(lapply(pu,nrow))[unlist(lapply(pu,nrow))>=9999])` reached an equilibrium by 10000 generations. 
 
-Let's take a look at how the parent trait values evolve
-
-```{r parent_nogenetics_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with additive genetic variation. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
+```{r parent_nogenetics_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with additive genetic variation. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10,echo=FALSE,eval=FALSE}
+#Let's take a look at how the parent trait values evolve
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(pu,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
@@ -180,27 +193,25 @@ out<-lapply(pu,function(rep.summ){
 Females choose nests based on males' courtship trait (they all only nest with courting males, and the female preference does not have a genetic basis and does not evolve), and then the survival of the nest depends on whether the courting male is also a parental male. If the chosen male is a parental male, the nest has a 90% chance of survival. Otherwise, it only has a 10% chance. Non-courters and non-parents can reproduce through sneaking.
 
 ```{r parentalCourtship_nogenetics, echo=FALSE,out.extra='',fig.keep=FALSE}
-u<-plot.pc.reps("^parent-courter_unlinked_[1-5]_summary.txt",cols,make.plot=FALSE)
+u<-plot.pc.reps("^parent-courter_unlinked_novs_[1-5]_summary.txt",cols,make.plot=FALSE)
 ```
 
-The different runs have different outcomes. 
-
-Let's look at the morph frequencies for each run.
+Let's look at the morph frequencies for each run:
 
 
-```{r courtParent_morphfreqs,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with unlinked genetic variation",fig.width=6,fig.height=10}
+```{r courtParent_morphfreqs,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with unlinked genetic variation",fig.width=6,fig.height=8}
 plot.morphs.reps(u,cols2,ncols = 4)
 ```
 
 
 ```{r unlinked_courterParent_final}
 pc.final.freqs<-get.morph.freqs(u)
-kable(pc.final.freqs,caption = "Frequency of morphs in final generation",
+rownames(pc.final.freqs)<-NULL
+kable(pc.final.freqs[,c(1,grep("Freq",colnames(pc.final.freqs)))],caption = "Frequency of morphs in final generation",
       row.names = TRUE)
 ```
 
-Multiple morphs are maintained in `r length(apply(pc.final.freqs,1,function(r){ length(r[r==0])})[apply(pc.final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(pc.final.freqs)` replicates, and those morphs contain either a parent or a courter. 
-
+Multiple morphs are maintained in `r length(apply(pc.final.freqs,1,function(r){ length(r[r==0])})[apply(pc.final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(pc.final.freqs)` replicates. 
 
 
 ```{r courtParent_rs,echo=FALSE,eval=FALSE}
@@ -217,9 +228,9 @@ points(pcng.sum$NonCourterW,lwd=2,lty=3,type="l",col=alpha("grey",0.75))
 legend("topright",bty='n',legend=c("Preferred","Not Preferred"),lty=c(1,2),col="darkgrey",lwd=2)
 ```
 
-If we look at how the two traits evolved, it's interesting to note that the same outcomes can emerge from different averages relative to the thresholds. 
+If we look at how the two traits evolved, it's interesting to note that the same outcomes can emerge from different averages relative to the thresholds. It appears that the courtship trait always evolves above the threshold but the parentage trait can evolve below (resulting in the courter/non-parent morph) or above (resulting in the courter/parent morph) the threshold. 
 
-```{r courtparent_traits_unlinked,out.extra='',fig.pos="H",fig.cap="Evolution of the courter and parenting trait values in each rep with unlinked genetic variation. Dotted line shows the thresholds determining if males become courters (green) or parents (blue)",fig.width=6,fig.height=10}
+```{r courtparent_traits_unlinked,out.extra='',fig.pos="H",fig.cap="Evolution of the courter and parenting trait values in each rep with unlinked genetic variation. Dotted line shows the thresholds determining if males become courters (green) or parents (blue)",fig.width=6,fig.height=8}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(u,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
@@ -232,7 +243,6 @@ out<-lapply(u,function(rep.summ){
 })
 ```
 
-
 ## Linked additive genetic variance
 
 
@@ -242,7 +252,7 @@ In these cases, the traits are encoded by a number (50) of loci, whose alleles c
 
 
 ```{r linked_courter,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph with linked QTLs (each color represents a different replicate)"}
-cl<-plot.courter.reps(pattern="^courter_linked_[1-5]_summary.txt",cols,make.plot=FALSE)
+cl<-plot.courter.reps(pattern="^courter_linked_novs_[1-5]_summary.txt",cols)
 ```
 
 When only the courtship trait is included in the simulation, `r length(unlist(lapply(cl,nrow))[unlist(lapply(cl,nrow))>=9999])` of the `r length(cl)` replicates reached an equilibrium by 10000 generations.
@@ -265,9 +275,9 @@ kable(final.freqs,caption = "Frequency of courters with linked QTLs in final gen
 
 Every replicate has the courtship trait go to fixation.
 
-Let's also evaluate the evolution of the courtship trait values:
 
-```{r,fig.pos="H",fig.cap="Evolution of courtship trait with linked loci. Green dotted lines are the standard deviations of the traits and the black dotted line is the threshold",fig.width=6,fig.height=10}
+```{r,fig.pos="H",fig.cap="Evolution of courtship trait with linked loci. Green dotted lines are the standard deviations of the traits and the black dotted line is the threshold",fig.width=6,fig.height=10, echo=FALSE,eval=FALSE}
+#Let's also evaluate the evolution of the courtship trait values:
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(cl,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"],
@@ -277,15 +287,16 @@ out<-lapply(cl,function(rep.summ){
   lines(rep.summ$Generation,rep.summ$CourterAEmean-rep.summ$CourterAEsd,type="l",col=alpha(cols["courter"],0.5),lty=3)
   abline(h=rep.summ$CourterThresh[1],lty=2,col="black")
 })
+#In every case, the trait values evolve above the threshold.
 ```
 
-In every case, the trait values evolve above the threshold.
+
 
 ### Parental trait
 
 
 ```{r parental_genetics, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph with linked QTLs (each color represents a different replicate)"}
-pl<-plot.parent.reps(pattern="^parent_linked_[1-5]_summary.txt",cols,make.plot=FALSE)
+pl<-plot.parent.reps(pattern="^parent_linked_novs_[1-5]_summary.txt",cols)
 ```
 
 ```{r linked_parent_final}
@@ -302,12 +313,12 @@ kable(final.freqs,caption = "Frequency of parents with linked QTLs in final gene
       row.names = TRUE)
 ```
 
+All of the replicates resulted in the parenting trait going to fixation. Of the `r length(pl)` replicates, `r length(unlist(lapply(pl,nrow))[unlist(lapply(pl,nrow))>=9999])` reached an equilibrium by 10000 generations.
 
-Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[r==0])})[apply(final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(final.freqs)`. `r length(unlist(lapply(pl,nrow))[lapply(pl,nrow) < 9999])` of the `r length(pl)` populations crashed. Of the `r length(pl)` replicates, `r length(unlist(lapply(pl,nrow))[unlist(lapply(pl,nrow))>=9999])` reached an equilibrium by 10000 generations.
 
-The evolution of the trait values may shed light on the variable outcomes:
+```{r parent_linkedgenetics_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with linked QTLs. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10, echo=FALSE,eval=FALSE}
+#The evolution of the trait values may shed light on the variable outcomes:
 
-```{r parent_linkedgenetics_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with linked QTLs. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(pl,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
@@ -319,38 +330,35 @@ out<-lapply(pl,function(rep.summ){
 })
 ```
 
-Fluctuations around a relatively stable trait mean match the fluctuations around a fairly stable frequency of parental males.
 
 ### Courtship and Parental Traits
 
 Including both courtship and parental traits, along with linked loci, causes the outcomes to be less predictable -- same as in the case of unanchored/unlinked genetic loci.
 
 ```{r parentalCourtship_genetics, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the two morphs with linked QTLs (courter = green, parent = blue)"}
-l<-plot.pc.reps("^parent-courter_linked_[1-5]_summary.txt",cols,make.plot=FALSE)
+l<-plot.pc.reps("^parent-courter_linked_novs_[1-5]_summary.txt",cols,make.plot=FALSE)
 ```
 
 Because of the variable outcomes, it is useful to visualize the frequencies of the four morphs with each rep in its own graph.
 
 
-```{r courtParent_morphfreqs_linked,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with linked QTLs",fig.height=10,fig.width=6}
+```{r courtParent_morphfreqs_linked,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with linked QTLs",fig.height=8,fig.width=6}
 plot.morphs.reps(l,cols2,ncols = 4)
 ```
 
-In some of the runs the population crashed after few generations. This is obvious both from the figures and when looking at the the final frequencies in a table as well (pay attention to the generation number column):
 
 ```{r linked_courterParent_final}
 pc.final.freqs<-get.morph.freqs(l)
-kable(pc.final.freqs,caption = "Frequency of morphs in final generation (linked loci)",
+rownames(pc.final.freqs)<-NULL
+kable(pc.final.freqs[,c(1,grep("Freq",colnames(pc.final.freqs)))],caption = "Frequency of morphs in final generation (linked loci)",
       row.names = TRUE)
 ```
 
-Multiple morphs are maintained in `r length(apply(pc.final.freqs,1,function(r){ length(r[r==0])})[apply(pc.final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(pc.final.freqs)` replicates, and those morphs contain either a parent or a courter. However, `r length(unlist(lapply(l,nrow))[lapply(l,nrow) < 9999])` of those reps with variation actually crashed.
+Multiple morphs are maintained in `r length(apply(pc.final.freqs,1,function(r){ length(r[r==0])})[apply(pc.final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(pc.final.freqs)` replicates, and those morphs contain either a parent or a courter. What's surprising is that the instance of a different morph going to fixation occurs in only one replicate, even though it had the same initial conditions as the others in its row. 
 
+Looking at the trait value evolution may help us understand why some of the runs have different outcomes:
 
-
-Looking at the trait value evolution may help us understand why some of the runs resulted in extinction:
-
-```{r courtparent_traits_linked,out.extra='',fig.pos="H",fig.cap="Evolution of the courter and parenting trait values in each rep with linked genetic variation",fig.width=6,fig.height=10}
+```{r courtparent_traits_linked,out.extra='',fig.pos="H",fig.cap="Evolution of the courter and parenting trait values in each rep with linked genetic variation",fig.width=6,fig.height=8}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(l,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
@@ -363,16 +371,15 @@ out<-lapply(l,function(rep.summ){
 ```
 
 
-
 ## Supergenes
 
-In these cases, the loci (50) are all located in one region of a chromosome, and that region has reduced recombination. As above, the overall trait value is compared to a population-level threshold (which is static, in these cases), and if the trait value is above the threshold the male takes the parent or courter morph and if it is below he does not. Below, I'm showing the results from 10 replicates of each scenario. 
+In these cases, the loci (50) are all located in one region of a chromosome, and that region has reduced recombination. As above, the overall trait value is compared to a population-level threshold (which is static, in these cases), and if the trait value is above the threshold the male takes the parent or courter morph and if it is below he does not.
 
 ### Courter trait
 
 
 ```{r supergenes_courter,out.extra='',fig.pos="H", fig.cap="Frequency of the courter morph with supergenes (each color represents a different replicate)"}
-cs<-plot.courter.reps(pattern="^courter_supergene_[1-5]_summary.txt",cols,make.plot=FALSE)
+cs<-plot.courter.reps(pattern="^courter_supergene_novs_[1-5]_summary.txt",cols)
 ```
 
 Of the `r length(cs)` replicates, `r length(unlist(lapply(cs,nrow))[unlist(lapply(cs,nrow))>=9999])` reached an equilibrium by 10000 generations.
@@ -391,9 +398,8 @@ kable(final.freqs,caption = "Frequency of courters with supergenes in final gene
       row.names = TRUE)
 ```
 
-Looking at the evolution of the trait values: 
-
-```{r,fig.pos="H",fig.cap="Evolution of courtship trait with a supergene. Green dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
+```{r,fig.pos="H",fig.cap="Evolution of courtship trait with a supergene. Green dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10,echo=FALSE,eval=FALSE}
+#Looking at the evolution of the trait values: 
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(cu,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$CourterAEmean,type="l",col=cols["courter"],
@@ -410,7 +416,7 @@ out<-lapply(cu,function(rep.summ){
 
 
 ```{r parental_supegene, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of parent morph with supergenes (each color represents a different replicate)"}
-pss<-plot.parent.reps(pattern="^parent_supergene_[1-5]_summary.txt",cols,make.plot=FALSE)
+pss<-plot.parent.reps(pattern="^parent_supergene_novs_[1-5]_summary.txt",cols)
 ```
 
 
@@ -428,12 +434,12 @@ kable(final.freqs,caption = "Frequency of parents with supergenes in final gener
       row.names = TRUE)
 ```
 
+Of the `r length(pss)` replicates, `r length(unlist(lapply(pss,nrow))[unlist(lapply(pss,nrow))>=9999])` reached an equilibrium by 10000 generations.
 
-Variation was maintained in `r length(apply(final.freqs,1,function(r){ length(r[r==0])})[apply(final.freqs,1,function(r){ length(r[r==0])})<3])` of the `r nrow(final.freqs)`. `r length(unlist(lapply(pss,nrow))[lapply(pss,nrow) < 9999])` of the `r length(pss)` populations crashed. Of the `r length(pss)` replicates, `r length(unlist(lapply(pss,nrow))[unlist(lapply(pss,nrow))>=9999])` reached an equilibrium by 10000 generations.
 
-Let's look at the trajectories of the parent traits.
 
-```{r parent_supergene_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with a supergene. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10}
+```{r parent_supergene_traits ,out.extra='',fig.pos="H",fig.cap="Evolution of parenting trait values with a supergene. Blue dotted lines are the standard deviations around the mean and the black dotted line is the threshold",fig.width=6,fig.height=10,echo=FALSE,eval=FALSE}
+#Let's look at the trajectories of the parent traits.
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(pl,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
@@ -449,20 +455,21 @@ out<-lapply(pl,function(rep.summ){
 
 
 ```{r parentalCourtship_supergenes, echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the two morphs with linked QTLs (courter = green, parent = blue)"}
-s<-plot.pc.reps("^parent-courter_supergene_[1-5]_summary.txt",cols,make.plot=FALSE,make.plot=FALSE)
+s<-plot.pc.reps("^parent-courter_supergene_novs_[1-5]_summary.txt",cols,make.plot=FALSE)
 ```
 
 The different runs have different outcomes. To better see this, let's look at the morph frequencies in each rep separately.
 
 
-```{r courtParent_morphfreqs_supergenes,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with supergenes",fig.width=6,fig.height=10}
+```{r courtParent_morphfreqs_supergenes,echo=FALSE,out.extra='',fig.pos="H",fig.cap="Frequency of the 4 morphs in each rep with supergenes",fig.width=6,fig.height=8}
 plot.morphs.reps(s,cols2,ncols = 4)
 ```
 
 
 ```{r supergenes_courterParent_final}
 pc.final.freqs<-get.morph.freqs(s)
-kable(pc.final.freqs,caption = "Frequency of morphs in final generation (supergenes)",
+rownames(pc.final.freqs)<-NULL
+kable(pc.final.freqs[,c(1,grep("Freq",colnames(pc.final.freqs)))],caption = "Frequency of morphs in final generation (supergenes)",
       row.names = TRUE)
 ```
 
@@ -482,8 +489,9 @@ points(pcng.sum$NonCourterW,lwd=2,lty=3,type="l",col=alpha("grey",0.75))
 legend("topright",bty='n',legend=c("Preferred","Not Preferred"),lty=c(1,2),col="darkgrey",lwd=2)
 ```
 
+Visualizing the evolution of the trait values for each trait separately again shows that the outcome for the morphs depends on whether the parental trait evolves above or below the threshold.
 
-```{r courtparent_traits_supergene,out.extra='',fig.pos="H",fig.cap="Evolution of the courter and parenting trait values in each rep with a supergene",fig.width=6,fig.height=10}
+```{r courtparent_traits_supergene,out.extra='',fig.pos="H",fig.cap="Evolution of the courter and parenting trait values in each rep with a supergene",fig.width=6,fig.height=8}
 par(mfrow=c(5,4),mar=c(1,1,1,1),oma=c(2,2,2,2))
 out<-lapply(s,function(rep.summ){
   plot(rep.summ$Generation,rep.summ$ParentAEmean,type="l",col=cols["parent"],
@@ -495,7 +503,12 @@ out<-lapply(s,function(rep.summ){
 })
 ```
 
+\newpage
+
 ## Preliminary conclusions
 
-* No results?
+* Density-dependent survival successfully prevented populations from crashing.
+* Genetic architecture is not playing a major role in the outcomes, at least for these parameter sets. However, recombination among linked genes may result in more variable outcomes (the most variable results are in the case with linked additive genetic variance).
+* When both courtship and parenting traits exist, the morphs (combination of the two traits) that 'survive' depend on whether the parentage trait values evolve to be above the threshold (results in Courter/Parent fixation) or to be below the threshold (results in Courter/Non-parent fixation).
+* Fixation of the traits/stasis is achieved after a small number of generations (<2000).
 

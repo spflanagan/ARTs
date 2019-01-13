@@ -6,7 +6,7 @@
 #' @param x.lim optional specification of x-axis minimum and maximum (default = c(0,12000))
 #' @return A list of data.frames containing the summary frequencies from all generations. The length of the list = number of files matching pattern.
 #' @export
-plot.courter.reps<-function(pattern,cols,x.lim=c(0,12000),make.plot=FALSE){
+plot.courter.reps<-function(pattern,cols,x.lim=c(0,12000),make.plot=TRUE){
   courter.files<-list.files(pattern=pattern)
   #set up colors
   mycols <- colorRampPalette(c("grey",cols["courter"],"black"))(length(courter.files)+1)[2:(1+length(courter.files))]
@@ -64,7 +64,7 @@ get.courter.freqs<-function(s){
 #' @param x.lim optional specification of x-axis minimum and maximum (default = c(0,12000))
 #' @return A list of data.frames containing the summary frequencies from all generations. The length of the list = number of files matching pattern.
 #' @export
-plot.parent.reps<-function(pattern,cols,x.lim=c(0,12000),make.plot=FALSE){
+plot.parent.reps<-function(pattern,cols,x.lim=c(0,12000),make.plot=TRUE){
   parent.files<-list.files(pattern=pattern)
   #set up colors
   mycols <- colorRampPalette(c("grey",cols["parent"],"black"))(length(parent.files))[2:(1+length(parent.files))]
