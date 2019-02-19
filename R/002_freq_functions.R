@@ -401,7 +401,7 @@ summarize_params<-function(base_pattern="^courter_linked",cols,summ_list="Courte
     baseline<-plot.parent.reps(pattern=paste(base_pattern,".*_summary.txt",sep=""),path="baseline",cols,make.plot=FALSE)
     baseline_freqs<-get.parent.freqs(baseline)[,-1]
   }else if(tolower(type) == "morphs"){
-    baseline<-plot.morphs.reps(pattern=paste(base_pattern,".*_summary.txt",sep=""),path="baseline",cols,make.plot=FALSE)
+    baseline<-plot.pc.reps(pattern=paste(base_pattern,".*_summary.txt",sep=""),path="baseline",cols,make.plot=FALSE)
     baseline_freqs<-get.morph.freqs(baseline)[,-1]
   }else{
     stop("you must correctly specify the type of function call")
@@ -422,7 +422,7 @@ summarize_params<-function(base_pattern="^courter_linked",cols,summ_list="Courte
     polygyny<-plot.parent.reps(pattern=paste(base_pattern,"_polygyny.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
     polygyny_freqs<-get.parent.freqs(polygyny)[,-1]
   }else if(tolower(type) == "morphs"){
-    polygyny<-plot.morphs.reps(pattern=paste(base_pattern,"_polygyny.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    polygyny<-plot.pc.reps(pattern=paste(base_pattern,"_polygyny.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
     polygyny_freqs<-get.morph.freqs(polygyny)[,-1]
   }
   polygyny_freqs$Polygyny<-TRUE
@@ -437,7 +437,7 @@ summarize_params<-function(base_pattern="^courter_linked",cols,summ_list="Courte
     rs<-plot.parent.reps(pattern=paste(base_pattern,"_crs.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
     rs_freqs<-get.parent.freqs(rs)[,-1]
   }else if(tolower(type) == "morphs"){
-    rs<-plot.morphs.reps(pattern=paste(base_pattern,"_crs.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    rs<-plot.pc.reps(pattern=paste(base_pattern,"_crs.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
     rs_freqs<-get.morph.freqs(rs)[,-1]
   }
   rs_freqs$CourterRS<-gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(rs_freqs))
@@ -454,7 +454,7 @@ summarize_params<-function(base_pattern="^courter_linked",cols,summ_list="Courte
     psurv<-plot.parent.reps(pattern=paste(base_pattern,"_psurv.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
     psurv_freqs<-get.parent.freqs(psurv)[,-1]
   }else if(tolower(type) == "morphs"){
-    psurv<-plot.morphs.reps(pattern=paste(base_pattern,"_psurv.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    psurv<-plot.pc.reps(pattern=paste(base_pattern,"_psurv.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
     psurv_freqs<-get.morph.freqs(psurv)[,-1]
   }
   psurv_freqs$ParentSurvival<-gsub(".*psurv(\\d.\\d).*","\\1",rownames(psurv_freqs))
@@ -469,7 +469,7 @@ summarize_params<-function(base_pattern="^courter_linked",cols,summ_list="Courte
     npsurv<-plot.parent.reps(pattern=paste(base_pattern,"_npsurv.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
     npsurv_freqs<-get.parent.freqs(npsurv)[,-1]
   }else if(tolower(type) == "morphs"){
-    npsurv<-plot.morphs.reps(pattern=paste(base_pattern,"_npsurv.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    npsurv<-plot.pc.reps(pattern=paste(base_pattern,"_npsurv.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
     npsurv_freqs<-get.morph.freqs(npsurv)[,-1]
   }
   npsurv_freqs$NonparentSurvival<-gsub(".*npsurv(\\d.\\d).*","\\1",rownames(npsurv_freqs))
@@ -478,13 +478,17 @@ summarize_params<-function(base_pattern="^courter_linked",cols,summ_list="Courte
   
   #calc the summary stats
   summary_stats<-do.call(rbind,lapply(list(polygyny_freqs,rs_freqs,psurv_freqs,npsurv_freqs),function(freqs,summ_list){
-    output<-do.call(rbind,lapply(summ_list,function(summ){
+    output<-lapply(summ_list,function(summ){
       m<-tapply(freqs[,summ],freqs[,ncol(freqs)],mean)
       sem<-tapply(freqs[,summ],freqs[,ncol(freqs)],function(x){ sd(x)/length(x) })
-      lab<-paste(gsub(paste(".*",substr(base_pattern,2,nchar(base_pattern)),"_(\\w+).*_summary.txt.*",sep=""),"\\1",rownames(freqs)[1]),
-                 summ,sep="_")
-      output<-data.frame(label=lab,params=names(m),means=m,sem=as.numeric(sem))
-    }))
+      param_lab<-gsub(paste(".*",substr(base_pattern,2,nchar(base_pattern)),"_(\\w+).*_summary.txt.*",sep=""),"\\1",rownames(freqs)[1])
+      output<-data.frame(param_label=param_lab,params=names(m),means=m,sem=as.numeric(sem))
+      colnames(output)<-c("param_label","params",paste(summ,"Mean",sep=""),paste(summ,"SEM",sep=""))
+      return(output)
+    })
+    output<-do.call(cbind,output)
+    output<-output[,unique(colnames(output))]
+    return(output)
   },summ_list=summ_list))
   
   return(summary_stats)

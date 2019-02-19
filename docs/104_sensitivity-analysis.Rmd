@@ -214,26 +214,35 @@ plot_morph_freqs(cpu_npsurv_freqs,"NonparentSurvival",cols2,"Non-Parent nest sur
 ```{r}
 crt_unlinked_summ<-summarize_params(base_pattern="^courter_unlinked",cols,
                                     summ_list="CourterFreq",type="courter")
+write.csv(crt_unlinked_summ,"crt_unlinked_summ.csv")
 crt_linked_summ<-summarize_params(base_pattern="^courter_linked",cols,
                                   summ_list="CourterFreq",type="courter")
-crt_supergene_summ<-summarize_params(base_pattern="^courter_supergene",
+write.csv(crt_linked_summ,"crt_linked_summ.csv")
+crt_supergene_summ<-summarize_params(base_pattern="^courter_supergene",cols,
                                      summ_list="CourterFreq",type="courter")
+write.csv(crt_supergene_summ,"crt_supergene_summ.csv")
 ```
 
 ```{r}
 prt_unlinked_summ<-summarize_params(base_pattern="^parent_unlinked",cols,
                                     summ_list="ParentFreq",type="parent")
+write.csv(prt_unlinked_summ,"prt_unlinked_summ.csv")
 prt_linked_summ<-summarize_params(base_pattern="^parent_linked",cols,
                                   summ_list="ParentFreq",type="parent")
+write.csv(prt_linked_summ,"prt_linked_summ.csv")
 prt_supergene_summ<-summarize_params(base_pattern="^parent_supergene",cols,
-                                     summ_list="ParentFreq",type="parnet")
+                                     summ_list="ParentFreq",type="parent")
+write.csv(prt_supergene_summ,"prt_supergene_summ.csv")
 ```
 
 ```{r}
 morphs_unlinked_summ<-summarize_params(base_pattern="^parent-courter_unlinked",cols,
-                                    summ_list=c("FreqNcNp","FreqNcP","FreqCNP","FreqCP"),type="morphs")
+                                    summ_list=c("FreqNcNp","FreqNcP","FreqCNp","FreqCP"),type="morphs")
+write.csv(morphs_unlinked_summ,"morphs_unlinked_summ.csv")
 morphs_linked_summ<-summarize_params(base_pattern="^parent-courter_linked",cols,
-                                  summ_list=c("FreqNcNp","FreqNcP","FreqCNP","FreqCP"),type="morphs")
-morphs_supergene_summ<-summarize_params(base_pattern="^parentcourter_supergene",cols,
-                                     summ_list=c("FreqNcNp","FreqNcP","FreqCNP","FreqCP"),type="morphs")
+                                  summ_list=c("FreqNcNp","FreqNcP","FreqCNp","FreqCP"),type="morphs")
+write.csv(morphs_linked_summ,"morphs_linked_summ.csv")
+morphs_supergene_summ<-summarize_params(base_pattern="^parent-courter_supergene",cols,
+                                     summ_list=c("FreqNcNp","FreqNcP","FreqCNp","FreqCP"),type="morphs")
+write.csv(morphs_supergene_summ,"morphs_supergene_summ.csv")
 ```
