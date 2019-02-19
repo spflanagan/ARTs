@@ -117,6 +117,7 @@ kable(cl_npsurv_freqs,caption = "Frequency of courters with linked QTLs in final
 ```
 
 
+
 ## Courter-Parent
 
 ### Baseline
@@ -207,3 +208,32 @@ kable(cpu_npsurv_freqs,caption = "Frequency of morphs with unlinked QTLs in fina
 plot_morph_freqs(cpu_npsurv_freqs,"NonparentSurvival",cols2,"Non-Parent nest survival")
 ```
 
+
+# Summaries
+
+```{r}
+crt_unlinked_summ<-summarize_params(base_pattern="^courter_unlinked",cols,
+                                    summ_list="CourterFreq",type="courter")
+crt_linked_summ<-summarize_params(base_pattern="^courter_linked",cols,
+                                  summ_list="CourterFreq",type="courter")
+crt_supergene_summ<-summarize_params(base_pattern="^courter_supergene",
+                                     summ_list="CourterFreq",type="courter")
+```
+
+```{r}
+prt_unlinked_summ<-summarize_params(base_pattern="^parent_unlinked",cols,
+                                    summ_list="ParentFreq",type="parent")
+prt_linked_summ<-summarize_params(base_pattern="^parent_linked",cols,
+                                  summ_list="ParentFreq",type="parent")
+prt_supergene_summ<-summarize_params(base_pattern="^parent_supergene",cols,
+                                     summ_list="ParentFreq",type="parnet")
+```
+
+```{r}
+morphs_unlinked_summ<-summarize_params(base_pattern="^parent-courter_unlinked",cols,
+                                    summ_list=c("FreqNcNp","FreqNcP","FreqCNP","FreqCP"),type="morphs")
+morphs_linked_summ<-summarize_params(base_pattern="^parent-courter_linked",cols,
+                                  summ_list=c("FreqNcNp","FreqNcP","FreqCNP","FreqCP"),type="morphs")
+morphs_supergene_summ<-summarize_params(base_pattern="^parentcourter_supergene",cols,
+                                     summ_list=c("FreqNcNp","FreqNcP","FreqCNP","FreqCP"),type="morphs")
+```
