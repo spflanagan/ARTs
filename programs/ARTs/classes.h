@@ -152,7 +152,7 @@ public:
 		env_cue = gene_network = false;//default false
 		cor_prefs= ind_pref= FD_pref= CD_pref= FD_court= FD_parent= CD_court= CD_parent = false;//no selection
 		cor_mal_traits = false;//default false
-		polygyny = true;//default false
+		polygyny = false;//default false
 		base_name = "../../results/arts";//default: "../../results/arts"
 		num_ld_comparisons = 100;//default 100
 		rs_c = 8;//default 8

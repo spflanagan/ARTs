@@ -25,7 +25,7 @@ The purpose of this model is to understand how genetic architectures of alternat
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200)
-knitr::opts_knit$set(root.dir='../results/') #change
+knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 ```
 ```{r opts, echo = FALSE}
 library(knitr)
@@ -42,41 +42,168 @@ cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
 ```
 
 
-# Polygyny
+# Courter Trait only
+
+## Linked
+
+### Baseline
+
+```{r}
+cl_baseline<-plot.courter.reps(pattern="^courter_linked_.*_summary.txt",path="baseline",cols,make.plot=TRUE)
+cl_baseline_freqs<-get.courter.freqs(cl_baseline)
+cl_baseline_freqs<-cl_baseline_freqs[,-1]
+cl_baseline_freqs$Polygyny<-FALSE
+cl_baseline_freqs$CourterRS<-8
+cl_baseline_freqs$NoncourterRS<-4
+cl_baseline_freqs$ParentSurvival<-0.9
+cl_baseline_freqs$NonparentSurvival<-0.1
+kable(cl_baseline_freqs,caption = "Frequency of courters with linked QTLs in final generation - baseline conditions",
+      row.names = TRUE)
+```
+
+### Polygyny
 
 I want some way of summarizing these data...Could do x-axis with the genetic architectures...and/or polygyny? First need to get all of the outcomes.
 
-## Courter
-
 ```{r}
-cup<-plot.courter.reps(pattern="^courter_unlinked_polygyny_[1-5]_summary.txt",cols,make.plot=TRUE)
-clp<-plot.courter.reps(pattern="^courter_linked_polygyny_[1-5]_summary.txt",cols,make.plot=TRUE)
-csp<-plot.courter.reps(pattern="^courter_supergene_polygyny_[1-5]_summary.txt",cols,make.plot=TRUE)
+cl_polygyny<-plot.courter.reps(pattern="^courter_linked_polygyny_.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
+cl_polygyny_freqs<-get.courter.freqs(cl_polygyny)[,-1]
+cl_polygyny_freqs$Polygyny<-TRUE
+#merge with baseline
+cl_polygyny_freqs<-rbind(cl_polygyny_freqs,cl_baseline_freqs[,c("CourterFreq","CourterW","NonCourterW","Polygyny")])
+kable(cl_polygyny_freqs,caption = "Frequency of courters with linked QTLs in final generation - polygyny",
+      row.names = TRUE)
+
+
 ```
 
+### Reproductive Success
 
-## Parent
 
 ```{r}
-pup<-plot.parent.reps(pattern="^parent_unlinked_polygyny_[1-5]_summary.txt",cols,make.plot=TRUE)
-plp<-plot.parent.reps(pattern="^parent_linked_polygyny_[1-5]_summary.txt",cols,make.plot=TRUE)
-psp<-plot.parent.reps(pattern="^parent_supergene_polygyny_[1-5]_summary.txt",cols,make.plot=TRUE)
+cl_rs<-plot.courter.reps(pattern="^courter_linked_crs.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
+cl_rs_freqs<-get.courter.freqs(cl_rs)[,-1]
+cl_rs_freqs$CourterRS<-gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(cl_rs_freqs))
+cl_rs_freqs$NoncourterRS<-gsub(".*crs\\d_ncrs(\\d).*","\\1",rownames(cl_rs_freqs))
+cl_rs_freqs<-rbind(cl_rs_freqs,cl_baseline_freqs[,c("CourterFreq","CourterW","NonCourterW","CourterRS","NoncourterRS")])
+kable(cl_rs_freqs,caption = "Frequency of courters with linked QTLs in final generation - rs",
+      row.names = TRUE)
 ```
+
+### Parental nest survival
+
+
+```{r}
+cl_psurv<-plot.courter.reps(pattern="^courter_linked_psurv.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
+cl_psurv_freqs<-get.courter.freqs(cl_psurv)[,-1]
+cl_psurv_freqs$ParentSurvival<-gsub(".*psurv(\\d.\\d).*","\\1",rownames(cl_psurv_freqs))
+cl_psurv_freqs<-rbind(cl_psurv_freqs,cl_baseline_freqs[,c("CourterFreq","CourterW","NonCourterW","ParentSurvival")])
+kable(cl_psurv_freqs,caption = "Frequency of courters with linked QTLs in final generation - parental nest survival",
+      row.names = TRUE)
+plot(cl_psurv_freqs$ParentSurvival,cl_psurv_freqs$CourterFreq,pch=19,col=alpha(cols["courter"],0.5),ylim=c(0,1))
+
+```
+
+### Non-parental nest survival
+
+
+```{r}
+cl_npsurv<-plot.courter.reps(pattern="^courter_linked_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
+cl_npsurv_freqs<-get.courter.freqs(cl_npsurv)[,-1]
+cl_npsurv_freqs$NonparentSurvival<-gsub(".*psurv(\\d.\\d).*","\\1",rownames(cl_npsurv_freqs))
+cl_npsurv_freqs<-rbind(cl_npsurv_freqs,cl_baseline_freqs[,c("CourterFreq","CourterW","NonCourterW","NonparentSurvival")])
+kable(cl_npsurv_freqs,caption = "Frequency of courters with linked QTLs in final generation - nonparent nest survival",
+      row.names = TRUE)
+```
+
 
 ## Courter-Parent
 
+### Baseline
+
 ```{r}
-up<-plot.pc.reps("^parent-courter_unlinked_polygyny_[1-5]_summary.txt",cols,make.plot=TRUE)
-lapply(up,function(rep){
-  freqs<-rep[nrow(rep),grep("Freq",colnames(rep))]
-})
-lp<-plot.pc.reps("^parent-courter_linked_polygyny_[1-5]_summary.txt",cols,make.plot=FALSE)
-lapply(lp,function(rep){
-  freqs<-rep[nrow(rep),grep("Freq",colnames(rep))]
-})
-sp<-plot.pc.reps("^parent-courter_supergene_polygyny_[1-5]_summary.txt",cols,make.plot=FALSE)
-lapply(sp,function(rep){
-  freqs<-rep[nrow(rep),grep("Freq",colnames(rep))]
-})
+cpu_baseline<-up<-plot.pc.reps("^parent-courter_unlinked_.*_summary.txt",path="baseline",cols,make.plot=TRUE)
+plot.morphs.reps(cpu_baseline,cols2,ncols = 4)
+cpu_baseline_freqs<-get.morph.freqs(cpu_baseline)
+cpu_baseline_freqs<-cpu_baseline_freqs[,-1]
+cpu_baseline_freqs$Polygyny<-FALSE
+cpu_baseline_freqs$CourterRS<-8
+cpu_baseline_freqs$NoncourterRS<-4
+cpu_baseline_freqs$ParentSurvival<-0.9
+cpu_baseline_freqs$NonparentSurvival<-0.1
+kable(cpu_baseline_freqs[,grep("mean|sd|W|Thresh|Progeny|Pref",colnames(cpu_baseline_freqs),invert = TRUE)],caption = "Frequency of morphs in final generation",
+      row.names = FALSE)
+base_keep_cols<-grep("mean|sd|W|Thresh|Progeny|Pref",colnames(cpu_baseline_freqs),invert = TRUE,value = TRUE)[1:10]
+```
+
+
+### Polygyny
+
+I want some way of summarizing these data...Could do x-axis with the genetic architectures...and/or polygyny? First need to get all of the outcomes.
+
+```{r}
+cpu_polygyny<-plot.pc.reps(pattern="^parent-courter_unlinked_polygyny_.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
+#plot.morphs.reps(cpu_polygyny,cols2,ncols = 4)
+cpu_polygyny_freqs<-get.morph.freqs(cpu_polygyny)[,-1]
+cpu_polygyny_freqs$Polygyny<-TRUE
+#merge with baseline
+cpu_polygyny_freqs<-rbind(cpu_polygyny_freqs[,c(base_keep_cols,"Polygyny")],cpu_baseline_freqs[,c(base_keep_cols,"Polygyny")])
+kable(cpu_polygyny_freqs,caption = "Frequency of courters and parents with unanchored QTLs in final generation - polygyny",
+      row.names = TRUE)
+
+plot(cpu_polygyny_freqs$Polygyny,cpu_polygyny_freqs)
+plot_morph_freqs(cpu_polygyny_freqs,"Polygyny",cols2,"Mating System",x_lim = c(-0.25,1.25),yname_pos = -0.35,xaxt='n')
+axis(1,at=c(0,1),labels=c("Monogamy","Polygyny"),lwd=0)
+```
+
+### Reproductive Success
+
+
+```{r}
+cpu_rs<-plot.pc.reps(pattern="^parent-courter_unlinked_crs.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
+#plot.morphs.reps(cpu_rs,cols2,ncols = 4)
+cpu_rs_freqs<-get.morph.freqs(cpu_rs)[,-1]
+cpu_rs_freqs$CourterRS<-gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(cpu_rs_freqs))
+cpu_rs_freqs$NoncourterRS<-gsub(".*crs\\d_ncrs(\\d).*","\\1",rownames(cpu_rs_freqs))
+#merge with baseline
+cpu_rs_freqs<-rbind(cpu_rs_freqs[,c(base_keep_cols,"CourterRS","NoncourterRS")],cpu_baseline_freqs[,c(base_keep_cols,"CourterRS","NoncourterRS")])
+kable(cpu_rs_freqs,caption = "Frequency of courters and parents with unanchored QTLs in final generation - reproductive success",
+      row.names = TRUE)
+cpu_rs_freqs$Courter2NonRS<-as.factor(as.numeric(cpu_rs_freqs$CourterRS)/as.numeric(cpu_rs_freqs$NoncourterRS))
+
+plot_morph_freqs(cpu_rs_freqs,"Courter2NonRS",cols2,"Ratio of Reproductive Allocation\nCourter:Non-Courter",xaxt='n',x_lim = c(0.15,5.5),yname_pos = -0.2)
+axis(1,at=levels(as.factor(as.numeric(cpu_rs_freqs$Courter2NonRS))),labels = levels(cpu_rs_freqs$Courter2NonRS))
+
+```
+
+### Parental nest survival
+
+
+```{r}
+cpu_psurv<-plot.pc.reps(pattern="^parent-courter_unlinked_psurv.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
+#plot.morphs.reps(cpu_psurv,cols2,ncols = 4)
+cpu_psurv_freqs<-get.morph.freqs(cpu_psurv)[,-1]
+cpu_psurv_freqs$ParentSurvival<-gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_psurv_freqs))
+cpu_psurv_freqs<-rbind(cpu_psurv_freqs[,c(base_keep_cols,"ParentSurvival")],cpu_baseline_freqs[,c(base_keep_cols,"ParentSurvival")])
+kable(cpu_psurv_freqs,caption = "Frequency of morphs with unlinked QTLs in final generation - parental nest survival",
+      row.names = TRUE)
+plot_morph_freqs(cpu_psurv_freqs,"ParentSurvival",cols2,"Parent nest survival")
+```
+
+### Non-parental nest survival
+
+
+```{r}
+cpu_npsurv<-plot.pc.reps(pattern="^parent-courter_unlinked_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
+#plot.morphs.reps(cpu_npsurv,cols2,ncols = 4)
+cpu_npsurv_freqs<-get.morph.freqs(cpu_npsurv)[,-1]
+cpu_npsurv_freqs$NonparentSurvival<-as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_npsurv_freqs)))
+cpu_npsurv_freqs<-rbind(cpu_npsurv_freqs[,c(base_keep_cols,"NonparentSurvival")],cpu_baseline_freqs[,c(base_keep_cols,"NonparentSurvival")])
+kable(cpu_npsurv_freqs,caption = "Frequency of morphs with unlinked QTLs in final generation - nonparental nest survival",
+      row.names = TRUE)
+```
+
+```{r}
+plot_morph_freqs(cpu_npsurv_freqs,"NonparentSurvival",cols2,"Non-Parent nest survival")
 ```
 

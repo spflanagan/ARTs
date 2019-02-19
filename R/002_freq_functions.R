@@ -6,8 +6,8 @@
 #' @param x.lim optional specification of x-axis minimum and maximum (default = c(0,12000))
 #' @return A list of data.frames containing the summary frequencies from all generations. The length of the list = number of files matching pattern.
 #' @export
-plot.courter.reps<-function(pattern,cols,x.lim=c(0,12000),make.plot=TRUE){
-  courter.files<-list.files(pattern=pattern)
+plot.courter.reps<-function(pattern,path="./",cols,x.lim=c(0,12000),make.plot=TRUE){
+  courter.files<-list.files(pattern=pattern,path=path,full.names = TRUE)
   #set up colors
   mycols <- colorRampPalette(c("grey",cols["courter"],"black"))(length(courter.files)+1)[2:(1+length(courter.files))]
   #set up an empty plot
@@ -64,8 +64,8 @@ get.courter.freqs<-function(s){
 #' @param x.lim optional specification of x-axis minimum and maximum (default = c(0,12000))
 #' @return A list of data.frames containing the summary frequencies from all generations. The length of the list = number of files matching pattern.
 #' @export
-plot.parent.reps<-function(pattern,cols,x.lim=c(0,12000),make.plot=TRUE){
-  parent.files<-list.files(pattern=pattern)
+plot.parent.reps<-function(pattern,path="./",cols,x.lim=c(0,12000),make.plot=TRUE){
+  parent.files<-list.files(pattern=pattern,path=path,full.names = TRUE)
   #set up colors
   mycols <- colorRampPalette(c("grey",cols["parent"],"black"))(length(parent.files))[2:(1+length(parent.files))]
   #set up an empty plot
@@ -124,8 +124,8 @@ get.parent.freqs<-function(s){
 #' @return A list of data.frames containing the summary frequencies from all generations. The length of the list = number of files matching pattern.
 #' @note This is often difficult to interpret.
 #' @export
-plot.pc.reps<-function(pattern,cols,x.lim=c(0,12000),make.plot=TRUE){
-  pc.files<-list.files(pattern=pattern)
+plot.pc.reps<-function(pattern,path="./",cols,x.lim=c(0,12000),make.plot=TRUE){
+  pc.files<-list.files(pattern=pattern,path=path,full.names = TRUE)
   #set up colors
   parent.cols <- colorRampPalette(c("grey",cols["parent"],"black"))(length(pc.files))[2:(1+length(pc.files))]
   courtr.cols <- colorRampPalette(c("grey",cols["courter"],"black"))(length(pc.files))[2:(1+length(pc.files))]
@@ -344,3 +344,155 @@ plot.afs<-function(maf,qtlcol,prow,qtl.name="QTL",nullcol="darkgrey",
   mtext("Major allele frequency",1,outer=TRUE,cex=0.85)
   mtext("Density",2,outer=TRUE,cex=0.85)
 }
+
+
+#' Plot the final frequencies of morphs for a variety of parameter values
+#' @param freqs A data.frame with the morph frequencies
+#' @param x_name The name of the column with x-axis values (e.g. "ParentSurvival")
+#' @param cols2 Colors for the backgrounds
+#' @param x_lab Label for the x-axis
+#' @param x_lim Limits for the x-axis
+#' @param yname_pos The location of the y-axis labels'
+#' @param xaxt Defaults to 's', but you can use any of the valid plot parameters
+#' @export
+plot_morph_freqs<-function(freqs,x_name,cols2,x_lab=NA,x_lim=NA,yname_pos=NA,xaxt='s'){
+  freqs[,x_name]<-as.numeric(freqs[,x_name])
+  if(length(x_lim) == 1){
+    x_lim<-c(min(freqs[,x_name])-0.05,max(freqs[,x_name])+0.05)  
+  }
+  if(is.na(x_lab)){
+    x_lab<-x_name
+  }
+  if(is.na(yname_pos)){
+    yname_pos<-x_lim[1]-0.05
+  }
+  plot(freqs[,x_name],freqs$FreqNcNp,ylim=c(0,4.3),xlim=x_lim,xaxt=xaxt,
+       yaxt='n',xlab=x_lab,ylab="",type = 'n',frame.plot = FALSE)
+  rect(xleft = x_lim[1],ybottom = 0,xright = x_lim[2]+0.05,ytop = 1,col=alpha(cols2["NCNP"],0.25),border = NA)
+  rect(xleft = x_lim[1],ybottom = 1.1,xright = x_lim[2]+0.05,ytop = 2.1,col=alpha(cols2["NCP"],0.25),border = NA)
+  rect(xleft = x_lim[1],ybottom = 2.2,xright = x_lim[2]+0.05,ytop = 3.2,col=alpha(cols2["CNP"],0.25),border = NA)
+  rect(xleft = x_lim[1],ybottom = 3.3,xright = x_lim[2]+0.05,ytop = 4.3,col=alpha(cols2["CP"],0.25),border = NA)
+  points(jitter(freqs[,x_name]),freqs$FreqNcNp,pch=0) #scale up one
+  points(jitter(freqs[,x_name]),freqs$FreqNcP+1.1,pch=1) #scale up one
+  points(jitter(freqs[,x_name]),freqs$FreqCNp+2.2,pch=2) #scale up two
+  points(jitter(freqs[,x_name]),freqs$FreqCP+3.3,pch=5) #scale up three
+  text(x = yname_pos,y = 0.5,"Non-Courter-\nNon-Parent\nFrequency",xpd=TRUE,srt=90)
+  text(x = yname_pos,y = 1.6,"Non-Courter-\nParent\nFrequency",xpd=TRUE,srt=90)
+  text(x = yname_pos,y = 2.7,"Courter-\nNon-Parent\nFrequency",xpd=TRUE,srt=90)
+  text(x = yname_pos,y = 3.8,"Courter-\nParent\nFrequency",xpd=TRUE,srt=90)
+  axis(2,at=c(0,1,1.1,2.1,2.2,3.2,3.3,4.3),labels = c(0,1,0,1,0,1,0,1),pos = x_lim[1],las=1,lwd=0)
+}
+
+#' Plot the final frequencies of morphs for a variety of parameter values
+#' @param base_pattern The base pattern for all of the files (e.g. courter_linked) used to find and read the files in the directory
+#' @param x_name The name of the column with x-axis values (e.g. "ParentSurvival")
+#' @param qtl.name The name to look for in the QTL file to extract the correct qtls (e.g. "CourterQTL"). If not specified, it will just look for "QTL" in the column names
+#' @param cols Colors for plot.reps
+#' @param summ_list String or list of strings containing column names that you want means and SEM for
+#' @param type specify "courter", "parent" or "morphs" to specify which functions to call
+#' @return data.frame containing labels, the parameter values, and the means and standard errors across the runs
+#' @export
+summarize_params<-function(base_pattern="^courter_linked",cols,summ_list="CourterFreq",type){
+  #get baselines
+  if(tolower(type) == "courter"){
+    baseline<-plot.courter.reps(pattern=paste(base_pattern,".*_summary.txt",sep=""),path="baseline",cols,make.plot=FALSE)
+    baseline_freqs<-get.courter.freqs(baseline)[,-1]
+  }else if(tolower(type) == "parent"){
+    baseline<-plot.parent.reps(pattern=paste(base_pattern,".*_summary.txt",sep=""),path="baseline",cols,make.plot=FALSE)
+    baseline_freqs<-get.parent.freqs(baseline)[,-1]
+  }else if(tolower(type) == "morphs"){
+    baseline<-plot.morphs.reps(pattern=paste(base_pattern,".*_summary.txt",sep=""),path="baseline",cols,make.plot=FALSE)
+    baseline_freqs<-get.morph.freqs(baseline)[,-1]
+  }else{
+    stop("you must correctly specify the type of function call")
+  }
+  baseline_freqs$Polygyny<-FALSE
+  baseline_freqs$CourterRS<-8
+  baseline_freqs$NoncourterRS<-4
+  baseline_freqs$ParentSurvival<-0.9
+  baseline_freqs$NonparentSurvival<-0.1
+  baseline_freqs$Courter2NonRS<-as.factor(as.numeric(baseline_freqs$CourterRS)/as.numeric(baseline_freqs$NoncourterRS))
+  rm(baseline)
+  
+  #polygyny
+  if(tolower(type) == "courter"){
+    polygyny<-plot.courter.reps(pattern=paste(base_pattern,"_polygyny.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    polygyny_freqs<-get.courter.freqs(polygyny)[,-1]
+  }else if(tolower(type) == "parent"){
+    polygyny<-plot.parent.reps(pattern=paste(base_pattern,"_polygyny.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    polygyny_freqs<-get.parent.freqs(polygyny)[,-1]
+  }else if(tolower(type) == "morphs"){
+    polygyny<-plot.morphs.reps(pattern=paste(base_pattern,"_polygyny.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    polygyny_freqs<-get.morph.freqs(polygyny)[,-1]
+  }
+  polygyny_freqs$Polygyny<-TRUE
+  polygyny_freqs<-rbind(polygyny_freqs[,c(summ_list,"Polygyny")],baseline_freqs[,c(summ_list,"Polygyny")])
+  rm(polygyny)
+ 
+  #RS
+  if(tolower(type) == "courter"){
+    rs<-plot.courter.reps(pattern=paste(base_pattern,"_crs.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    rs_freqs<-get.courter.freqs(rs)[,-1]
+  }else if(tolower(type) == "parent"){
+    rs<-plot.parent.reps(pattern=paste(base_pattern,"_crs.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    rs_freqs<-get.parent.freqs(rs)[,-1]
+  }else if(tolower(type) == "morphs"){
+    rs<-plot.morphs.reps(pattern=paste(base_pattern,"_crs.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    rs_freqs<-get.morph.freqs(rs)[,-1]
+  }
+  rs_freqs$CourterRS<-gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(rs_freqs))
+  rs_freqs$NoncourterRS<-gsub(".*crs\\d_ncrs(\\d).*","\\1",rownames(rs_freqs))
+  rs_freqs$Courter2NonRS<-as.factor(as.numeric(rs_freqs$CourterRS)/as.numeric(rs_freqs$NoncourterRS))
+  rs_freqs<-rbind(rs_freqs[,c(summ_list,"CourterRS","NoncourterRS","Courter2NonRS")],baseline_freqs[,c(summ_list,"CourterRS","NoncourterRS","Courter2NonRS")])
+  rm(rs)
+  
+  #Parent nest survival
+  if(tolower(type) == "courter"){
+    psurv<-plot.courter.reps(pattern=paste(base_pattern,"_psurv.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    psurv_freqs<-get.courter.freqs(psurv)[,-1]
+  }else if(tolower(type) == "parent"){
+    psurv<-plot.parent.reps(pattern=paste(base_pattern,"_psurv.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    psurv_freqs<-get.parent.freqs(psurv)[,-1]
+  }else if(tolower(type) == "morphs"){
+    psurv<-plot.morphs.reps(pattern=paste(base_pattern,"_psurv.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    psurv_freqs<-get.morph.freqs(psurv)[,-1]
+  }
+  psurv_freqs$ParentSurvival<-gsub(".*psurv(\\d.\\d).*","\\1",rownames(psurv_freqs))
+  psurv_freqs<-rbind(psurv_freqs[,c(summ_list,"ParentSurvival")],baseline_freqs[,c(summ_list,"ParentSurvival")])
+  rm(psurv)
+  
+  #Non parent nest survival
+  if(tolower(type) == "courter"){
+    npsurv<-plot.courter.reps(pattern=paste(base_pattern,"_npsurv.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    npsurv_freqs<-get.courter.freqs(npsurv)[,-1]
+  }else if(tolower(type) == "parent"){
+    npsurv<-plot.parent.reps(pattern=paste(base_pattern,"_npsurv.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    npsurv_freqs<-get.parent.freqs(npsurv)[,-1]
+  }else if(tolower(type) == "morphs"){
+    npsurv<-plot.morphs.reps(pattern=paste(base_pattern,"_npsurv.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    npsurv_freqs<-get.morph.freqs(npsurv)[,-1]
+  }
+  npsurv_freqs$NonparentSurvival<-gsub(".*npsurv(\\d.\\d).*","\\1",rownames(npsurv_freqs))
+  npsurv_freqs<-rbind(npsurv_freqs[,c(summ_list,"NonparentSurvival")],baseline_freqs[,c(summ_list,"NonparentSurvival")])
+  rm(npsurv)
+  
+  #calc the summary stats
+  summary_stats<-do.call(rbind,lapply(list(polygyny_freqs,rs_freqs,psurv_freqs,npsurv_freqs),function(freqs,summ_list){
+    output<-do.call(rbind,lapply(summ_list,function(summ){
+      m<-tapply(freqs[,summ],freqs[,ncol(freqs)],mean)
+      sem<-tapply(freqs[,summ],freqs[,ncol(freqs)],function(x){ sd(x)/length(x) })
+      lab<-paste(gsub(paste(".*",substr(base_pattern,2,nchar(base_pattern)),"_(\\w+).*_summary.txt.*",sep=""),"\\1",rownames(freqs)[1]),
+                 summ,sep="_")
+      output<-data.frame(label=lab,params=names(m),means=m,sem=as.numeric(sem))
+    }))
+  },summ_list=summ_list))
+  
+  return(summary_stats)
+}
+
+
+
+
+
+
+
