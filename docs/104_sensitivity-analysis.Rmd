@@ -3,11 +3,11 @@ title: "Sensitivity analysis with ARTs Analysis"
 author: "Sarah P. Flanagan"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output:
+  html_document: 
+    toc: true  
   pdf_document:
     toc: true
     dev: png
-  html_document: 
-    toc: true  
 header-includes: \usepackage{float}
 always_allow_html: yes
 editor_options: 
@@ -26,6 +26,7 @@ The purpose of this model is to understand how genetic architectures of alternat
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200)
 knitr::opts_knit$set(root.dir='../fixedART-results/') #change
+
 ```
 ```{r opts, echo = FALSE}
 library(knitr)
@@ -36,95 +37,131 @@ knitr::opts_chunk$set(
 ```{r, echo=FALSE}
 library(RColorBrewer)
 library(scales)
-source("../R/002_freq_functions.R")
+source("~/Research/ARTs/R/002_freq_functions.R")
 cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
 cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
 ```
 
+Here, I'm presenting the initial sensitivity analysis results. I tested the effects of four parameter settings: mating system, the ratio of reproductive allocation between courters and non-courters, the survival of parental male nests, and the survival of non-parental male nests. 
 
-# Courter Trait only
+By 'mating system' I refer to whether males are able to mate with multiple females (i.e., be the nesting male for multiple females). The default is monogamy, meaning males can only be the nesting male to one female. 
 
-## Linked
+The ratio of reproductive allocation between courters and non-courters comes into play during the fertilization stage of the model. At this point, females have mated with a male, and her eggs will be preferentially fertilized by her mate but could also be fertilized by non-courting males. Each male has a maximum reproductive success or reproductive allocation that is given by their courtship status ($r_{courter}$ or $r_{non-courter}$) and gets used up by each additional fertilization. This sets a bound on reproductive success for each male. When a female mates, she receives a total of $\Sigma{n_{sperm}}$ from all of the males who attempt to fertilize her eggs (e.g., with one courter and two non-courters, $\Sigma{n_{sperm}}$ = $r_{courter}$ + 2$*$(0.5$*$$r_{non-courter}$)). The ratio of $r_{courter}$ to $r_{non-courter}$ is the parameter set that I varied in these sensitivity analyses.
 
-### Baseline
+The final two traits that I tested were the survival of a nest when it was with parental male and the survival of a nest when it was with a non-parental male. I tested these two parameters separately. When the parental nest survival parameter was tested the non-parental nest survival was constant at 0.1. When the non-parental nest survival parameter was tested the parental nest survival was constant at 0.9.
+
+I tested several parameter settings with three genetic architectures and with just a courter trait, just a parent trait, and both traits: 
 
 ```{r}
-cl_baseline<-plot.courter.reps(pattern="^courter_linked_.*_summary.txt",path="baseline",cols,make.plot=TRUE)
-cl_baseline_freqs<-get.courter.freqs(cl_baseline)
-cl_baseline_freqs<-cl_baseline_freqs[,-1]
-cl_baseline_freqs$Polygyny<-FALSE
-cl_baseline_freqs$CourterRS<-8
-cl_baseline_freqs$NoncourterRS<-4
-cl_baseline_freqs$ParentSurvival<-0.9
-cl_baseline_freqs$NonparentSurvival<-0.1
-kable(cl_baseline_freqs,caption = "Frequency of courters with linked QTLs in final generation - baseline conditions",
-      row.names = TRUE)
+params<-data.frame(parameter=c("polygyny","relative reproductive allocation (courter:non-courter)", "parental nest survival","non-parental nest survival"),
+                   default = c("monogamy","8:4 (2)","0.9","0.1"),
+                   tested_settings = c("polygyny","2:8 (0.25), 4:8 (0.5), 4:4 (1), 8:2 (4)","0.5, 0.6, 0.7, 0.8","0.2, 0.3, 0.4, 0.5"))
+kable(params,caption="The parameters, their defaults, and their tested settings",format="pandoc")
 ```
 
-### Polygyny
+Here, I present the initial analyses of those parameter combinations.
 
-I want some way of summarizing these data...Could do x-axis with the genetic architectures...and/or polygyny? First need to get all of the outcomes.
 
+# Courter Trait 
+
+
+```{r, eval=FALSE}
+crt_unlinked_summ<-summarize_params(base_pattern="^courter_unlinked",cols,
+                                    summ_list="CourterFreq",type="courter")
+write.csv(crt_unlinked_summ,"crt_unlinked_summ.csv",row.names = FALSE)
+crt_linked_summ<-summarize_params(base_pattern="^courter_linked",cols,
+                                  summ_list="CourterFreq",type="courter")
+write.csv(crt_linked_summ,"crt_linked_summ.csv",row.names = FALSE)
+crt_supergene_summ<-summarize_params(base_pattern="^courter_supergene",cols,
+                                     summ_list="CourterFreq",type="courter")
+write.csv(crt_supergene_summ,"crt_supergene_summ.csv",row.names = FALSE)
+```
 ```{r}
-cl_polygyny<-plot.courter.reps(pattern="^courter_linked_polygyny_.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
-cl_polygyny_freqs<-get.courter.freqs(cl_polygyny)[,-1]
-cl_polygyny_freqs$Polygyny<-TRUE
-#merge with baseline
-cl_polygyny_freqs<-rbind(cl_polygyny_freqs,cl_baseline_freqs[,c("CourterFreq","CourterW","NonCourterW","Polygyny")])
-kable(cl_polygyny_freqs,caption = "Frequency of courters with linked QTLs in final generation - polygyny",
-      row.names = TRUE)
+crt_unlinked_summ<-read.csv("crt_unlinked_summ.csv")
+crt_linked_summ<-read.csv("crt_linked_summ.csv")
+crt_supergene_summ<-read.csv("crt_supergene_summ.csv")
+# Put it all together
+crt_summ<-cbind(crt_unlinked_summ,crt_linked_summ[,3:4],crt_supergene_summ[,3:4])
+colnames(crt_summ)[3:4]<-paste(colnames(crt_summ)[3:4]," Unlinked",sep="")
+colnames(crt_summ)[5:6]<-paste(colnames(crt_summ)[5:6]," Linked",sep="")
+colnames(crt_summ)[7:8]<-paste(colnames(crt_summ)[7:8]," Supergene",sep="")
+rownames(crt_summ)<-1:nrow(crt_summ)
+kable(crt_summ,caption = "Summaries of final morph frequencies",row.names=FALSE)
+```
 
+When just the courter trait is present, regardless of the parameter settings, the courting male morph goes to fixation in every run.
+
+# Parent Trait 
+
+
+```{r, eval=FALSE}
+prt_unlinked_summ<-summarize_params(base_pattern="^parent_unlinked",cols,
+                                    summ_list="ParentFreq",type="parent")
+write.csv(prt_unlinked_summ,"prt_unlinked_summ.csv",row.names = FALSE)
+prt_linked_summ<-summarize_params(base_pattern="^parent_linked",cols,
+                                  summ_list="ParentFreq",type="parent")
+write.csv(prt_linked_summ,"prt_linked_summ.csv",row.names = FALSE)
+prt_supergene_summ<-summarize_params(base_pattern="^parent_supergene",cols,
+                                     summ_list="ParentFreq",type="parent")
+write.csv(prt_supergene_summ,"prt_supergene_summ.csv",row.names = FALSE)
+```
+```{r}
+prt_unlinked_summ<-read.csv("prt_unlinked_summ.csv")
+prt_linked_summ<-read.csv("prt_linked_summ.csv")
+prt_supergene_summ<-read.csv("prt_supergene_summ.csv")
+# Put it all together
+prt_summ<-cbind(prt_unlinked_summ,prt_linked_summ[,3:4],prt_supergene_summ[,3:4])
+colnames(prt_summ)[3:4]<-paste(colnames(prt_summ)[3:4]," Unlinked",sep="")
+colnames(prt_summ)[5:6]<-paste(colnames(prt_summ)[5:6]," Linked",sep="")
+colnames(prt_summ)[7:8]<-paste(colnames(prt_summ)[7:8]," Supergene",sep="")
+rownames(prt_summ)<-NULL
+kable(prt_summ,row.names = FALSE,caption = "Summaries of final morph frequencies")
+```
+
+When just the parent trait is present, regardless of the parameter settings, the parental male morph goes to fixation in every run.
+
+# Courter and Parent Traits
+
+
+```{r,eval=FALSE}
+morphs_unlinked_summ<-summarize_params(base_pattern="^parent-courter_unlinked",cols,
+                                    summ_list=c("FreqNcNp","FreqNcP","FreqCNp","FreqCP"),type="morphs")
+write.csv(morphs_unlinked_summ,"morphs_unlinked_summ.csv",row.names = FALSE)
+
+morphs_linked_summ<-summarize_params(base_pattern="^parent-courter_linked",cols,
+                                  summ_list=c("FreqNcNp","FreqNcP","FreqCNp","FreqCP"),type="morphs")
+write.csv(morphs_linked_summ,"morphs_linked_summ.csv",row.names = FALSE)
+
+morphs_supergene_summ<-summarize_params(base_pattern="^parent-courter_supergene",cols,
+                                     summ_list=c("FreqNcNp","FreqNcP","FreqCNp","FreqCP"),type="morphs")
+write.csv(morphs_supergene_summ,"morphs_supergene_summ.csv",row.names = FALSE)
 
 ```
 
-### Reproductive Success
-
-
 ```{r}
-cl_rs<-plot.courter.reps(pattern="^courter_linked_crs.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
-cl_rs_freqs<-get.courter.freqs(cl_rs)[,-1]
-cl_rs_freqs$CourterRS<-gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(cl_rs_freqs))
-cl_rs_freqs$NoncourterRS<-gsub(".*crs\\d_ncrs(\\d).*","\\1",rownames(cl_rs_freqs))
-cl_rs_freqs<-rbind(cl_rs_freqs,cl_baseline_freqs[,c("CourterFreq","CourterW","NonCourterW","CourterRS","NoncourterRS")])
-kable(cl_rs_freqs,caption = "Frequency of courters with linked QTLs in final generation - rs",
-      row.names = TRUE)
+morphs_unlinked_summ<-read.csv("morphs_unlinked_summ.csv")
+kable(morphs_unlinked_summ,row.names = FALSE,caption="Summaries of final morph frequencies when QTLs are unanchored")
 ```
 
-### Parental nest survival
-
-
 ```{r}
-cl_psurv<-plot.courter.reps(pattern="^courter_linked_psurv.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
-cl_psurv_freqs<-get.courter.freqs(cl_psurv)[,-1]
-cl_psurv_freqs$ParentSurvival<-gsub(".*psurv(\\d.\\d).*","\\1",rownames(cl_psurv_freqs))
-cl_psurv_freqs<-rbind(cl_psurv_freqs,cl_baseline_freqs[,c("CourterFreq","CourterW","NonCourterW","ParentSurvival")])
-kable(cl_psurv_freqs,caption = "Frequency of courters with linked QTLs in final generation - parental nest survival",
-      row.names = TRUE)
-plot(cl_psurv_freqs$ParentSurvival,cl_psurv_freqs$CourterFreq,pch=19,col=alpha(cols["courter"],0.5),ylim=c(0,1))
-
+morphs_linked_summ<-read.csv("morphs_linked_summ.csv")
+kable(morphs_linked_summ,row.names = FALSE,caption="Summaries of final morph frequencies when QTLs are anchored on chromosomes")
 ```
 
-### Non-parental nest survival
-
-
 ```{r}
-cl_npsurv<-plot.courter.reps(pattern="^courter_linked_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
-cl_npsurv_freqs<-get.courter.freqs(cl_npsurv)[,-1]
-cl_npsurv_freqs$NonparentSurvival<-gsub(".*psurv(\\d.\\d).*","\\1",rownames(cl_npsurv_freqs))
-cl_npsurv_freqs<-rbind(cl_npsurv_freqs,cl_baseline_freqs[,c("CourterFreq","CourterW","NonCourterW","NonparentSurvival")])
-kable(cl_npsurv_freqs,caption = "Frequency of courters with linked QTLs in final generation - nonparent nest survival",
-      row.names = TRUE)
+morphs_supergene_summ<-read.csv("morphs_supergene_summ.csv")
+kable(morphs_supergene_summ,row.names = FALSE,caption="Summaries of final morph frequencies when QTLs are in a supergene")
 ```
 
 
+The outcomes are not as consistent with both traits present, and it may be easier to visualize with plots.
 
-## Courter-Parent
+## Unlinked QTLs
 
-### Baseline
+We'll start by looking at the unlinked QTLs.
 
 ```{r}
-cpu_baseline<-up<-plot.pc.reps("^parent-courter_unlinked_.*_summary.txt",path="baseline",cols,make.plot=TRUE)
-plot.morphs.reps(cpu_baseline,cols2,ncols = 4)
+cpu_baseline<-up<-plot.pc.reps("^parent-courter_unlinked_.*_summary.txt",path="baseline",cols,make.plot=FALSE)
 cpu_baseline_freqs<-get.morph.freqs(cpu_baseline)
 cpu_baseline_freqs<-cpu_baseline_freqs[,-1]
 cpu_baseline_freqs$Polygyny<-FALSE
@@ -132,117 +169,356 @@ cpu_baseline_freqs$CourterRS<-8
 cpu_baseline_freqs$NoncourterRS<-4
 cpu_baseline_freqs$ParentSurvival<-0.9
 cpu_baseline_freqs$NonparentSurvival<-0.1
-kable(cpu_baseline_freqs[,grep("mean|sd|W|Thresh|Progeny|Pref",colnames(cpu_baseline_freqs),invert = TRUE)],caption = "Frequency of morphs in final generation",
-      row.names = FALSE)
+
 base_keep_cols<-grep("mean|sd|W|Thresh|Progeny|Pref",colnames(cpu_baseline_freqs),invert = TRUE,value = TRUE)[1:10]
 ```
 
+```{r echo=FALSE}
+params$unlinked<-NA
+```
 
 ### Polygyny
 
-I want some way of summarizing these data...Could do x-axis with the genetic architectures...and/or polygyny? First need to get all of the outcomes.
-
 ```{r}
-cpu_polygyny<-plot.pc.reps(pattern="^parent-courter_unlinked_polygyny_.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
+cpu_polygyny<-plot.pc.reps(pattern="^parent-courter_unlinked_polygyny_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
 #plot.morphs.reps(cpu_polygyny,cols2,ncols = 4)
 cpu_polygyny_freqs<-get.morph.freqs(cpu_polygyny)[,-1]
 cpu_polygyny_freqs$Polygyny<-TRUE
 #merge with baseline
 cpu_polygyny_freqs<-rbind(cpu_polygyny_freqs[,c(base_keep_cols,"Polygyny")],cpu_baseline_freqs[,c(base_keep_cols,"Polygyny")])
-kable(cpu_polygyny_freqs,caption = "Frequency of courters and parents with unanchored QTLs in final generation - polygyny",
-      row.names = TRUE)
+```
 
-plot(cpu_polygyny_freqs$Polygyny,cpu_polygyny_freqs)
+```{r,fig.cap="Frequency of morphs with unlinked QTLs in scenarios with and without polygyny",fig.height=8,fig.width=8}
 plot_morph_freqs(cpu_polygyny_freqs,"Polygyny",cols2,"Mating System",x_lim = c(-0.25,1.25),yname_pos = -0.35,xaxt='n')
 axis(1,at=c(0,1),labels=c("Monogamy","Polygyny"),lwd=0)
 ```
 
-### Reproductive Success
+Looking at these figures, the outcomes are consistent across mating systems: in all cases, either the Courter-Parent or the Courter-Nonparent morphs are fixed. 
+
+```{r echo=FALSE}
+params[1,"unlinked"]<-"No effect"
+```
+
+### Reproductive Allocations
 
 
 ```{r}
-cpu_rs<-plot.pc.reps(pattern="^parent-courter_unlinked_crs.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
+cpu_rs<-plot.pc.reps(pattern="^parent-courter_unlinked_crs.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
 #plot.morphs.reps(cpu_rs,cols2,ncols = 4)
 cpu_rs_freqs<-get.morph.freqs(cpu_rs)[,-1]
 cpu_rs_freqs$CourterRS<-gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(cpu_rs_freqs))
 cpu_rs_freqs$NoncourterRS<-gsub(".*crs\\d_ncrs(\\d).*","\\1",rownames(cpu_rs_freqs))
 #merge with baseline
 cpu_rs_freqs<-rbind(cpu_rs_freqs[,c(base_keep_cols,"CourterRS","NoncourterRS")],cpu_baseline_freqs[,c(base_keep_cols,"CourterRS","NoncourterRS")])
-kable(cpu_rs_freqs,caption = "Frequency of courters and parents with unanchored QTLs in final generation - reproductive success",
-      row.names = TRUE)
-cpu_rs_freqs$Courter2NonRS<-as.factor(as.numeric(cpu_rs_freqs$CourterRS)/as.numeric(cpu_rs_freqs$NoncourterRS))
 
+cpu_rs_freqs$Courter2NonRS<-as.factor(as.numeric(cpu_rs_freqs$CourterRS)/as.numeric(cpu_rs_freqs$NoncourterRS))
+```
+
+```{r,fig.cap="Frequency of morphs with unlinked QTLs in scenarios with different ratios of courter to non-courter reproductive success",fig.height=8,fig.width=8}
 plot_morph_freqs(cpu_rs_freqs,"Courter2NonRS",cols2,"Ratio of Reproductive Allocation\nCourter:Non-Courter",xaxt='n',x_lim = c(0.15,5.5),yname_pos = -0.2)
 axis(1,at=levels(as.factor(as.numeric(cpu_rs_freqs$Courter2NonRS))),labels = levels(cpu_rs_freqs$Courter2NonRS))
 
+```
+
+For the ratio of reproductive allocations, the parameter settings do affect the outcomes. In the cases when the Courter has a higher allocation -- both 8 to 4 (ratio = 2) and 8 to 2 (ratio = 4) -- the outcomes are variable, with either the Courter-Parent or Courter-Nonparent morphs being fixed. When the non-courters have a much higher reproductive allocation than courters (8 offspring compared to 2, ratio = 0.25), the Courter-Parent morph is never fixed, and instead the Courter-Nonparent morph is fixed. This pattern is also found when Courters and Noncourters have equivalent allocations (4 and 4). Intriguingly, at the ratio of 0.5, when Noncourters have an allocation of 8 and Courters have an allocation of 4, variation is maintained in a handful of the simulations, with a very small number of Noncourter-Nonparent morphs still occurring in the population along with Courter-Parent morphs. 
+
+```{r echo=FALSE}
+params[2,"unlinked"]<-"Nuanced effect. High ratios, courters are always fixed. Low allocations, Courter-Nonparent morph is usually fixed, except at ratio 0.25"
 ```
 
 ### Parental nest survival
 
 
 ```{r}
-cpu_psurv<-plot.pc.reps(pattern="^parent-courter_unlinked_psurv.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
+cpu_psurv<-plot.pc.reps(pattern="^parent-courter_unlinked_psurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
 #plot.morphs.reps(cpu_psurv,cols2,ncols = 4)
 cpu_psurv_freqs<-get.morph.freqs(cpu_psurv)[,-1]
 cpu_psurv_freqs$ParentSurvival<-gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_psurv_freqs))
 cpu_psurv_freqs<-rbind(cpu_psurv_freqs[,c(base_keep_cols,"ParentSurvival")],cpu_baseline_freqs[,c(base_keep_cols,"ParentSurvival")])
-kable(cpu_psurv_freqs,caption = "Frequency of morphs with unlinked QTLs in final generation - parental nest survival",
-      row.names = TRUE)
+```
+
+```{r,fig.cap="Frequency of morphs with unlinked QTLs in scenarios with different survival rates for nests of the parental morph",fig.height=8,fig.width=8}
 plot_morph_freqs(cpu_psurv_freqs,"ParentSurvival",cols2,"Parent nest survival")
+```
+
+Parental nest survival does not appear to have a major effect on the outcomes. Occasionally, at several of the lower survival rates (0.5, 0.7, 0.8) a very small proportion of males have the Noncourter-Nonparent morph when the vast majority of males have the Courter-Parent morph.
+
+```{r echo=FALSE}
+params[3,"unlinked"]<-"No major effect"
 ```
 
 ### Non-parental nest survival
 
 
 ```{r}
-cpu_npsurv<-plot.pc.reps(pattern="^parent-courter_unlinked_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=TRUE)
+cpu_npsurv<-plot.pc.reps(pattern="^parent-courter_unlinked_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
 #plot.morphs.reps(cpu_npsurv,cols2,ncols = 4)
 cpu_npsurv_freqs<-get.morph.freqs(cpu_npsurv)[,-1]
 cpu_npsurv_freqs$NonparentSurvival<-as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_npsurv_freqs)))
 cpu_npsurv_freqs<-rbind(cpu_npsurv_freqs[,c(base_keep_cols,"NonparentSurvival")],cpu_baseline_freqs[,c(base_keep_cols,"NonparentSurvival")])
-kable(cpu_npsurv_freqs,caption = "Frequency of morphs with unlinked QTLs in final generation - nonparental nest survival",
-      row.names = TRUE)
 ```
 
-```{r}
+```{r,fig.cap="Frequency of morphs with unlinked QTLs in scenarios with different survival rates for nests of the parental morph",fig.height=8,fig.width=8}
 plot_morph_freqs(cpu_npsurv_freqs,"NonparentSurvival",cols2,"Non-Parent nest survival")
 ```
 
+No major effects observed, although when non-parent nest survival was 0.3 every run had the outcome of fixed Courter-Parent morph, whereas in other cases the Courter-Nonparent morph was also fixed occasionally. In the case where survival was 0.5, one or two runs maintained tiny amounts of polymorphism, with near-zero positive frequencies of Noncourter-Nonparent morphs occurring alongside the Courter-Parent morphs.
 
-# Summaries
-
-```{r}
-crt_unlinked_summ<-summarize_params(base_pattern="^courter_unlinked",cols,
-                                    summ_list="CourterFreq",type="courter")
-write.csv(crt_unlinked_summ,"crt_unlinked_summ.csv")
-crt_linked_summ<-summarize_params(base_pattern="^courter_linked",cols,
-                                  summ_list="CourterFreq",type="courter")
-write.csv(crt_linked_summ,"crt_linked_summ.csv")
-crt_supergene_summ<-summarize_params(base_pattern="^courter_supergene",cols,
-                                     summ_list="CourterFreq",type="courter")
-write.csv(crt_supergene_summ,"crt_supergene_summ.csv")
+```{r echo=FALSE}
+params[4,"unlinked"]<-"No major effect"
 ```
 
-```{r}
-prt_unlinked_summ<-summarize_params(base_pattern="^parent_unlinked",cols,
-                                    summ_list="ParentFreq",type="parent")
-write.csv(prt_unlinked_summ,"prt_unlinked_summ.csv")
-prt_linked_summ<-summarize_params(base_pattern="^parent_linked",cols,
-                                  summ_list="ParentFreq",type="parent")
-write.csv(prt_linked_summ,"prt_linked_summ.csv")
-prt_supergene_summ<-summarize_params(base_pattern="^parent_supergene",cols,
-                                     summ_list="ParentFreq",type="parent")
-write.csv(prt_supergene_summ,"prt_supergene_summ.csv")
-```
+## Linked QTLs
+
 
 ```{r}
-morphs_unlinked_summ<-summarize_params(base_pattern="^parent-courter_unlinked",cols,
-                                    summ_list=c("FreqNcNp","FreqNcP","FreqCNp","FreqCP"),type="morphs")
-write.csv(morphs_unlinked_summ,"morphs_unlinked_summ.csv")
-morphs_linked_summ<-summarize_params(base_pattern="^parent-courter_linked",cols,
-                                  summ_list=c("FreqNcNp","FreqNcP","FreqCNp","FreqCP"),type="morphs")
-write.csv(morphs_linked_summ,"morphs_linked_summ.csv")
-morphs_supergene_summ<-summarize_params(base_pattern="^parent-courter_supergene",cols,
-                                     summ_list=c("FreqNcNp","FreqNcP","FreqCNp","FreqCP"),type="morphs")
-write.csv(morphs_supergene_summ,"morphs_supergene_summ.csv")
+cpu_baseline<-up<-plot.pc.reps("^parent-courter_linked_.*_summary.txt",path="baseline",cols,make.plot=FALSE)
+cpu_baseline_freqs<-get.morph.freqs(cpu_baseline)
+cpu_baseline_freqs<-cpu_baseline_freqs[,-1]
+cpu_baseline_freqs$Polygyny<-FALSE
+cpu_baseline_freqs$CourterRS<-8
+cpu_baseline_freqs$NoncourterRS<-4
+cpu_baseline_freqs$ParentSurvival<-0.9
+cpu_baseline_freqs$NonparentSurvival<-0.1
+
+base_keep_cols<-grep("mean|sd|W|Thresh|Progeny|Pref",colnames(cpu_baseline_freqs),invert = TRUE,value = TRUE)[1:10]
 ```
+```{r echo=FALSE}
+params$linked<-NA
+```
+
+### Polygyny
+
+```{r}
+cpu_polygyny<-plot.pc.reps(pattern="^parent-courter_linked_polygyny_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
+#plot.morphs.reps(cpu_polygyny,cols2,ncols = 4)
+cpu_polygyny_freqs<-get.morph.freqs(cpu_polygyny)[,-1]
+cpu_polygyny_freqs$Polygyny<-TRUE
+#merge with baseline
+cpu_polygyny_freqs<-rbind(cpu_polygyny_freqs[,c(base_keep_cols,"Polygyny")],cpu_baseline_freqs[,c(base_keep_cols,"Polygyny")])
+```
+
+```{r,fig.cap="Frequency of morphs with linked QTLs in scenarios with and without polygyny",fig.height=8,fig.width=8}
+plot_morph_freqs(cpu_polygyny_freqs,"Polygyny",cols2,"Mating System",x_lim = c(-0.25,1.25),yname_pos = -0.35,xaxt='n')
+axis(1,at=c(0,1),labels=c("Monogamy","Polygyny"),lwd=0)
+```
+
+With linked QTLs, the mating system has an effect. Polygyny allows variation to be maintained, with every run resulting in a population of *mostly* Courter-Parents, but some small numbers of Courter-Nonparents, Nonparent-Courters, and/or NonCourter-Nonparents. From the way these results are presented, it's challenging to determine whether all three morphs are maintained in the same run. To get at that, we can plot each run's outcomes:
+
+```{r,fig.cap="Frequencies over time in each run with linked QTLs, both traits, and polygyny",fig.height=8,fig.width=8}
+plot.morphs.reps(cpu_polygyny,cols2,ncols=4)
+```
+
+It appears that in one set of runs, all three morphs are maintained simultaneously.
+
+```{r echo=FALSE}
+params[1,"linked"]<-"Allows polymorphism sometimes"
+```
+
+### Reproductive Allocations
+
+
+```{r}
+cpu_rs<-plot.pc.reps(pattern="^parent-courter_linked_crs.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
+#plot.morphs.reps(cpu_rs,cols2,ncols = 4)
+cpu_rs_freqs<-get.morph.freqs(cpu_rs)[,-1]
+cpu_rs_freqs$CourterRS<-gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(cpu_rs_freqs))
+cpu_rs_freqs$NoncourterRS<-gsub(".*crs\\d_ncrs(\\d).*","\\1",rownames(cpu_rs_freqs))
+#merge with baseline
+cpu_rs_freqs<-rbind(cpu_rs_freqs[,c(base_keep_cols,"CourterRS","NoncourterRS")],cpu_baseline_freqs[,c(base_keep_cols,"CourterRS","NoncourterRS")])
+
+cpu_rs_freqs$Courter2NonRS<-as.factor(as.numeric(cpu_rs_freqs$CourterRS)/as.numeric(cpu_rs_freqs$NoncourterRS))
+```
+
+```{r,fig.cap="Frequency of morphs with linked QTLs in scenarios with different ratios of courter to non-courter reproductive success",fig.height=8,fig.width=8}
+plot_morph_freqs(cpu_rs_freqs,"Courter2NonRS",cols2,"Ratio of Reproductive Allocation\nCourter:Non-Courter",xaxt='n',x_lim = c(0.15,5.5),yname_pos = -0.2)
+axis(1,at=levels(as.factor(as.numeric(cpu_rs_freqs$Courter2NonRS))),labels = levels(cpu_rs_freqs$Courter2NonRS))
+
+```
+
+In general, high ratios generally result in Courter-Parent morph to be fixed, although at very high ratios some polymorphism with Noncourter-Nonparent is observed. At the lowest ratio, when Noncourters have 8 offspring and courters have 2, in almost all cases the Courter-Nonparent morph is fixed, with one exception where the Courter-Parent morph is fixed.
+
+```{r echo=FALSE}
+params[2,"linked"]<-"Nuanced effect. High ratios generally result in Courter-Parent morph to be fixed, although at very high ratios some polymorphism with Noncourter-Nonparent is observed. At the lowest ratio, usually Courter-Nonparent is fixed instead of Courter-Parent"
+```
+
+### Parental nest survival
+
+
+```{r}
+cpu_psurv<-plot.pc.reps(pattern="^parent-courter_linked_psurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
+#plot.morphs.reps(cpu_psurv,cols2,ncols = 4)
+cpu_psurv_freqs<-get.morph.freqs(cpu_psurv)[,-1]
+cpu_psurv_freqs$ParentSurvival<-gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_psurv_freqs))
+cpu_psurv_freqs<-rbind(cpu_psurv_freqs[,c(base_keep_cols,"ParentSurvival")],cpu_baseline_freqs[,c(base_keep_cols,"ParentSurvival")])
+```
+
+```{r,fig.cap="Frequency of morphs with linked QTLs in scenarios with different survival rates for nests of the parental morph",fig.height=8,fig.width=8}
+plot_morph_freqs(cpu_psurv_freqs,"ParentSurvival",cols2,"Parent nest survival")
+```
+
+In general, the Courter-Parent or Courter-Nonparent traits become fixed, although with parental nest survival at 0.7 only the Courter-Parent morph became fixed (though this may be an artefact of not running huge numbers of runs).
+
+```{r echo=FALSE}
+params[3,"linked"]<-"No major effect"
+```
+
+### Non-parental nest survival
+
+
+```{r}
+cpu_npsurv<-plot.pc.reps(pattern="^parent-courter_linked_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
+#plot.morphs.reps(cpu_npsurv,cols2,ncols = 4)
+cpu_npsurv_freqs<-get.morph.freqs(cpu_npsurv)[,-1]
+cpu_npsurv_freqs$NonparentSurvival<-as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_npsurv_freqs)))
+cpu_npsurv_freqs<-rbind(cpu_npsurv_freqs[,c(base_keep_cols,"NonparentSurvival")],cpu_baseline_freqs[,c(base_keep_cols,"NonparentSurvival")])
+```
+
+```{r,fig.cap="Frequency of morphs with linked QTLs in scenarios with different survival rates for nests of the parental morph",fig.height=8,fig.width=8}
+plot_morph_freqs(cpu_npsurv_freqs,"NonparentSurvival",cols2,"Non-Parent nest survival")
+```
+
+In general, the Courter-Parent or Courter-Nonparent morph becomes fixed, although occasionally the Courter-Nonparent morph is fixed instead. The highest survival rate (0.5) allows the Courter-Nonparent morph to be fixed more frequently.
+
+```{r echo=FALSE}
+params[4,"linked"]<-"High survival allows higher frequency of Courter-Nonparent morph"
+```
+
+## QTLs in a supergene
+
+We'll start by looking at the unlinked QTLs.
+
+```{r}
+cpu_baseline<-up<-plot.pc.reps("^parent-courter_supergene_.*_summary.txt",path="baseline",cols,make.plot=FALSE)
+cpu_baseline_freqs<-get.morph.freqs(cpu_baseline)
+cpu_baseline_freqs<-cpu_baseline_freqs[,-1]
+cpu_baseline_freqs$Polygyny<-FALSE
+cpu_baseline_freqs$CourterRS<-8
+cpu_baseline_freqs$NoncourterRS<-4
+cpu_baseline_freqs$ParentSurvival<-0.9
+cpu_baseline_freqs$NonparentSurvival<-0.1
+
+base_keep_cols<-grep("mean|sd|W|Thresh|Progeny|Pref",colnames(cpu_baseline_freqs),invert = TRUE,value = TRUE)[1:10]
+```
+
+```{r echo=FALSE}
+params$supergene<-NA
+```
+
+### Polygyny
+
+```{r}
+cpu_polygyny<-plot.pc.reps(pattern="^parent-courter_supergene_polygyny_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
+#plot.morphs.reps(cpu_polygyny,cols2,ncols = 4)
+cpu_polygyny_freqs<-get.morph.freqs(cpu_polygyny)[,-1]
+cpu_polygyny_freqs$Polygyny<-TRUE
+#merge with baseline
+cpu_polygyny_freqs<-rbind(cpu_polygyny_freqs[,c(base_keep_cols,"Polygyny")],cpu_baseline_freqs[,c(base_keep_cols,"Polygyny")])
+```
+
+```{r,fig.cap="Frequency of morphs with a supergene in scenarios with and without polygyny",fig.height=8,fig.width=8}
+plot_morph_freqs(cpu_polygyny_freqs,"Polygyny",cols2,"Mating System",x_lim = c(-0.25,1.25),yname_pos = -0.35,xaxt='n')
+axis(1,at=c(0,1),labels=c("Monogamy","Polygyny"),lwd=0)
+```
+
+Similar to the case with linked QTLs, polygyny allows polymorphism to be maintained in some runs, this time with Courter-Parent, Courter-Nonparent, and Noncourter-Parent morphs all being maintained in the population.
+
+```{r echo=FALSE}
+params[1,"supergene"]<-"Allows polymorphism sometimes"
+```
+
+
+### Reproductive Allocations
+
+
+```{r}
+cpu_rs<-plot.pc.reps(pattern="^parent-courter_supergene_crs.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
+#plot.morphs.reps(cpu_rs,cols2,ncols = 4)
+cpu_rs_freqs<-get.morph.freqs(cpu_rs)[,-1]
+cpu_rs_freqs$CourterRS<-gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(cpu_rs_freqs))
+cpu_rs_freqs$NoncourterRS<-gsub(".*crs\\d_ncrs(\\d).*","\\1",rownames(cpu_rs_freqs))
+#merge with baseline
+cpu_rs_freqs<-rbind(cpu_rs_freqs[,c(base_keep_cols,"CourterRS","NoncourterRS")],cpu_baseline_freqs[,c(base_keep_cols,"CourterRS","NoncourterRS")])
+
+cpu_rs_freqs$Courter2NonRS<-as.factor(as.numeric(cpu_rs_freqs$CourterRS)/as.numeric(cpu_rs_freqs$NoncourterRS))
+```
+
+```{r,fig.cap="Frequency of morphs with a supergene in scenarios with different ratios of courter to non-courter reproductive success",fig.height=8,fig.width=8}
+plot_morph_freqs(cpu_rs_freqs,"Courter2NonRS",cols2,"Ratio of Reproductive Allocation\nCourter:Non-Courter",xaxt='n',x_lim = c(0.15,5.5),yname_pos = -0.2)
+axis(1,at=levels(as.factor(as.numeric(cpu_rs_freqs$Courter2NonRS))),labels = levels(cpu_rs_freqs$Courter2NonRS))
+
+```
+
+Now polymorphism can be maintained when the ratios are very low. In one set of simulations when Noncourters had the reproductive advantage, the Courter-Parent morphs coexisted with Courter-Nonparents and Noncourter-Parents. Otherwise, similar patterns were observed with either Courter-Parent morphs of Courter-Nonparent morphs becoming fixed. 
+
+```{r echo=FALSE}
+params[2,"supergene"]<-"Low ratios allow polymorphism in some cases"
+```
+
+Genetic composition?
+
+```{r}
+mrks<-read.delim("sensitivity/parent-courter_supergene_crs2_ncrs8_1_markers.txt")
+qtls<-read.delim("sensitivity/parent-courter_supergene_crs2_ncrs8_1_qtlinfo.txt")
+qtls<-qtls[,complete.cases(t(qtls))] #remove nas
+qtl_af<-cbind(mrks[,1:2],mrks[,colnames(mrks) %in% paste("Marker",qtls[1,-1],sep="")])
+qtl_af<-qtl_af[qtl_af$Pop=="Pop0",]
+
+
+
+plot(c(0,1),c(0,1),bty='n',type='n',xlab="",ylab="Allele Frequency")
+points(jitter(rep(0.25,length(grep("Courter",colnames(qtls))))),qtl_af[nrow(qtl_af),paste("Marker",qtls[1,grep("Courter",colnames(qtls))],sep="")],col=cols["courter"])
+points(jitter(rep(0.75,length(grep("Parent",colnames(qtls))))),qtl_af[nrow(qtl_af),paste("Marker",qtls[1,grep("Parent",colnames(qtls))],sep="")],col=cols["parent"])
+
+
+```
+### Parental nest survival
+
+
+```{r}
+cpu_psurv<-plot.pc.reps(pattern="^parent-courter_supergene_psurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
+#plot.morphs.reps(cpu_psurv,cols2,ncols = 4)
+cpu_psurv_freqs<-get.morph.freqs(cpu_psurv)[,-1]
+cpu_psurv_freqs$ParentSurvival<-gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_psurv_freqs))
+cpu_psurv_freqs<-rbind(cpu_psurv_freqs[,c(base_keep_cols,"ParentSurvival")],cpu_baseline_freqs[,c(base_keep_cols,"ParentSurvival")])
+```
+
+```{r,fig.cap="Frequency of morphs with a supergene in scenarios with different survival rates for nests of the parental morph",fig.height=8,fig.width=8}
+plot_morph_freqs(cpu_psurv_freqs,"ParentSurvival",cols2,"Parent nest survival")
+```
+
+Here, the lowest parental nest survival rate (0.5) resulted in all cases having the Courter-Nonparent morph becoming fixed, whereas in the other runs either the Courter-Parent or the Courter-Nonparent could become fixed.
+
+```{r echo=FALSE}
+params[3,"supergene"]<-"Low survival results in coevolution of Courter and Non-parent traits"
+```
+
+
+
+### Non-parental nest survival
+
+
+```{r}
+cpu_npsurv<-plot.pc.reps(pattern="^parent-courter_supergene_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
+#plot.morphs.reps(cpu_npsurv,cols2,ncols = 4)
+cpu_npsurv_freqs<-get.morph.freqs(cpu_npsurv)[,-1]
+cpu_npsurv_freqs$NonparentSurvival<-as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_npsurv_freqs)))
+cpu_npsurv_freqs<-rbind(cpu_npsurv_freqs[,c(base_keep_cols,"NonparentSurvival")],cpu_baseline_freqs[,c(base_keep_cols,"NonparentSurvival")])
+```
+
+```{r,fig.cap="Frequency of morphs with a supergene in scenarios with different survival rates for nests of the parental morph",fig.height=8,fig.width=8}
+plot_morph_freqs(cpu_npsurv_freqs,"NonparentSurvival",cols2,"Non-Parent nest survival")
+```
+
+High survival of the non-parental nests allows polymorphism to be maintained -- Courter-Parent, Courter-Nonparent, and Noncourter-Parent morphs are all maintained at appreciable frequencies when survival was 0.5. In the other cases, either the Courter-Parent or the Courter-Nonparent morphs became fixed.
+
+```{r echo=FALSE}
+params[4,"supergene"]<-"High survival allows polymorphism"
+```
+
+# Summary
+
+```{r}
+kable(params)
+```
+

@@ -248,7 +248,7 @@ get.pref.freqs<-function(pref){
 }
 
 #' Extract the frequencies of the preferences in the final generation of each rep
-#' @param files A list of summary file names to loop over
+#' @param files A list of marker file names to loop over
 #' @param twocols Two colors, which will alternate as chromosome backgrounds
 #' @param qtl.name The name to look for in the QTL file to extract the correct qtls (e.g. "CourterQTL")
 #' @param court.label A binary variable. If true, the courter frequency is written on the graph
@@ -265,7 +265,7 @@ plot.final.maf<-function(files,twocols,qtl.name,qtl.name2=NA,
     summ<-suppressWarnings(read.delim(file))
     maf<-summ[nrow(summ),which(colnames(summ)%in%grep("Marker",colnames(summ),value = TRUE))]
     #get the qtl info
-    aqtls<-read.delim(gsub("summary","qtlinfo",file))
+    aqtls<-read.delim(gsub("markers","qtlinfo",file))
     qtls<-aqtls[,which(colnames(aqtls)%in%grep(qtl.name,colnames(aqtls),value=TRUE))]
     qtls<-unlist(lapply(qtls,function(q){ paste("Marker",q,sep="") }))
     
@@ -383,7 +383,7 @@ plot_morph_freqs<-function(freqs,x_name,cols2,x_lab=NA,x_lim=NA,yname_pos=NA,xax
   axis(2,at=c(0,1,1.1,2.1,2.2,3.2,3.3,4.3),labels = c(0,1,0,1,0,1,0,1),pos = x_lim[1],las=1,lwd=0)
 }
 
-#' Plot the final frequencies of morphs for a variety of parameter values
+#' Generate the tables of summary statistics for final frequencies
 #' @param base_pattern The base pattern for all of the files (e.g. courter_linked) used to find and read the files in the directory
 #' @param x_name The name of the column with x-axis values (e.g. "ParentSurvival")
 #' @param qtl.name The name to look for in the QTL file to extract the correct qtls (e.g. "CourterQTL"). If not specified, it will just look for "QTL" in the column names
