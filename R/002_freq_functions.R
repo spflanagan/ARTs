@@ -494,6 +494,252 @@ summarize_params<-function(base_pattern="^courter_linked",cols,summ_list="Courte
   return(summary_stats)
 }
 
+#' Create violin plots with 
+#' @param ... legend parameters
+#' @return Optionally returns the summary statistics of the data.
+#' @notes Modified from vioplot() in library(vioplot)
+#' @example 
+#' mu<-2
+#' si<-0.6
+#' bimodal<-c(rnorm(1000,-mu,si),rnorm(1000,mu,si))
+#' uniform<-runif(2000,-4,4)
+#' normal<-rnorm(2000,0,3)
+#' gwsca.vioplot(bimodal,uniform,normal,col=c("red","blue","green"))
+#' @include sm
+#' @export
+violinplot <- function(x,...,range=1.5,h=NULL,ylim=NULL,names=NULL, horizontal=FALSE,
+                          col="magenta", border="black", lty=1, lwd=1, rectCol="black", colMed="white", pchMed=19, at, add=FALSE, wex=1,
+                          drawRect=TRUE,plot.axes=TRUE,axis.box=FALSE,plot.ann=TRUE)
+{
+  # process multiple datas
+  datas <- list(x,...)
+  n <- length(datas)
+  
+  if(missing(at)) at <- 1:n
+  
+  # pass 1
+  #
+  # - calculate base range
+  # - estimate density
+  #
+  
+  # setup parameters for density estimation
+  upper  <- vector(mode="numeric",length=n)
+  lower  <- vector(mode="numeric",length=n)
+  q1     <- vector(mode="numeric",length=n)
+  q3     <- vector(mode="numeric",length=n)
+  med    <- vector(mode="numeric",length=n)
+  base   <- vector(mode="list",length=n)
+  height <- vector(mode="list",length=n)
+  baserange <- c(Inf,-Inf)
+  
+  # global args for sm.density function-call
+  args <- list(display="none")
+  
+  if (!(is.null(h)))
+    args <- c(args, h=h)
+  
+  for(i in 1:n) {
+    data<-datas[[i]]
+    
+    # calculate plot parameters
+    #   1- and 3-quantile, median, IQR, upper- and lower-adjacent
+    data.min <- min(data)
+    data.max <- max(data)
+    q1[i]<-quantile(data,0.25)
+    q3[i]<-quantile(data,0.75)
+    med[i]<-median(data)
+    iqd <- q3[i]-q1[i]
+    upper[i] <- min( q3[i] + range*iqd, data.max )
+    lower[i] <- max( q1[i] - range*iqd, data.min )
+    
+    #   strategy:
+    #       xmin = min(lower, data.min))
+    #       ymax = max(upper, data.max))
+    #
+    
+    est.xlim <- c( min(lower[i], data.min), max(upper[i], data.max) )
+    
+    # estimate density curve
+    smout <- do.call("sm.density", c( list(data, xlim=est.xlim), args ) )
+    
+    # calculate stretch factor
+    #
+    #  the plots density heights is defined in range 0.0 ... 0.5
+    #  we scale maximum estimated point to 0.4 per data
+    #
+    hscale <- 0.4/max(smout$estimate) * wex
+    
+    # add density curve x,y pair to lists
+    base[[i]]   <- smout$eval.points
+    height[[i]] <- smout$estimate * hscale
+    
+    # calculate min,max base ranges
+    t <- range(base[[i]])
+    baserange[1] <- min(baserange[1],t[1])
+    baserange[2] <- max(baserange[2],t[2])
+    
+  }
+  
+  # pass 2
+  #
+  # - plot graphics
+  
+  # setup parameters for plot
+  if(!add){
+    xlim <- if(n==1)
+      at + c(-.5, .5)
+    else
+      range(at) + min(diff(at))/2 * c(-1,1)
+    
+    if (is.null(ylim)) {
+      ylim <- baserange
+    }
+  }
+  if (is.null(names)) {
+    label <- 1:n
+  } else {
+    label <- names
+  }
+  # setup colors and borders
+  if(length(col) < n){
+    col<-c(col,rep(col,n-length(col)))
+  }
+  if(length(border)<n){
+    border<-c(border,rep(border,n-length(border)))
+  }
+  if(length(colMed)<n){
+    colMed<-c(colMed,rep(colMed,n-length(colMed)))
+  }
+  boxwidth <- 0.05 * wex
+  
+  # setup plot
+  if(!add)
+    plot.new()
+  if(!horizontal) {
+    if(!add){
+      plot.window(xlim = xlim, ylim = ylim)
+      if(plot.axes){
+        if(plot.ann){
+          axis(2)
+          axis(1,at = at, label=label )
+        }else{
+          axis(2,labels=F)
+          axis(1,at = at, labels=F )
+        }
+      }
+    }
+    
+    if(axis.box){ box() }
+    for(i in 1:n) {
+      # plot left/right density curve
+      polygon( c(at[i]-height[[i]], rev(at[i]+height[[i]])),
+               c(base[[i]], rev(base[[i]])),
+               col = col[i], border=border[i], lty=lty, lwd=lwd)
+      
+      if(drawRect){
+        # plot IQR
+        lines( at[c( i, i)], c(lower[i], upper[i]) ,lwd=lwd, lty=lty)
+        
+        # plot 50% KI box
+        rect( at[i]-boxwidth/2, q1[i], at[i]+boxwidth/2, q3[i], col=rectCol)
+        
+        # plot median point
+        points( at[i], med[i], pch=pchMed, col=colMed )
+      }
+    }
+    
+  }
+  else {
+    if(!add){
+      plot.window(xlim = ylim, ylim = xlim,bty=axis.bty)
+      if(plot.axes){
+        if(plot.ann){
+          axis(2)
+          axis(1,at = at, label=label )
+        }else{
+          axis(2,labels=F)
+          axis(1,at = at, labels=F )
+        }
+      }
+    }
+    
+    if(axis.box){ box() }
+    for(i in 1:n) {
+      # plot left/right density curve
+      polygon( c(base[[i]], rev(base[[i]])),
+               c(at[i]-height[[i]], rev(at[i]+height[[i]])),
+               col = col[i], border=border[i], lty=lty, lwd=lwd)
+      
+      if(drawRect){
+        # plot IQR
+        lines( c(lower[i], upper[i]), at[c(i,i)] ,lwd=lwd, lty=lty)
+        
+        # plot 50% KI box
+        rect( q1[i], at[i]-boxwidth/2, q3[i], at[i]+boxwidth/2,  col=rectCol)
+        
+        # plot median point
+        points( med[i], at[i], pch=pchMed, col=colMed )
+      }
+    }
+  }
+  invisible (list( upper=upper, lower=lower, median=med, q1=q1, q3=q3))
+}
+
+
+#' Plot the final allele frequencies for all replicates
+#' @param base_pattern The baseline pattern of file names to look for in the path
+#' @param path The path to look in. defaults to ./
+#' @param ncols The number of columns to plot
+#' @param cols The colors for the plots
+#' @param ... Parameters passed to par()
+#' @return A data.frame with the frequencies for courter and parent QTLs for each population in the final generation of the simulations
+#' @export
+hists_final_af<-function(base_pattern,path="./",ncols=4,cols,...){
+   
+  mrk_files<-list.files(pattern=paste(base_pattern,"markers.txt",sep="_"),path=path,full.names = TRUE)
+  qtl_files<-list.files(pattern=paste(base_pattern,"qtlinfo.txt",sep="_"),path=path,full.names = TRUE)
+  nrows<-length(mrk_files) #and there will be ncols per file
+  par(mfrow=c(nrows,ncols),mar=c(1,1,1,1),oma=c(2,2,2,2))#,...
+  
+  dat<-mapply(function(mrk_file,qtl_file){
+    mrks<-read.delim(mrk_file)
+    qtls<-read.delim(qtl_file)
+    qtls<-qtls[,complete.cases(t(qtls))] #remove columns with nas
+    
+    qtl_final_freq<-do.call(rbind,lapply(levels(qtls$Pop),function(pop){
+      qtl_af<-cbind(mrks[,1:2],mrks[,colnames(mrks) %in% paste("Marker",qtls[qtls$Pop %in% pop,-1],sep="")])
+      qtl_af<-qtl_af[qtl_af$Pop%in% pop,] #only save the ones for this pop
+      
+      courter_qtls<-paste("Marker",qtls[qtls$Pop %in% pop,grep("Courter",colnames(qtls))],sep="")
+      parent_qtls<-paste("Marker",qtls[qtls$Pop %in% pop,grep("Parent",colnames(qtls))],sep="")
+      
+      #reorganzie
+      qtl_dat<-data.frame(freqs=as.numeric(qtl_af[which.max(qtl_af$Generation),3:ncol(qtl_af)]),
+                          pop=rep(pop,length(3:ncol(qtl_af))),
+                          trait=rep("Courter",length(3:ncol(qtl_af))),stringsAsFactors = FALSE)
+      qtl_dat$trait[(which(colnames(qtl_af) %in% parent_qtls)-2)]<-"Parent"
+      
+      #plot
+      violinplot(qtl_dat$freqs[qtl_dat$trait=="Courter"],qtl_dat$freqs[qtl_dat$trait=="Parent"],
+                 col=alpha(cols[c("courter","parent")],0.5),plot.axes = FALSE,border=cols[c("courter","parent")],ylim=c(0,1))
+      points(jitter(rep(1,length(qtl_dat$freqs[qtl_dat$trait=="Courter"]))),qtl_dat$freqs[qtl_dat$trait=="Courter"],col=cols["courter"],pch=19)
+      points(jitter(rep(2,length(qtl_dat$freqs[qtl_dat$trait=="Parent"]))),qtl_dat$freqs[qtl_dat$trait=="Parent"],col=cols["parent"],pch=19)
+      axis(1,at=c(1,2),labels = c("Courter QTLs","ParentQTLs"),lwd=0)
+      axis(2)
+      return(qtl_dat)
+    }))
+    
+    qtl_final_freq$label<-mrk_file
+    return(qtl_final_freq)
+    
+    
+  },mrk_file=mrk_files,qtl_file=qtl_files)
+  
+  mtext("Allele Frequency",2,outer=TRUE)
+  
+  invisible(return(dat))
+}
 
 
 

@@ -2143,7 +2143,7 @@ public:
 			off_counter = off_to_make;
 		}	
 		//sanity check
-		if(off_counter != (start_numprog - num_progeny))
+		if(off_counter != (num_progeny - start_numprog))
 			cout << "\nWrong number of offspring created for nest with female " << this_nest.mom << std::flush;
 		return off_counter;
 	}
@@ -3225,9 +3225,34 @@ public:
 	{
 		int j;
 		eval_rs(gp);
+		// "Pop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
 		for (j = 0; j < adults.size(); j++)
 		{
-			output << '\n' << pop_id << '\t' << j;// "Pop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
+			//update trait values
+			if (gp.parent_trait || gp.parent_conditional)
+			{
+				if (gp.gene_network)
+					adults[j].calc_parent_trait(gp, parent_env_qtls, 0);
+				else
+					adults[j].calc_parent_trait(gp);
+			}
+			if (gp.court_trait || gp.courter_conditional)
+			{
+				if (gp.gene_network)
+					adults[j].calc_parent_trait(gp, parent_env_qtls, 0);
+				else
+					adults[j].calc_parent_trait(gp);
+			}
+			if(gp.ind_pref || gp.cor_prefs)
+			{
+				if (gp.gene_network)
+					adults[j].calc_preference_trait(gp, pref_thresh, pref_env_qtls, 0);//what is the environmental cue??
+				else
+					adults[j].calc_preference_trait(gp, pref_thresh);
+			}
+			
+			//output info
+			output << '\n' << pop_id << '\t' << j;
 			if (adults[j].female)
 				output << "\tFEMALE";
 			else
