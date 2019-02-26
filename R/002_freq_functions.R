@@ -757,8 +757,14 @@ plot_final_traits<-function(pattern,path="./",ncols=4,cols,cols2){
       #axis(1,at=c(1,2),labels = c("Courter","Parent"),lwd=0,lwd.ticks = 0,cex.axis=2,pos=ymin)
       axis(2,cex.axis=1.5,las=1)
       #ADD THE COURTER/NONCOURTER AND PARENT/NONPARENT COLORS
-      points(jitter(rep(1,nrow(trt))),trt$CourtTrait,pch=21,bg=alpha(cols["courter"],0.5),col=cols["courter"],cex=2)
-      points(jitter(rep(2,nrow(trt))),trt$ParentTrait,pch=21,bg=alpha(cols["parent"],0.5),col=cols["parent"],cex=2)
+      crtpch<-trt$Courter
+      crtpch[crtpch==1]<-21
+      crtpch[crtpch==2]<-23
+      prtpch<-trt$Parent
+      prtpch[prtpch==1]<-21
+      prtpch[prtpch==2]<-23
+      points(jitter(rep(1,nrow(trt))),trt$CourtTrait,pch=crtpch,bg=alpha(cols["courter"],0.5),col=cols["courter"],cex=2)
+      points(jitter(rep(2,nrow(trt))),trt$ParentTrait,pch=prtpch,bg=alpha(cols["parent"],0.5),col=cols["parent"],cex=2)
       n<-apply(trt,1,function(trow,cols2){
         if(trow["Courter"]==1 & trow["Parent"]==1){
           thiscol<-cols2["CP"]
