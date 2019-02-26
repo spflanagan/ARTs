@@ -34,7 +34,7 @@ knitr::opts_chunk$set(
   fig.path = "figs/"
 )
 ```
-```{r, echo=FALSE}
+```{r, echo=FALSE,echo=FALSE}
 library(RColorBrewer)
 library(scales)
 library(sm)
@@ -51,7 +51,7 @@ The ratio of reproductive allocation between courters and non-courters comes int
 
 The final two traits that I tested were the survival of a nest when it was with parental male and the survival of a nest when it was with a non-parental male. I tested these two parameters separately. When the parental nest survival parameter was tested the non-parental nest survival was constant at 0.1. When the non-parental nest survival parameter was tested the parental nest survival was constant at 0.9.
 
-I tested several parameter settings with three genetic architectures and with just a courter trait, just a parent trait, and both traits: 
+I tested these parameter settings with three genetic architectures and with just a courter trait, just a parent trait, and both traits: 
 
 ```{r}
 params<-data.frame(parameter=c("polygyny","relative reproductive allocation (courter:non-courter)", "parental nest survival","non-parental nest survival"),
@@ -90,7 +90,7 @@ rownames(crt_summ)<-1:nrow(crt_summ)
 kable(crt_summ,caption = "Summaries of final morph frequencies",row.names=FALSE)
 ```
 
-When just the courter trait is present, regardless of the parameter settings, the courting male morph goes to fixation in every run.
+When just the courter trait is present, regardless of the parameter settings or genetic architectures, the courting male morph goes to fixation in every run.
 
 # Parent Trait 
 
@@ -119,10 +119,11 @@ rownames(prt_summ)<-NULL
 kable(prt_summ,row.names = FALSE,caption = "Summaries of final morph frequencies")
 ```
 
-When just the parent trait is present, regardless of the parameter settings, the parental male morph goes to fixation in every run.
+When just the parent trait is present, regardless of the parameter settings or genetic architectures, the parental male morph goes to fixation in every run.
 
 # Courter and Parent Traits
 
+When both traits are present, the genetic architecture plays a role, so below the three genetic architectures are presented in their own tables.
 
 ```{r,eval=FALSE}
 morphs_unlinked_summ<-summarize_params(base_pattern="^parent-courter_unlinked",cols,
@@ -271,6 +272,8 @@ params[4,"unlinked"]<-"No major effect"
 
 ## Linked QTLs
 
+In some of the cases with linked QTLs, polymorphism is maintained in some runs. Therefore, I'm also showing genetic variation and trait variation for each set of parameter settings.
+
 
 ```{r}
 cpu_baseline<-up<-plot.pc.reps("^parent-courter_linked_.*_summary.txt",path="baseline",cols,make.plot=FALSE)
@@ -288,10 +291,17 @@ base_keep_cols<-grep("mean|sd|W|Thresh|Progeny|Pref",colnames(cpu_baseline_freqs
 params$linked<-NA
 ```
 
-```{r,fig.cap="Allele frequencies in the final generation of all of the runs - baseline",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_.*",path="baseline",4,cols)
+```{r,fig.cap="Allele frequencies at QTLs in the final generation of all of the runs - baseline",fig.height=10,fig.width=8}
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_.*",path="baseline",4,cols)
 ```
 
+Here, the distribution of allele frequencies at QTLs for the Courter trait and the Parent trait are shown for the baseline parameter settings. These graphs demonstrate that substantial genetic variation can be maintained at QTLs even when the traits themselves have become fixed.
+
+```{r,fig.cap="Trait values in the final generation of all the runs: baseline with linked QTLs",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_linked_.*traits.txt",path="baseline",ncols=4,cols=cols,cols2 = cols2)
+```
+
+These trait combinations reflect what I've previously observed, that a single morph becomes fixed in the population, with the Courter-Parent morph being fixed when the parental trait evolves to be positive and the Courter-Nonparent morph becoming fixed if the parental trait evolves to have negative values.
 
 ### Polygyny
 
@@ -323,10 +333,17 @@ params[1,"linked"]<-"Allows polymorphism sometimes"
 
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - polygyny",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_polygyny.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_polygyny.*",path="sensitivity",4,cols)
 ```
 
 Interestingly, genetic variation is found in the runs that don't have polymorphism either (but remember that allele frequencies are not necessarily reflective of additive genetic variation).
+
+```{r,fig.cap="Trait values in the final generation of all the runs: polygyny with linked QTLs",fig.height=7,fig.width=7}
+plot_final_traits(pattern="^parent-courter_linked_polygyny.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
+```
+
+Substantial trait variation is maintained when the courter trait and parent trait evolve overlapping trait values that span a substantial range.
+
 
 ### Reproductive Allocations
 
@@ -355,24 +372,40 @@ In general, high ratios generally result in Courter-Parent morph to be fixed, al
 params[2,"linked"]<-"Nuanced effect. High ratios generally result in Courter-Parent morph to be fixed, although at very high ratios some polymorphism with Noncourter-Nonparent is observed. At the lowest ratio, usually Courter-Nonparent is fixed instead of Courter-Parent"
 ```
 
-```{r,fig.cap="Allele frequencies in the final generation of all of the runs - courter RS = 2, noncourter RS = 8",fig.height=10,fig.width=8.5}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_crs2_ncrs8.*",path="sensitivity",4,cols)
+```{r,fig.cap="Allele frequencies in the final generation of all of the runs - courter RS = 2, noncourter RS = 8",fig.height=8,fig.width=8.5}
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_crs2_ncrs8.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: courter RS = 2, noncourter RS = 8 with linked QTLs",fig.height=4,fig.width=7}
+plot_final_traits(pattern="^parent-courter_linked_crs2_ncrs8.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 
-```{r,fig.cap="Allele frequencies in the final generation of all of the runs - courter RS = 4, noncourter RS = 8",fig.height=10,fig.width=8.5}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_crs4_ncrs8.*",path="sensitivity",4,cols)
+```{r,fig.cap="Allele frequencies in the final generation of all of the runs - courter RS = 4, noncourter RS = 8",fig.height=8,fig.width=8.5}
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_crs4_ncrs8.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: courter RS = 4, noncourter RS = 8 with linked QTLs",fig.height=4,fig.width=7}
+plot_final_traits(pattern="^parent-courter_linked_crs4_ncrs8.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
-```{r,fig.cap="Allele frequencies in the final generation of all of the runs - courter RS = 8, noncourter RS = 2",fig.height=10,fig.width=8.5}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_crs8_ncrs8.*",path="sensitivity",4,cols)
+```{r,fig.cap="Allele frequencies in the final generation of all of the runs - courter RS = 8, noncourter RS = 2",fig.height=8,fig.width=8.5}
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_crs8_ncrs8.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: courter RS = 8, noncourter RS = 2 with linked QTLs",fig.height=4,fig.width=7}
+plot_final_traits(pattern="^parent-courter_linked_crs8_ncrs2.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
-```{r,fig.cap="Allele frequencies in the final generation of all of the runs - courter RS = 8, noncourter RS = 8",fig.height=10,fig.width=8.5}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_crs8_ncrs8.*",path="sensitivity",4,cols)
+This is interesting because in these cases for multiple morphs to be maintained the parental trait has to be non-positive but not necessarily overlapping the courter trait values. 
+
+
+```{r,fig.cap="Allele frequencies in the final generation of all of the runs - courter RS = 8, noncourter RS = 8",fig.height=8,fig.width=8.5}
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_crs8_ncrs8.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: courter RS = 8, noncourter RS = 8 with linked QTLs",fig.height=4,fig.width=7}
+plot_final_traits(pattern="^parent-courter_linked_crs8_ncrs8.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
-Interestingly, genetic variation is maintained in all of them.
+And here, no variation is maintained and the Courter-Parent morph is always maintained.
+
 
 
 ### Parental nest survival
@@ -396,20 +429,33 @@ In general, the Courter-Parent or Courter-Nonparent traits become fixed, althoug
 params[3,"linked"]<-"No major effect"
 ```
 
-```{r,fig.cap="Allele frequencies in the final generation of all of the runs - parent nest survival = 0.5",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_psurv0.5.*",path="sensitivity",4,cols)
+```{r,fig.cap="Allele frequencies in the final generation of all of the runs - parent nest survival = 0.5",fig.height=8,fig.width=8}
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_psurv0.5.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: parent nest survival = 0.5 with linked QTLs",fig.height=4,fig.width=7}
+plot_final_traits(pattern="^parent-courter_linked_psurv0.5.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
-```{r,fig.cap="Allele frequencies in the final generation of all of the runs - parent nest survival = 0.6",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_psurv0.6.*",path="sensitivity",4,cols)
+
+```{r,fig.cap="Allele frequencies in the final generation of all of the runs - parent nest survival = 0.6",fig.height=8,fig.width=8}
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_psurv0.6.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: parent nest survival = 0.6 with linked QTLs",fig.height=4,fig.width=7}
+plot_final_traits(pattern="^parent-courter_linked_psurv0.6.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
-```{r,fig.cap="Allele frequencies in the final generation of all of the runs - parent nest survival = 0.7",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_psurv0.7.*",path="sensitivity",4,cols)
+```{r,fig.cap="Allele frequencies in the final generation of all of the runs - parent nest survival = 0.7",fig.height=8,fig.width=8}
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_psurv0.7.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: parent nest survival = 0.7 with linked QTLs",fig.height=4,fig.width=7}
+plot_final_traits(pattern="^parent-courter_linked_psurv0.7.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - parent nest survival = 0.8",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_psurv0.8.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_psurv0.8.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: parent nest survival = 0.8 with linked QTLs",fig.height=10,fig.width=7}
+plot_final_traits(pattern="^parent-courter_linked_psurv0.8.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ### Non-parental nest survival
@@ -434,20 +480,32 @@ params[4,"linked"]<-"High survival allows higher frequency of Courter-Nonparent 
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - non-parental nest survival = 0.2",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_npsurv0.2.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_npsurv0.2.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: non-parent nest survival = 0.2 with linked QTLs",fig.height=10,fig.width=7}
+plot_final_traits(pattern="^parent-courter_linked_npsurv0.2.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - non-parental nest survival = 0.3",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_npsurv0.3.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_npsurv0.3.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: non-parent nest survival = 0.3 with linked QTLs",fig.height=10,fig.width=7}
+plot_final_traits(pattern="^parent-courter_linked_npsurv0.3.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - non-parental nest survival = 0.4",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_npsurv0.4.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_npsurv0.4.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: non-parent nest survival = 0.4 with linked QTLs",fig.height=10,fig.width=7}
+plot_final_traits(pattern="^parent-courter_linked_npsurv0.4.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - non-parental nest survival = 0.5",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_linked_npsurv0.5.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_linked_npsurv0.5.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: non-parent nest survival = 0.5 with linked QTLs",fig.height=10,fig.width=7}
+plot_final_traits(pattern="^parent-courter_linked_npsurv0.5.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 
@@ -474,7 +532,11 @@ params$supergene<-NA
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - baseline",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_.*",path="baseline",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_.*",path="baseline",4,cols)
+```
+
+```{r,fig.cap="Trait values in the final generation of all the runs: polygyny with a supergene",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_.*traits.txt",path="baseline",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 
@@ -501,10 +563,16 @@ params[1,"supergene"]<-"Allows polymorphism sometimes"
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - polygyny",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_polygyny.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_polygyny.*",path="sensitivity",4,cols)
 ```
 
 When variation is maintained, the genetic variation maintained is much greater as well.
+
+Trait values are recorded for each population at the final generation and written to the *traits.txt files.
+
+```{r,fig.cap="Trait values in the final generation of all the runs: polygyny with a supergene",fig.height=8,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_polygyny.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
+```
 
 
 ### Reproductive Allocations
@@ -612,20 +680,31 @@ mtext("Allele Frequencies",2,outer=TRUE)
 Let's look at the final allele frequencies across all reps
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - supergene and courter RS = 2, noncourter RS = 8",fig.height=10,fig.width=8.5}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_crs2_ncrs8.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_crs2_ncrs8.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: courter RS = 2, noncourter RS = 8 with a supergene",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_crs2_ncrs8.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
-
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - supergene and courter RS = 4, noncourter RS = 8",fig.height=10,fig.width=8.5}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_crs4_ncrs8.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_crs4_ncrs8.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: courter RS = 4, noncourter RS = 8 with a supergene",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_crs4_ncrs8.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - supergene and courter RS = 8, noncourter RS = 2",fig.height=10,fig.width=8.5}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_crs8_ncrs8.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_crs8_ncrs8.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: courter RS = 8, noncourter RS = 2 with a supergene",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_crs8_ncrs2.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - supergene and courter RS = 8, noncourter RS = 8",fig.height=10,fig.width=8.5}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_crs8_ncrs8.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_crs8_ncrs8.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: courter RS = 8, noncourter RS = 8 with a supergene",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_crs8_ncrs8.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ### Parental nest survival
@@ -650,19 +729,31 @@ params[3,"supergene"]<-"Low survival results in coevolution of Courter and Non-p
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - parent nest survival = 0.5",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_psurv0.5.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_psurv0.5.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: parent nest survival = 0.5 with a supergene",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_psurv0.5.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - parent nest survival = 0.6",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_psurv0.6.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_psurv0.6.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: parent nest survival = 0.6 with a supergene",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_psurv0.6.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - parent nest survival = 0.7",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_psurv0.7.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_psurv0.7.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: parent nest survival = 0.7 with a supergene",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_psurv0.7.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - parent nest survival = 0.8",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_psurv0.8.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_psurv0.8.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: parent nest survival = 0.8 with a supergene",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_psurv0.8.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ### Non-parental nest survival
@@ -688,22 +779,33 @@ params[4,"supergene"]<-"High survival allows polymorphism"
 
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - non-parental nest survival = 0.2",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_npsurv0.2.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_npsurv0.2.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: non-parent nest survival = 0.2 with a supergene",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_npsurv0.2.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - non-parental nest survival = 0.3",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_npsurv0.3.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_npsurv0.3.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: non-parent nest survival = 0.3 with a supergene",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_npsurv0.3.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - non-parental nest survival = 0.4",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_npsurv0.4.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_npsurv0.4.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: non-parent nest survival = 0.4 with a supergene",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_npsurv0.4.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ```{r,fig.cap="Allele frequencies in the final generation of all of the runs - non-parental nest survival = 0.5",fig.height=10,fig.width=8}
-all_af_dat<-hists_final_af(base_pattern="^parent-courter_supergene_npsurv0.5.*",path="sensitivity",4,cols)
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_npsurv0.5.*",path="sensitivity",4,cols)
 ```
-
+```{r,fig.cap="Trait values in the final generation of all the runs: non-parent nest survival = 0.5 with a supergene",fig.height=10,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_npsurv0.5.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
+```
 
 
 
@@ -715,7 +817,6 @@ kable(params)
 
 The genetic architecture of traits impacts whether variation can be maintained, and the extent of genetic variation that is maintained. Further follow-up:
 
-* Look into distribution of additive genetic variance/allelic effects
 * Do simple FST comparisons between the morphs?
 * How does the supergene evolve over time?
 * Other sensitivity paramters, plus the key parameters of interest

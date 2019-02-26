@@ -695,7 +695,7 @@ violinplot <- function(x,...,range=1.5,h=NULL,ylim=NULL,names=NULL, horizontal=F
 #' @param ... Parameters passed to par()
 #' @return A data.frame with the frequencies for courter and parent QTLs for each population in the final generation of the simulations
 #' @export
-hists_final_af<-function(base_pattern,path="./",ncols=4,cols,...){
+plot_final_af<-function(base_pattern,path="./",ncols=4,cols,...){
    
   mrk_files<-list.files(pattern=paste(base_pattern,"markers.txt",sep="_"),path=path,full.names = TRUE)
   qtl_files<-list.files(pattern=paste(base_pattern,"qtlinfo.txt",sep="_"),path=path,full.names = TRUE)
@@ -736,12 +736,59 @@ hists_final_af<-function(base_pattern,path="./",ncols=4,cols,...){
     
   },mrk_file=mrk_files,qtl_file=qtl_files)
   
-  mtext("Allele Frequency",2,outer=TRUE)
+  mtext("Allele Frequency",2,outer=TRUE,line=1)
   
   invisible(return(dat))
 }
 
-
+plot_final_traits<-function(pattern,path="./",ncols=4,cols,cols2){
+  trait_files<-list.files(pattern=pattern,path=path,full.names = TRUE)
+  trait_files<-trait_files[sapply(trait_files,file.size)>0] # skip any that are empty
+  nrows<-length(trait_files) #and there will be ncols per file
+  par(mfrow=c(nrows,ncols),mar=c(1,2,1,1),oma=c(2,2,2,2))#,...
+  loopdeloop<-lapply(trait_files,function(trait_files,cols2){
+    traits<-read.delim(trait_files)
+    trtplot<-lapply(unique(traits$Pop),function(pop,traits,cols2){
+      trt<-traits[traits$Pop == pop,]
+      ymin<-round(min(c(trt$CourtTrait,trt$ParentTrait)),digits = 0)-1
+      ymax<-round(max(c(trt$CourtTrait,trt$ParentTrait)),digits = 0)+1
+      plot(c(0,1),xlim=c(0.5,2.5),ylim=c(ymin,ymax),axes=FALSE,type='n',xlab="",xaxt='n',ylab="Allelic effects")
+      abline(h = 0,lty=3,col="grey")
+      #axis(1,at=c(1,2),labels = c("Courter","Parent"),lwd=0,lwd.ticks = 0,cex.axis=2,pos=ymin)
+      axis(2,cex.axis=1.5,las=1)
+      #ADD THE COURTER/NONCOURTER AND PARENT/NONPARENT COLORS
+      points(jitter(rep(1,nrow(trt))),trt$CourtTrait,pch=21,bg=alpha(cols["courter"],0.5),col=cols["courter"],cex=2)
+      points(jitter(rep(2,nrow(trt))),trt$ParentTrait,pch=21,bg=alpha(cols["parent"],0.5),col=cols["parent"],cex=2)
+      n<-apply(trt,1,function(trow,cols2){
+        if(trow["Courter"]==1 & trow["Parent"]==1){
+          thiscol<-cols2["CP"]
+        }
+        if(trow["Courter"]==1 & trow["Parent"]==0){
+          thiscol<-cols2["CNP"]
+        }
+        if(trow["Courter"]==0 & trow["Parent"]==1){
+          thiscol<-cols2["NCP"]
+        }
+        if(trow["Courter"]==0 & trow["Parent"]==0){
+          thiscol<-cols2["NCNP"]
+        }
+        lines(x=c(1,2),y=c(trow["CourtTrait"],trow["ParentTrait"]),col=alpha(thiscol,0.5))
+      },cols2=cols2)
+      
+    },traits=traits,cols2=cols2)
+  },cols2=cols2)
+  
+  mtext("Trait values",2,outer=TRUE,line=1)
+  
+  #add outer legend
+  par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+  plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
+  legend("topleft",c("Courter","Parent"),pt.bg=c(alpha(cols["courter"],0.5),alpha(cols["parent"],0.5)),
+         col=cols[c("courter","parent")],bty='n',ncol = 2,pch=21,cex=1.5,pt.cex = 2)
+  
+  legend("topright",c("Courter/Parent","Non-Courter/Parent","Courter/Non-Parent","Non-courter/Non-parent"),
+         col=cols2,bty='n',ncol = 2,lty=1,cex=1.5,lwd=2)
+}
 
 
 
