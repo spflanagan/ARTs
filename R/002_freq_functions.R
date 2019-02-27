@@ -483,7 +483,7 @@ summarize_params<-function(base_pattern="^courter_linked",cols,summ_list="Courte
       sem<-tapply(freqs[,summ],freqs[,ncol(freqs)],function(x){ sd(x)/length(x) })
       param_lab<-gsub(paste(".*",substr(base_pattern,2,nchar(base_pattern)),"_(\\w+).*_summary.txt.*",sep=""),"\\1",rownames(freqs)[1])
       output<-data.frame(param_label=param_lab,params=names(m),means=m,sem=as.numeric(sem))
-      colnames(output)<-c("param_label","params",paste(summ,"Mean",sep=""),paste(summ,"SEM",sep=""))
+      colnames(output)<-c("param_label","params",paste(summ," Mean",sep=""),paste(summ," SEM",sep=""))
       return(output)
     })
     output<-do.call(cbind,output)
@@ -700,7 +700,7 @@ plot_final_af<-function(base_pattern,path="./",ncols=4,cols,...){
   mrk_files<-list.files(pattern=paste(base_pattern,"markers.txt",sep="_"),path=path,full.names = TRUE)
   qtl_files<-list.files(pattern=paste(base_pattern,"qtlinfo.txt",sep="_"),path=path,full.names = TRUE)
   nrows<-length(mrk_files) #and there will be ncols per file
-  par(mfrow=c(nrows,ncols),mar=c(1,1,1,1),oma=c(2,2,2,2))#,...
+  par(mfrow=c(nrows,ncols),mar=c(1,1,1,1),oma=c(2,2.5,2,2))#,...
   
   dat<-mapply(function(mrk_file,qtl_file){
     mrks<-read.delim(mrk_file)
@@ -745,7 +745,7 @@ plot_final_traits<-function(pattern,path="./",ncols=4,cols,cols2){
   trait_files<-list.files(pattern=pattern,path=path,full.names = TRUE)
   trait_files<-trait_files[sapply(trait_files,file.size)>0] # skip any that are empty
   nrows<-length(trait_files) #and there will be ncols per file
-  par(mfrow=c(nrows,ncols),mar=c(1,2,1,1),oma=c(2,2,2,2))#,...
+  par(mfrow=c(nrows,ncols),mar=c(1,2,1,1),oma=c(2,2.5,3,2))#,...
   loopdeloop<-lapply(trait_files,function(trait_files,cols2){
     traits<-read.delim(trait_files)
     trtplot<-lapply(unique(traits$Pop),function(pop,traits,cols2){
@@ -758,13 +758,9 @@ plot_final_traits<-function(pattern,path="./",ncols=4,cols,cols2){
       axis(2,cex.axis=1.5,las=1)
       #ADD THE COURTER/NONCOURTER AND PARENT/NONPARENT COLORS
       crtpch<-trt$Courter
-      crtpch[crtpch==1]<-21
-      crtpch[crtpch==2]<-23
       prtpch<-trt$Parent
-      prtpch[prtpch==1]<-21
-      prtpch[prtpch==2]<-23
-      points(jitter(rep(1,nrow(trt))),trt$CourtTrait,pch=crtpch,bg=alpha(cols["courter"],0.5),col=cols["courter"],cex=2)
-      points(jitter(rep(2,nrow(trt))),trt$ParentTrait,pch=prtpch,bg=alpha(cols["parent"],0.5),col=cols["parent"],cex=2)
+      points(jitter(rep(1,nrow(trt))),trt$CourtTrait,pch=crtpch,col=cols["courter"],cex=2)
+      points(jitter(rep(2,nrow(trt))),trt$ParentTrait,pch=prtpch,col=cols["parent"],cex=2)
       n<-apply(trt,1,function(trow,cols2){
         if(trow["Courter"]==1 & trow["Parent"]==1){
           thiscol<-cols2["CP"]
@@ -789,8 +785,10 @@ plot_final_traits<-function(pattern,path="./",ncols=4,cols,cols2){
   #add outer legend
   par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
   plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
-  legend("topleft",c("Courter","Parent"),pt.bg=c(alpha(cols["courter"],0.5),alpha(cols["parent"],0.5)),
-         col=cols[c("courter","parent")],bty='n',ncol = 2,pch=21,cex=1.5,pt.cex = 2)
+  legend("topleft",c("Courter","Non-Courter","Parent","Non-Parent"),
+         pt.bg=c(rep(alpha(cols["courter"],0.5),2),rep(alpha(cols["parent"],0.5),2)),
+         col=c(rep(cols["courter"],2),rep(cols["parent"],2)),bty='n',ncol = 2,
+         pch=c(1,0,1,0),cex=1.5,pt.cex = 2)
   
   legend("topright",c("Courter/Parent","Non-Courter/Parent","Courter/Non-Parent","Non-courter/Non-parent"),
          col=cols2,bty='n',ncol = 2,lty=1,cex=1.5,lwd=2)
