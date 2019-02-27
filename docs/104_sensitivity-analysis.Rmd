@@ -3,11 +3,11 @@ title: "Sensitivity analysis with ARTs Analysis"
 author: "Sarah P. Flanagan"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output:
-  html_document: 
-    toc: true  
   pdf_document:
     toc: true
     dev: png
+  html_document: 
+    toc: true  
 header-includes: \usepackage{float}
 always_allow_html: yes
 editor_options: 
