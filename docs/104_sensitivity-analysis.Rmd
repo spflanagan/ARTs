@@ -38,6 +38,7 @@ knitr::opts_chunk$set(
 library(RColorBrewer)
 library(scales)
 library(sm)
+library(kableExtra)
 source("~/Research/ARTs/R/002_freq_functions.R")
 cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
 cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
@@ -57,7 +58,8 @@ I tested these parameter settings with three genetic architectures and with just
 params<-data.frame(parameter=c("polygyny","relative reproductive allocation (courter:non-courter)", "parental nest survival","non-parental nest survival"),
                    default = c("monogamy","8:4 (2)","0.9","0.1"),
                    tested_settings = c("polygyny","2:8 (0.25), 4:8 (0.5), 4:4 (1), 8:2 (4)","0.5, 0.6, 0.7, 0.8","0.2, 0.3, 0.4, 0.5"))
-kable(params,caption="The parameters, their defaults, and their tested settings",format="pandoc")
+kable(params, format="latex", booktabs = T, caption="The parameters, their defaults, and their tested settings") %>% 
+  kable_styling(latex_options =c("scale_down","HOLD_position"))
 ```
 
 Here, I present the initial analyses of those parameter combinations.
@@ -87,7 +89,8 @@ colnames(crt_summ)[3:4]<-paste(colnames(crt_summ)[3:4]," Unlinked",sep="")
 colnames(crt_summ)[5:6]<-paste(colnames(crt_summ)[5:6]," Linked",sep="")
 colnames(crt_summ)[7:8]<-paste(colnames(crt_summ)[7:8]," Supergene",sep="")
 rownames(crt_summ)<-1:nrow(crt_summ)
-kable(crt_summ,caption = "Summaries of final morph frequencies",row.names=FALSE)
+kable(crt_summ, "latex", booktabs = T, caption = "Summaries of final Courter frequencies",row.names=FALSE) %>% 
+  kable_styling(latex_options =c("scale_down","HOLD_position"))
 ```
 
 When just the courter trait is present, regardless of the parameter settings or genetic architectures, the courting male morph goes to fixation in every run.
@@ -116,7 +119,8 @@ colnames(prt_summ)[3:4]<-paste(colnames(prt_summ)[3:4]," Unlinked",sep="")
 colnames(prt_summ)[5:6]<-paste(colnames(prt_summ)[5:6]," Linked",sep="")
 colnames(prt_summ)[7:8]<-paste(colnames(prt_summ)[7:8]," Supergene",sep="")
 rownames(prt_summ)<-NULL
-kable(prt_summ,row.names = FALSE,caption = "Summaries of final morph frequencies")
+kable(prt_summ, "latex", booktabs = T, row.names = FALSE,caption = "Summaries of final Parent frequencies") %>% 
+  kable_styling(latex_options =c("scale_down","HOLD_position"))
 ```
 
 When just the parent trait is present, regardless of the parameter settings or genetic architectures, the parental male morph goes to fixation in every run.
@@ -147,7 +151,8 @@ We'll start by looking at the unlinked QTLs.
 
 ```{r}
 morphs_unlinked_summ<-read.csv("morphs_unlinked_summ.csv")
-kable(morphs_unlinked_summ,row.names = FALSE,caption="Summaries of final morph frequencies when QTLs are unanchored")
+kable(morphs_unlinked_summ, "latex", booktabs = T, row.names = FALSE,caption="Summaries of final morph frequencies when QTLs are unanchored")%>% 
+  kable_styling(latex_options =c("scale_down","HOLD_position"))
 ```
 
 
@@ -269,7 +274,8 @@ params[4,"unlinked"]<-"No major effect"
 
 ```{r}
 morphs_linked_summ<-read.csv("morphs_linked_summ.csv")
-kable(morphs_linked_summ,row.names = FALSE,caption="Summaries of final morph frequencies when QTLs are anchored on chromosomes")
+kable(morphs_linked_summ, "latex", booktabs = T, row.names = FALSE,caption="Summaries of final morph frequencies when QTLs are anchored on chromosomes") %>% 
+  kable_styling(latex_options =c("scale_down","HOLD_position"))
 ```
 
 
@@ -526,7 +532,8 @@ When the QTLs are anchored in a supergene, more variation in allele frequencies 
 
 ```{r}
 morphs_supergene_summ<-read.csv("morphs_supergene_summ.csv")
-kable(morphs_supergene_summ,row.names = FALSE,caption="Summaries of final morph frequencies when QTLs are in a supergene")
+kable(morphs_supergene_summ, "latex", booktabs = T, row.names = FALSE,caption="Summaries of final morph frequencies when QTLs are in a supergene")%>%
+  kable_styling(latex_options =c("scale_down","HOLD_position"))
 ```
 
 
@@ -838,7 +845,13 @@ The other parameters only have effects when QTLs are anchored to chromosomes. Pa
 
 
 ```{r}
-kable(params)
+kable(params, "latex", booktabs = T) %>% 
+  kable_styling(latex_options =c("scale_down", "HOLD_position")) %>%
+  column_spec(1, width= "15em") %>%
+  column_spec(3, width= "15em") %>%
+  column_spec(4, width= "20em") %>%
+  column_spec(5, width= "20em") %>%
+  column_spec(6, width= "20em")
 ```
 
 Further follow-up ideas:
