@@ -6,7 +6,7 @@
 
 ### --- TO RUN THE SCRIPT --- ###
 
-#qsub -t 1-NUMREPS -cwd -S /bin/bash 104_sensitivity-analysis-qsub.sh
+#qsub -tc 1-NUMREPS -l h_vmem -cwd -S /bin/bash 104_sensitivity-analysis-qsub.sh
 #where the thread number determines which rep it is
 
 
@@ -35,25 +35,25 @@ RS=false
 CRS=('4' '8' '8' '2')
 NCRS=('8' '8' '2' '8')
 #-f 4
-FECUNDITY=true
+FECUNDITY=false
 FECUNDITY_VARS='2 8'
 #-v 50
-VIABILITY=true
+VIABILITY=false
 VIABILITY_VARS='25 75 100'
 #-e 50
-ENCOUNTERS=true
+ENCOUNTERS=false
 ENCOUNTERS_VARS='25 75 100'
 #-mm 3
-MAXMATES=true
+MAXMATES=false
 MAXMATES_VARS='6 12'
 #-sprop 0.1
 SUPERGENE_PROP=true
 SUPERGENE_PROP_VARS='0.05 0.25 0.5'
 #-sperm-r 0.5
-SPERMR=true
+SPERMR=false
 SPERMR_VARS='0.25 0.75'
 #-mu 0.0002
-MUTATION=true
+MUTATION=false
 MU='0.0001 0.0004 0.001'
 
 
@@ -84,6 +84,7 @@ if [ "$POLYGYNY" = true ]; then
     ./ARTs --courter --supergene -b ../../results/courter_supergene_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
     ./ARTs --parent --supergene -b ../../results/parent_supergene_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
     ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
+    gzip ../../results/*_polygyny_*
 fi
 
 if [ "$PARENT_SURV" = true ]; then
@@ -99,7 +100,7 @@ if [ "$PARENT_SURV" = true ]; then
 		#with supergene
 		./ARTs --parent --supergene -b ../../results/parent_supergene_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
 		./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
-		
+		gzip ../../results/*_psurv*
 	done
 fi
 
@@ -116,7 +117,7 @@ if [ "$NONPARENT_SURV" = true ]; then
 		#with supergene
 		./ARTs --parent --supergene -b ../../results/parent_supergene_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
 		./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
-		
+		gzip ../../results/*npsurv*
 	done
 fi
 
@@ -133,7 +134,7 @@ if [ "$RS" = true ]; then
 		#with supergene
 		./ARTs --courter --supergene -b ../../results/courter_supergene_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} --verbose --viability --same-base -p 4
 		./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} --verbose --viability --same-base -p 4
-		
+		gzip ../../results/*crs*
 	done
 fi
 
@@ -153,6 +154,7 @@ if [ "$FECUNDITY" = true ]; then
         ./ARTs --courter --supergene -b ../../results/courter_supergene_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
         ./ARTs --parent --supergene -b ../../results/parent_supergene_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
         ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
+        gzip ../../results/*fecundity*
     done
 fi
 
@@ -171,6 +173,7 @@ if [ "$VIABILITY" = true ]; then
         ./ARTs --courter --supergene -b ../../results/courter_supergene_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
         ./ARTs --parent --supergene -b ../../results/parent_supergene_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
         ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
+        gzip ../../results/*viability*
     done
 fi
 
@@ -190,6 +193,7 @@ if [ "$ENCOUNTERS" = true ]; then
         ./ARTs --courter --supergene -b ../../results/courter_supergene_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
         ./ARTs --parent --supergene -b ../../results/parent_supergene_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
         ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
+        gzip ../../results/*encounters*
     done
 fi
 
@@ -208,6 +212,7 @@ if [ "$MAXMATES" = true ]; then
         ./ARTs --courter --supergene -b ../../results/courter_supergene_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
         ./ARTs --parent --supergene -b ../../results/parent_supergene_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
         ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
+        gzip ../../results/*maxmates*
     done
 fi
 
@@ -218,6 +223,7 @@ if [ "$SUPERGENE_PROP" = true ]; then
         ./ARTs --courter --supergene -b ../../results/courter_supergene_prop${j}_${i} --verbose --viability --same-base -p 4 -sprop ${j}
         ./ARTs --parent --supergene -b ../../results/parent_supergene_prop${j}_${i} --verbose --viability --same-base -p 4 -sprop ${j}
         ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_prop${j}_${i} --verbose --viability --same-base -p 4 -sprop ${j}
+        gzip ../../results/*prop*
     done
 fi
 
@@ -236,6 +242,7 @@ if [ "$SPERMR" = true ]; then
         ./ARTs --courter --supergene -b ../../results/courter_supergene_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
         ./ARTs --parent --supergene -b ../../results/parent_supergene_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
         ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
+        gzip ../../results/*spermr*
     done
 fi
 
@@ -254,6 +261,7 @@ if [ "$MUTATION" = true ]; then
         ./ARTs --courter --supergene -b ../../results/courter_supergene_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
         ./ARTs --parent --supergene -b ../../results/parent_supergene_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
         ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
+        gzip ../../results/*mu*
     done
 fi
 
