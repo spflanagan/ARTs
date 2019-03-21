@@ -274,7 +274,11 @@ plot.final.maf<-function(files,twocols,qtl.name,qtl.name2=NA,
   
   par(mfrow=c(prow,ceiling(length(files)/prow)),mar=c(2,2,2,2),oma=c(2,2,2,2))
   l<-lapply(files, function(file){
-    summ<-suppressWarnings(read.delim(file))
+    if(length(grep("gz$",file)>0)){
+      summ<-suppressWarnings(read.delim(gzfile(file)))
+    }else{
+      summ<-suppressWarnings(read.delim(file))
+    }
     maf<-summ[nrow(summ),which(colnames(summ)%in%grep("Marker",colnames(summ),value = TRUE))]
     #get the qtl info
     aqtls<-read.delim(gsub("markers","qtlinfo",file))
@@ -424,6 +428,7 @@ summarize_params<-function(base_pattern="^courter_linked",cols,summ_list="Courte
   baseline_freqs$ParentSurvival<-0.9
   baseline_freqs$NonparentSurvival<-0.1
   baseline_freqs$Courter2NonRS<-as.factor(as.numeric(baseline_freqs$CourterRS)/as.numeric(baseline_freqs$NoncourterRS))
+  baseline_freqs$SupergeneProportion<-0.1
   rm(baseline)
   
   #polygyny
@@ -431,7 +436,7 @@ summarize_params<-function(base_pattern="^courter_linked",cols,summ_list="Courte
     polygyny<-plot.courter.reps(pattern=paste(base_pattern,"_polygyny.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
     polygyny_freqs<-get.courter.freqs(polygyny)[,-1]
   }else if(tolower(type) == "parent"){
-    polygyny<-plot.parent.reps(pattern=paste(base_pattern,"_polygyny.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    polygyny<-plot.parent.reps(pattern=paste(base_pattern,"_polygyny.*_summary.txt(.*)?",sep=""),path="sensitivity",cols,make.plot=FALSE)
     polygyny_freqs<-get.parent.freqs(polygyny)[,-1]
   }else if(tolower(type) == "morphs"){
     polygyny<-plot.pc.reps(pattern=paste(base_pattern,"_polygyny.*_summary.txt",sep=""),path="sensitivity",cols,make.plot=FALSE)
@@ -488,8 +493,23 @@ summarize_params<-function(base_pattern="^courter_linked",cols,summ_list="Courte
   npsurv_freqs<-rbind(npsurv_freqs[,c(summ_list,"NonparentSurvival")],baseline_freqs[,c(summ_list,"NonparentSurvival")])
   rm(npsurv)
   
+  #supergene proportion
+  if(tolower(type) == "courter"){
+    supprop<-plot.courter.reps(pattern=paste(base_pattern,".*prop.*_summary.txt(.*)?",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    supprop_freqs<-get.courter.freqs(supprop)[,-1]
+  }else if(tolower(type) == "parent"){
+    supprop<-plot.parent.reps(pattern=paste(base_pattern,".*prop.*_summary.txt(.*)?",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    supprop_freqs<-get.parent.freqs(supprop)[,-1]
+  }else if(tolower(type) == "morphs"){
+    supprop<-plot.pc.reps(pattern=paste(base_pattern,".*prop.*_summary.txt(.*)?",sep=""),path="sensitivity",cols,make.plot=FALSE)
+    supprop_freqs<-get.morph.freqs(supprop)[,-1]
+  }
+  supprop_freqs$SupergeneProportion<-gsub(".*prop(\\d.\\d+).*","\\1",rownames(supprop_freqs))
+  supprop_freqs<-rbind(supprop_freqs[,c(summ_list,"SupergeneProportion")],baseline_freqs[,c(summ_list,"SupergeneProportion")])
+  rm(supprop)
+  
   #calc the summary stats
-  summary_stats<-do.call(rbind,lapply(list(polygyny_freqs,rs_freqs,psurv_freqs,npsurv_freqs),function(freqs,summ_list){
+  summary_stats<-do.call(rbind,lapply(list(polygyny_freqs,rs_freqs,psurv_freqs,npsurv_freqs,supprop_freqs),function(freqs,summ_list){
     output<-lapply(summ_list,function(summ){
       m<-tapply(freqs[,summ],freqs[,ncol(freqs)],mean)
       sem<-tapply(freqs[,summ],freqs[,ncol(freqs)],function(x){ sd(x)/length(x) })
@@ -715,8 +735,16 @@ plot_final_af<-function(base_pattern,path="./",ncols=4,cols,...){
   par(mfrow=c(nrows,ncols),mar=c(1,1,1,1),oma=c(2,2.5,2,2))#,...
   
   dat<-mapply(function(mrk_file,qtl_file){
-    mrks<-read.delim(mrk_file)
-    qtls<-read.delim(qtl_file)
+    if(length(grep("gz$",mrk_file)>0)){
+      mrks<-suppressWarnings(read.delim(gzfile(mrk_file)))
+    }else{
+      mrks<-suppressWarnings(read.delim(mrk_file))
+    }
+    if(length(grep("gz$",qtl_file)>0)){
+      qtls<-suppressWarnings(read.delim(gzfile(qtl_file)))
+    }else{
+      qtls<-suppressWarnings(read.delim(qtl_file))
+    }
     qtls<-qtls[,complete.cases(t(qtls))] #remove columns with nas
     
     qtl_final_freq<-do.call(rbind,lapply(levels(qtls$Pop),function(pop){
@@ -758,8 +786,15 @@ plot_final_traits<-function(pattern,path="./",ncols=4,cols,cols2){
   trait_files<-trait_files[sapply(trait_files,file.size)>0] # skip any that are empty
   nrows<-length(trait_files) #and there will be ncols per file
   par(mfrow=c(nrows,ncols),mar=c(1,2,1,1),oma=c(2,2.5,3,2))#,...
-  loopdeloop<-lapply(trait_files,function(trait_files,cols2){
-    traits<-read.delim(trait_files)
+  loopdeloop<-lapply(trait_files,function(trait_file,cols2){
+    if(length(grep("gz$",trait_file)>0)){
+      tryCatch(traits<-suppressWarnings(read.delim(gzfile(trait_file))),error=function(e){
+        print(paste("Reading error with file ",trait_file))
+      })
+      #traits<-suppressWarnings(read.delim(gzfile(trait_file)))
+    }else{
+      traits<-suppressWarnings(read.delim(trait_file))
+    }
     trtplot<-lapply(unique(traits$Pop),function(pop,traits,cols2){
       trt<-traits[traits$Pop == pop,]
       ymin<-round(min(c(trt$CourtTrait,trt$ParentTrait)),digits = 0)-1

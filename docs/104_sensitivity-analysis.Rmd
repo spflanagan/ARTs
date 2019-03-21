@@ -838,7 +838,7 @@ plot_final_traits(pattern="^parent-courter_supergene_npsurv0.4.*traits.txt",path
 all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_npsurv0.5.*",path="sensitivity",4,cols)
 ```
 ```{r,fig.cap="Trait values in the final generation of all the runs: non-parent nest survival = 0.5 with a supergene",fig.height=4,fig.width=8}
-plot_final_traits(pattern="^parent-courter_supergene_npsurv0.5.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
+plot_final_traits(pattern="^parent-courter_cd supergene_npsurv0.5.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
 ```
 
 ```{r echo=FALSE}
@@ -859,6 +859,29 @@ cpu_npsurv_freqs<-rbind(cpu_npsurv_freqs[,c(base_keep_cols,"SupergeneProportion"
 plot_morph_freqs(cpu_npsurv_freqs,"SupergeneProportion",cols2,"Supergene Proportion")
 ```
 
+
+```{r,fig.cap="Allele frequencies in the final generation of all of the runs - supergene proportion = 0.05",fig.height=5,fig.width=8,eval=FALSE}
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_prop0.05.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: supergene proportion = 0.05",fig.height=4,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_prop0.05.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
+```
+
+
+```{r,fig.cap="Allele frequencies in the final generation of all of the runs - supergene proportion = 0.25",fig.height=5,fig.width=8,eval=FALSE}
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_prop0.25.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: supergene proportion = 0.25",fig.height=4,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_prop0.25.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
+```
+
+
+```{r,fig.cap="Allele frequencies in the final generation of all of the runs - supergene proportion = 0.5",fig.height=5,fig.width=8,eval=FALSE}
+all_af_dat<-plot_final_af(base_pattern="^parent-courter_supergene_prop0.5.*",path="sensitivity",4,cols)
+```
+```{r,fig.cap="Trait values in the final generation of all the runs: supergene proportion = 0.5",fig.height=4,fig.width=8}
+plot_final_traits(pattern="^parent-courter_supergene_prop0.5.*traits.txt",path="sensitivity",ncols=4,cols=cols,cols2 = cols2)
+```
 
 
 # Summary
