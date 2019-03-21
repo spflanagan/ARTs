@@ -17,7 +17,11 @@ plot.courter.reps<-function(pattern,path="./",cols,x.lim=c(0,12000),make.plot=TR
   }
   #plot each run's output and save it
   s<-lapply(courter.files,function(file){
-    summ<-suppressWarnings(read.delim(file))
+    if(length(grep("gz$",file)>0)){
+      summ<-suppressWarnings(read.delim(gzfile(file)))
+    }else{
+      summ<-suppressWarnings(read.delim(file))
+    }
     sp<-by(summ,summ$Pop,function(pop){ #break it into each population in the file
       pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
       pop<-pop[!is.na(pop$CourterFreq),]
@@ -75,7 +79,11 @@ plot.parent.reps<-function(pattern,path="./",cols,x.lim=c(0,12000),make.plot=TRU
   }
   #plot each run's output and save it
   s<-lapply(parent.files,function(file){
-    summ<-suppressWarnings(read.delim(file))
+    if(length(grep("gz$",file)>0)){
+      summ<-suppressWarnings(read.delim(gzfile(file)))
+    }else{
+      summ<-suppressWarnings(read.delim(file))
+    }
     sp<-by(summ,summ$Pop,function(pop){ #break it into each population in the file
       pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
       pop<-pop[!is.na(pop$ParentFreq),]
@@ -139,7 +147,11 @@ plot.pc.reps<-function(pattern,path="./",cols,x.lim=c(0,12000),make.plot=TRUE){
   }
   #plot each run's output and save it
   s<-lapply(pc.files,function(file){
-    summ<-suppressWarnings(read.delim(file))
+    if(length(grep("gz$",file)>0)){
+      summ<-suppressWarnings(read.delim(gzfile(file)))
+    }else{
+      summ<-suppressWarnings(read.delim(file))
+    }
     sp<-by(summ,summ$Pop,function(pop){ #break it into each population in the file
       pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
       pop<-pop[!is.na(pop$ParentFreq),]

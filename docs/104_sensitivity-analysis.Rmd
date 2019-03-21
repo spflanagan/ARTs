@@ -55,9 +55,9 @@ The final two traits that I tested were the survival of a nest when it was with 
 I tested these parameter settings with three genetic architectures and with just a courter trait, just a parent trait, and both traits: 
 
 ```{r}
-params<-data.frame(parameter=c("polygyny","relative reproductive allocation (courter:non-courter)", "parental nest survival","non-parental nest survival"),
-                   default = c("monogamy","8:4 (2)","0.9","0.1"),
-                   tested_settings = c("polygyny","2:8 (0.25), 4:8 (0.5), 4:4 (1), 8:2 (4)","0.5, 0.6, 0.7, 0.8","0.2, 0.3, 0.4, 0.5"))
+params<-data.frame(parameter=c("polygyny","relative reproductive allocation (courter:non-courter)", "parental nest survival","non-parental nest survival", "supergene proportion"),
+                   default = c("monogamy","8:4 (2)","0.9","0.1","0.1?"),
+                   tested_settings = c("polygyny","2:8 (0.25), 4:8 (0.5), 4:4 (1), 8:2 (4)","0.5, 0.6, 0.7, 0.8","0.2, 0.3, 0.4, 0.5","0.5,0.25,0.05"))
 kable(params, format="latex", booktabs = T, caption="The parameters, their defaults, and their tested settings") %>% 
   kable_styling(latex_options =c("scale_down","HOLD_position"))
 ```
@@ -94,6 +94,14 @@ kable(crt_summ, "latex", booktabs = T, caption = "Summaries of final Courter fre
 ```
 
 When just the courter trait is present, regardless of the parameter settings or genetic architectures, the courting male morph goes to fixation in every run.
+
+### Supergene proportion
+
+This doesn't reflect the segmentation faults that I know happened...
+```{r}
+cs_prop<-plot.courter.reps(pattern="^courter_supergene_prop.*summary.txt.gz",path="sensitivity",cols,make.plot=TRUE)
+```
+
 
 # Parent Trait 
 
@@ -546,6 +554,7 @@ cpu_baseline_freqs$CourterRS<-8
 cpu_baseline_freqs$NoncourterRS<-4
 cpu_baseline_freqs$ParentSurvival<-0.9
 cpu_baseline_freqs$NonparentSurvival<-0.1
+cpu_baseline_freqs$SupergeneProportion<-0.1
 
 base_keep_cols<-grep("mean|sd|W|Thresh|Progeny|Pref",colnames(cpu_baseline_freqs),invert = TRUE,value = TRUE)[1:10]
 ```
@@ -835,6 +844,21 @@ plot_final_traits(pattern="^parent-courter_supergene_npsurv0.5.*traits.txt",path
 ```{r echo=FALSE}
 params[4,"supergene"]<-"High survival allows polymorphism"
 ```
+
+### Supergene proportions
+
+```{r}
+cpu_npsurv<-plot.pc.reps(pattern="^parent-courter_supergene_prop.*summary.txt.gz",path="sensitivity",cols,make.plot=FALSE)
+#plot.morphs.reps(cpu_npsurv,cols2,ncols = 4)
+cpu_npsurv_freqs<-get.morph.freqs(cpu_npsurv)[,-1]
+cpu_npsurv_freqs$SupergeneProportion<-as.numeric(gsub(".*prop(\\d.\\d+)_.*","\\1",rownames(cpu_npsurv_freqs)))
+cpu_npsurv_freqs<-rbind(cpu_npsurv_freqs[,c(base_keep_cols,"SupergeneProportion")],cpu_baseline_freqs[,c(base_keep_cols,"SupergeneProportion")])
+```
+
+```{r,fig.cap="Frequency of morphs with a supergene in scenarios with different survival rates for nests of the parental morph",fig.height=8,fig.width=8}
+plot_morph_freqs(cpu_npsurv_freqs,"SupergeneProportion",cols2,"Supergene Proportion")
+```
+
 
 
 # Summary

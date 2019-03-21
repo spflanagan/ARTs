@@ -6,7 +6,8 @@
 
 ### --- TO RUN THE SCRIPT --- ###
 
-#qsub -tc 1-NUMREPS -l h_vmem -cwd -S /bin/bash 104_sensitivity-analysis-qsub.sh
+####  IN THE DIRECTORY CONTAINING BOTH SCRIPT AND COMPILED ARTS PROGRAM ####
+#qsub -tc 1-NUMREPS -cwd -S /bin/bash 104_sensitivity-analysis-qsub.sh
 #where the thread number determines which rep it is
 
 
@@ -57,13 +58,6 @@ MUTATION=false
 MU='0.0001 0.0004 0.001'
 
 
-### --- MOVE TO THE CORRECT DIRECTORIES --- ###
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-echo "$DIR"
-PROGDIR="../programs/ARTs"
-cd $DIR
-cd $PROGDIR
-
 
 
 
@@ -73,18 +67,18 @@ i=$SGE_TASK_ID
     
 if [ "$POLYGYNY" = true ]; then
 	#with no genetic architecture
-    ./ARTs --courter --no-genetics -b ../../results/courter_unlinked_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
-    ./ARTs --parent --no-genetics -b ../../results/parent_unlinked_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
-    ./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
+    ./ARTs --courter --no-genetics -b /data/people/spf50/courter_unlinked_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
+    ./ARTs --parent --no-genetics -b /data/people/spf50/parent_unlinked_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
+    ./ARTs --courter --no-genetics --parent -b /data/people/spf50/parent-courter_unlinked_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
 	#with genetic architecture
-    ./ARTs --courter -b ../../results/courter_linked_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
-    ./ARTs --parent -b ../../results/parent_linked_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
-    ./ARTs --courter --parent -b ../../results/parent-courter_linked_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
+    ./ARTs --courter -b /data/people/spf50/courter_linked_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
+    ./ARTs --parent -b /data/people/spf50/parent_linked_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
+    ./ARTs --courter --parent -b /data/people/spf50/parent-courter_linked_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
     #with supergene
-    ./ARTs --courter --supergene -b ../../results/courter_supergene_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
-    ./ARTs --parent --supergene -b ../../results/parent_supergene_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
-    ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
-    gzip ../../results/*_polygyny_*
+    ./ARTs --courter --supergene -b /data/people/spf50/courter_supergene_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
+    ./ARTs --parent --supergene -b /data/people/spf50/parent_supergene_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
+    ./ARTs --courter --parent --supergene -b /data/people/spf50/parent-courter_supergene_polygyny_${i} --verbose --viability --same-base -p 4 --polygyny
+    gzip /data/people/spf50/*_polygyny_*.txt
 fi
 
 if [ "$PARENT_SURV" = true ]; then
@@ -92,15 +86,15 @@ if [ "$PARENT_SURV" = true ]; then
 	for j in $PARENT_SURV_VARS
 	do
 		#with no genetic architecture
-		./ARTs --parent --no-genetics -b ../../results/parent_unlinked_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
-		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
+		./ARTs --parent --no-genetics -b /data/people/spf50/parent_unlinked_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
+		./ARTs --courter --no-genetics --parent -b /data/people/spf50/parent-courter_unlinked_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
 		#with genetic architecture
-		./ARTs --parent -b ../../results/parent_linked_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
-		./ARTs --courter --parent -b ../../results/parent-courter_linked_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
+		./ARTs --parent -b /data/people/spf50/parent_linked_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
+		./ARTs --courter --parent -b /data/people/spf50/parent-courter_linked_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
 		#with supergene
-		./ARTs --parent --supergene -b ../../results/parent_supergene_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
-		./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
-		gzip ../../results/*_psurv*
+		./ARTs --parent --supergene -b /data/people/spf50/parent_supergene_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
+		./ARTs --courter --parent --supergene -b /data/people/spf50/parent-courter_supergene_psurv${j}_${i} -surv-parent ${j} --verbose --viability --same-base -p 4
+		gzip /data/people/spf50/*_psurv*.txt
 	done
 fi
 
@@ -109,15 +103,15 @@ if [ "$NONPARENT_SURV" = true ]; then
 	for j in $NONPARENT_SURV_VARS
 	do
 		#with no genetic architecture
-		./ARTs --parent --no-genetics -b ../../results/parent_unlinked_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
-		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
+		./ARTs --parent --no-genetics -b /data/people/spf50/parent_unlinked_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
+		./ARTs --courter --no-genetics --parent -b /data/people/spf50/parent-courter_unlinked_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
 		#with genetic architecture
-		./ARTs --parent -b ../../results/parent_linked_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
-		./ARTs --courter --parent -b ../../results/parent-courter_linked_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
+		./ARTs --parent -b /data/people/spf50/parent_linked_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
+		./ARTs --courter --parent -b /data/people/spf50/parent-courter_linked_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
 		#with supergene
-		./ARTs --parent --supergene -b ../../results/parent_supergene_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
-		./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
-		gzip ../../results/*npsurv*
+		./ARTs --parent --supergene -b /data/people/spf50/parent_supergene_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
+		./ARTs --courter --parent --supergene -b /data/people/spf50/parent-courter_supergene_npsurv${j}_${i} -surv-noparent ${j} --verbose --viability --same-base -p 4
+		gzip /data/people/spf50/*npsurv*.txt
 	done
 fi
 
@@ -126,15 +120,15 @@ if [ "$RS" = true ]; then
 		crs=${CRS[idx]}
 		ncrs=${NCRS[idx]}
 		#with no genetic architecture
-		./ARTs --courter --no-genetics -b ../../results/courter_unlinked_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} --verbose --viability --same-base -p 4
-		./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} --verbose --viability --same-base -p 4
+		./ARTs --courter --no-genetics -b /data/people/spf50/courter_unlinked_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} --verbose --viability --same-base -p 4
+		./ARTs --courter --no-genetics --parent -b /data/people/spf50/parent-courter_unlinked_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} --verbose --viability --same-base -p 4
 		#with genetic architecture
-		./ARTs --courter -b ../../results/courter_linked_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} --verbose --viability --same-base -p 4
-		./ARTs --courter --parent -b ../../results/parent-courter_linked_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} -surv-noparent ${j} --verbose --viability --same-base -p 4
+		./ARTs --courter -b /data/people/spf50/courter_linked_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} --verbose --viability --same-base -p 4
+		./ARTs --courter --parent -b /data/people/spf50/parent-courter_linked_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} -surv-noparent ${j} --verbose --viability --same-base -p 4
 		#with supergene
-		./ARTs --courter --supergene -b ../../results/courter_supergene_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} --verbose --viability --same-base -p 4
-		./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} --verbose --viability --same-base -p 4
-		gzip ../../results/*crs*
+		./ARTs --courter --supergene -b /data/people/spf50/courter_supergene_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} --verbose --viability --same-base -p 4
+		./ARTs --courter --parent --supergene -b /data/people/spf50/parent-courter_supergene_crs${crs}_ncrs${ncrs}_${i} -crs ${crs} -ncrs ${ncrs} --verbose --viability --same-base -p 4
+		gzip /data/people/spf50/*crs*.txt
 	done
 fi
 
@@ -143,18 +137,18 @@ if [ "$FECUNDITY" = true ]; then
 	for j in $FECUNDITY_VARS
 	do
 		#with no genetic architecture
-        ./ARTs --courter --no-genetics -b ../../results/courter_unlinked_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
-        ./ARTs --parent --no-genetics -b ../../results/parent_unlinked_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
-        ./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
+        ./ARTs --courter --no-genetics -b /data/people/spf50/courter_unlinked_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
+        ./ARTs --parent --no-genetics -b /data/people/spf50/parent_unlinked_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
+        ./ARTs --courter --no-genetics --parent -b /data/people/spf50/parent-courter_unlinked_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
 		#with genetic architecture
-        ./ARTs --courter -b ../../results/courter_linked_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
-        ./ARTs --parent -b ../../results/parent_linked_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
-        ./ARTs --courter --parent -b ../../results/parent-courter_linked_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
+        ./ARTs --courter -b /data/people/spf50/courter_linked_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
+        ./ARTs --parent -b /data/people/spf50/parent_linked_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
+        ./ARTs --courter --parent -b /data/people/spf50/parent-courter_linked_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
         #with supergene
-        ./ARTs --courter --supergene -b ../../results/courter_supergene_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
-        ./ARTs --parent --supergene -b ../../results/parent_supergene_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
-        ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
-        gzip ../../results/*fecundity*
+        ./ARTs --courter --supergene -b /data/people/spf50/courter_supergene_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
+        ./ARTs --parent --supergene -b /data/people/spf50/parent_supergene_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
+        ./ARTs --courter --parent --supergene -b /data/people/spf50/parent-courter_supergene_fecundity${j}_${i} --verbose --viability --same-base -p 4 -f ${j}
+        gzip /data/people/spf50/*fecundity*.txt
     done
 fi
 
@@ -162,18 +156,18 @@ if [ "$VIABILITY" = true ]; then
 	for j in $VIABILITY_VARS
 	do
 		#with no genetic architecture
-        ./ARTs --courter --no-genetics -b ../../results/courter_unlinked_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
-        ./ARTs --parent --no-genetics -b ../../results/parent_unlinked_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
-        ./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
+        ./ARTs --courter --no-genetics -b /data/people/spf50/courter_unlinked_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
+        ./ARTs --parent --no-genetics -b /data/people/spf50/parent_unlinked_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
+        ./ARTs --courter --no-genetics --parent -b /data/people/spf50/parent-courter_unlinked_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
 		#with genetic architecture
-        ./ARTs --courter -b ../../results/courter_linked_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
-        ./ARTs --parent -b ../../results/parent_linked_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
-        ./ARTs --courter --parent -b ../../results/parent-courter_linked_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
+        ./ARTs --courter -b /data/people/spf50/courter_linked_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
+        ./ARTs --parent -b /data/people/spf50/parent_linked_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
+        ./ARTs --courter --parent -b /data/people/spf50/parent-courter_linked_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
         #with supergene
-        ./ARTs --courter --supergene -b ../../results/courter_supergene_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
-        ./ARTs --parent --supergene -b ../../results/parent_supergene_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
-        ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
-        gzip ../../results/*viability*
+        ./ARTs --courter --supergene -b /data/people/spf50/courter_supergene_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
+        ./ARTs --parent --supergene -b /data/people/spf50/parent_supergene_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
+        ./ARTs --courter --parent --supergene -b /data/people/spf50/parent-courter_supergene_viability${j}_${i} --verbose --viability --same-base -p 4 -v ${j}
+        gzip /data/people/spf50/*viability*.txt
     done
 fi
 
@@ -182,18 +176,18 @@ if [ "$ENCOUNTERS" = true ]; then
 	for j in $ENCOUNTER_VARS
 	do
 		#with no genetic architecture
-        ./ARTs --courter --no-genetics -b ../../results/courter_unlinked_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
-        ./ARTs --parent --no-genetics -b ../../results/parent_unlinked_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
-        ./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
+        ./ARTs --courter --no-genetics -b /data/people/spf50/courter_unlinked_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
+        ./ARTs --parent --no-genetics -b /data/people/spf50/parent_unlinked_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
+        ./ARTs --courter --no-genetics --parent -b /data/people/spf50/parent-courter_unlinked_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
 		#with genetic architecture
-        ./ARTs --courter -b ../../results/courter_linked_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
-        ./ARTs --parent -b ../../results/parent_linked_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
-        ./ARTs --courter --parent -b ../../results/parent-courter_linked_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
+        ./ARTs --courter -b /data/people/spf50/courter_linked_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
+        ./ARTs --parent -b /data/people/spf50/parent_linked_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
+        ./ARTs --courter --parent -b /data/people/spf50/parent-courter_linked_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
         #with supergene
-        ./ARTs --courter --supergene -b ../../results/courter_supergene_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
-        ./ARTs --parent --supergene -b ../../results/parent_supergene_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
-        ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
-        gzip ../../results/*encounters*
+        ./ARTs --courter --supergene -b /data/people/spf50/courter_supergene_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
+        ./ARTs --parent --supergene -b /data/people/spf50/parent_supergene_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
+        ./ARTs --courter --parent --supergene -b /data/people/spf50/parent-courter_supergene_encounters${j}_${i} --verbose --viability --same-base -p 4 -e ${j}
+        gzip /data/people/spf50/*encounters*.txt
     done
 fi
 
@@ -201,18 +195,18 @@ if [ "$MAXMATES" = true ]; then
 	for j in $MAXMATES_VARS
 	do
 		#with no genetic architecture
-        ./ARTs --courter --no-genetics -b ../../results/courter_unlinked_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
-        ./ARTs --parent --no-genetics -b ../../results/parent_unlinked_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
-        ./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
+        ./ARTs --courter --no-genetics -b /data/people/spf50/courter_unlinked_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
+        ./ARTs --parent --no-genetics -b /data/people/spf50/parent_unlinked_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
+        ./ARTs --courter --no-genetics --parent -b /data/people/spf50/parent-courter_unlinked_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
 		#with genetic architecture
-        ./ARTs --courter -b ../../results/courter_linked_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
-        ./ARTs --parent -b ../../results/parent_linked_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
-        ./ARTs --courter --parent -b ../../results/parent-courter_linked_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
+        ./ARTs --courter -b /data/people/spf50/courter_linked_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
+        ./ARTs --parent -b /data/people/spf50/parent_linked_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
+        ./ARTs --courter --parent -b /data/people/spf50/parent-courter_linked_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
         #with supergene
-        ./ARTs --courter --supergene -b ../../results/courter_supergene_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
-        ./ARTs --parent --supergene -b ../../results/parent_supergene_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
-        ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
-        gzip ../../results/*maxmates*
+        ./ARTs --courter --supergene -b /data/people/spf50/courter_supergene_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
+        ./ARTs --parent --supergene -b /data/people/spf50/parent_supergene_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
+        ./ARTs --courter --parent --supergene -b /data/people/spf50/parent-courter_supergene_maxmates${j}_${i} --verbose --viability --same-base -p 4 -mm ${j}
+        gzip /data/people/spf50/*maxmates*.txt
     done
 fi
 
@@ -220,10 +214,10 @@ if [ "$SUPERGENE_PROP" = true ]; then
 	for j in $SUPERGENE_PROP_VARS
 	do
 		#with supergene
-        ./ARTs --courter --supergene -b ../../results/courter_supergene_prop${j}_${i} --verbose --viability --same-base -p 4 -sprop ${j}
-        ./ARTs --parent --supergene -b ../../results/parent_supergene_prop${j}_${i} --verbose --viability --same-base -p 4 -sprop ${j}
-        ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_prop${j}_${i} --verbose --viability --same-base -p 4 -sprop ${j}
-        gzip ../../results/*prop*
+        ./ARTs --courter --supergene -b /data/people/spf50/courter_supergene_prop${j}_${i} --verbose --viability --same-base -p 4 -sprop ${j}
+        ./ARTs --parent --supergene -b /data/people/spf50/parent_supergene_prop${j}_${i} --verbose --viability --same-base -p 4 -sprop ${j}
+        ./ARTs --courter --parent --supergene -b /data/people/spf50/parent-courter_supergene_prop${j}_${i} --verbose --viability --same-base -p 4 -sprop ${j}
+        gzip /data/people/spf50/*prop*.txt
     done
 fi
 
@@ -231,18 +225,18 @@ if [ "$SPERMR" = true ]; then
 	for j in $SPERMR_VARS
 	do
 		#with no genetic architecture
-        ./ARTs --courter --no-genetics -b ../../results/courter_unlinked_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
-        ./ARTs --parent --no-genetics -b ../../results/parent_unlinked_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
-        ./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
+        ./ARTs --courter --no-genetics -b /data/people/spf50/courter_unlinked_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
+        ./ARTs --parent --no-genetics -b /data/people/spf50/parent_unlinked_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
+        ./ARTs --courter --no-genetics --parent -b /data/people/spf50/parent-courter_unlinked_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
 		#with genetic architecture
-        ./ARTs --courter -b ../../results/courter_linked_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
-        ./ARTs --parent -b ../../results/parent_linked_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
-        ./ARTs --courter --parent -b ../../results/parent-courter_linked_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
+        ./ARTs --courter -b /data/people/spf50/courter_linked_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
+        ./ARTs --parent -b /data/people/spf50/parent_linked_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
+        ./ARTs --courter --parent -b /data/people/spf50/parent-courter_linked_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
         #with supergene
-        ./ARTs --courter --supergene -b ../../results/courter_supergene_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
-        ./ARTs --parent --supergene -b ../../results/parent_supergene_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
-        ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
-        gzip ../../results/*spermr*
+        ./ARTs --courter --supergene -b /data/people/spf50/courter_supergene_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
+        ./ARTs --parent --supergene -b /data/people/spf50/parent_supergene_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
+        ./ARTs --courter --parent --supergene -b /data/people/spf50/parent-courter_supergene_spermr${j}_${i} --verbose --viability --same-base -p 4 -sperm-r ${j}
+        gzip /data/people/spf50/*spermr*.txt
     done
 fi
 
@@ -250,18 +244,18 @@ if [ "$MUTATION" = true ]; then
 	for j in $MU
 	do
 		#with no genetic architecture
-        ./ARTs --courter --no-genetics -b ../../results/courter_unlinked_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
-        ./ARTs --parent --no-genetics -b ../../results/parent_unlinked_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
-        ./ARTs --courter --no-genetics --parent -b ../../results/parent-courter_unlinked_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
+        ./ARTs --courter --no-genetics -b /data/people/spf50/courter_unlinked_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
+        ./ARTs --parent --no-genetics -b /data/people/spf50/parent_unlinked_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
+        ./ARTs --courter --no-genetics --parent -b /data/people/spf50/parent-courter_unlinked_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
 		#with genetic architecture
-        ./ARTs --courter -b ../../results/courter_linked_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
-        ./ARTs --parent -b ../../results/parent_linked_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
-        ./ARTs --courter --parent -b ../../results/parent-courter_linked_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
+        ./ARTs --courter -b /data/people/spf50/courter_linked_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
+        ./ARTs --parent -b /data/people/spf50/parent_linked_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
+        ./ARTs --courter --parent -b /data/people/spf50/parent-courter_linked_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
         #with supergene
-        ./ARTs --courter --supergene -b ../../results/courter_supergene_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
-        ./ARTs --parent --supergene -b ../../results/parent_supergene_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
-        ./ARTs --courter --parent --supergene -b ../../results/parent-courter_supergene_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
-        gzip ../../results/*mu*
+        ./ARTs --courter --supergene -b /data/people/spf50/courter_supergene_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
+        ./ARTs --parent --supergene -b /data/people/spf50/parent_supergene_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
+        ./ARTs --courter --parent --supergene -b /data/people/spf50/parent-courter_supergene_mu${j}_${i} --verbose --viability --same-base -p 4 -mu ${j}
+        gzip /data/people/spf50/*mu*.txt
     done
 fi
 
