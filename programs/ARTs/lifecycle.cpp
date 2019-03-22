@@ -64,10 +64,11 @@ int main(int argc, char*argv[])
 		//OPTIONAL SET PARAMETERS HERE FOR TESTING
 		global_params.parent_trait= false;
 		global_params.court_trait = true;
-		global_params.no_genetics = true;
+		global_params.supergene = true;
+		global_params.supergene_prop = 0.05;
 		global_params.num_init_gen = 5;
 		global_params.num_exp_gen = 2;
-		global_params.base_name = "../../results/testing";
+		global_params.base_name = "../../results/courter_supergene_propTest";
 		global_params.dependent_params();
 		global_params.verbose = false;
 		global_params.optimize = true;
