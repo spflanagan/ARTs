@@ -316,13 +316,14 @@ int main(int argc, char*argv[])
 			}
 			else //if the population size is 0 the population has crashed
 			{
+				pops[ii].extinct = true;
 				if (global_params.log_file)
                     log_out << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n' << std::flush;
 				else
 					std::cout << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n' << std::flush;
 				crash_counter++;
 			}
-			if (crash_counter == global_params.num_pops-1)
+			if (crash_counter == global_params.num_pops+1)
 			{
 				if (global_params.log_file)
                     log_out << "\n" << global_params.base_name << ": All populations have crashed at experimental generation " << i << '\n' << std::flush;
@@ -429,7 +430,7 @@ int main(int argc, char*argv[])
 				}
 					
 				pops[ii].extinct = true;
-				if (crash_counter == global_params.num_pops -1)
+				if (crash_counter == global_params.num_pops +1)
 				{
 					if (global_params.log_file)
                         log_out<< "\n" << global_params.base_name << ": All populations have crashed at experimental generation " << i << '\n' << std::flush;

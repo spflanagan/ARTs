@@ -3239,9 +3239,9 @@ public:
 			if (gp.court_trait || gp.courter_conditional)
 			{
 				if (gp.gene_network)
-					adults[j].calc_parent_trait(gp, parent_env_qtls, 0);
+					adults[j].calc_courter_trait(gp, parent_env_qtls, 0);
 				else
-					adults[j].calc_parent_trait(gp);
+					adults[j].calc_courter_trait(gp);
 			}
 			if(gp.ind_pref || gp.cor_prefs)
 			{
