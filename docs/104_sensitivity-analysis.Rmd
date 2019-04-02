@@ -556,7 +556,7 @@ cpu_baseline_freqs$ParentSurvival<-0.9
 cpu_baseline_freqs$NonparentSurvival<-0.1
 cpu_baseline_freqs$SupergeneProportion<-0.1
 
-base_keep_cols<-grep("mean|sd|W|Thresh|Progeny|Pref",colnames(cpu_baseline_freqs),invert = TRUE,value = TRUE)[1:10]
+base_keep_cols<-grep("mean|sd|W|Progeny|Pref|Polygyny",colnames(cpu_baseline_freqs),invert = TRUE,value = TRUE)
 ```
 
 ```{r echo=FALSE}
@@ -621,7 +621,7 @@ cpu_rs_freqs<-get.morph.freqs(cpu_rs)[,-1]
 cpu_rs_freqs$CourterRS<-gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(cpu_rs_freqs))
 cpu_rs_freqs$NoncourterRS<-gsub(".*crs\\d_ncrs(\\d).*","\\1",rownames(cpu_rs_freqs))
 #merge with baseline
-cpu_rs_freqs<-rbind(cpu_rs_freqs[,c(base_keep_cols,"CourterRS","NoncourterRS")],cpu_baseline_freqs[,c(base_keep_cols,"CourterRS","NoncourterRS")])
+cpu_rs_freqs<-rbind(cpu_rs_freqs[,base_keep_cols[1:14]],cpu_baseline_freqs[,base_keep_cols[1:14]])
 
 cpu_rs_freqs$Courter2NonRS<-as.factor(as.numeric(cpu_rs_freqs$CourterRS)/as.numeric(cpu_rs_freqs$NoncourterRS))
 ```
@@ -751,7 +751,7 @@ cpu_psurv<-plot.pc.reps(pattern="^parent-courter_supergene_psurv.*_summary.txt",
 #plot.morphs.reps(cpu_psurv,cols2,ncols = 4)
 cpu_psurv_freqs<-get.morph.freqs(cpu_psurv)[,-1]
 cpu_psurv_freqs$ParentSurvival<-gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_psurv_freqs))
-cpu_psurv_freqs<-rbind(cpu_psurv_freqs[,c(base_keep_cols,"ParentSurvival")],cpu_baseline_freqs[,c(base_keep_cols,"ParentSurvival")])
+cpu_psurv_freqs<-rbind(cpu_psurv_freqs[,base_keep_cols[c(seq(1,12),15)]],cpu_baseline_freqs[,base_keep_cols[c(1:12,15)]])
 ```
 
 ```{r,fig.cap="Frequency of morphs with a supergene in scenarios with different survival rates for nests of the parental morph",fig.height=8,fig.width=8}
@@ -801,7 +801,7 @@ cpu_npsurv<-plot.pc.reps(pattern="^parent-courter_supergene_npsurv.*_summary.txt
 #plot.morphs.reps(cpu_npsurv,cols2,ncols = 4)
 cpu_npsurv_freqs<-get.morph.freqs(cpu_npsurv)[,-1]
 cpu_npsurv_freqs$NonparentSurvival<-as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_npsurv_freqs)))
-cpu_npsurv_freqs<-rbind(cpu_npsurv_freqs[,c(base_keep_cols,"NonparentSurvival")],cpu_baseline_freqs[,c(base_keep_cols,"NonparentSurvival")])
+cpu_npsurv_freqs<-rbind(cpu_npsurv_freqs[,base_keep_cols[c(1:12,16)]],cpu_baseline_freqs[,base_keep_cols[c(1:12,16)]])
 ```
 
 ```{r,fig.cap="Frequency of morphs with a supergene in scenarios with different survival rates for nests of the parental morph",fig.height=8,fig.width=8}
@@ -903,9 +903,9 @@ kable(params, "latex", booktabs = T) %>%
 
 Summary plot
 ```{r}
-cpu_rs_freqs<-rbind(cpu_rs_freqs[,c(base_keep_cols,"CourterRS","NoncourterRS")],cpu_baseline_freqs[,c(base_keep_cols,"CourterRS","NoncourterRS")])
 
 cpu_all_freqs<-cpu_rs_freqs
+cpu_all_freqs$Courter2NonRS<-as.factor(as.numeric(cpu_all_freqs$CourterRS)/as.numeric(cpu_all_freqs$NoncourterRS))
 cpu_all_freqs$Parent2NonSurvival<-0.9/0.1
 cpu_psurv_freqs$Courter2NonRS<-8/2
 cpu_psurv_freqs$Parent2NonSurvival<-as.numeric(cpu_psurv_freqs$ParentSurvival)/0.1
@@ -919,28 +919,45 @@ cpu_npsurv_freqs$Courter2NonRS<-8/2
 cpu_npsurv_freqs$Parent2NonSurvival<-0.9/as.numeric(cpu_npsurv_freqs$NonparentSurvival)
 cpu_all_freqs<-rbind(cpu_npsurv_freqs[,c(base_keep_cols,"Courter2NonRS","Parent2NonSurvival")],cpu_all_freqs[,c(base_keep_cols,"Courter2NonRS","Parent2NonSurvival")])
 
+#Plotting setup
+nx<-length(unique(cpu_all_freqs$Courter2NonRS)) #number of values on x axis
+ny<-length(unique(cpu_all_freqs$Parent2NonSurvival)) #number of values on y axis
+cpu_all_freqs$Rep<-as.numeric(factor(rownames(cpu_all_freqs[order(cpu_all_freqs$Courter2NonRS),]))) # make rep in order of RS
+cpu_all_freqs$RSloc<-as.numeric(as.factor(cpu_all_freqs$Courter2NonRS))
+cpu_all_freqs$Survloc<-as.numeric(as.factor(cpu_all_freqs$Parent2NonSurvival))
+rep_ns<-tapply(cpu_all_freqs$Rep,cpu_all_freqs$RSloc,function(x) length(x))
+
+cpu_all_freqs$paramsets<-gsub(".*/parent-courter_supergene_(.*)_\\d+_summary.txt_\\d+","\\1",rownames(cpu_all_freqs))
+
+newlocs<-do.call(rbind,lapply(unique(cpu_all_freqs$paramsets),function(p,cpu_all_freqs){  
+  newlocs<-cpu_all_freqs[cpu_all_freqs$paramsets==p,]$RSloc+seq(-0.4,0.4,length.out = nrow(cpu_all_freqs[cpu_all_freqs$paramsets==p,]))
+  return(cbind(Rep=cpu_all_freqs[cpu_all_freqs$paramsets==p,"Rep"],newlocs))
+},cpu_all_freqs=cpu_all_freqs))
+
+cpu_all_freqs<-merge(cpu_all_freqs,newlocs,by="Rep")
+
 png("~/Research/ARTs/figs/RS_Survival.png",height=7,width=7,units="in",res=300)
-plot(log(as.numeric(cpu_all_freqs$Courter2NonRS)),
-     cpu_all_freqs$Parent2NonSurvival,xlim=c(-2,2),ylim=c(1,10),axes = FALSE,
+
+plot(c(1,1),c(nx,ny),xlim=c(0,nx+1),ylim=c(0,ny+1),axes = FALSE,
      xlab="Relative reproductive allocation (courter/non-courter)",
      ylab="Relative nest survival (parent/non-parent)",type='n')
-abline(h=c(1.5,2.1,2.75,3.75,4.8,5.5,6.5,7.5,8.5,9.5),col="grey",xpd=FALSE)
-axis(2,at=as.numeric(levels(as.factor(cpu_all_freqs$Parent2NonSurvival))),lty=0,las=1)
-abline(v=seq(-1.75,2,0.7),col="grey",xpd=FALSE)
-axis(1,at=as.numeric(levels(as.factor(log(as.numeric(cpu_all_freqs$Courter2NonRS))))),
-     labels = levels(as.factor(cpu_all_freqs$Courter2NonRS)),lty=0)
-points(jitter(log(as.numeric(cpu_all_freqs$Courter2NonRS))),cpu_all_freqs$Parent2NonSurvival+0.2,
-       col=alpha(cols2["CP"],cpu_all_freqs$FreqCP),pch=5)
-points(jitter(log(as.numeric(cpu_all_freqs$Courter2NonRS))),cpu_all_freqs$Parent2NonSurvival+0.075,
-       col=alpha(cols2["CNP"],cpu_all_freqs$FreqCNp),pch=2)
-points(jitter(log(as.numeric(cpu_all_freqs$Courter2NonRS))),cpu_all_freqs$Parent2NonSurvival-0.075,
-       col=alpha(cols2["NCP"],cpu_all_freqs$FreqNcP),pch=1)
-points(jitter(log(as.numeric(cpu_all_freqs$Courter2NonRS))),cpu_all_freqs$Parent2NonSurvival-0.2,
-       col=alpha(cols2["NCNP"],cpu_all_freqs$FreqNcNp),pch=0)
+abline(h=seq(0.5,(ny+1.5)),col="grey",xpd=FALSE)
+axis(2,at=1:ny,labels = as.numeric(levels(as.factor(cpu_all_freqs$Parent2NonSurvival))),lty=0,las=1)
+abline(v=seq(0.5,(nx+1.5)),col="grey",xpd=FALSE)
+axis(1,at=1:nx,labels=as.numeric(levels(as.factor(as.numeric(cpu_all_freqs$Courter2NonRS)))),lty=0)
+
+points(cpu_all_freqs$newlocs,cpu_all_freqs$Survloc+0.2,
+       col=alpha(cols2["CP"],cpu_all_freqs$FreqCP),pch=18)
+points(cpu_all_freqs$newlocs,cpu_all_freqs$Survloc+0.075,
+       col=alpha(cols2["CNP"],cpu_all_freqs$FreqCNp),pch=17)
+points(cpu_all_freqs$newlocs,cpu_all_freqs$Survloc-0.075,
+       col=alpha(cols2["NCP"],cpu_all_freqs$FreqNcP),pch=16)
+points(cpu_all_freqs$newlocs,cpu_all_freqs$Survloc-0.2,
+       col=alpha(cols2["NCNP"],cpu_all_freqs$FreqNcNp),pch=15)
 par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
 plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
 legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
-       col=cols2[c("CP","CNP","NCP","NCNP")],pch=c(5,2,1,0),xpd = TRUE,ncol=2)
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=c(18,17,16,15),xpd = TRUE,ncol=2)
 dev.off()
 ```
 
