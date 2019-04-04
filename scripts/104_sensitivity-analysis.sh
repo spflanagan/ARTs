@@ -15,36 +15,36 @@ NUMREPS=5
 #Parameters of interest include 
 #--polygyny
 POLYGYNY=false
-#-surv-parent 0.9
-PARENT_SURV=false 
-PARENT_SURV_VARS='0.8 0.7 0.6 0.5'
-#-surv-noparent 0.1
-NONPARENT_SURV=false
-NONPARENT_SURV_VARS='0.2 0.3 0.4 0.5'
+#-surv-parent 0.9 -surv-noparent 0.1
+SURVIVAL=false 
+PARENT_SURV_VARS=('0.8' '0.7' '0.6' '0.5')
+NONPARENT_SURV_VARS=('0.2' '0.3' '0.4' '0.5')
 #-crs 8, -ncrs 4
-RS=false
-CRS=('4' '8' '8' '2')
-NCRS=('8' '8' '2' '8')
+RS=false #goes set by set
+CRS=('2' '4' '8')
+NCRS=('2' '4' '8')
+# Combinations of both research allocation types!
+RESEARCH_ALLOCATION=true #only runs parent-courter combos
 #-f 4
-FECUNDITY=true
+FECUNDITY=false
 FECUNDITY_VARS='2 8'
 #-v 50
-VIABILITY=true
+VIABILITY=false
 VIABILITY_VARS='25 75 100'
 #-e 50
-ENCOUNTERS=true
+ENCOUNTERS=false
 ENCOUNTERS_VARS='25 75 100'
 #-mm 3
-MAXMATES=true
+MAXMATES=false
 MAXMATES_VARS='6 12'
 #-sprop 0.1
-SUPERGENE_PROP=true
+SUPERGENE_PROP=false
 SUPERGENE_PROP_VARS='0.05 0.25 0.5'
 #-sperm-r 0.5
-SPERMR=true
+SPERMR=false
 SPERMR_VARS='0.25 0.75'
 #-mu 0.0002
-MUTATION=true
+MUTATION=false
 MU='0.0001 0.0004 0.001'
 
 
@@ -62,6 +62,31 @@ DATE=`date +%Y%m%d`
 ### --- RUN THE PARAMETER COMBINATIONS --- ###
 
 for i in `seq ${NUMREPS}`; do
+
+
+	if [ "$RESEARCH_ALLOCATION" = true ]; then
+	    for ((par=0; par<${#PARENT_SURV_VARS[@]}; ++par)); do
+	        parent=${PARENT_SURV_VARS[par]}
+	        for ((np=0; np<${#NONPARENT_SURV_VARS[@]}; ++np)); do
+	            nonparent=${NONPARENT_SURV_VARS[np]}
+	            for ((c=0; c<${#CRS[@]}; ++c)); do
+	                crs=${CRS[c]}
+	                for ((nc=0; nc<${#NCRS[@]}; ++nc)); do
+	                    ncrs=${NCRS[nc]}
+	                    echo "c${crs}_nc${ncrs}_p${parent}_np${nonparent}_${i}"
+	                    #with no genetic architecture
+	                    ./ARTs --courter --no-genetics --parent -b /data/people/spf50/parent-courter_unlinked_RA_c${crs}_nc${ncrs}_p${parent}_np${nonparent}_${i} -crs ${crs} -ncrs ${ncrs} -surv-parent ${parent} -surv-noparent ${nonparent} --verbose --viability --same-base -p 4
+	                    #with genetic architecture
+	                    ./ARTs --courter --parent -b /data/people/spf50/parent-courter_linked_RA_c${crs}_nc${ncrs}_p${parent}_np${nonparent}_${i} -crs ${crs} -ncrs ${ncrs} -surv-parent ${parent} -surv-noparent ${nonparent} --verbose --viability --same-base -p 4
+	                    #with supergene
+	                    ./ARTs --courter --parent --supergene -b /data/people/spf50/parent-courter_supergene_RA_c${crs}_nc${ncrs}_p${parent}_np${nonparent}_${i} -crs ${crs} -ncrs ${ncrs} -surv-parent ${parent} -surv-noparent ${nonparent} --verbose --viability --same-base -p 4
+	                    gzip /data/people/spf50/*_RA*.txt
+	                done
+	            done
+	        done
+	    done
+	fi
+
     
     if [ "$POLYGYNY" = true ]; then
 		#with no genetic architecture

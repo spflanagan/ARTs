@@ -843,7 +843,7 @@ plot_final_traits<-function(pattern,path="./",ncols=4,cols,cols2){
 
 
 plot_2vars_summary<-function(all_freqs,xvar,yvar,...){
-  #browser()
+ # browser()
   #Plotting setup
   nx<-length(unique(all_freqs[,xvar])) #number of values on x axis
   ny<-length(unique(all_freqs[,yvar])) #number of values on y axis
@@ -869,13 +869,13 @@ plot_2vars_summary<-function(all_freqs,xvar,yvar,...){
   abline(v=seq(0.5,(nx+1.5)),col="grey",xpd=FALSE)
   axis(1,at=1:nx,labels=as.numeric(levels(as.factor(as.numeric(all_freqs[,xvar])))),lty=0)
   
-  points(plot_freqs$newlocs,plot_freqs[,yvar]+0.2,
+  points(plot_freqs$newlocs,as.numeric(as.factor(plot_freqs[,yvar]))+0.2,
          col=alpha(cols2["CP"],plot_freqs$FreqCP),pch=18)
-  points(plot_freqs$newlocs,plot_freqs[,yvar]+0.075,
+  points(plot_freqs$newlocs,as.numeric(as.factor(plot_freqs[,yvar]))+0.075,
          col=alpha(cols2["CNP"],plot_freqs$FreqCNp),pch=17)
-  points(plot_freqs$newlocs,plot_freqs[,yvar]-0.075,
+  points(plot_freqs$newlocs,as.numeric(as.factor(plot_freqs[,yvar]))-0.075,
          col=alpha(cols2["NCP"],plot_freqs$FreqNcP),pch=16)
-  points(plot_freqs$newlocs,plot_freqs[,yvar]-0.2,
+  points(plot_freqs$newlocs,as.numeric(as.factor(plot_freqs[,yvar]))-0.2,
          col=alpha(cols2["NCNP"],plot_freqs$FreqNcNp),pch=15)
   par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
   plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
