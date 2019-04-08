@@ -842,7 +842,7 @@ plot_final_traits<-function(pattern,path="./",ncols=4,cols,cols2){
 }
 
 
-plot_2vars_summary<-function(all_freqs,xvar,yvar,...){
+plot_2vars_summary<-function(all_freqs,xvar,yvar,xlab="Relative reproductive allocation (courter/non-courter)",ylab="Relative nest survival (parent/non-parent)",...){
  # browser()
   #Plotting setup
   nx<-length(unique(all_freqs[,xvar])) #number of values on x axis
@@ -862,8 +862,7 @@ plot_2vars_summary<-function(all_freqs,xvar,yvar,...){
   
   par(...)
   plot(c(1,1),c(nx,ny),xlim=c(0,nx+1),ylim=c(0,ny+1),axes = FALSE,
-       xlab="Relative reproductive allocation (courter/non-courter)",
-       ylab="Relative nest survival (parent/non-parent)",type='n')
+       xlab=xlab,ylab=ylab,type='n')
   abline(h=seq(0.5,(ny+1.5)),col="grey",xpd=FALSE)
   axis(2,at=1:ny,labels = as.numeric(levels(as.factor(all_freqs[,yvar]))),lty=0,las=1)
   abline(v=seq(0.5,(nx+1.5)),col="grey",xpd=FALSE)
