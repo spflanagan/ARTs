@@ -1,0 +1,366 @@
+---
+title: "Summarizing sensitivity analyses"
+author: "Sarah P. Flanagan"
+date:  "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document:
+    toc: true
+    dev: png
+  html_document: 
+    toc: true  
+header-includes: \usepackage{float}
+always_allow_html: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+<style>
+p.caption {
+  font-size: 0.85em;
+  background-color: #f5f5f5
+}
+</style>
+
+The purpose of this model is to understand how genetic architectures of alternative reproductive tactics impact their maintenance in populations. I'm using an individual-based simulation model with different selection scenarios, types of alternative tactics, and genetic architectures (genome-wide additive genetic variance, supergenes, expression networks).
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
+knitr::opts_knit$set(root.dir='../fixedART-results/') #change
+
+```
+```{r opts, echo = FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+  fig.path = "figs/"
+)
+```
+```{r, echo=FALSE,echo=FALSE,message=FALSE}
+library(RColorBrewer)
+library(scales)
+library(sm)
+library(kableExtra)
+source("~/Research/ARTs/R/002_freq_functions.R")
+cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
+cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
+```
+
+Here, I'm presenting the initial sensitivity analysis results. I tested the effects of four parameter settings: mating system, the ratio of reproductive allocation between courters and non-courters, the survival of parental male nests, and the survival of non-parental male nests. 
+
+By 'mating system' I refer to whether males are able to mate with multiple females (i.e., be the nesting male for multiple females). The default is monogamy, meaning males can only be the nesting male to one female. 
+
+The ratio of reproductive allocation between courters and non-courters comes into play during the fertilization stage of the model. At this point, females have mated with a male, and her eggs will be preferentially fertilized by her mate but could also be fertilized by non-courting males. Each male has a maximum reproductive success or reproductive allocation that is given by their courtship status ($r_{courter}$ or $r_{non-courter}$) and gets used up by each additional fertilization. This sets a bound on reproductive success for each male. When a female mates, she receives a total of $\Sigma{n_{sperm}}$ from all of the males who attempt to fertilize her eggs (e.g., with one courter and two non-courters, $\Sigma{n_{sperm}}$ = $r_{courter}$ + 2$*$(0.5$*$$r_{non-courter}$)). The ratio of $r_{courter}$ to $r_{non-courter}$ is the parameter set that I varied in these sensitivity analyses.
+
+The final two traits that I tested were the survival of a nest when it was with parental male and the survival of a nest when it was with a non-parental male. I tested these two parameters separately. When the parental nest survival parameter was tested the non-parental nest survival was constant at 0.1. When the non-parental nest survival parameter was tested the parental nest survival was constant at 0.9.
+
+I tested these parameter settings with three genetic architectures and with just a courter trait, just a parent trait, and both traits: 
+
+```{r}
+params<-data.frame(parameter=c("polygyny","relative reproductive allocation (courter:non-courter)", "parental nest survival","non-parental nest survival", "supergene proportion"),
+                   default = c("monogamy","8:4 (2)","0.9","0.1","0.1?"),
+                   tested_settings = c("polygyny","2:8 (0.25), 4:8 (0.5), 4:4 (1), 8:2 (4)","0.5, 0.6, 0.7, 0.8","0.2, 0.3, 0.4, 0.5","0.5,0.25,0.05"))
+kable(params, format="latex", booktabs = T, caption="The parameters, their defaults, and their tested settings") %>% 
+  kable_styling(latex_options =c("scale_down","HOLD_position"))
+```
+
+Here, I present the initial analyses of those parameter combinations.
+
+
+# Courter Trait 
+
+
+```{r, eval=FALSE}
+crt_unlinked_summ<-summarize_params(base_pattern="^courter_unlinked",cols,
+                                    summ_list="CourterFreq",type="courter")
+write.csv(crt_unlinked_summ,"crt_unlinked_summ.csv",row.names = FALSE)
+crt_linked_summ<-summarize_params(base_pattern="^courter_linked",cols,
+                                  summ_list="CourterFreq",type="courter")
+write.csv(crt_linked_summ,"crt_linked_summ.csv",row.names = FALSE)
+crt_supergene_summ<-summarize_params(base_pattern="^courter_supergene",cols,
+                                     summ_list="CourterFreq",type="courter")
+write.csv(crt_supergene_summ,"crt_supergene_summ.csv",row.names = FALSE)
+```
+```{r}
+crt_unlinked_summ<-read.csv("crt_unlinked_summ.csv")
+crt_linked_summ<-read.csv("crt_linked_summ.csv")
+crt_supergene_summ<-read.csv("crt_supergene_summ.csv")
+# Put it all together
+crt_summ<-cbind(crt_unlinked_summ,crt_linked_summ[,3:4],crt_supergene_summ[,3:4])
+colnames(crt_summ)[3:4]<-paste(colnames(crt_summ)[3:4]," Unlinked",sep="")
+colnames(crt_summ)[5:6]<-paste(colnames(crt_summ)[5:6]," Linked",sep="")
+colnames(crt_summ)[7:8]<-paste(colnames(crt_summ)[7:8]," Supergene",sep="")
+rownames(crt_summ)<-1:nrow(crt_summ)
+kable(crt_summ, "latex", booktabs = T, caption = "Summaries of final Courter frequencies",row.names=FALSE) %>% 
+  kable_styling(latex_options =c("scale_down","HOLD_position"))
+```
+
+When just the courter trait is present, regardless of the parameter settings or genetic architectures, the courting male morph goes to fixation in every run.
+
+### Supergene proportion
+
+
+```{r}
+cs_prop<-plot.courter.reps(pattern="^courter_supergene_prop.*summary.txt.gz",path="sensitivity",cols,make.plot=TRUE)
+```
+
+
+# Parent Trait 
+
+
+```{r, eval=FALSE}
+prt_unlinked_summ<-summarize_params(base_pattern="^parent_unlinked",cols,
+                                    summ_list="ParentFreq",type="parent")
+write.csv(prt_unlinked_summ,"prt_unlinked_summ.csv",row.names = FALSE)
+prt_linked_summ<-summarize_params(base_pattern="^parent_linked",cols,
+                                  summ_list="ParentFreq",type="parent")
+write.csv(prt_linked_summ,"prt_linked_summ.csv",row.names = FALSE)
+prt_supergene_summ<-summarize_params(base_pattern="^parent_supergene",cols,
+                                     summ_list="ParentFreq",type="parent")
+write.csv(prt_supergene_summ,"prt_supergene_summ.csv",row.names = FALSE)
+```
+```{r}
+prt_unlinked_summ<-read.csv("prt_unlinked_summ.csv")
+prt_linked_summ<-read.csv("prt_linked_summ.csv")
+prt_supergene_summ<-read.csv("prt_supergene_summ.csv")
+# Put it all together
+prt_summ<-cbind(prt_unlinked_summ,prt_linked_summ[,3:4],prt_supergene_summ[,3:4])
+colnames(prt_summ)[3:4]<-paste(colnames(prt_summ)[3:4]," Unlinked",sep="")
+colnames(prt_summ)[5:6]<-paste(colnames(prt_summ)[5:6]," Linked",sep="")
+colnames(prt_summ)[7:8]<-paste(colnames(prt_summ)[7:8]," Supergene",sep="")
+rownames(prt_summ)<-NULL
+kable(prt_summ, "latex", booktabs = T, row.names = FALSE,caption = "Summaries of final Parent frequencies") %>% 
+  kable_styling(latex_options =c("scale_down","HOLD_position"))
+```
+
+When just the parent trait is present, regardless of the parameter settings or genetic architectures, the parental male morph goes to fixation in every run.
+
+# Courter and Parent Traits
+
+## Reproductive Investment Trade-offs
+
+```{r}
+base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                   "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
+```
+
+
+### Unlinked QTLs
+
+First we'll read in the data from the relevant runs:
+
+```{r readBaseline_Unlinked}
+cpu_baseline_freqs<-get.morph.freqs(plot.pc.reps("^parent-courter_unlinked_.*_summary.txt",path="baseline",cols,make.plot=FALSE))
+cpu_baseline_freqs$Courter2NonRS<-8/4
+cpu_baseline_freqs$Parent2NonSurvival<-0.9/0.1
+```
+
+```{r readReproductivAllocations_Unlinked}
+cpu_rs_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_unlinked_crs.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cpu_rs_freqs$Courter2NonRS<-as.numeric(
+  gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(cpu_rs_freqs)))/
+    as.numeric(gsub(".*crs\\d_ncrs(\\d).*","\\1",rownames(cpu_rs_freqs)))
+cpu_rs_freqs$Parent2NonSurvival<-0.9/0.1
+#merge with baseline
+cpu_all_freqs<-rbind(cpu_rs_freqs[,base_keep_cols],cpu_baseline_freqs[,base_keep_cols])
+```
+
+```{r readParentalSurvival_Unlinked}
+cpu_psurv_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_unlinked_psurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cpu_psurv_freqs$Parent2NonSurvival<-as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_psurv_freqs)))/0.1
+cpu_psurv_freqs$Courter2NonRS<-8/4
+cpu_all_freqs<-rbind(cpu_psurv_freqs[,base_keep_cols],cpu_all_freqs)
+```
+
+```{r readNonParentalSurvival_Unlinked}
+cpu_npsurv_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_unlinked_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cpu_npsurv_freqs$Parent2NonSurvival<-0.9/as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_npsurv_freqs)))
+cpu_npsurv_freqs$Courter2NonRS<-8/4
+cpu_all_freqs<-rbind(cpu_npsurv_freqs[,base_keep_cols],cpu_all_freqs)
+```
+
+```{r readNonParentalSurvival_Unlinked}
+cpu_ra_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_unlinked_RA_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cpu_ra_freqs$Parent2NonSurvival<-as.numeric(gsub(".*_p(\\d.\\d).*","\\1",rownames(cpu_ra_freqs)))/as.numeric(gsub(".*np(\\d.\\d).*","\\1",rownames(cpu_ra_freqs)))
+cpu_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cpu_ra_freqs)))/as.numeric(gsub(".*nc(\\d).*","\\1",rownames(cpu_ra_freqs)))
+cpu_all_freqs<-rbind(cpu_ra_freqs[,base_keep_cols],cpu_all_freqs)
+```
+
+Now we can make a summary plot!
+
+```{r}
+plot_2vars_summary(cpu_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
+```
+
+### Linked QTLs
+
+First we'll read in the data from the relevant runs:
+
+```{r readBaseline_Linked}
+cpl_baseline_freqs<-get.morph.freqs(plot.pc.reps("^parent-courter_linked_.*_summary.txt",path="baseline",cols,make.plot=FALSE))
+cpl_baseline_freqs$Courter2NonRS<-8/4
+cpl_baseline_freqs$Parent2NonSurvival<-0.9/0.1
+```
+
+```{r readReproductivAllocations_Linked}
+cpl_rs_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_linked_crs.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cpl_rs_freqs$Courter2NonRS<-as.numeric(
+  gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(cpl_rs_freqs)))/
+    as.numeric(gsub(".*crs\\d_ncrs(\\d).*","\\1",rownames(cpl_rs_freqs)))
+cpl_rs_freqs$Parent2NonSurvival<-0.9/0.1
+#merge with baseline
+cpl_all_freqs<-rbind(cpl_rs_freqs[,base_keep_cols],cpl_baseline_freqs[,base_keep_cols])
+```
+
+```{r readParentalSurvival_Linked}
+cpl_psurv_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_linked_psurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cpl_psurv_freqs$Parent2NonSurvival<-as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpl_psurv_freqs)))/0.1
+cpl_psurv_freqs$Courter2NonRS<-8/4
+cpl_all_freqs<-rbind(cpl_psurv_freqs[,base_keep_cols],cpl_all_freqs)
+```
+
+```{r readNonParentalSurvival_Linked}
+cpl_npsurv_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_linked_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cpl_npsurv_freqs$Parent2NonSurvival<-0.9/as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpl_npsurv_freqs)))
+cpl_npsurv_freqs$Courter2NonRS<-8/4
+cpl_all_freqs<-rbind(cpl_npsurv_freqs[,base_keep_cols],cpl_all_freqs)
+```
+
+```{r readNonParentalSurvival_Unlinked}
+cpl_ra_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_linked_RA_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cpl_ra_freqs$Parent2NonSurvival<-as.numeric(gsub(".*_p(\\d.\\d).*","\\1",rownames(cpl_ra_freqs)))/as.numeric(gsub(".*np(\\d.\\d).*","\\1",rownames(cpl_ra_freqs)))
+cpl_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cpl_ra_freqs)))/as.numeric(gsub(".*nc(\\d).*","\\1",rownames(cpl_ra_freqs)))
+cpl_all_freqs<-rbind(cpl_ra_freqs[,base_keep_cols],cpl_all_freqs)
+```
+
+
+Now we can make a summary plot!
+
+```{r}
+plot_2vars_summary(cpl_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
+```
+
+### QTLs in a supergene
+
+First we'll read in the data from the relevant runs:
+
+```{r readBaseline_Supergene}
+cps_baseline_freqs<-get.morph.freqs(plot.pc.reps("^parent-courter_supergene_.*_summary.txt",path="baseline",cols,make.plot=FALSE))
+cps_baseline_freqs$Courter2NonRS<-8/4
+cps_baseline_freqs$Parent2NonSurvival<-0.9/0.1
+```
+
+```{r readReproductivAllocations_Supergene}
+cps_rs_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_supergene_crs.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cps_rs_freqs$Courter2NonRS<-as.numeric(
+  gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(cps_rs_freqs)))/
+    as.numeric(gsub(".*crs\\d_ncrs(\\d).*","\\1",rownames(cps_rs_freqs)))
+cps_rs_freqs$Parent2NonSurvival<-0.9/0.1
+#merge with baseline
+cps_all_freqs<-rbind(cps_rs_freqs[,base_keep_cols],cps_baseline_freqs[,base_keep_cols])
+```
+
+```{r readParentalSurvival_Supergene}
+cps_psurv_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_supergene_psurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cps_psurv_freqs$Parent2NonSurvival<-as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cps_psurv_freqs)))/0.1
+cps_psurv_freqs$Courter2NonRS<-8/4
+cps_all_freqs<-rbind(cps_psurv_freqs[,base_keep_cols],cps_all_freqs)
+```
+
+```{r readNonParentalSurvival_Supergene}
+cps_npsurv_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_supergene_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cps_npsurv_freqs$Parent2NonSurvival<-0.9/as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpl_npsurv_freqs)))
+cps_npsurv_freqs$Courter2NonRS<-8/4
+cps_all_freqs<-rbind(cps_npsurv_freqs[,base_keep_cols],cps_all_freqs)
+```
+
+```{r readNonParentalSurvival_Unlinked}
+cps_ra_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_supergene_RA_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cps_ra_freqs$Parent2NonSurvival<-as.numeric(gsub(".*_p(\\d.\\d).*","\\1",rownames(cps_ra_freqs)))/as.numeric(gsub(".*np(\\d.\\d).*","\\1",rownames(cps_ra_freqs)))
+cps_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cps_ra_freqs)))/as.numeric(gsub(".*nc(\\d).*","\\1",rownames(cps_ra_freqs)))
+cps_all_freqs<-rbind(cps_ra_freqs[,base_keep_cols],cps_all_freqs)
+```
+
+
+Now we can make a summary plot!
+
+```{r}
+plot_2vars_summary(cps_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
+```
+
+
+
+## Mating System
+
+```{r}
+base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                    "FreqNcP","FreqCP","Polygyny")
+```
+### Unlinked
+
+```{r}
+cpu_polygyny<-plot.pc.reps(pattern="^parent-courter_unlinked_polygyny_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
+cpu_polygyny_freqs<-get.morph.freqs(cpu_polygyny)
+cpu_polygyny_freqs$Polygyny<-TRUE
+#merge with baseline
+cpu_baseline_freqs$Polygyny<-FALSE
+cpu_ms_freqs<-rbind(cpu_polygyny_freqs[,base_keep_cols],cpu_baseline_freqs[,base_keep_cols])
+cpu_ms_freqs$MSnum<-as.numeric(cpu_ms_freqs$Polygyny)
+```
+
+```{r}
+plot_2vars_summary(cpu_ms_freqs,"ParentThresh","MSnum",xlab="Parent Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+```
+```{r}
+plot_2vars_summary(cpu_ms_freqs,"CourterThresh","MSnum",xlab="Courter Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+```
+```{r}
+cpu_ms_freqs$CourtParentThresh<-cpu_ms_freqs$CourterThresh-cpu_ms_freqs$ParentThresh
+plot_2vars_summary(cpu_ms_freqs,"CourtParentThresh","MSnum",xlab="Difference in thresholds (courter-parent)",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+```
+
+
+### Linked
+
+```{r}
+cpl_polygyny<-plot.pc.reps(pattern="^parent-courter_linked_polygyny_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
+cpl_polygyny_freqs<-get.morph.freqs(cpl_polygyny)
+cpl_polygyny_freqs$Polygyny<-TRUE
+#merge with baseline
+cpl_baseline_freqs$Polygyny<-FALSE
+cpl_ms_freqs<-rbind(cpl_polygyny_freqs[,base_keep_cols],cpl_baseline_freqs[,base_keep_cols])
+cpl_ms_freqs$MSnum<-as.numeric(cpl_ms_freqs$Polygyny)
+```
+
+```{r}
+plot_2vars_summary(cpl_ms_freqs,"ParentThresh","MSnum",xlab="Parent Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+```
+```{r}
+plot_2vars_summary(cpl_ms_freqs,"CourterThresh","MSnum",xlab="Courter Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+```
+```{r}
+cpl_ms_freqs$CourtParentThresh<-cpl_ms_freqs$CourterThresh-cpl_ms_freqs$ParentThresh
+plot_2vars_summary(cpl_ms_freqs,"CourtParentThresh","MSnum",xlab="Difference in thresholds (courter-parent)",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+```
+
+### Supergene
+
+```{r}
+cps_polygyny<-plot.pc.reps(pattern="^parent-courter_supergene_polygyny_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
+cps_polygyny_freqs<-get.morph.freqs(cps_polygyny)
+cps_polygyny_freqs$Polygyny<-TRUE
+#merge with baseline
+cps_baseline_freqs$Polygyny<-FALSE
+cps_ms_freqs<-rbind(cps_polygyny_freqs[,base_keep_cols],cps_baseline_freqs[,base_keep_cols])
+cps_ms_freqs$MSnum<-as.numeric(cps_ms_freqs$Polygyny)
+```
+
+```{r}
+plot_2vars_summary(cpu_ms_freqs,"ParentThresh","MSnum",xlab="Parent Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+```
+```{r}
+plot_2vars_summary(cpu_ms_freqs,"CourterThresh","MSnum",xlab="Courter Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+```
+```{r}
+cpu_ms_freqs$CourtParentThresh<-cpu_ms_freqs$CourterThresh-cpu_ms_freqs$ParentThresh
+plot_2vars_summary(cpu_ms_freqs,"CourtParentThresh","MSnum",xlab="Difference in thresholds (courter-parent)",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+```
+

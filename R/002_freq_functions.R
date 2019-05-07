@@ -845,13 +845,13 @@ plot_final_traits<-function(pattern,path="./",ncols=4,cols,cols2){
 plot_2vars_summary<-function(all_freqs,xvar,yvar,xlab="Relative reproductive allocation (courter/non-courter)",ylab="Relative nest survival (parent/non-parent)",...){
  # browser()
   #Plotting setup
-  nx<-length(unique(all_freqs[,xvar])) #number of values on x axis
-  ny<-length(unique(all_freqs[,yvar])) #number of values on y axis
+  nx<-length(as.numeric(levels(as.factor(as.numeric(all_freqs[,xvar]))))) #number of values on x axis
+  ny<-length(as.numeric(levels(as.factor(all_freqs[,yvar])))) #number of values on y axis
   all_freqs$Rep<-as.numeric(factor(rownames(all_freqs[order(all_freqs[,xvar]),]))) # make rep in order of RS
   all_freqs$xloc<-as.numeric(as.factor(all_freqs[,xvar]))
   all_freqs$yloc<-as.numeric(as.factor(all_freqs[,yvar]))
   
-  all_freqs$paramsets<-gsub(".*/parent-courter_\\w+_(.*)_\\d+_summary.txt_\\d+","\\1",rownames(all_freqs))
+  all_freqs$paramsets<-gsub(".*/parent-courter_[a-z]+_(.*)_\\d+_summary.txt(.gz)?_\\d+","\\1",rownames(all_freqs))
   
   newlocs<-do.call(rbind,lapply(unique(all_freqs$paramsets),function(p,all_freqs){  
     newlocs<-all_freqs[all_freqs$paramsets==p,]$xloc+seq(-0.4,0.4,length.out = nrow(all_freqs[all_freqs$paramsets==p,]))
@@ -864,9 +864,9 @@ plot_2vars_summary<-function(all_freqs,xvar,yvar,xlab="Relative reproductive all
   plot(c(1,1),c(nx,ny),xlim=c(0,nx+1),ylim=c(0,ny+1),axes = FALSE,
        xlab=xlab,ylab=ylab,type='n')
   abline(h=seq(0.5,(ny+1.5)),col="grey",xpd=FALSE)
-  axis(2,at=1:ny,labels = as.numeric(levels(as.factor(all_freqs[,yvar]))),lty=0,las=1)
+  axis(2,at=1:ny,labels = round(as.numeric(levels(as.factor(all_freqs[,yvar]))),digits=2),lty=0,las=1)
   abline(v=seq(0.5,(nx+1.5)),col="grey",xpd=FALSE)
-  axis(1,at=1:nx,labels=as.numeric(levels(as.factor(as.numeric(all_freqs[,xvar])))),lty=0)
+  axis(1,at=1:nx,labels=round(as.numeric(levels(as.factor(as.numeric(all_freqs[,xvar])))),digits=2),lty=0)
   
   points(plot_freqs$newlocs,as.numeric(as.factor(plot_freqs[,yvar]))+0.2,
          col=alpha(cols2["CP"],plot_freqs$FreqCP),pch=18)
