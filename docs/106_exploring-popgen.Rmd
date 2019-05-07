@@ -51,36 +51,64 @@ qtls<-read.table(qtl_file,header=TRUE)
 crt_qtls<-qtls[,c(1,grep("CourterQTL",colnames(qtls)))]
 crt_qtls<-data.frame(cbind(Pop=as.character(crt_qtls[,1]),t(do.call(rbind,lapply(crt_qtls[,-1],function(x){ paste0("Marker",x) })))))
 
-by(mrks,INDICES = mrks$Pop,FUN = function(markers,qtls){
-  browser()
+par(mfrow=c(2,2),mar=c(4,4,3,4))
+bys<-by(mrks,INDICES = mrks$Pop,FUN = function(markers,qtls,overall=FALSE,means=FALSE,deltap=TRUE){
+  #browser()
   pop_qtls<-qtls[qtls[,1] %in% markers$Pop,]
   sel<-markers[,c("Generation","Pop",as.character(unlist(pop_qtls[1,2:ncol(pop_qtls)])))]
   ntl<-markers[,!colnames(markers) %in% as.character(unlist(pop_qtls[1,2:ncol(pop_qtls)]))]
-  dp_sel<-sel[nrow(sel),3:ncol(sel)]-sel[1,3:ncol(sel)]
   
-  dp<-markers[nrow(markers),3:ncol(markers)]-markers[1,3:ncol(markers)]
+  if(isTRUE(overall)){
+    dp_sel<-sel[nrow(sel),3:ncol(sel)]-sel[1,3:ncol(sel)]
+    dp<-markers[nrow(markers),3:ncol(markers)]-markers[1,3:ncol(markers)]
+    
+    plot(1:(ncol(markers)-2),unlist(dp),type='n',xlab="Genomic Location",ylab=expression("Overall "~Delta~italic(p)),las=1,bty='n',xaxt='n')
+    rect(xleft = 0,ybottom = 0,xright = 1000,ytop = 0.5,col="light grey",border = "light grey")
+    rect(xleft = 2000,ybottom = 0,xright = 3000,ytop = 0.5,col="light grey",border = "light grey")
+    points(1:(ncol(markers)-2),unlist(dp))
+    points(which(colnames(markers) %in% as.character(unlist(pop_qtls[1,2:ncol(pop_qtls)]))),unlist(dp_sel),pch=8,col="red",lwd=3,cex=2)
+  }
+  if(isTRUE(means)){
+    mp<-colMeans(markers[,3:ncol(markers)])
+    mp_sel<-colMeans(sel[,3:ncol(sel)])
+    plot(1:(ncol(markers)-2),unlist(mp),type='n',xlab="Genomic Location",ylab=expression("Mean "~italic(p)),las=1,bty='n',xaxt='n')
+    rect(xleft = 0,ybottom = 0,xright = 1000,ytop = 1,col="light grey",border = "light grey")
+    rect(xleft = 2000,ybottom = 0,xright = 3000,ytop = 1,col="light grey",border = "light grey")
+    points(1:(ncol(markers)-2),unlist(mp))
+    points(which(colnames(markers) %in% as.character(unlist(pop_qtls[1,2:ncol(pop_qtls)]))),unlist(mp_sel),pch=8,col="red",lwd=3,cex=2)
+  }
+  if(isTRUE(deltap)){
+    # average deltap per gen
+    each_dp<-data.frame(diff(as.matrix(markers[,3:ncol(markers)])))
+    sel_dp<-each_dp[,as.character(unlist(pop_qtls[1,2:ncol(pop_qtls)]))]
+    ntl_dp<-each_dp[,!colnames(each_dp) %in% as.character(unlist(pop_qtls[1,2:ncol(pop_qtls)]))]
   
-  plot(1:(ncol(markers)-2),unlist(dp),type='n',xlab="Genomic Location",ylab=expression("Overall "~Delta~italic(p)),las=1,bty='n',xaxt='n')
-  rect(xleft = 0,ybottom = 0,xright = 1000,ytop = 0.5,col="light grey",border = "light grey")
-  rect(xleft = 2000,ybottom = 0,xright = 3000,ytop = 0.5,col="light grey",border = "light grey")
-  points(1:(ncol(markers)-2),unlist(dp))
-  points(which(colnames(markers) %in% as.character(unlist(pop_qtls[1,2:ncol(pop_qtls)]))),unlist(dp_sel),pch=8,col="red",lwd=3,cex=2)
-  
-  mp<-colMeans(markers[,3:ncol(markers)])
-  mp_sel<-colMeans(sel[,3:ncol(sel)])
-  plot(1:(ncol(markers)-2),unlist(mp),type='n',xlab="Genomic Location",ylab=expression("Mean "~italic(p)),las=1,bty='n',xaxt='n')
-  rect(xleft = 0,ybottom = 0,xright = 1000,ytop = 1,col="light grey",border = "light grey")
-  rect(xleft = 2000,ybottom = 0,xright = 3000,ytop = 1,col="light grey",border = "light grey")
-  points(1:(ncol(markers)-2),unlist(mp))
-  points(which(colnames(markers) %in% as.character(unlist(pop_qtls[1,2:ncol(pop_qtls)]))),unlist(mp_sel),pch=8,col="red",lwd=3,cex=2)
-
-  
-  final_gen<-markers[nrow(markers),]
-  
+    sel_mean_dp<-rowMeans(sel_dp)
+    ntl_mean_dp<-rowMeans(ntl_dp)
+    
+    sem<-function(x){
+      se<-sd(x)/sqrt(length(x))
+    }
+    
+    sel_se_dp<-apply(sel_dp,1,sem)
+    ntl_se_dp<-apply(ntl_dp,1,sem)
+    
+    #they really overlap and the CIs barely make a difference
+    plot(1:max(markers$Generation),ntl_mean_dp,type = 'n',xlab="Generation",ylab=expression("Mean"~Delta~italic(p)))
+   # polygon(c((1:max(markers$Generation)),rev(1:max(markers$Generation))),
+  #          c((ntl_mean_dp-ntl_se_dp),rev(ntl_mean_dp+ntl_se_dp)),border=NA,col=alpha("dark grey",0.5))
+   # polygon(c((1:max(markers$Generation)),rev(1:max(markers$Generation))),
+  #          c((sel_mean_dp-sel_se_dp),rev(sel_mean_dp+sel_se_dp)),border=NA,col=alpha("forest green",0.5))
+    points(1:max(markers$Generation),sel_mean_dp,lwd=2,col=alpha("#66c2a5",0.5),type = 'l')  
+    points(1:max(markers$Generation),ntl_mean_dp,lwd=2,col=alpha("#fc8d62",0.5),type = 'l')
+    legend("topright",bty='n',c("Neutral Markers","Selected Markers"),col = c("#fc8d62","#66c2a5"),lwd=2)
+  }
+   
 },qtls=crt_qtls)
 
 ```
 
+I think I need to output allelic effects for each locus - so I can look at the spread. And eventually I'll want those vcf files for individuals in the final generation.
 
 
 
