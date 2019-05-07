@@ -1,0 +1,89 @@
+---
+title: "Figuring out how to summarize QTL evolution"
+author: "Sarah P. Flanagan"
+date:  "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document:
+    toc: true
+    dev: png
+  html_document: 
+    toc: true  
+header-includes: \usepackage{float}
+always_allow_html: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+The purpose of this model is to understand how genetic architectures of alternative reproductive tactics impact their maintenance in populations. I'm using an individual-based simulation model with different selection scenarios, types of alternative tactics, and genetic architectures (genome-wide additive genetic variance, supergenes, expression networks).
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
+knitr::opts_knit$set(root.dir='../fixedART-results/') #change
+
+```
+```{r opts, echo = FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+  fig.path = "figs/"
+)
+```
+```{r, echo=FALSE,echo=FALSE,message=FALSE}
+library(RColorBrewer)
+library(scales)
+library(sm)
+library(kableExtra)
+source("~/Research/ARTs/R/002_freq_functions.R")
+cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
+cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
+```
+
+
+So I want to see how QTLs have evolved over time, how their allelic effects have evolved, and to dive into the 'equilibrial' QTL output.
+
+```{r}
+markers_file<-"courter_linked_crs2_ncrs8_1_markers.txt"
+mrks<-read.table(markers_file,header = TRUE)
+qtl_file<-"courter_linked_crs2_ncrs8_1_qtlinfo.txt"
+qtls<-read.table(qtl_file,header=TRUE)
+
+crt_qtls<-qtls[,c(1,grep("CourterQTL",colnames(qtls)))]
+crt_qtls<-data.frame(cbind(Pop=as.character(crt_qtls[,1]),t(do.call(rbind,lapply(crt_qtls[,-1],function(x){ paste0("Marker",x) })))))
+
+by(mrks,INDICES = mrks$Pop,FUN = function(markers,qtls){
+  browser()
+  pop_qtls<-qtls[qtls[,1] %in% markers$Pop,]
+  sel<-markers[,c("Generation","Pop",as.character(unlist(pop_qtls[1,2:ncol(pop_qtls)])))]
+  ntl<-markers[,!colnames(markers) %in% as.character(unlist(pop_qtls[1,2:ncol(pop_qtls)]))]
+  dp_sel<-sel[nrow(sel),3:ncol(sel)]-sel[1,3:ncol(sel)]
+  
+  dp<-markers[nrow(markers),3:ncol(markers)]-markers[1,3:ncol(markers)]
+  
+  plot(1:(ncol(markers)-2),unlist(dp),type='n',xlab="Genomic Location",ylab=expression("Overall "~Delta~italic(p)),las=1,bty='n',xaxt='n')
+  rect(xleft = 0,ybottom = 0,xright = 1000,ytop = 0.5,col="light grey",border = "light grey")
+  rect(xleft = 2000,ybottom = 0,xright = 3000,ytop = 0.5,col="light grey",border = "light grey")
+  points(1:(ncol(markers)-2),unlist(dp))
+  points(which(colnames(markers) %in% as.character(unlist(pop_qtls[1,2:ncol(pop_qtls)]))),unlist(dp_sel),pch=8,col="red",lwd=3,cex=2)
+  
+  mp<-colMeans(markers[,3:ncol(markers)])
+  mp_sel<-colMeans(sel[,3:ncol(sel)])
+  plot(1:(ncol(markers)-2),unlist(mp),type='n',xlab="Genomic Location",ylab=expression("Mean "~italic(p)),las=1,bty='n',xaxt='n')
+  rect(xleft = 0,ybottom = 0,xright = 1000,ytop = 1,col="light grey",border = "light grey")
+  rect(xleft = 2000,ybottom = 0,xright = 3000,ytop = 1,col="light grey",border = "light grey")
+  points(1:(ncol(markers)-2),unlist(mp))
+  points(which(colnames(markers) %in% as.character(unlist(pop_qtls[1,2:ncol(pop_qtls)]))),unlist(mp_sel),pch=8,col="red",lwd=3,cex=2)
+
+  
+  final_gen<-markers[nrow(markers),]
+  
+},qtls=crt_qtls)
+
+```
+
+
+
+
+
+
+
