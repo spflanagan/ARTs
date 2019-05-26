@@ -3113,6 +3113,151 @@ public:
 		}
 		output_file << std::flush;
 	}
+	void avg_allelic_effects(parameters gp, vector<double>& avg_pref,vector<double>& avg_parent,
+		vector<double>& avg_court,vector<double>& avg_cthresh,vector<double>& avg_pthresh)
+	{
+		int j, jj, jjj, qtl_count, ind_count;
+		// set up the vectors
+		for (jj = 0; jj < gp.num_qtl; jj++)
+		{
+			//if (gp.ind_pref || gp.cor_prefs)
+			{
+				avg_pref.push_back(0);
+			}
+			//if(gp.parent_trait)
+			{
+				avg_parent.push_back(0);
+			}
+			//if(gp.court_trait)
+			{
+				avg_court.push_back(0);
+			}
+			//if (courter_thresh_qtls.size() > 0)
+			{
+				avg_cthresh.push_back(0);
+			}
+			//if (parent_thresh_qtls.size() > 0)
+			{
+				avg_pthresh.push_back(0);
+			}
+		}
+		// calculate the means	
+		ind_count = 0;
+		for (j = 0; j < gp.carrying_capacity; j++)
+		{
+			if(adults[j].alive)
+			{
+				qtl_count = 0;
+				
+				for (jj = 0; jj < gp.num_chrom; jj++)
+				{
+					for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
+					{
+						
+						if (gp.ind_pref || gp.cor_prefs)
+						{
+							avg_pref[qtl_count] = avg_pref[qtl_count] + adults[j].maternal[jj].pref_ae[jjj] + adults[j].paternal[jj].pref_ae[jjj];
+						}
+					
+						if (gp.parent_trait)
+						{
+							avg_parent[qtl_count] = avg_parent[qtl_count] + adults[j].maternal[jj].parent_ae[jjj] + adults[j].paternal[jj].parent_ae[jjj];
+						}
+					
+						if (gp.court_trait)
+						{
+							avg_court[qtl_count] = avg_court[qtl_count] + adults[j].maternal[jj].courter_ae[jjj] + adults[j].paternal[jj].courter_ae[jjj];
+						}
+					
+						if (courter_thresh_qtls.size() > 0)
+						{
+							avg_cthresh[qtl_count] = avg_cthresh[qtl_count] + adults[j].maternal[jj].courter_thresh[jjj] + adults[j].paternal[jj].courter_thresh[jjj];
+						}
+					
+						if (parent_thresh_qtls.size() > 0)
+						{
+							avg_pthresh[qtl_count] = avg_pthresh[qtl_count] + adults[j].maternal[jj].parent_thresh[jjj] + adults[j].paternal[jj].parent_thresh[jjj];
+						}
+						qtl_count++;
+					}	//qtl			
+				}//chrom
+				ind_count++;
+			}//alive
+		}//carrying capacity
+		
+		
+		for (jj = 0; jj < qtl_count; jj++)
+		{
+			//if (gp.ind_pref || gp.cor_prefs)
+			{
+				avg_pref[jj]=avg_pref[jj]/ind_count;
+			}
+			//if(gp.parent_trait)
+			{
+				avg_parent[jj]=avg_parent[jj]/ind_count;
+			}
+			//if(gp.court_trait)
+			{
+				avg_court[jj]=avg_court[jj]/ind_count;
+			}
+			//if (courter_thresh_qtls.size() > 0)
+			{
+				avg_cthresh[jj]=avg_cthresh[jj]/ind_count;
+			}
+			//if (parent_thresh_qtls.size() > 0)
+			{
+				avg_pthresh[jj]=avg_pthresh[jj]/ind_count;
+			}
+		}
+		//cout << "\nNum Inds counted: " << ind_count << "\tNum QTLs counted: " << qtl_count;
+	}
+	void output_allelic_effects(parameters gp, ofstream & output_file, bool initial)
+	{
+		int j, jj,qtl_count;
+		vector<double> avg_pref, avg_parent, avg_court,avg_cthresh,avg_pthresh;
+		avg_allelic_effects(gp,avg_pref, avg_parent, avg_court,avg_cthresh,avg_pthresh);
+		qtl_count = 0;
+		for(j = 0; j < gp.num_chrom; j++)
+		{
+			for(jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+			{
+				if(initial) // we just output the header
+				{
+					output_file << "\tPrefQTL"<<qtl_count;
+					output_file<<"\tParentQTL"<<qtl_count;
+					output_file << "\tCourterQTL"<<qtl_count;
+					output_file<<"\tCourterThresholdQTL"<<qtl_count;
+					output_file<<"\tParentThresholdQTL"<<qtl_count;
+				}
+				else
+				{
+					if (gp.ind_pref || gp.cor_prefs)
+					{
+						output_file << '\t' << avg_pref[qtl_count];
+					} else output_file << '\t' << "NA";
+					if(gp.parent_trait)
+					{
+						output_file << '\t' << avg_parent[qtl_count];
+					} else output_file << '\t' << "NA";
+					if(gp.court_trait)
+					{
+						output_file << '\t' << avg_court[qtl_count];
+					} else output_file << '\t' << "NA";
+					if (courter_thresh_qtls.size() > 0)
+					{
+						output_file << '\t' << avg_cthresh[qtl_count];
+					} else output_file << '\t' << "NA";
+					if (parent_thresh_qtls.size() > 0)
+					{
+						output_file << '\t' << avg_pthresh[qtl_count];
+					} else output_file << '\t' << "NA";
+				}		
+				qtl_count++;
+			}
+		}
+		output_file << std::flush;
+	}
+
 	void output_summary_info(parameters gp, ofstream & summary_output)
 	{
         //pop info

@@ -76,8 +76,8 @@ int main(int argc, char*argv[])
 	
 	//output
 
-	string summary_output_name, trait_output_name, qtlinfo_output_name,markers_output_name;
-	ofstream summary_output, trait_output, qtlinfo_output, markers_output;
+	string summary_output_name, trait_output_name, qtlinfo_output_name,markers_output_name, ae_output_name;
+	ofstream summary_output, trait_output, qtlinfo_output, markers_output, ae_output;
 	
 
 	trait_output_name = global_params.base_name + "_traits.txt";
@@ -96,6 +96,10 @@ int main(int argc, char*argv[])
 	qtlinfo_output_name = global_params.base_name + "_qtlinfo.txt";
 	qtlinfo_output.open(qtlinfo_output_name);
 	qtlinfo_output << "Pop";
+
+	ae_output_name = global_params.base_name + "_allelic-effects.txt";
+	ae_output.open(ae_output_name);
+	ae_output << "Gen\tPop";
 
 	summary_output_name = global_params.base_name + "_summary.txt";
 	summary_output.open(summary_output_name);
@@ -208,9 +212,12 @@ int main(int argc, char*argv[])
 					pops[i].cthresh_env_qtls, pops[i].pthresh_env_qtls);
 			else
 				pops[i].output_qtl_info(global_params, qtlinfo_output, true);
+			pops[i].output_allelic_effects(global_params,ae_output, true);
 		}
 		qtlinfo_output << "Pop" << i;
 		pops[i].output_qtl_info(global_params, qtlinfo_output, false);
+		ae_output << '\n' << 0 << "\tPop" << i;
+		pops[i].output_allelic_effects(global_params,ae_output, false);
 	}
 		
 	
@@ -299,7 +306,8 @@ int main(int argc, char*argv[])
                 //output allele frequencies
                 markers_output << "\n" << i << "\tPop" << ii;
                 pops[ii].output_allele_freqs(global_params, markers_output);
-
+				ae_output << '\n' << i+1 << "\tPop" << ii;
+				pops[ii].output_allelic_effects(global_params,ae_output, false);
 				//stochastic survival
 				//pops[ii].density_regulation(global_params);
 				t1 = std::chrono::high_resolution_clock::now();
@@ -331,6 +339,7 @@ int main(int argc, char*argv[])
 					std::cout << "\n" << global_params.base_name << ": All populations have crashed at experimental generation " << i << '\n' << std::flush;
 				summary_output.close();
 				markers_output.close();
+				ae_output.close();
 				if (command_line)
 					return 0;
 				else
@@ -383,6 +392,8 @@ int main(int argc, char*argv[])
 				pops[ii].output_summary_info(global_params, summary_output);
                 markers_output << '\n' <<global_params.num_init_gen + i << "\tPop" << ii;
                 pops[ii].output_allele_freqs(global_params, markers_output);
+				ae_output << '\n' << global_params.num_init_gen +i+1 << "\tPop" << ii;
+				pops[ii].output_allelic_effects(global_params,ae_output, false);
 				//stochastic survival
 				//pops[i].density_regulation(global_params);
 				pops[ii].regulate_popsize(global_params);
@@ -439,6 +450,7 @@ int main(int argc, char*argv[])
 					trait_output.close();
 					summary_output.close();
 					markers_output.close();
+					ae_output.close();
 					if (command_line)
 						return 0;
 					else
@@ -525,6 +537,7 @@ int main(int argc, char*argv[])
 	summary_output.close();
 	trait_output.close();
 	markers_output.close();
+	ae_output.close();
 	if (global_params.log_file)
 		log_out<< "\nDone!\n";
 	else
