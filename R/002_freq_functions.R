@@ -162,6 +162,11 @@ plot.pc.reps<-function(pattern,path="./",cols,x.lim=c(0,12000),make.plot=TRUE){
         points(pop$Generation,pop$ParentFreq,col=alpha(parent.cols[n],0.5),
                lwd=2,type="l")
       }
+      if(length(grep("AE",colnames(pop)))==0){
+        browser()
+        pop<-cbind(pop,ParentAEmean=NA,ParentAEsd=NA,CourterAEmean=NA,CourterAEsd=NA)
+      }
+      rownames(pop)<-NULL
       return(pop)
     })
     names(sp)<-paste(file,1:length(sp),sep="_")
@@ -208,7 +213,12 @@ plot.morphs.reps<-function(s,cols2,ncols=5,lwd=2,...){
 #' @export
 get.morph.freqs<-function(s){
   pc.final.freqs<-do.call(rbind,lapply(s,function(dat){
+    if(nrow(dat)==0) 
+    {
+      dat[1,]<-NA
+    }
     last<-dat[nrow(dat),]
+    
     return(last)
   }))
   if(is.null(names(s))){

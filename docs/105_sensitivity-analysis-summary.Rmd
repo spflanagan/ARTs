@@ -231,7 +231,6 @@ cpl_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cpl_ra_
 cpl_all_freqs<-rbind(cpl_ra_freqs[,base_keep_cols],cpl_all_freqs)
 ```
 
-
 Now we can make a summary plot!
 
 ```{r}
