@@ -1,0 +1,117 @@
+---
+title: "ARTs notebook"
+output: html_notebook
+author: "Sarah P. Flanagan"
+date:  "`r format(Sys.time(), '%d %B, %Y')`"
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
+knitr::opts_knit$set(root.dir='../fixedART-results/') #change
+
+```
+
+# 18 July 2019
+
+I'm transitioning from my paper notebook to this online notebook to improve reproducibility and better track my work and progress.
+
+So far with the ARTs model I've been testing how sensitive it is to reproductive parameters -- the relative reproductive allocation for courters vs noncourters and the nest survival rates for parents vs nonparents. 
+
+![results for QTLs in a supergene]("../figs/unnamed-chunk-11-1.png")
+
+Looking at these results, a few things stand out to me:
+
+* The points at different frequencies are hard to see
+* The diamonds and triangles seem to be different sizes, which throws off some amount of inference
+* There don't seem to be overly consistent patterns! 
+* I've apparently kept my runs to a particular part of parameter space
+* I should label my chunks in the Rmd so that the figures get useful names
+
+I recently added the output of allelic effects to my code, hoping that doing so might shed some light on what determines the outcome of each run, because as I noted on 7 May 2019, the thresholds alone are not useful. So FIRST I'm going to dive into the allelic effects, focusing on those results for QTLs in a supergene. Taking the code to load and create that figure from 105_sensitivity-analysis-summary.Rmd:
+
+First we'll read in the data from the relevant runs -- focusing only on the QTLs + supergenes that are newest, so those labelled with "RA" (plus the baseline):
+
+```{r RA_basecols}
+base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                   "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
+```
+```{r setup, echo=FALSE,echo=FALSE,message=FALSE}
+library(RColorBrewer)
+library(scales)
+library(sm)
+library(kableExtra)
+source("~/Research/ARTs/R/002_freq_functions.R")
+cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
+cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
+```
+
+```{r readBaseline_Supergene}
+cps_baseline_freqs<-get.morph.freqs(plot.pc.reps("^parent-courter_supergene_.*_summary.txt",path="baseline",cols,make.plot=FALSE))
+cps_baseline_freqs$Courter2NonRS<-8/4
+cps_baseline_freqs$Parent2NonSurvival<-0.9/0.1
+```
+
+```{r readNonParentalRA_Supergene}
+cps_ra_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_supergene_RA_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cps_ra_freqs$Parent2NonSurvival<-as.numeric(gsub(".*_p(\\d.\\d).*","\\1",rownames(cps_ra_freqs)))/as.numeric(gsub(".*np(\\d.\\d).*","\\1",rownames(cps_ra_freqs)))
+cps_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cps_ra_freqs)))/as.numeric(gsub(".*nc(\\d).*","\\1",rownames(cps_ra_freqs)))
+#MODIFIED FROM SOURCE SCRIPT BECAUSE I'M NOT USING THE OTHER RUNS
+cps_all_freqs<-rbind(cps_ra_freqs[,base_keep_cols],cps_baseline_freqs[,base_keep_cols])
+```
+
+
+Now we can make a summary plot!
+
+```{r RA_Summary}
+plot_2vars_summary(cps_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
+```
+
+So an interesting run seems to be when the reproductive allocation is 2 courter : 1 non-courter and 0.67 parent : non-parent
+
+```{r exploreRA}
+cps_all_freqs[cps_all_freqs$Courter2NonRS==2 & round(cps_all_freqs$Parent2NonSurvival,2)==0.67,]
+```
+
+This set of parameters contains one run that apparently didn't go well, `r rownames(cps_all_freqs[is.na(cps_all_freqs$PopSize),])`. Intriguingly, it's just that first population and not the other populations. It looks like that is the only population that could not reach an equilibrium -- it only had a population size of 991 as well. So I need to update the code to include in the summary non-equilibrium pops as well, perhaps...or this is the better choice? Do I actually not output the information or is it simply not read by the summary functions? Either way, this is what the 'true' graph should look like:
+
+```{r RA_SummaryNArm}
+plot_2vars_summary(cps_all_freqs[!is.na(cps_all_freqs$PopSize),],"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
+```
+
+Before moving forward, I'd like to investigate this non-equilibrium issue, so let's read in that summary file.
+
+```{r RAc8nc5p4np6, warning=FALSE}
+dat<-read.delim(gzfile(gsub("_1$","",rownames(cps_all_freqs[is.na(cps_all_freqs$PopSize),]))),header = TRUE,sep='\t')
+nrow(dat[dat$Pop=="Pop0",])
+nrow(dat[dat$Pop=="Pop1",])
+tapply(dat$Generation,dat$Pop,max)
+```
+
+
+Ok, so that's weird. Obviously there's a bug in the code where the population data doesn't get output -- maybe for Pop 3 when it's reached equilibrium? Also, I feel I should keep running it until equilibrium is reached for each population. Looking at the C++ code doesn't reveal anything immediately obvious, so let's take a look at the rows around this error.
+
+```{r}
+weirdn<-which(!dat$Pop %in% c("Pop0","Pop1","Pop2","Pop3"))
+dat[(weirdn-5):(weirdn+5),]
+```
+
+What happened at generations 1956 - 1963?? This is really strange because it should have been during the initial generations (10000, checked using `zless parent-courter_supergene_RA_c8_nc4_p0.4_np0.6_1_parameters.txt.gz`), unless I'm mis-labelling the experimental ones. Let's look at the distribution of generations
+
+```{r}
+hist(dat$Generation,seq(0,6500,1))
+```
+
+The giant black block suggests that they're all respresented the same number of times, which means that this particular run stopped within the initial generations, which shouldn't happen. 
+
+Let me see what one that behaves 'normally' looks like:
+
+```{r}
+testdat<-read.delim(gzfile(gsub("_\\d$","",rownames(cps_all_freqs[which(is.na(cps_all_freqs$PopSize))+5,]))),header = TRUE,sep='\t')
+tapply(testdat$Generation,testdat$Pop,max)
+```
+
+Ok, so this one doesn't have weird entries but it does seem to have stopped during the initial generations, unless I'm misunderstanding my output. The log file also tracks it as going to generation 11999, but it's not in the summary output -- equilibrium is reached, perhaps that's the issue? I'm thinking I need to revisit my program before moving forward, because this is an important component of how I'm evaluating this output.
+
