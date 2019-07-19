@@ -14,6 +14,85 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 
 ```
 
+# 19 July 2019
+
+Looking at the C++ code, the summary data is output for all initial generations and experimental generations. The only way the number of generations is cut short is through extinction. Equilibrium is only evaluated after all experimental generations. So the only thing I can think of is that this is an issue with running it on the server?? This is a major issue because it's I'm looking at the frequencies in the FINAL generation, and if I'm only seeing intermediate generations then I'm not necessarily seeing the right stuff. Let's take a look at the data again:
+
+```{r setup, echo=FALSE,echo=FALSE,message=FALSE}
+library(RColorBrewer)
+library(scales)
+library(sm)
+library(kableExtra)
+source("~/Research/ARTs/R/002_freq_functions.R")
+cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
+cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
+base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                   "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
+```
+
+```{r lookingAtGens}
+cps_baseline<-plot.pc.reps("^parent-courter_supergene_.*_summary.txt",path="baseline",cols,make.plot=FALSE)
+cps_ra<-plot.pc.reps(pattern="^parent-courter_supergene_RA_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
+max_gens<-c(unlist(lapply(cps_baseline,function(dat) return(max(dat$Generation)))),
+            unlist(lapply(cps_ra,function(dat) return(max(dat$Generation)))))
+hist(max_gens)  
+```
+
+`r length(max_gens[max_gens<11999])` of `r length(max_gens)` runs have fewer than the expected number of generations. Running `grep "crashed" parent-courter_supergene_RA*log` results in no output. 
+
+The only error messages in the server log files are gzip errors (I'm guessing it tried to run gzip on files that had already been gzipped?). But those were all run starting May 27 or 28...so maybe there's an informative batch effect I can deduce?
+
+```{r}
+good_files<-unique(gsub("_\\d$","",names(max_gens[max_gens==11999])))
+bad_files<-unique(gsub("_\\d$","",names(max_gens[max_gens<11999])))
+file.info(good_files)$mtime
+file.info(bad_files)$mtime
+```
+
+Ok, so there doesn't seem to be a pattern with when they were created. 
+
+Are the only ones with variation the ones that have finished early?
+
+```{r}
+cps_ra_freqs<-get.morph.freqs(cps_ra)
+cps_ra_freqs$Parent2NonSurvival<-as.numeric(gsub(".*_p(\\d.\\d).*","\\1",rownames(cps_ra_freqs)))/as.numeric(gsub(".*np(\\d.\\d).*","\\1",rownames(cps_ra_freqs)))
+cps_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cps_ra_freqs)))/as.numeric(gsub(".*nc(\\d).*","\\1",rownames(cps_ra_freqs)))
+
+plot_2vars_summary(cps_ra_freqs[cps_ra_freqs$Generation==11999,],"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
+
+```
+
+Ok, so some variation does still happen. Are there any other indications? Perhaps the parameter values?
+
+```{r}
+plot_2vars_summary(cps_ra_freqs[cps_ra_freqs$Generation<11999,],"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1)) #this doesn't help
+# extract all parameter info
+cps_ra_freqs$C<-as.numeric(gsub(".*RA_c(\\d)_.*","\\1",rownames(cps_ra_freqs)))
+cps_ra_freqs$NC<-as.numeric(gsub(".*_nc(\\d)_.*","\\1",rownames(cps_ra_freqs)))
+cps_ra_freqs$P<-as.numeric(gsub(".*_p(\\d.\\d)_.*","\\1",rownames(cps_ra_freqs)))
+cps_ra_freqs$NP<-as.numeric(gsub(".*_np(\\d.\\d)_.*","\\1",rownames(cps_ra_freqs)))
+cps_ra_freqs$rep<-as.numeric(gsub(".*_(\\d)_summary.*","\\1",rownames(cps_ra_freqs)))
+cps_ra_freqs$Problem<-FALSE
+cps_ra_freqs$Problem[cps_ra_freqs$Generation<11999]<-TRUE
+
+tapply(cps_ra_freqs$rep,cps_ra_freqs$Problem,summary)
+tapply(cps_ra_freqs$C,cps_ra_freqs$Problem,summary)
+tapply(cps_ra_freqs$NC,cps_ra_freqs$Problem,summary)
+tapply(cps_ra_freqs$P,cps_ra_freqs$Problem,summary)
+tapply(cps_ra_freqs$NP,cps_ra_freqs$Problem,summary)
+
+```
+
+None of these seem to factor into whether it's a problem child or not. What else could it be??? Stochasticity? Time of day?
+
+```{r}
+file.info(good_files)$mtime
+file.info(bad_files)$mtime
+```
+
+Well, these are the times when they were downloaded, not the times they were run, and I've already deleted the files off the server. I have no idea what could be causing this issue!!
+
+
 # 18 July 2019
 
 I'm transitioning from my paper notebook to this online notebook to improve reproducibility and better track my work and progress.
