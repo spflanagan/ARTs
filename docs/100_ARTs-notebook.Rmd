@@ -92,6 +92,8 @@ file.info(bad_files)$mtime
 
 Well, these are the times when they were downloaded, not the times they were run, and I've already deleted the files off the server. I have no idea what could be causing this issue!!
 
+I'm going to try running one of the bad combos on my local computer, and next time I should check to see if the same thing is happening with the other genetic architectures.
+
 
 # 18 July 2019
 
