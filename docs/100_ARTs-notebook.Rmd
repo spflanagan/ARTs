@@ -14,6 +14,10 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 
 ```
 
+# 22 July 2019
+
+The test run ran without any problems -- all the way through to generation 11999. This does not help me solve the issue. 
+
 # 19 July 2019
 
 Looking at the C++ code, the summary data is output for all initial generations and experimental generations. The only way the number of generations is cut short is through extinction. Equilibrium is only evaluated after all experimental generations. So the only thing I can think of is that this is an issue with running it on the server?? This is a major issue because it's I'm looking at the frequencies in the FINAL generation, and if I'm only seeing intermediate generations then I'm not necessarily seeing the right stuff. Let's take a look at the data again:
