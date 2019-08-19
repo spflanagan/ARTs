@@ -14,6 +14,76 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 
 ```
 
+# 19 August 2019
+
+Ok I've put off dealing with this for a while. I've re-created the good_files and bad_files as below and will do a couple things. 
+1. Check if it says "Evaluating equilibirum" in the log file. 
+   nope
+2. Check if it says "Input integer to quit" in the log file. 
+  nope
+3. Other error messages?
+
+Ok, wait, one of the 'bad_files' actually ran through to equilibrium according to the log file:
+parent-courter_supergene_RA_c2_nc2_p0.2_np0.6_1.log shows 11999 generations, but
+parent-courter_supergene_RA_c2_nc2_p0.2_np0.6_1_summary.txt.gz only goes to 3899 generations. what?
+
+Let's check the outputting functions in my code (I don't know what would have happened).
+
+I've fixed some of the extinction checking but I don't think this is what's causing the issue. 
+
+The only thing that seems like it could be the explanation would be a space issue? Maybe I run out of space on the supercomputer? Then I would expect the later-in-the-loop parameters to be bad. 
+
+Ok, so first I need to figure out why I'm getting -Inf values in my max_gens. This seems to be due to sensitivity/parent-courter_supergene_RA_c8_nc4_p0.4_np0.6_1_summary.txt.gz_1, which has no rows for Pop 1...it seems the numbering got shifted somehow. Weird. I'll just ignore it then.  
+
+```{r}
+cps_ra<-plot.pc.reps(pattern="^parent-courter_.*_RA_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
+max_gens<-unlist(lapply(cps_ra,function(dat) return(max(dat$Generation))))
+max_gens<-max_gens[max_gens!="-Inf"]
+good_files<-unique(gsub("_\\d$","",names(max_gens[max_gens==11999])))
+bad_files<-unique(gsub("_\\d$","",names(max_gens[max_gens<11999])))
+
+```
+
+```{r}
+bad_chars<-data.frame(arch=gsub("sensitivity/parent-courter_(\\w+)_RA.*","\\1",bad_files),
+                      cval=gsub(".*_RA_c(.*)_nc.*_p.*_np.*_.*","\\1",bad_files),
+                      ncval=gsub(".*_RA_c.*_nc(.*)_p.*_np.*_.*","\\1",bad_files),
+                      pval=gsub(".*_RA_c.*_nc.*_p(.*)_np.*_.*","\\1",bad_files),
+                      npval=gsub(".*_RA_c.*_nc.*_p.*_np(.*)_\\d+.*","\\1",bad_files),
+                      rep=gsub(".*_RA_c.*_nc.*_p.*_np.*_(\\d+).*","\\1",bad_files))
+
+good_chars<-data.frame(arch=gsub("sensitivity/parent-courter_(\\w+)_RA.*","\\1",good_files[grep("RA",good_files)]),
+                      cval=gsub(".*_RA_c(.*)_nc.*_p.*_np.*_.*","\\1",good_files[grep("RA",good_files)]),
+                      ncval=gsub(".*_RA_c.*_nc(.*)_p.*_np.*_.*","\\1",good_files[grep("RA",good_files)]),
+                      pval=gsub(".*_RA_c.*_nc.*_p(.*)_np.*_.*","\\1",good_files[grep("RA",good_files)]),
+                      npval=gsub(".*_RA_c.*_nc.*_p.*_np(.*)_\\d+.*","\\1",good_files[grep("RA",good_files)]),
+                      rep=gsub(".*_RA_c.*_nc.*_p.*_np.*_(\\d+).*","\\1",good_files[grep("RA",good_files)]))
+```
+
+All of these seem the same. So what if the errors about gzip errors are giving me the real information? Nope, that doesn't seem to be an indicator.
+
+Is this happening for the non-supergene ones?
+
+The question in my mind is whether this is a bug or a supercomputer glitch. It seems too frequent to be a supercomputer glitch, but I also cannot figure out what went wrong. 
+
+In the command line, I did `zgrep "11999.*Pop3" *summary.txt.gz > popsizeSearch.txt` and `zgrep "equilibrium" *log > equilibriumSearch.txt` 
+
+```{r}
+eq<-read.delim("sensitivity/equilibriumSearch.txt",header = FALSE)
+eq$name<-gsub("(.*).log:.*","\\1",eq$V1)
+ps<-read.delim("sensitivity/popsizeSearch.txt",header=FALSE)
+ps$name<-gsub("(.*)_summary.txt.gz:.*","\\1",ps$V1)
+```
+
+The popsize search ones should be the same as the good_files, I expect
+
+```{r}
+which(!paste0("sensitivity/",ps$name,"_summary.txt.gz") %in% good_files)
+```
+
+
+....I wonder if it's gzipping ones that are being run?? That's probably it! If I have the gzip in the same script then it needs to be more specific and only gzip the ones it just did. Hopefully this resolves the issue. I'm running it again on the supercomputer to see.
+
 # 22 July 2019
 
 The test run ran without any problems -- all the way through to generation 11999. This does not help me solve the issue. 
