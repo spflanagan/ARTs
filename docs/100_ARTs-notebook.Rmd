@@ -11,8 +11,26 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
 knitr::opts_knit$set(root.dir='../fixedART-results/') #change
-
+source("~/Research/ARTs/R/002_freq_functions.R")
 ```
+
+# 2 September 2019
+
+The simulations finished running, so now I'm going to re-evaluate the analysis by looking at the final generations like below.
+
+```{r}
+cps_ra<-plot.pc.reps(pattern="^parent-courter_.*_RA_.*_summary.txt",path="repro_allocation",cols="red",make.plot=FALSE)
+max_gens<-unlist(lapply(cps_ra,function(dat) return(max(dat$Generation))))
+max_gens<-max_gens[max_gens!="-Inf"]
+good_files<-unique(gsub("_\\d$","",names(max_gens[max_gens==11999])))
+bad_files<-unique(gsub("_\\d$","",names(max_gens[max_gens<11999])))
+```
+
+This fixed it, there are 0 bad files! Woo hoo! Now to recompile the document to learn something about the model results.
+
+I'm also putting the 'reproductive allocation' data in the directory repro_allocation/ within fixedARTs-results/.
+
+I need to run more simulations to fill in the patterns (not to mention come up with better ways to present the analyses, hopefully). Started runs with more combos on abacus, job array is 1385398.1-3.
 
 # 19 August 2019
 

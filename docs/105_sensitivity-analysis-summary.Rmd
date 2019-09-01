@@ -178,7 +178,7 @@ cpu_all_freqs<-rbind(cpu_npsurv_freqs[,base_keep_cols],cpu_all_freqs)
 ```
 
 ```{r readNonParentalRA_Unlinked}
-cpu_ra_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_unlinked_RA_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cpu_ra_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_unlinked_RA_.*_summary.txt",path="repro_allocation",cols,make.plot=FALSE))
 cpu_ra_freqs$Parent2NonSurvival<-as.numeric(gsub(".*_p(\\d.\\d).*","\\1",rownames(cpu_ra_freqs)))/as.numeric(gsub(".*np(\\d.\\d).*","\\1",rownames(cpu_ra_freqs)))
 cpu_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cpu_ra_freqs)))/as.numeric(gsub(".*nc(\\d).*","\\1",rownames(cpu_ra_freqs)))
 cpu_all_freqs<-rbind(cpu_ra_freqs[,base_keep_cols],cpu_all_freqs)
@@ -225,7 +225,7 @@ cpl_all_freqs<-rbind(cpl_npsurv_freqs[,base_keep_cols],cpl_all_freqs)
 ```
 
 ```{r readNonParentalRA_Linked}
-cpl_ra_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_linked_RA_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cpl_ra_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_linked_RA_.*_summary.txt",path="repro_allocation",cols,make.plot=FALSE))
 cpl_ra_freqs$Parent2NonSurvival<-as.numeric(gsub(".*_p(\\d.\\d).*","\\1",rownames(cpl_ra_freqs)))/as.numeric(gsub(".*np(\\d.\\d).*","\\1",rownames(cpl_ra_freqs)))
 cpl_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cpl_ra_freqs)))/as.numeric(gsub(".*nc(\\d).*","\\1",rownames(cpl_ra_freqs)))
 cpl_all_freqs<-rbind(cpl_ra_freqs[,base_keep_cols],cpl_all_freqs)
@@ -272,7 +272,7 @@ cps_all_freqs<-rbind(cps_npsurv_freqs[,base_keep_cols],cps_all_freqs)
 ```
 
 ```{r readNonParentalRA_Supergene}
-cps_ra_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_supergene_RA_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
+cps_ra_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_supergene_RA_.*_summary.txt",path="repro_allocation",cols,make.plot=FALSE))
 cps_ra_freqs$Parent2NonSurvival<-as.numeric(gsub(".*_p(\\d.\\d).*","\\1",rownames(cps_ra_freqs)))/as.numeric(gsub(".*np(\\d.\\d).*","\\1",rownames(cps_ra_freqs)))
 cps_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cps_ra_freqs)))/as.numeric(gsub(".*nc(\\d).*","\\1",rownames(cps_ra_freqs)))
 cps_all_freqs<-rbind(cps_ra_freqs[,base_keep_cols],cps_all_freqs)
