@@ -899,7 +899,9 @@ plot_2vars_summary<-function(all_freqs,xvar,yvar,xlab="Relative reproductive all
   mtext(ylab,2,outer=TRUE,line=1.5)
   
   par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
-  plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
-  legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
-         col=cols2[c("CP","CNP","NCP","NCNP")],pch=c(18,17,16,15),xpd = TRUE,ncol=2)
+  plot(as.numeric(all_freqs[,xvar]),
+       as.numeric(all_freqs[,yvar]), type='n', bty='n', xaxt='n', yaxt='n')
+   legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+         col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+  
 }
