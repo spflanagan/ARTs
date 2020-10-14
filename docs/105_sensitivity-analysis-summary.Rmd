@@ -293,10 +293,6 @@ plot_2vars_summary(cps_all_freqs,"Courter2NonRS","Parent2NonSurvival")
 
 By 'mating system' I refer to whether males are able to mate with multiple females (i.e., be the nesting male for multiple females). The default is monogamy, meaning males can only be the nesting male to one female. 
 
-```{r}
-base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
-                    "FreqNcP","FreqCP","Polygyny")
-```
 ### Unlinked
 
 ```{r UnlinkedPolygyny}
