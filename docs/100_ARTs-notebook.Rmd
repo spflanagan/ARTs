@@ -14,6 +14,24 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 14 October 2020
+
+So I've neglected this analysis for a very long time, and now I'm not quite sure where I am. I downloaded a bunch of files from the supercomputer earlier this year, all of which were reproductive allocation ones. I saved these in oct2019/ to avoid overwriting any in repro_allocation, so they all finished properly. I moved the ones that didn't overwrite using `mv -n`. The ones that would have overwritten the ones in repro_allocation remain in oct2019. All of the files in repro_allocation are 'complete'.
+
+So now I'm re-knitting the doc to evaluate where I'm at. 
+
+The plotting is really  not helpful. I need to change this!
+
+I've turned the summary plots into stacked barplots, which is better for comparing frequencies. 
+
+what do I want to show in the summary doc?
+* how do I show the role of mating system?
+* do I care about the thresholds?
+* are there other runs I should summarize?
+
+I also need to ID next steps, which include at least popgen analyses.
+
+
 # 2 September 2019
 
 The simulations finished running, so now I'm going to re-evaluate the analysis by looking at the final generations like below.
