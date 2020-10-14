@@ -266,7 +266,7 @@ cps_all_freqs<-rbind(cps_psurv_freqs[,base_keep_cols],cps_all_freqs)
 
 ```{r readNonParentalSurvival_Supergene}
 cps_npsurv_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_supergene_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
-cps_npsurv_freqs$Parent2NonSurvival<-0.9/as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpl_npsurv_freqs)))
+cps_npsurv_freqs$Parent2NonSurvival<-0.9/as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cps_npsurv_freqs)))
 cps_npsurv_freqs$Courter2NonRS<-8/4
 cps_all_freqs<-rbind(cps_npsurv_freqs[,base_keep_cols],cps_all_freqs)
 ```
