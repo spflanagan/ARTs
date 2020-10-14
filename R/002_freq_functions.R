@@ -853,10 +853,10 @@ plot_final_traits<-function(pattern,path="./",ncols=4,cols,cols2){
 
 
 plot_2vars_summary<-function(all_freqs,xvar,yvar,xlab="Relative reproductive allocation (courter/non-courter)",ylab="Relative nest survival (parent/non-parent)",...){
- # browser()
+  
   #Plotting setup
-  nx<-length(as.numeric(levels(as.factor(as.numeric(all_freqs[,xvar]))))) #number of values on x axis
-  ny<-length(as.numeric(levels(as.factor(all_freqs[,yvar])))) #number of values on y axis
+  nx<-length(unique(as.numeric(all_freqs[,xvar]))) #number of values on x axis
+  ny<-length(unique(as.numeric(all_freqs[,yvar]))) #number of values on y axis
   all_freqs$Rep<-as.numeric(factor(rownames(all_freqs[order(all_freqs[,xvar]),]))) # make rep in order of RS
   all_freqs$xloc<-as.numeric(as.factor(all_freqs[,xvar]))
   all_freqs$yloc<-as.numeric(as.factor(all_freqs[,yvar]))
