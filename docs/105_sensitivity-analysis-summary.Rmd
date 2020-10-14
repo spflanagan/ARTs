@@ -194,7 +194,6 @@ plot_2vars_summary(cpu_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,
 
 ### Linked QTLs
 
-First we'll read in the data from the relevant runs:
 
 ```{r readBaselineLinked}
 cpl_baseline_freqs<-get.morph.freqs(plot.pc.reps("^parent-courter_linked_.*_summary.txt",path="baseline",cols,make.plot=FALSE))
@@ -233,7 +232,6 @@ cpl_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cpl_ra_
 cpl_all_freqs<-rbind(cpl_ra_freqs[,base_keep_cols],cpl_all_freqs)
 ```
 
-Now we can make a summary plot!
 
 ```{r plotRAlinkedSumm}
 plot_2vars_summary(cpl_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
@@ -241,7 +239,6 @@ plot_2vars_summary(cpl_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,
 
 ### QTLs in a supergene
 
-First we'll read in the data from the relevant runs:
 
 ```{r readBaselineSupergene}
 cps_baseline_freqs<-get.morph.freqs(plot.pc.reps("^parent-courter_supergene_.*_summary.txt",path="baseline",cols,make.plot=FALSE))
@@ -280,8 +277,6 @@ cps_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cps_ra_
 cps_all_freqs<-rbind(cps_ra_freqs[,base_keep_cols],cps_all_freqs)
 ```
 
-
-Now we can make a summary plot!
 
 ```{r plotRAsupergeneSumm}
 plot_2vars_summary(cps_all_freqs,"Courter2NonRS","Parent2NonSurvival")
