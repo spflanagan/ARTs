@@ -282,7 +282,7 @@ cps_all_freqs<-rbind(cps_ra_freqs[,base_keep_cols],cps_all_freqs)
 Now we can make a summary plot!
 
 ```{r}
-plot_2vars_summary(cps_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
+plot_2vars_summary(cps_all_freqs,"Courter2NonRS","Parent2NonSurvival")
 ```
 
 
