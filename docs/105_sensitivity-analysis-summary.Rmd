@@ -39,7 +39,7 @@ library(RColorBrewer)
 library(scales)
 library(sm)
 library(kableExtra)
-source("~/Research/ARTs/R/002_freq_functions.R")
+source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
 cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
 ```
