@@ -149,13 +149,13 @@ base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
 
 
 
-```{r readBaseline_Unlinked}
+```{r readBaselineUnlinked}
 cpu_baseline_freqs<-get.morph.freqs(plot.pc.reps("^parent-courter_unlinked_.*_summary.txt",path="baseline",cols,make.plot=FALSE))
 cpu_baseline_freqs$Courter2NonRS<-8/4
 cpu_baseline_freqs$Parent2NonSurvival<-0.9/0.1
 ```
 
-```{r readReproductivAllocations_Unlinked}
+```{r readReproductivAllocationsUnlinked}
 cpu_rs_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_unlinked_crs.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
 cpu_rs_freqs$Courter2NonRS<-as.numeric(
   gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(cpu_rs_freqs)))/
@@ -165,21 +165,21 @@ cpu_rs_freqs$Parent2NonSurvival<-0.9/0.1
 cpu_all_freqs<-rbind(cpu_rs_freqs[,base_keep_cols],cpu_baseline_freqs[,base_keep_cols])
 ```
 
-```{r readParentalSurvival_Unlinked}
+```{r readParentalSurvivalUnlinked}
 cpu_psurv_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_unlinked_psurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
 cpu_psurv_freqs$Parent2NonSurvival<-as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_psurv_freqs)))/0.1
 cpu_psurv_freqs$Courter2NonRS<-8/4
 cpu_all_freqs<-rbind(cpu_psurv_freqs[,base_keep_cols],cpu_all_freqs)
 ```
 
-```{r readNonParentalSurvival_Unlinked}
+```{r readNonParentalSurvivalUnlinked}
 cpu_npsurv_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_unlinked_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
 cpu_npsurv_freqs$Parent2NonSurvival<-0.9/as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpu_npsurv_freqs)))
 cpu_npsurv_freqs$Courter2NonRS<-8/4
 cpu_all_freqs<-rbind(cpu_npsurv_freqs[,base_keep_cols],cpu_all_freqs)
 ```
 
-```{r readNonParentalRA_Unlinked}
+```{r readNonParentalRAUnlinked}
 cpu_ra_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_unlinked_RA_.*_summary.txt",path="repro_allocation",cols,make.plot=FALSE))
 cpu_ra_freqs$Parent2NonSurvival<-as.numeric(gsub(".*_p(\\d.\\d).*","\\1",rownames(cpu_ra_freqs)))/as.numeric(gsub(".*np(\\d.\\d).*","\\1",rownames(cpu_ra_freqs)))
 cpu_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cpu_ra_freqs)))/as.numeric(gsub(".*nc(\\d).*","\\1",rownames(cpu_ra_freqs)))
@@ -196,13 +196,13 @@ plot_2vars_summary(cpu_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,
 
 First we'll read in the data from the relevant runs:
 
-```{r readBaseline_Linked}
+```{r readBaselineLinked}
 cpl_baseline_freqs<-get.morph.freqs(plot.pc.reps("^parent-courter_linked_.*_summary.txt",path="baseline",cols,make.plot=FALSE))
 cpl_baseline_freqs$Courter2NonRS<-8/4
 cpl_baseline_freqs$Parent2NonSurvival<-0.9/0.1
 ```
 
-```{r readReproductivAllocations_Linked}
+```{r readReproductivAllocationsLinked}
 cpl_rs_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_linked_crs.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
 cpl_rs_freqs$Courter2NonRS<-as.numeric(
   gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(cpl_rs_freqs)))/
@@ -212,21 +212,21 @@ cpl_rs_freqs$Parent2NonSurvival<-0.9/0.1
 cpl_all_freqs<-rbind(cpl_rs_freqs[,base_keep_cols],cpl_baseline_freqs[,base_keep_cols])
 ```
 
-```{r readParentalSurvival_Linked}
+```{r readParentalSurvivalLinked}
 cpl_psurv_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_linked_psurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
 cpl_psurv_freqs$Parent2NonSurvival<-as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpl_psurv_freqs)))/0.1
 cpl_psurv_freqs$Courter2NonRS<-8/4
 cpl_all_freqs<-rbind(cpl_psurv_freqs[,base_keep_cols],cpl_all_freqs)
 ```
 
-```{r readNonParentalSurvival_Linked}
+```{r readNonParentalSurvivalLinked}
 cpl_npsurv_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_linked_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
 cpl_npsurv_freqs$Parent2NonSurvival<-0.9/as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cpl_npsurv_freqs)))
 cpl_npsurv_freqs$Courter2NonRS<-8/4
 cpl_all_freqs<-rbind(cpl_npsurv_freqs[,base_keep_cols],cpl_all_freqs)
 ```
 
-```{r readNonParentalRA_Linked}
+```{r readNonParentalRALinked}
 cpl_ra_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_linked_RA_.*_summary.txt",path="repro_allocation",cols,make.plot=FALSE))
 cpl_ra_freqs$Parent2NonSurvival<-as.numeric(gsub(".*_p(\\d.\\d).*","\\1",rownames(cpl_ra_freqs)))/as.numeric(gsub(".*np(\\d.\\d).*","\\1",rownames(cpl_ra_freqs)))
 cpl_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cpl_ra_freqs)))/as.numeric(gsub(".*nc(\\d).*","\\1",rownames(cpl_ra_freqs)))
@@ -243,13 +243,13 @@ plot_2vars_summary(cpl_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,
 
 First we'll read in the data from the relevant runs:
 
-```{r readBaseline_Supergene}
+```{r readBaselineSupergene}
 cps_baseline_freqs<-get.morph.freqs(plot.pc.reps("^parent-courter_supergene_.*_summary.txt",path="baseline",cols,make.plot=FALSE))
 cps_baseline_freqs$Courter2NonRS<-8/4
 cps_baseline_freqs$Parent2NonSurvival<-0.9/0.1
 ```
 
-```{r readReproductivAllocations_Supergene}
+```{r readReproductivAllocationsSupergene}
 cps_rs_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_supergene_crs.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
 cps_rs_freqs$Courter2NonRS<-as.numeric(
   gsub(".*crs(\\d)_ncrs\\d.*","\\1",rownames(cps_rs_freqs)))/
@@ -259,21 +259,21 @@ cps_rs_freqs$Parent2NonSurvival<-0.9/0.1
 cps_all_freqs<-rbind(cps_rs_freqs[,base_keep_cols],cps_baseline_freqs[,base_keep_cols])
 ```
 
-```{r readParentalSurvival_Supergene}
+```{r readParentalSurvivalSupergene}
 cps_psurv_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_supergene_psurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
 cps_psurv_freqs$Parent2NonSurvival<-as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cps_psurv_freqs)))/0.1
 cps_psurv_freqs$Courter2NonRS<-8/4
 cps_all_freqs<-rbind(cps_psurv_freqs[,base_keep_cols],cps_all_freqs)
 ```
 
-```{r readNonParentalSurvival_Supergene}
+```{r readNonParentalSurvivalSupergene}
 cps_npsurv_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_supergene_npsurv.*_summary.txt",path="sensitivity",cols,make.plot=FALSE))
 cps_npsurv_freqs$Parent2NonSurvival<-0.9/as.numeric(gsub(".*psurv(\\d.\\d).*","\\1",rownames(cps_npsurv_freqs)))
 cps_npsurv_freqs$Courter2NonRS<-8/4
 cps_all_freqs<-rbind(cps_npsurv_freqs[,base_keep_cols],cps_all_freqs)
 ```
 
-```{r readNonParentalRA_Supergene}
+```{r readNonParentalRASupergene}
 cps_ra_freqs<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_supergene_RA_.*_summary.txt",path="repro_allocation",cols,make.plot=FALSE))
 cps_ra_freqs$Parent2NonSurvival<-as.numeric(gsub(".*_p(\\d.\\d).*","\\1",rownames(cps_ra_freqs)))/as.numeric(gsub(".*np(\\d.\\d).*","\\1",rownames(cps_ra_freqs)))
 cps_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cps_ra_freqs)))/as.numeric(gsub(".*nc(\\d).*","\\1",rownames(cps_ra_freqs)))
