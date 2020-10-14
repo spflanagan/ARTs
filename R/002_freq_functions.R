@@ -871,21 +871,33 @@ plot_2vars_summary<-function(all_freqs,xvar,yvar,xlab="Relative reproductive all
   plot_freqs<-merge(all_freqs,newlocs,by="Rep")
   
   par(...)
-  plot(c(1,1),c(nx,ny),xlim=c(0,nx+1),ylim=c(0,ny+1),axes = FALSE,
-       xlab=xlab,ylab=ylab,type='n')
-  abline(h=seq(0.5,(ny+1.5)),col="grey",xpd=FALSE)
-  axis(2,at=1:ny,labels = round(as.numeric(levels(as.factor(all_freqs[,yvar]))),digits=2),lty=0,las=1)
-  abline(v=seq(0.5,(nx+1.5)),col="grey",xpd=FALSE)
-  axis(1,at=1:nx,labels=round(as.numeric(levels(as.factor(as.numeric(all_freqs[,xvar])))),digits=2),lty=0)
+  par(mfrow=c(ny,nx),mar=c(0.5,0.5,0.5,0.5),oma=c(3,3,3,1))
+  # need to go across x axis and down y axis
+  for(y in unique(as.numeric(all_freqs[,yvar]))[order(unique(as.numeric(all_freqs[,yvar])),decreasing = TRUE)]){
+    for(x in unique(as.numeric(all_freqs[,xvar]))[order(unique(as.numeric(all_freqs[,xvar])))]){    
+      dat<-plot_freqs[plot_freqs[,xvar]==x & plot_freqs[,yvar]==y,]
+      if(nrow(dat)>0){
+        
+        barplot(t(as.matrix(dat[,c("FreqNcNp","FreqCNp","FreqNcP","FreqCP")])),
+                col=cols2[c("NCNP","CNP","NCP","CP")],
+                names.arg = rep("",ncol(t(as.matrix(dat[,c("FreqNcNp","FreqCNp","FreqNcP","FreqCP")])))),
+                axes=FALSE,
+                border=NA,
+                space=0.1)
+      }else{
+        plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
+      }
+      if(x==min(as.numeric(all_freqs[,xvar]))){
+        mtext(round(y,1),2,las=2)
+      }
+      if(y==min(as.numeric(all_freqs[,yvar]))){
+        mtext(round(x,1),1)
+      }
+    }
+  }
+  mtext(xlab,1,outer=TRUE,line=1.5)
+  mtext(ylab,2,outer=TRUE,line=1.5)
   
-  points(plot_freqs$newlocs,as.numeric(as.factor(plot_freqs[,yvar]))+0.2,
-         col=alpha(cols2["CP"],plot_freqs$FreqCP),pch=18)
-  points(plot_freqs$newlocs,as.numeric(as.factor(plot_freqs[,yvar]))+0.075,
-         col=alpha(cols2["CNP"],plot_freqs$FreqCNp),pch=17)
-  points(plot_freqs$newlocs,as.numeric(as.factor(plot_freqs[,yvar]))-0.075,
-         col=alpha(cols2["NCP"],plot_freqs$FreqNcP),pch=16)
-  points(plot_freqs$newlocs,as.numeric(as.factor(plot_freqs[,yvar]))-0.2,
-         col=alpha(cols2["NCNP"],plot_freqs$FreqNcNp),pch=15)
   par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
   plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
   legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
