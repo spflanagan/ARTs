@@ -54,7 +54,7 @@ The final two traits that I tested were the survival of a nest when it was with 
 
 I tested these parameter settings with three genetic architectures and with just a courter trait, just a parent trait, and both traits: 
 
-```{r}
+```{r params}
 params<-data.frame(parameter=c("polygyny","relative reproductive allocation (courter:non-courter)", "parental nest survival","non-parental nest survival", "supergene proportion"),
                    default = c("monogamy","8:4 (2)","0.9","0.1","0.1?"),
                    tested_settings = c("polygyny","2:8 (0.25), 4:8 (0.5), 4:4 (1), 8:2 (4)","0.5, 0.6, 0.7, 0.8","0.2, 0.3, 0.4, 0.5","0.5,0.25,0.05"))
@@ -68,7 +68,7 @@ Here, I present the initial analyses of those parameter combinations.
 # Courter Trait 
 
 
-```{r, eval=FALSE}
+```{r courterSumm, eval=FALSE}
 crt_unlinked_summ<-summarize_params(base_pattern="^courter_unlinked",cols,
                                     summ_list="CourterFreq",type="courter")
 write.csv(crt_unlinked_summ,"crt_unlinked_summ.csv",row.names = FALSE)
@@ -79,7 +79,7 @@ crt_supergene_summ<-summarize_params(base_pattern="^courter_supergene",cols,
                                      summ_list="CourterFreq",type="courter")
 write.csv(crt_supergene_summ,"crt_supergene_summ.csv",row.names = FALSE)
 ```
-```{r}
+```{r courterSummTable}
 crt_unlinked_summ<-read.csv("crt_unlinked_summ.csv")
 crt_linked_summ<-read.csv("crt_linked_summ.csv")
 crt_supergene_summ<-read.csv("crt_supergene_summ.csv")
@@ -98,7 +98,7 @@ When just the courter trait is present, regardless of the parameter settings or 
 ### Supergene proportion
 
 
-```{r}
+```{r supergeneProp}
 cs_prop<-plot.courter.reps(pattern="^courter_supergene_prop.*summary.txt.gz",path="sensitivity",cols,make.plot=TRUE)
 ```
 
@@ -106,7 +106,7 @@ cs_prop<-plot.courter.reps(pattern="^courter_supergene_prop.*summary.txt.gz",pat
 # Parent Trait 
 
 
-```{r, eval=FALSE}
+```{r parentSumm, eval=FALSE}
 prt_unlinked_summ<-summarize_params(base_pattern="^parent_unlinked",cols,
                                     summ_list="ParentFreq",type="parent")
 write.csv(prt_unlinked_summ,"prt_unlinked_summ.csv",row.names = FALSE)
@@ -117,7 +117,7 @@ prt_supergene_summ<-summarize_params(base_pattern="^parent_supergene",cols,
                                      summ_list="ParentFreq",type="parent")
 write.csv(prt_supergene_summ,"prt_supergene_summ.csv",row.names = FALSE)
 ```
-```{r}
+```{r parentSummTable}
 prt_unlinked_summ<-read.csv("prt_unlinked_summ.csv")
 prt_linked_summ<-read.csv("prt_linked_summ.csv")
 prt_supergene_summ<-read.csv("prt_supergene_summ.csv")
@@ -139,7 +139,7 @@ When just the parent trait is present, regardless of the parameter settings or g
 
 I tested the effect of the ratio of reproductive allocation between courters and non-courters. The ratio of reproductive allocation between courters and non-courters comes into play during the fertilization stage of the model. At this point, females have mated with a male, and her eggs will be preferentially fertilized by her mate but could also be fertilized by non-courting males. Each male has a maximum reproductive success or reproductive allocation that is given by their courtship status ($r_{courter}$ or $r_{non-courter}$) and gets used up by each additional fertilization. This sets a bound on reproductive success for each male. When a female mates, she receives a total of $\Sigma{n_{sperm}}$ from all of the males who attempt to fertilize her eggs (e.g., with one courter and two non-courters, $\Sigma{n_{sperm}}$ = $r_{courter}$ + 2$*$(0.5$*$$r_{non-courter}$)). The ratio of $r_{courter}$ to $r_{non-courter}$ is the parameter set that I varied in these sensitivity analyses.
 
-```{r}
+```{r baseCols}
 base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
                    "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
 ```
@@ -188,7 +188,7 @@ cpu_all_freqs<-rbind(cpu_ra_freqs[,base_keep_cols],cpu_all_freqs)
 
 
 
-```{r}
+```{r plotRAunlinkedSumm}
 plot_2vars_summary(cpu_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
 ```
 
@@ -235,7 +235,7 @@ cpl_all_freqs<-rbind(cpl_ra_freqs[,base_keep_cols],cpl_all_freqs)
 
 Now we can make a summary plot!
 
-```{r}
+```{r plotRAlinkedSumm}
 plot_2vars_summary(cpl_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
 ```
 
@@ -283,7 +283,7 @@ cps_all_freqs<-rbind(cps_ra_freqs[,base_keep_cols],cps_all_freqs)
 
 Now we can make a summary plot!
 
-```{r}
+```{r plotRAsupergeneSumm}
 plot_2vars_summary(cps_all_freqs,"Courter2NonRS","Parent2NonSurvival")
 ```
 
@@ -299,7 +299,7 @@ base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
 ```
 ### Unlinked
 
-```{r}
+```{r UnlinkedPolygyny}
 cpu_polygyny<-plot.pc.reps(pattern="^parent-courter_unlinked_polygyny_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
 cpu_polygyny_freqs<-get.morph.freqs(cpu_polygyny)
 cpu_polygyny_freqs$Polygyny<-TRUE
@@ -309,13 +309,13 @@ cpu_ms_freqs<-rbind(cpu_polygyny_freqs[,base_keep_cols],cpu_baseline_freqs[,base
 cpu_ms_freqs$MSnum<-as.numeric(cpu_ms_freqs$Polygyny)
 ```
 
-```{r}
+```{r UnlinkedPolygynyParentThresh}
 plot_2vars_summary(cpu_ms_freqs,"ParentThresh","MSnum",xlab="Parent Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
 ```
-```{r}
+```{r UnlinkedPolygynyCourterThresh}
 plot_2vars_summary(cpu_ms_freqs,"CourterThresh","MSnum",xlab="Courter Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
 ```
-```{r}
+```{r UnlinkedPolygynyThreshDiff}
 cpu_ms_freqs$CourtParentThresh<-cpu_ms_freqs$CourterThresh-cpu_ms_freqs$ParentThresh
 plot_2vars_summary(cpu_ms_freqs,"CourtParentThresh","MSnum",xlab="Difference in thresholds (courter-parent)",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
 ```
@@ -323,7 +323,7 @@ plot_2vars_summary(cpu_ms_freqs,"CourtParentThresh","MSnum",xlab="Difference in 
 
 ### Linked
 
-```{r}
+```{r LinkedPolygyny}
 cpl_polygyny<-plot.pc.reps(pattern="^parent-courter_linked_polygyny_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
 cpl_polygyny_freqs<-get.morph.freqs(cpl_polygyny)
 cpl_polygyny_freqs$Polygyny<-TRUE
@@ -333,20 +333,20 @@ cpl_ms_freqs<-rbind(cpl_polygyny_freqs[,base_keep_cols],cpl_baseline_freqs[,base
 cpl_ms_freqs$MSnum<-as.numeric(cpl_ms_freqs$Polygyny)
 ```
 
-```{r}
+```{r LinkedPolygynyParentThresh}
 plot_2vars_summary(cpl_ms_freqs,"ParentThresh","MSnum",xlab="Parent Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
 ```
-```{r}
+```{r LinkedPolygynyCourterThresh}
 plot_2vars_summary(cpl_ms_freqs,"CourterThresh","MSnum",xlab="Courter Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
 ```
-```{r}
+```{r LinkedPolygynyThreshDiff}
 cpl_ms_freqs$CourtParentThresh<-cpl_ms_freqs$CourterThresh-cpl_ms_freqs$ParentThresh
 plot_2vars_summary(cpl_ms_freqs,"CourtParentThresh","MSnum",xlab="Difference in thresholds (courter-parent)",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
 ```
 
 ### Supergene
 
-```{r}
+```{r SupergenePolygyny}
 cps_polygyny<-plot.pc.reps(pattern="^parent-courter_supergene_polygyny_.*_summary.txt",path="sensitivity",cols,make.plot=FALSE)
 cps_polygyny_freqs<-get.morph.freqs(cps_polygyny)
 cps_polygyny_freqs$Polygyny<-TRUE
@@ -356,13 +356,13 @@ cps_ms_freqs<-rbind(cps_polygyny_freqs[,base_keep_cols],cps_baseline_freqs[,base
 cps_ms_freqs$MSnum<-as.numeric(cps_ms_freqs$Polygyny)
 ```
 
-```{r}
+```{r SupergenePolygynyParentThresh}
 plot_2vars_summary(cpu_ms_freqs,"ParentThresh","MSnum",xlab="Parent Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
 ```
-```{r}
+```{r SupergenePolygynyCourterThresh}
 plot_2vars_summary(cpu_ms_freqs,"CourterThresh","MSnum",xlab="Courter Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
 ```
-```{r}
+```{r SupergenePolygynyThreshDiff}
 cpu_ms_freqs$CourtParentThresh<-cpu_ms_freqs$CourterThresh-cpu_ms_freqs$ParentThresh
 plot_2vars_summary(cpu_ms_freqs,"CourtParentThresh","MSnum",xlab="Difference in thresholds (courter-parent)",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
 ```
