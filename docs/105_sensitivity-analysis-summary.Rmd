@@ -147,7 +147,7 @@ base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
 
 ### Unlinked QTLs
 
-First we'll read in the data from the relevant runs:
+
 
 ```{r readBaseline_Unlinked}
 cpu_baseline_freqs<-get.morph.freqs(plot.pc.reps("^parent-courter_unlinked_.*_summary.txt",path="baseline",cols,make.plot=FALSE))
@@ -186,7 +186,7 @@ cpu_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cpu_ra_
 cpu_all_freqs<-rbind(cpu_ra_freqs[,base_keep_cols],cpu_all_freqs)
 ```
 
-Now we can make a summary plot!
+
 
 ```{r}
 plot_2vars_summary(cpu_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
