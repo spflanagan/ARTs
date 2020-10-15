@@ -304,7 +304,7 @@ cpu_polygyny_freqs<-get.morph.freqs(cpu_polygyny)
 cpu_polygyny_freqs$Polygyny<-TRUE
 #merge with baseline
 cpu_baseline_freqs$Polygyny<-FALSE
-cpu_ms_freqs<-rbind(cpu_polygyny_freqs[,base_keep_cols],cpu_baseline_freqs[,base_keep_cols])
+cpu_ms_freqs<-rbind(cpu_polygyny_freqs[,poly_keep_cols],cpu_baseline_freqs[,poly_keep_cols])
 cpu_ms_freqs$MSnum<-as.numeric(cpu_ms_freqs$Polygyny)
 ```
 
@@ -328,7 +328,7 @@ cpl_polygyny_freqs<-get.morph.freqs(cpl_polygyny)
 cpl_polygyny_freqs$Polygyny<-TRUE
 #merge with baseline
 cpl_baseline_freqs$Polygyny<-FALSE
-cpl_ms_freqs<-rbind(cpl_polygyny_freqs[,base_keep_cols],cpl_baseline_freqs[,base_keep_cols])
+cpl_ms_freqs<-rbind(cpl_polygyny_freqs[,poly_keep_cols],cpl_baseline_freqs[,poly_keep_cols])
 cpl_ms_freqs$MSnum<-as.numeric(cpl_ms_freqs$Polygyny)
 ```
 
@@ -351,7 +351,7 @@ cps_polygyny_freqs<-get.morph.freqs(cps_polygyny)
 cps_polygyny_freqs$Polygyny<-TRUE
 #merge with baseline
 cps_baseline_freqs$Polygyny<-FALSE
-cps_ms_freqs<-rbind(cps_polygyny_freqs[,base_keep_cols],cps_baseline_freqs[,base_keep_cols])
+cps_ms_freqs<-rbind(cps_polygyny_freqs[,poly_keep_cols],cps_baseline_freqs[,poly_keep_cols])
 cps_ms_freqs$MSnum<-as.numeric(cps_ms_freqs$Polygyny)
 ```
 
