@@ -67,7 +67,7 @@ I tested these parameter settings with three genetic architectures and with just
 
 ```{r params}
 params<-data.frame(parameter=c("polygyny","relative reproductive allocation (courter:non-courter)", "parental nest survival","non-parental nest survival", "supergene proportion"),
-                   default = c("monogamy","8:4 (2)","0.9","0.1","0.1?"),
+                   default = c("monogamy","8:4 (2)","0.9","0.1","0.1"),
                    tested_settings = c("polygyny","2:8 (0.25), 4:8 (0.5), 4:4 (1), 8:2 (4)","0.5, 0.6, 0.7, 0.8","0.2, 0.3, 0.4, 0.5","0.5,0.25,0.05"))
 kable(params, format="latex", booktabs = T, caption="The parameters, their defaults, and their tested settings") %>% 
   kable_styling(latex_options =c("scale_down","HOLD_position"))
