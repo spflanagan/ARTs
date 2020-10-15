@@ -109,6 +109,7 @@ kable(crt_summ, "latex", booktabs = T, caption = "Summaries of final Courter fre
 
 # Parent Trait 
 
+When just the parent trait is present, regardless of the parameter settings or genetic architectures, the parental male morph goes to fixation in every run (Table \@ref(tab:parentSummTable)).
 
 ```{r parentSumm, eval=FALSE}
 prt_unlinked_summ<-summarize_params(base_pattern="^parent_unlinked",cols,
@@ -135,7 +136,7 @@ kable(prt_summ, "latex", booktabs = T, row.names = FALSE,caption = "Summaries of
   kable_styling(latex_options =c("scale_down","HOLD_position"))
 ```
 
-When just the parent trait is present, regardless of the parameter settings or genetic architectures, the parental male morph goes to fixation in every run.
+
 
 # Courter and Parent Traits
 
