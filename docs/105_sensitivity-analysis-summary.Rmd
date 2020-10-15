@@ -21,12 +21,8 @@ editor_options:
   chunk_output_type: console
 ---
 
-<style>
-p.caption {
-  font-size: 0.85em;
-  background-color: #f5f5f5
-}
-</style>
+
+# Overview
 
 The purpose of this model is to understand how genetic architectures of alternative reproductive tactics impact their maintenance in populations. I'm using an individual-based simulation model with different selection scenarios, types of alternative tactics, and genetic architectures (genome-wide additive genetic variance, supergenes, expression networks).
 
