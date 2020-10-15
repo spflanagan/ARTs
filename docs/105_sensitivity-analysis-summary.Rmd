@@ -78,6 +78,7 @@ Here, I present the initial analyses of those parameter combinations. Note that 
 
 # Courter Trait 
 
+When just the courter trait is present, regardless of the parameter settings or genetic architectures, the courting male morph goes to fixation in every run (Table \@ref(tab:courterSummTable)).
 
 ```{r courterSumm, eval=FALSE}
 crt_unlinked_summ<-summarize_params(base_pattern="^courter_unlinked",cols,
