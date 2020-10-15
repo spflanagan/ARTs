@@ -105,14 +105,6 @@ kable(crt_summ, "latex", booktabs = T, caption = "Summaries of final Courter fre
   kable_styling(latex_options =c("scale_down","HOLD_position"))
 ```
 
-When just the courter trait is present, regardless of the parameter settings or genetic architectures, the courting male morph goes to fixation in every run.
-
-### Supergene proportion
-
-
-```{r supergeneProp}
-cs_prop<-plot.courter.reps(pattern="^courter_supergene_prop.*summary.txt.gz",path="sensitivity",cols,make.plot=TRUE)
-```
 
 
 # Parent Trait 
