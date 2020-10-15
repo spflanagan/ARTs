@@ -369,14 +369,51 @@ cps_ms_freqs<-rbind(cps_polygyny_freqs[,poly_keep_cols],cps_baseline_freqs[,poly
 cps_ms_freqs$MSnum<-as.numeric(cps_ms_freqs$Polygyny)
 ```
 
-```{r SupergenePolygynyParentThresh}
-plot_2vars_summary(cpu_ms_freqs,"ParentThresh","MSnum",xlab="Parent Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+(ref:supergenePolygynyBarplot) A stacked barplot showing each run of the model with QTLs in supergenes, with polygyny (labelled 1 on the x-axis) or with monogamy (labelled 0 on the x-axis). Colors represent different morphs.
+
+```{r supergenePolygynyBarplot, fig.cap="(ref:supergenePolygynyBarplot)",fig.height=4,fig.width=6}
+bp<-barplot(t(as.matrix(cps_ms_freqs[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg = cps_ms_freqs$MSnum,
+        las=2,
+        border=NA)
+abline(v=max(bp[which(cps_ms_freqs$Polygyny==TRUE)])+0.5,lwd=2)
+
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
 ```
-```{r SupergenePolygynyCourterThresh}
-plot_2vars_summary(cpu_ms_freqs,"CourterThresh","MSnum",xlab="Courter Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+
+
+
+# Supergene proportion
+
+One of the settings in the model is the proportion of a chromosome that can contain the supergene -- this controls how tightly linked the SNPs are, given that they all occur in the same region of the same chromosome. Larger values indicate less tight linkage, since the QTLs are spaced across a larger proportion of the genome.
+
+```{r supergeneProp}
+cs_props<-get.morph.freqs(plot.courter.reps(pattern="^courter_supergene_prop.*summary.txt.gz",path="sensitivity",cols,make.plot=FALSE))
+ps_props<-get.morph.freqs(plot.parent.reps(pattern="^parent_supergene_prop.*summary.txt.gz",path="sensitivity",cols,make.plot=FALSE))
 ```
-```{r SupergenePolygynyThreshDiff}
-cpu_ms_freqs$CourtParentThresh<-cpu_ms_freqs$CourterThresh-cpu_ms_freqs$ParentThresh
-plot_2vars_summary(cpu_ms_freqs,"CourtParentThresh","MSnum",xlab="Difference in thresholds (courter-parent)",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+
+(ref:PCsupergeneProp) .
+
+```{r PCsupergeneProp, fig.cap="(ref:PCsupergeneProp)",fig.width=6,fig.height=4}
+pc_props<-get.morph.freqs(plot.pc.reps(pattern="^parent-courter_supergene_prop.*summary.txt.gz",path="sensitivity",cols,make.plot=FALSE))
+pc_props$Proportion<-as.numeric(gsub(".*prop(.*)_\\d+_summary.txt.gz.*","\\1",rownames(pc_props)))
+bp<-barplot(t(as.matrix(pc_props[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg = pc_props$Proportion,
+        las=2,
+        border=NA)
+l<-lapply(unique(pc_props$Proportion),function(prop){
+  abline(v=max(bp[which(pc_props$Proportion==prop)])+0.5,lwd=2)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
 ```
 
