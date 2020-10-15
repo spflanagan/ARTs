@@ -308,16 +308,23 @@ cpu_ms_freqs<-rbind(cpu_polygyny_freqs[,poly_keep_cols],cpu_baseline_freqs[,poly
 cpu_ms_freqs$MSnum<-as.numeric(cpu_ms_freqs$Polygyny)
 ```
 
-```{r UnlinkedPolygynyParentThresh}
-plot_2vars_summary(cpu_ms_freqs,"ParentThresh","MSnum",xlab="Parent Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+(ref:unlinkedPolygynyBarplot) A stacked barplot showing each run of the model with unanchored QTLs, with polygyny (labelled 1 on the x-axis) or with monogamy (labelled 0 on the x-axis). Colors represent different morphs.
+
+```{r unlinkedPolygynyBarplot, fig.cap="(ref:linkedPolygynyBarplot)",fig.height=4,fig.width=6}
+bp<-barplot(t(as.matrix(cpu_ms_freqs[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg = cpu_ms_freqs$MSnum,
+        las=2,
+        border=NA)
+abline(v=max(bp[which(cpu_ms_freqs$Polygyny==TRUE)])+0.5,lwd=2)
+
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
 ```
-```{r UnlinkedPolygynyCourterThresh}
-plot_2vars_summary(cpu_ms_freqs,"CourterThresh","MSnum",xlab="Courter Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
-```
-```{r UnlinkedPolygynyThreshDiff}
-cpu_ms_freqs$CourtParentThresh<-cpu_ms_freqs$CourterThresh-cpu_ms_freqs$ParentThresh
-plot_2vars_summary(cpu_ms_freqs,"CourtParentThresh","MSnum",xlab="Difference in thresholds (courter-parent)",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
-```
+
 
 
 ### Linked
@@ -332,16 +339,23 @@ cpl_ms_freqs<-rbind(cpl_polygyny_freqs[,poly_keep_cols],cpl_baseline_freqs[,poly
 cpl_ms_freqs$MSnum<-as.numeric(cpl_ms_freqs$Polygyny)
 ```
 
-```{r LinkedPolygynyParentThresh}
-plot_2vars_summary(cpl_ms_freqs,"ParentThresh","MSnum",xlab="Parent Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
+(ref:linkedPolygynyBarplot) A stacked barplot showing each run of the model with QTLs linked to chromosomes, with polygyny (labelled 1 on the x-axis) or with monogamy (labelled 0 on the x-axis). Colors represent different morphs.
+
+```{r linkedPolygynyBarplot, fig.cap="(ref:linkedPolygynyBarplot)",fig.height=4,fig.width=6}
+bp<-barplot(t(as.matrix(cpl_ms_freqs[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg = cpl_ms_freqs$MSnum,
+        las=2,
+        border=NA)
+abline(v=max(bp[which(cpl_ms_freqs$Polygyny==TRUE)])+0.5,lwd=2)
+
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
 ```
-```{r LinkedPolygynyCourterThresh}
-plot_2vars_summary(cpl_ms_freqs,"CourterThresh","MSnum",xlab="Courter Threshold Value",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
-```
-```{r LinkedPolygynyThreshDiff}
-cpl_ms_freqs$CourtParentThresh<-cpl_ms_freqs$CourterThresh-cpl_ms_freqs$ParentThresh
-plot_2vars_summary(cpl_ms_freqs,"CourtParentThresh","MSnum",xlab="Difference in thresholds (courter-parent)",ylab="Polygyny",mar=c(5.1,4.1,4.1,2.1))
-```
+
 
 ### Supergene
 
