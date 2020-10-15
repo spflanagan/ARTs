@@ -73,7 +73,7 @@ kable(params, format="latex", booktabs = T, caption="The parameters, their defau
   kable_styling(latex_options =c("scale_down","HOLD_position"))
 ```
 
-Here, I present the initial analyses of those parameter combinations.
+Here, I present the initial analyses of those parameter combinations. Note that I ran four replicates for each set of random starting conditions (so if there are 16 replicates, that means I ran the model 4 times from each of 4 sets of starting conditions).
 
 
 # Courter Trait 
