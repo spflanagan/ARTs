@@ -138,11 +138,10 @@ kable(prt_summ, "latex", booktabs = T, row.names = FALSE,caption = "Summaries of
 
 
 
-# Courter and Parent Traits
+# Reproductive Investment Trade-offs
 
 The most interesting patterns are expected to occur in the two-trait model, when males have both a courter and a parenting trait. This next section looks at the impact of tradeoffs in the reproductive allocation (courting vs non-courting) and parental care given our three different inheritance mechanisms to see when multiple morphs are maintained in the populations.
 
-## Reproductive Investment Trade-offs
 
 I tested the effect of the ratio of reproductive allocation between courters and non-courters. The ratio of reproductive allocation between courters and non-courters comes into play during the fertilization stage of the model. At this point, females have mated with a male, and her eggs will be preferentially fertilized by her mate but could also be fertilized by non-courting males. Each male has a maximum reproductive success or reproductive allocation that is given by their courtship status ($r_{courter}$ or $r_{non-courter}$) and gets used up by each additional fertilization. This sets a bound on reproductive success for each male. When a female mates, she receives a total of $\Sigma{n_{sperm}}$ from all of the males who attempt to fertilize her eggs (e.g., with one courter and two non-courters, $\Sigma{n_{sperm}}$ = $r_{courter}$ + 2$*$(0.5$*$$r_{non-courter}$)). The ratio of $r_{courter}$ to $r_{non-courter}$ is the parameter set that I varied in these sensitivity analyses.
 
