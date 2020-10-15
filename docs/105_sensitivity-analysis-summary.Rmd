@@ -291,9 +291,10 @@ plot_2vars_summary(cps_all_freqs,"Courter2NonRS","Parent2NonSurvival")
 
 
 
-## Mating System
+# Mating System
 
-By 'mating system' I refer to whether males are able to mate with multiple females (i.e., be the nesting male for multiple females). The default is monogamy, meaning males can only be the nesting male to one female. 
+By 'mating system' I refer to whether males are able to mate with multiple females (i.e., be the nesting male for multiple females). The default is monogamy, meaning males can only be the nesting male to one female. In these results, I'm showing the mating system as a function of the threshold values, which determine the trait value for which a male becomes a courter or non-courter and a parent or non-parent. These thresholds are set to the mean
+
 
 ### Unlinked
 
