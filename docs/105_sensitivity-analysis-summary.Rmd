@@ -46,6 +46,14 @@ source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
 cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
 ```
+```{r baseCols}
+base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                   "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
+poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                    "FreqNcP","FreqCP","Polygyny")
+
+```
+
 
 Here, I'm presenting the initial sensitivity analysis results. I tested the effects of four parameter settings: mating system, the ratio of reproductive allocation between courters and non-courters, the survival of parental male nests, and the survival of non-parental male nests. 
 
@@ -141,11 +149,6 @@ When just the parent trait is present, regardless of the parameter settings or g
 ## Reproductive Investment Trade-offs
 
 I tested the effect of the ratio of reproductive allocation between courters and non-courters. The ratio of reproductive allocation between courters and non-courters comes into play during the fertilization stage of the model. At this point, females have mated with a male, and her eggs will be preferentially fertilized by her mate but could also be fertilized by non-courting males. Each male has a maximum reproductive success or reproductive allocation that is given by their courtship status ($r_{courter}$ or $r_{non-courter}$) and gets used up by each additional fertilization. This sets a bound on reproductive success for each male. When a female mates, she receives a total of $\Sigma{n_{sperm}}$ from all of the males who attempt to fertilize her eggs (e.g., with one courter and two non-courters, $\Sigma{n_{sperm}}$ = $r_{courter}$ + 2$*$(0.5$*$$r_{non-courter}$)). The ratio of $r_{courter}$ to $r_{non-courter}$ is the parameter set that I varied in these sensitivity analyses.
-
-```{r baseCols}
-base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
-                   "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
-```
 
 
 ### Unlinked QTLs
