@@ -188,9 +188,9 @@ cpu_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cpu_ra_
 cpu_all_freqs<-rbind(cpu_ra_freqs[,base_keep_cols],cpu_all_freqs)
 ```
 
+(ref:plotRAunlinkedSumm) Impacts of reproductive allocation and nest survival on the maintenance of multiple male morphs given a completely unlinked genetic architecture underlying the traits. Along the x-axis are ratios of the ratio of courter to non-courter reproductive allocation (i.e., effort exerted pre-nesting) and on the y-axis are ratios of parent to non-parent nest survival. Each combination of settings shows multiple runs (in no particular order), each in its own stacked barplot, with different colors representing the various morphs. 
 
-
-```{r plotRAunlinkedSumm}
+```{r plotRAunlinkedSumm, fig.cap="(ref:plotRAunlinkedSumm)"}
 plot_2vars_summary(cpu_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
 ```
 
@@ -235,7 +235,10 @@ cpl_all_freqs<-rbind(cpl_ra_freqs[,base_keep_cols],cpl_all_freqs)
 ```
 
 
-```{r plotRAlinkedSumm}
+
+(ref:plotRAlinkedSumm) Impacts of reproductive allocation and nest survival on the maintenance of multiple male morphs given QTLs underlying the traits being anchored to chromosomes. Along the x-axis are ratios of the ratio of courter to non-courter reproductive allocation (i.e., effort exerted pre-nesting) and on the y-axis are ratios of parent to non-parent nest survival. Each combination of settings shows multiple runs (in no particular order), each in its own stacked barplot, with different colors representing the various morphs. 
+
+```{r plotRAlinkedSumm, fig.cap="(ref:plotRAlinkedSumm)"}
 plot_2vars_summary(cpl_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
 ```
 
@@ -279,8 +282,10 @@ cps_ra_freqs$Courter2NonRS<-as.numeric(gsub(".*_c(\\d).*","\\1",rownames(cps_ra_
 cps_all_freqs<-rbind(cps_ra_freqs[,base_keep_cols],cps_all_freqs)
 ```
 
+(ref:plotRAsupergeneSumm) Impacts of reproductive allocation and nest survival on the maintenance of multiple male morphs given QTLs being located in one chromosomal region (in a supergene). Along the x-axis are ratios of the ratio of courter to non-courter reproductive allocation (i.e., effort exerted pre-nesting) and on the y-axis are ratios of parent to non-parent nest survival. Each combination of settings shows multiple runs (in no particular order), each in its own stacked barplot, with different colors representing the various morphs. 
 
-```{r plotRAsupergeneSumm}
+
+```{r plotRAsupergeneSumm, fig.cap="(ref:plotRAsupergeneSumm) "}
 plot_2vars_summary(cps_all_freqs,"Courter2NonRS","Parent2NonSurvival")
 ```
 
