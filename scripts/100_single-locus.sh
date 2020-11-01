@@ -44,6 +44,6 @@ for i in `seq ${NUMREPS}`; do
 	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_nestBinary_onlySpermComp_${i} --verbose -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 -prs 4 -nprs 4 -crs 4 -ncrs 4 --viability --same-base -p 4 &
 	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_nestBinary_sneakRSadvantage_${i} --verbose -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 -prs 4 -nprs 8 -crs 4 -ncrs 4 --viability --same-base -p 4 &
 	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_nestBinary_sneakRSadvantage_courterRSadvantage_${i} --verbose -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 -prs 4 -nprs 8 -crs 8 -ncrs 4 --viability --same-base -p 4 &
-    
+    wait
 
 done
