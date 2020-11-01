@@ -32,11 +32,18 @@ DATE=`date +%Y%m%d`
 
 for i in `seq ${NUMREPS}`; do
 
-    if [ "$POLYGYNY" = true ]; then
-		./ARTs --courter --no-genetics --parent -b ../../results/single_locus/parent-courter_unlinked_1locus_polygyny_${i} --verbose -q 1 -x 1 -c 1 --viability --same-base -p 4 --polygyny &
-		
-    else
-    	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/parent-courter_unlinked_1locus_${i} --verbose -q 1 -x 1 -c 1 --viability --same-base -p 4 &
-    fi
+    # with polygyny
+	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_polygyny_nestBinary_courterRSadvantage_${i} --verbose -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 --viability --same-base -p 4 --polygyny &
+	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_polygyny_nestBinary_equalFitness_${i} --verbose -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 -prs 4 -nprs 4 -crs 4 -ncrs 4 -sperm-r 1 --viability --same-base -p 4 --polygyny &
+	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_polygyny_nestBinary_onlySpermComp_${i} --verbose -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 -prs 4 -nprs 4 -crs 4 -ncrs 4 --viability --same-base -p 4 --polygyny &
+	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_polygyny_nestBinary_sneakRSadvantage_${i} --verbose -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 -prs 4 -nprs 8 -crs 4 -ncrs 4 --viability --same-base -p 4 --polygyny &
+	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_polygyny_nestBinary_sneakRSadvantage_courterRSadvantage_${i} --verbose -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 -prs 4 -nprs 8 -crs 8 -ncrs 4 --viability --same-base -p 4 --polygyny &
+	# without polygyny
+	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_nestBinary_courterRSadvantage_${i} --verbose -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 --viability --same-base -p 4 &
+	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_nestBinary_equalFitness_${i} --verbose -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 -prs 4 -nprs 4 -crs 4 -ncrs 4 -sperm-r 1 --viability --same-base -p 4 &
+	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_nestBinary_onlySpermComp_${i} --verbose -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 -prs 4 -nprs 4 -crs 4 -ncrs 4 --viability --same-base -p 4 &
+	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_nestBinary_sneakRSadvantage_${i} --verbose -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 -prs 4 -nprs 8 -crs 4 -ncrs 4 --viability --same-base -p 4 &
+	./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_nestBinary_sneakRSadvantage_courterRSadvantage_${i} --verbose -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 -prs 4 -nprs 8 -crs 8 -ncrs 4 --viability --same-base -p 4 &
+    
 
 done
