@@ -697,24 +697,27 @@ public:
 				{
 					for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
 					{
-						adults[j].maternal[jj].courter_ae[jjj] = tempallele1[j%gp.num_alleles];
-						adults[j].paternal[jj].courter_ae[jjj] = tempallele1[j%gp.num_alleles];
+						int index = randnum(j);
+						adults[j].maternal[jj].courter_ae[jjj] = tempallele1[index%gp.num_alleles];
+						adults[j].paternal[jj].courter_ae[jjj] = tempallele1[index%gp.num_alleles];
 					}
 				}
 				if (gp.parent_trait)
 				{
 					for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
 					{
-						adults[j].maternal[jj].parent_ae[jjj] = tempallele2[j%gp.num_alleles];
-						adults[j].paternal[jj].parent_ae[jjj] = tempallele2[j%gp.num_alleles];
+						int index = randnum(j);
+						adults[j].maternal[jj].parent_ae[jjj] = tempallele2[index%gp.num_alleles];
+						adults[j].paternal[jj].parent_ae[jjj] = tempallele2[index%gp.num_alleles];
 					}
 				}
 				if (gp.cor_prefs || gp.ind_pref)
 				{
 					for (jjj = 0; jjj < adults[j].maternal[jj].pref_ae.size(); jjj++)
 					{
-						adults[j].maternal[jj].pref_ae[jjj] = tempallele3[j%gp.num_alleles];
-						adults[j].paternal[jj].pref_ae[jjj] = tempallele3[j%gp.num_alleles];
+						int index = randnum(j);
+						adults[j].maternal[jj].pref_ae[jjj] = tempallele3[index%gp.num_alleles];
+						adults[j].paternal[jj].pref_ae[jjj] = tempallele3[index%gp.num_alleles];
 					}
 				}
 				for (jjj = 0; jjj < gp.num_markers; jjj++)
