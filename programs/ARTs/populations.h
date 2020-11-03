@@ -38,7 +38,6 @@ public:
 		adults = progeny = vector<individual>();
 		courter_env_qtls = courter_qtls = parent_env_qtls = parent_qtls = pref_env_qtls = pref_qtls = parent_thresh_qtls = courter_thresh_qtls =cthresh_env_qtls = pthresh_env_qtls = maf = hs = vector<tracker>();
 		extinct = false;
-		sgenrand(time(0));
 	}
 	
 	//initialize

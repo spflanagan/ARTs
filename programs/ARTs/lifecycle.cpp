@@ -31,7 +31,9 @@ int main(int argc, char*argv[])
 	string log_name;
 	ofstream log_out;
 	
-
+	//set the seed
+	sgenrand(time(0));
+	
 	//parse parameters
 	if (argc == 1)
 		command_line = false; //this is also true if running command line with no params
