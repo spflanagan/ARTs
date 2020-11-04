@@ -677,12 +677,19 @@ public:
 		//set up progeny
 		initialize_progeny(gp);//just set up the vectors
 		//assign loci and alleles
-		vector<double> tempallele1, tempallele2, tempallele3;
-		for (j = 0; j < gp.num_alleles; j++) //set up specific alleles.
+		vector<tracker> tempallele1, tempallele2, tempallele3;
+		for (jj = 0; jj < (gp.num_chrom*gp.num_qtl); jj++) //set up specific alleles.
 		{
-			tempallele1.push_back(randnorm(0, gp.allelic_std_dev/gp.num_qtl));
-			tempallele2.push_back(randnorm(0, gp.allelic_std_dev / gp.num_qtl));
-			tempallele3.push_back(randnorm(0, gp.allelic_std_dev / gp.num_qtl));
+			tempallele1.push_back(tracker());
+			tempallele2.push_back(tracker());
+			tempallele3.push_back(tracker());
+			for(j = 0; j < gp.num_alleles; j++)
+			{
+				tempallele1[jj].per_locus.push_back(randnorm(0, gp.allelic_std_dev/gp.num_qtl));
+				tempallele2[jj].per_locus.push_back(randnorm(0, gp.allelic_std_dev / gp.num_qtl));
+				tempallele3[jj].per_locus.push_back(randnorm(0, gp.allelic_std_dev / gp.num_qtl));
+			}
+			
 		}
 		for (j = 0; j < gp.carrying_capacity; j++)
 		{
@@ -698,8 +705,8 @@ public:
 					for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
 					{
 						int index = randnum(j);
-						adults[j].maternal[jj].courter_ae[jjj] = tempallele1[index%gp.num_alleles];
-						adults[j].paternal[jj].courter_ae[jjj] = tempallele1[index%gp.num_alleles];
+						adults[j].maternal[jj].courter_ae[jjj] = tempallele1[(jj*gp.qtl_per_chrom[jj])+jjj].per_locus[index%gp.num_alleles];
+						adults[j].paternal[jj].courter_ae[jjj] = tempallele1[(jj*gp.qtl_per_chrom[jj])+jjj].per_locus[index%gp.num_alleles];
 					}
 				}
 				if (gp.parent_trait)
@@ -707,8 +714,8 @@ public:
 					for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
 					{
 						int index = randnum(j);
-						adults[j].maternal[jj].parent_ae[jjj] = tempallele2[index%gp.num_alleles];
-						adults[j].paternal[jj].parent_ae[jjj] = tempallele2[index%gp.num_alleles];
+						adults[j].maternal[jj].parent_ae[jjj] = tempallele2[(jj*gp.qtl_per_chrom[jj])+jjj].per_locus[index%gp.num_alleles];
+						adults[j].paternal[jj].parent_ae[jjj] = tempallele2[(jj*gp.qtl_per_chrom[jj])+jjj].per_locus[index%gp.num_alleles];
 					}
 				}
 				if (gp.cor_prefs || gp.ind_pref)
@@ -716,8 +723,8 @@ public:
 					for (jjj = 0; jjj < adults[j].maternal[jj].pref_ae.size(); jjj++)
 					{
 						int index = randnum(j);
-						adults[j].maternal[jj].pref_ae[jjj] = tempallele3[index%gp.num_alleles];
-						adults[j].paternal[jj].pref_ae[jjj] = tempallele3[index%gp.num_alleles];
+						adults[j].maternal[jj].pref_ae[jjj] = tempallele3[(jj*gp.qtl_per_chrom[jj])+jjj].per_locus[index%gp.num_alleles];
+						adults[j].paternal[jj].pref_ae[jjj] = tempallele3[(jj*gp.qtl_per_chrom[jj])+jjj].per_locus[index%gp.num_alleles];
 					}
 				}
 				for (jjj = 0; jjj < gp.num_markers; jjj++)
