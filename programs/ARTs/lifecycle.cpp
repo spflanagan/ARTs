@@ -32,7 +32,8 @@ int main(int argc, char*argv[])
 	ofstream log_out;
 	
 	//set the seed
-	sgenrand(time(0));
+	srand(time(0));
+	sgenrand(rand());
 	
 	//parse parameters
 	if (argc == 1)
