@@ -31,10 +31,6 @@ int main(int argc, char*argv[])
 	string log_name;
 	ofstream log_out;
 	
-	//set the seed
-	srand(time(0));
-	sgenrand(rand());
-	
 	//parse parameters
 	if (argc == 1)
 		command_line = false; //this is also true if running command line with no params
