@@ -11,6 +11,7 @@
 #include <vector>
 #include <time.h>
 #include <algorithm>
+#include <random>
 #include "random_numbers.h"
 #include "classes.h"
 
@@ -41,7 +42,7 @@ public:
 		//set the seed
 		std::random_device rd;
     	std::mt19937 mt(rd());
-		sgenrand(mt);
+		sgenrand(time(0)*rand());
 	}
 	
 	//initialize
