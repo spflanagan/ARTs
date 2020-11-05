@@ -10,7 +10,7 @@
 
 
 ###----DETERMINE WHAT SHOULD RUN----###
-NUMREPS=5
+NUMREPS=1
 
 #Parameters of interest include 
 #--polygyny
