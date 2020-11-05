@@ -3379,7 +3379,7 @@ public:
 			vcf.close();
 		}
 	}
-	void output_trait_info(parameters gp, int pop_id, ofstream & output)
+	void output_trait_info(parameters gp, int gen, int pop_id, ofstream & output)
 	{
 		int j;
 		eval_rs(gp);
@@ -3410,7 +3410,7 @@ public:
 			}
 			
 			//output info
-			output << '\n' << pop_id << '\t' << j;
+			output << '\n' << gen << '\t' << pop_id << '\t' << j;
 			if (adults[j].female)
 				output << "\tFEMALE";
 			else

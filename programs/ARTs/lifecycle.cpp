@@ -81,7 +81,7 @@ int main(int argc, char*argv[])
 
 	trait_output_name = global_params.base_name + "_traits.txt";
     trait_output.open(trait_output_name);
-    trait_output << "Pop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
+    trait_output << "Gen\tPop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
     
 	markers_output_name = global_params.base_name + "_markers.txt";
 	markers_output.open(markers_output_name);
@@ -212,6 +212,7 @@ int main(int argc, char*argv[])
 			else
 				pops[i].output_qtl_info(global_params, qtlinfo_output, true);
 			pops[i].output_allelic_effects(global_params,ae_output, true);
+			pops[i].output_trait_info(global_params, 0, i, trait_output);
 		}
 		qtlinfo_output << "Pop" << i;
 		pops[i].output_qtl_info(global_params, qtlinfo_output, false);
@@ -440,7 +441,7 @@ int main(int argc, char*argv[])
                         log_out << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n' << std::flush;
 					else
 						std::cout << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n' << std::flush;
-					pops[ii].output_trait_info(global_params, ii, trait_output);
+					pops[ii].output_trait_info(global_params, i, ii, trait_output);
 					crash_counter++;
 				}
 					
@@ -536,7 +537,7 @@ int main(int argc, char*argv[])
                 pops[i].output_genotypes_vcf(global_params, i);	
 		}
 		//output the trait values for the final generation of each population
-		pops[i].output_trait_info(global_params, i, trait_output);
+		pops[i].output_trait_info(global_params,global_params.num_init_gen + global_params.num_exp_gen, i, trait_output);
 	}
 	
 	//close output files
