@@ -12,6 +12,7 @@
 #include <time.h>
 #include <algorithm>
 #include <random>
+#include <unistd.h>
 #include "random_numbers.h"
 #include "classes.h"
 
@@ -40,9 +41,7 @@ public:
 		courter_env_qtls = courter_qtls = parent_env_qtls = parent_qtls = pref_env_qtls = pref_qtls = parent_thresh_qtls = courter_thresh_qtls =cthresh_env_qtls = pthresh_env_qtls = maf = hs = vector<tracker>();
 		extinct = false;
 		//set the seed
-		std::random_device rd;
-    	std::mt19937 mt(rd());
-		sgenrand(time(0)*rand());
+		sgenrand(time(NULL)*getpid());
 	}
 	
 	//initialize
