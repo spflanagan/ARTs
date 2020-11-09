@@ -14,6 +14,77 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 4 November 2020
+
+Yesterday I discovered that my code --  which spawns things using nohup and & -- doesn't necessarily set the seed properly. Somehow multiple runs have the same initial conditions. I should check my C++ code to see what's going on.
+-> looking at my code, I'm using a custom function sgenrand(time(0)) which should get around this (it adjusts the seed after it's set as time(0)), but it was within population(), which is probably not the right place for it. So I've moved it to the top of main() in lifecycle.cpp.
+-> could also try the suggestions in this thread: https://stackoverflow.com/questions/7617587/is-there-an-alternative-to-using-time-to-seed-a-random-number-generation
+
+I also have realized what's causing the main issue: I randomly assign males to be courter/non-courter and parent/non-parent, and somehow sometimes I wind up with my population being entirely courter/non-parent and non-courter/parent. This means that unless females find a courter, then the population will crash. So this is something funky in my setup which I should probably change. 
+-> In the final generation, there's no variation in trait values - but what about at the start?
+-> Also I think the way I'm randomizing the alleles is creating problems:
+
+```{c++}
+vector<double> tempallele1, tempallele2, tempallele3;
+for (j = 0; j < gp.num_alleles; j++) //set up specific alleles.
+{
+	tempallele1.push_back(randnorm(0, gp.allelic_std_dev/gp.num_qtl));
+	tempallele2.push_back(randnorm(0, gp.allelic_std_dev / gp.num_qtl));
+	tempallele3.push_back(randnorm(0, gp.allelic_std_dev / gp.num_qtl));
+}
+for (j = 0; j < gp.carrying_capacity; j++)
+{
+	if (j < gp.carrying_capacity)
+		adults[j].alive = true;
+	else
+		adults[j].alive = false; 
+	adults[j].lifetime_rs = 0;
+	for (jj = 0; jj < gp.num_chrom; jj++)
+	{
+		if (gp.court_trait)
+		{
+			for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
+			{
+				adults[j].maternal[jj].courter_ae[jjj] = tempallele1[j%gp.num_alleles];
+				adults[j].paternal[jj].courter_ae[jjj] = tempallele1[j%gp.num_alleles];
+			}
+		}
+		if (gp.parent_trait)
+		{
+			for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
+			{
+				adults[j].maternal[jj].parent_ae[jjj] = tempallele2[j%gp.num_alleles];
+				adults[j].paternal[jj].parent_ae[jjj] = tempallele2[j%gp.num_alleles];
+			}
+		}
+		if (gp.cor_prefs || gp.ind_pref)
+		{
+			for (jjj = 0; jjj < adults[j].maternal[jj].pref_ae.size(); jjj++)
+			{
+				adults[j].maternal[jj].pref_ae[jjj] = tempallele3[j%gp.num_alleles];
+				adults[j].paternal[jj].pref_ae[jjj] = tempallele3[j%gp.num_alleles];
+			}
+		}
+		for (jjj = 0; jjj < gp.num_markers; jjj++)
+		{
+			adults[j].maternal[jj].loci[jjj] = j%gp.num_alleles;
+			adults[j].paternal[jj].loci[jjj] = j%gp.num_alleles;
+		}
+	}
+```
+
+What this does is create two alleles for each trait and even/odd individuals get each set of alleles. This means that the population is incredibly bimodal in trait values, which is not what we want I think. I want biallelic loci, but I don't want all of the loci to be the same. What if I set up the tempalleles with `gp.numalleles*gp.num_chrom*gp.qtl_per_chrom`? Then each biallelic locus would be different.
+Or I could randomly assign one of the tempalleles rather than using j. That might be easier actually- then I'd expect an ~ equal distribution of trait combinations at the start.
+
+# 15 October 2020
+
+For now I'm adding text to each section, which will help me with the narrative structure of the summary and to identify some next steps.
+
+I've now covered the reproductive allocation and nest survival tradeoffs and the supergene proportion - mating system is still a bit elusive on what to show. 
+Currently it's got the thresholds for being courter/parent as the x axis but I don't think this is overly useful. 
+I think I was using that to try to explain why some sets of runs resulted in courter-parents and others resulted in courters-nonparents.
+But thresholds don't seem to explain any patterns - I would guess it's initial frequency.
+
 # 14 October 2020
 
 So I've neglected this analysis for a very long time, and now I'm not quite sure where I am. I downloaded a bunch of files from the supercomputer earlier this year, all of which were reproductive allocation ones. I saved these in oct2019/ to avoid overwriting any in repro_allocation, so they all finished properly. I moved the ones that didn't overwrite using `mv -n`. The ones that would have overwritten the ones in repro_allocation remain in oct2019. All of the files in repro_allocation are 'complete'.
