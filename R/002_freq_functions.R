@@ -219,10 +219,18 @@ get.morph.freqs<-function(s, gen="last"){
     {
       dat[1,]<-NA
     }
-    last<-dat[nrow(dat),]
-    
-    return(last)
-  }))
+    if(gen == "last"){
+      thisdat<-dat[nrow(dat),]  
+    }else if(gen == "first"){
+      thisdat<-dat[1,]
+    }else if(is.numeric(gen)){
+      thisdat <- dat[gen,]
+    }else{
+      print("WARNING: generation choice not recognized. The last generation is being used.")
+      thisdat<-dat[nrow(dat),]
+    }
+    return(thisdat)
+  },gen=gen))
   if(is.null(names(s))){
     rownames(pc.final.freqs)<-unlist(lapply(seq(1:nrow(pc.final.freqs)),function(n){paste("Rep",n,sep="")}))
   }else{
