@@ -193,6 +193,15 @@ cpu_all_freqs<-rbind(cpu_ra_freqs[,base_keep_cols],cpu_all_freqs)
 plot_2vars_summary(cpu_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
 ```
 
+```{r}
+cpu_var<-cpu_all_freqs[which(round(cpu_all_freqs$Parent2NonSurvival,1)==3.5 & cpu_all_freqs$Courter2NonRS==0.5),]
+cpu_var_init<-get.morph.freqs(plot.pc.reps(pattern=unique(gsub("(.*)\\/(.*)\\_\\d$","\\2",rownames(cpu_var))),
+                                           path=unique(gsub("(.*)\\/(.*)\\_\\d$","\\1",rownames(cpu_var))),
+                                           cols,make.plot=FALSE),
+                              gen="first")
+```
+
+
 ### Linked QTLs
 
 
