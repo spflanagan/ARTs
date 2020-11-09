@@ -14,6 +14,19 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 5 November 2020
+
+I'm not sure what I've done but I've broken something because now all of the outputs are identical, even with different parameter settings. There seem to be a few possibilities:
+1. I've broken the set seed component and randomizer isn't working properly
+2. I need to spawn all of these commands in a different way that doesn't start them all at the same time
+3. the changes I've made to the initialization isn't working
+
+So a few things I'm trying:
+1. using gnu parallel to run the code rather than sending to the background
+2. I'll try using time(NULL)*pid(), which should be unique for each run, to set the seed
+3. I should do some investigation of what's happening in the first couple of generations -- maybe output individual data for gen 0/1
+
+
 # 4 November 2020
 
 Yesterday I discovered that my code --  which spawns things using nohup and & -- doesn't necessarily set the seed properly. Somehow multiple runs have the same initial conditions. I should check my C++ code to see what's going on.
