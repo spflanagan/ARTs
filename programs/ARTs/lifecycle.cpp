@@ -399,6 +399,11 @@ int main(int argc, char*argv[])
                 pops[ii].output_allele_freqs(global_params, markers_output);
 				ae_output << '\n' << global_params.num_init_gen +i+1 << "\tPop" << ii;
 				pops[ii].output_allelic_effects(global_params,ae_output, false);
+				if(i == (global_params.num_exp_gen - 1))
+				{
+					//output the trait values for the final generation of each population
+					pops[ii].output_trait_info(global_params,global_params.num_init_gen + global_params.num_exp_gen, ii, trait_output);
+				}
 				//stochastic survival
 				//pops[i].density_regulation(global_params);
 				pops[ii].regulate_popsize(global_params);
@@ -536,8 +541,6 @@ int main(int argc, char*argv[])
             if(global_params.output_vcf)
                 pops[i].output_genotypes_vcf(global_params, i);	
 		}
-		//output the trait values for the final generation of each population
-		pops[i].output_trait_info(global_params,global_params.num_init_gen + global_params.num_exp_gen, i, trait_output);
 	}
 	
 	//close output files
