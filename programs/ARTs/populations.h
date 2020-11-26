@@ -2758,7 +2758,7 @@ public:
 				adults[progeny[j].dad].lifetime_rs++;
 			}
 		}
-		if (gp.verbose && !gp.log_file)
+		if (gp.verbose)
 		{
 			for (j = 0; j < adults.size(); j++)
 			{
