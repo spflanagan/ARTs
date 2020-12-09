@@ -34,7 +34,7 @@ knitr::opts_chunk$set(
   fig.path = "figs/"
 )
 ```
-```{r, echo=FALSE,echo=FALSE,message=FALSE}
+```{r librarysetup, echo=FALSE,echo=FALSE,message=FALSE}
 library(RColorBrewer)
 library(scales)
 library(sm)
