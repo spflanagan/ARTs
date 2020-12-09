@@ -14,6 +14,23 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 12 November 2020
+
+Unsurprisingly in runs with courter/non parents existing at the end, both males and females have that morph. However, they have a LifetimeRS of 0 - so how are they maintained??? Ahh except LifetimeRS is 0 for everyone so this is not a useful metric!
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_courterRSadvantage_5_traits.txt")
+traits0<-traits[which(traits$Pop==0),]
+traits0last<-traits0[which(traits0$Gen==12000),]
+table(traits0last$Sex[which(traits0last$Courter!=traits0last$Parent)])
+traits0last[which(traits0last$Courter!=traits0last$Parent),]
+```
+```{r}
+traits[which(traits$Pop==0 & traits$Individual %in% traits0last$Individual[which(traits0last$Courter!=traits0last$Parent)]),]
+```
+
+Compare this to the thresholds?
+
 # 11 November 2020
 
 I thought I'd solved it with the changes that I implmented, but I'm still getting some weird appeaances of the courter/non-parent, which shouldn't be reproducing at all! I want to check a couple things, though:
