@@ -233,7 +233,7 @@ int main(int argc, char*argv[])
 			std::cout << "\n   Initialize took " << duration << " seconds." << std::flush;
 
 	}
-		
+	
 	
 	//Run the program
 	if (global_params.log_file)
@@ -248,6 +248,10 @@ int main(int argc, char*argv[])
 			pops[ii].determine_pop_size(global_params);
 			if(pops[ii].population_size > 0)
 			{
+				if(global_params.ae_vcf)
+				{
+					output_ae_vcf(global_params, ii);
+				}
 				if (global_params.verbose)
 				{
 					if (global_params.log_file)
