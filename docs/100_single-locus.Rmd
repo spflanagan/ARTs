@@ -107,7 +107,7 @@ courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRS
 courterRS$Courter2NonRS<-8/4
 bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
         col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg = courterRS$Generation,
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
         las=2,
         border=NA)
 
@@ -127,7 +127,7 @@ courterRSpoly<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_polygyny_nestBin
 courterRSpoly$Courter2NonRS<-8/4
 bp<-barplot(t(as.matrix(courterRSpoly[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
         col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg = courterRSpoly$Generation,
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
         las=2,
         border=NA)
 
@@ -174,4 +174,3 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
-I'm concerned about this non-independence thing. 
