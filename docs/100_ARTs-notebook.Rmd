@@ -14,6 +14,19 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 25 November 2020
+
+So the problem with the lifetime RS counter was that I output the traits after I'd already reset the population, so I've cahnged it to output the info before the population resets in the final generation. 
+
+How do any courter/non-parents have surviving offspring? Is it if the female mates with a courter/parent?
+-> So it looks like the female mates once but then there can be sneakers, so courter/non-parents must be senakers (I don't track this info).
+
+Also, somehow males are getting more than their potential RS - ah this must be because of density dependent selection where offspring are assigned to nests proportional to mating success.
+
+All of the parent and courter trait values are the same though -- at the beginnng they are binary and by the end they appear to be fixed. Not sure what's going on there...I think it has to do with the fact that the index of the adult determines which allele they have, so there are equal numbers of both. Perhaps recombination/mutation rate are not high enough? I could let them have a random allele at each locus. -- it turns out this is what I'm doing!
+
+
+
 # 12 November 2020
 
 Unsurprisingly in runs with courter/non parents existing at the end, both males and females have that morph. However, they have a LifetimeRS of 0 - so how are they maintained??? Ahh except LifetimeRS is 0 for everyone so this is not a useful metric!
