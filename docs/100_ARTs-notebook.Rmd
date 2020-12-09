@@ -14,6 +14,15 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 11 November 2020
+
+I thought I'd solved it with the changes that I implmented, but I'm still getting some weird appeaances of the courter/non-parent, which shouldn't be reproducing at all! I want to check a couple things, though:
+1. how are the fitnesses calculated?
+2. is there a relationship between parent W vs courter W and the emergence of different combinations?
+3. are the morph frequencies including females? because that could be a pathway to maintain them, though I wouldn't think so.
+4. Which aspects of the intiial conditions seem to be most important in determining outcomes? 
+5. will initial generation trait distributions help at all? 
+
 # 5 November 2020
 
 I'm not sure what I've done but I've broken something because now all of the outputs are identical, even with different parameter settings. There seem to be a few possibilities:
