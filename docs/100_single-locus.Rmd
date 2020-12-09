@@ -155,7 +155,7 @@ var_patts<-c("pcu_1locus_nestBinary_equalFitness.*summary.txt",
              "pcu_1locus_polygyny_nestBinary_sneakRSadvantage_\\d.*summary.txt",
              "pcu_1locus_polygyny_nestBinary_sneakRSadvantage_courterRSadvantage.*summary.txt")
 
-par(mfrow=c(2,length(var_patts)/2))
+par(mfrow=c(2,length(var_patts)/2),oma=c(3,2,4,1),mar=c(3,2,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-get.morph.freqs(plot.pc.reps(pattern=pattern,path="single_locus",cols,make.plot=FALSE))
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
