@@ -3379,6 +3379,96 @@ public:
 			vcf.close();
 		}
 	}
+	void output_ae_vcf(parameters gp, int pop_id)
+	{
+		int j, jj, jjj;
+		if (gp.parent_trait || gp.court_trait || gp.courter_conditional || gp.parent_conditional || gp.ind_pref || gp.cor_prefs)
+		{
+			string vcf_name = gp.base_name + "_pop_" + to_string(pop_id) + "_ae.vcf";
+			ofstream vcf;
+			vcf.open(vcf_name);
+		
+			//output the header
+			vcf << "##fileformat=VCFv4.0";
+			string date = determine_date();
+			vcf << "\n##fileDate=" << date;
+			vcf << "\n##source=ARTsSimulation";
+			vcf << "\n##INFO=<ID=AF,Number=.,Type=Float,Description=\"Allele Frequency\">";
+			vcf << "\n##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">";
+			vcf << "\n##CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT";
+			for (j = 0; j < population_size; j++)
+			{
+				if (adults[j].alive)
+				{
+					if (adults[j].female)
+						vcf << "\tFEM" << j << "_pref" << adults[j].female_pref;
+					else
+					{
+						if (adults[j].courter && adults[j].parent)
+							vcf << "\tMAL" << j << "_CP";
+						if (adults[j].courter && !adults[j].parent)
+							vcf << "\tMAL" << j << "_C";
+						if (!adults[j].courter && adults[j].parent)
+							vcf << "\tMAL" << j << "_P";
+						if (!adults[j].courter && !adults[j].parent)
+							vcf << "\tMAL" << j << "_NON";
+					}
+				}
+			}
+			//output genotype info
+
+			for (j = 0; j < gp.num_chrom; j++)
+			{
+				if (gp.court_trait)
+				{
+					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+					{
+						vcf << '\n' << j << '\t' << jj << '\t' << j << "." << jj << '\t' << "NA" << '\t' << "NA";
+						vcf << "\t100\tPASS\tAF\tGT";
+						for (jjj = 0; jjj < population_size; jjj++)
+						{
+							if (adults[jjj].alive)
+							{
+								vcf << '\t' << adults[jjj].maternal[j].courter_ae[jj] << "/" << adults[jjj].paternal[j].courter_ae[jj];
+							}
+						}
+					}
+				}
+				if (gp.parent_trait)
+				{
+					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+					{
+						vcf << '\n' << j << '\t' << jj << '\t' << j << "." << jj << '\t' << "NA" << '\t' << "NA";
+						vcf << "\t100\tPASS\tAF\tGT";
+						for (jjj = 0; jjj < population_size; jjj++)
+						{
+							if (adults[jjj].alive)
+							{
+								vcf << '\t' << adults[jjj].maternal[j].parent_ae[jj] << "/" << adults[jjj].paternal[j].parent_ae[jj];
+							}
+						}
+					}
+				}
+				if (gp.cor_prefs || gp.ind_pref)
+				{
+					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+					{
+						vcf << '\n' << j << '\t' << jj << '\t' << j << "." << jj << '\t' << "NA" << '\t' << "NA";
+						vcf << "\t100\tPASS\tAF\tGT";
+						for (jjj = 0; jjj < population_size; jjj++)
+						{
+							if (adults[jjj].alive)
+							{
+								vcf << '\t' << adults[jjj].maternal[j].pref_ae[jj] << "/" << adults[jjj].paternal[j].pref_ae[jj];
+							}
+						}
+					}
+				}
+				
+			}
+			vcf.close();
+		}
+	}
 	void output_trait_info(parameters gp, int gen, int pop_id, ofstream & output)
 	{
 		int j;
