@@ -138,11 +138,11 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
-Somehow it seems like the seed isn't being set properly, because the polygyny and non-polygyny have the same thresholds! And the same thing happened here. 
+
 
 ### Expectation: multiple morphs will be maintained
 
-
+I ran a set of models with the following parameter variations, in which I expected multiple morphs to be maintained.
 
 ```{r}
 ```{r multipleMorphs,fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from. The top row are runs where males can only mate once and the bottom row are runs where males can mate with multiple females. The top row is for the case when males mate with one female, and the bottom is polygyny.", fig.height=6,fig.width=7.5}
