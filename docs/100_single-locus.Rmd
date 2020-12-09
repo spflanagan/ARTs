@@ -102,7 +102,7 @@ I ran some simple sets of parameters where I have an expectation for the outcome
 
 The first of these scenarios arise when courters and parents have a reproductive advantage (they can fertilize 8 eggs compared to the non-courter and non-parent's 4 eggs). The nesting male (regardless of phenotype) experienced a reproductive advantage by fertilizing a higher proportion of the eggs. 
 
-```{r}
+```{r courterRS, fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from.", fig.height=3,fig.width=6.5}
 courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
 courterRS$Courter2NonRS<-8/4
 bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -121,6 +121,8 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 Some of these crashed (ones with generation 0), presumably becuase all of the non-courters were given nests.
 
 ```{r}
+
+```{r polyCourterRS, fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from.", fig.height=3,fig.width=6.5}
 courterRSpoly<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_polygyny_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
 courterRSpoly$Courter2NonRS<-8/4
 bp<-barplot(t(as.matrix(courterRSpoly[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -143,6 +145,7 @@ Somehow it seems like the seed isn't being set properly, because the polygyny an
 
 
 ```{r}
+```{r multipleMorphs,fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from. The top row are runs where males can only mate once and the bottom row are runs where males can mate with multiple females. The top row is for the case when males mate with one female, and the bottom is polygyny.", fig.height=6,fig.width=7.5}
 var_patts<-c("pcu_1locus_nestBinary_equalFitness.*summary.txt",
              "pcu_1locus_nestBinary_onlySpermComp.*summary.txt",
              "pcu_1locus_nestBinary_sneakRSadvantage_\\d.*summary.txt",
