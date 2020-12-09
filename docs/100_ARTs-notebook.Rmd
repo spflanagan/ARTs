@@ -14,6 +14,37 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 9 December 2020
+
+The only ones that sneak are non-parents (I wonder if this is the best way to do it?)
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_courterRSadvantage_5_traits.txt")
+summary<-read.delim("single_locus/pcu_1locus_nestBinary_courterRSadvantage_5_summary.txt")
+
+plot(traits$CourtTrait[traits$Gen==0 & traits$Pop==0],
+     pch=as.numeric(traits$Sex[traits$Gen==0 & traits$Pop==0]))
+```
+
+Somehow we're still n2ot getting any variation in trait values at the start of the population.
+```{r}
+plot(traits$CourtTrait[traits$Gen==12000 & traits$Pop==0],
+     pch=as.numeric(traits$Sex[traits$Gen==12000 & traits$Pop==0]))
+```
+
+I guess it's because we have only one locus with its allelic effects? 
+
+```{r}
+ae<-read.delim("single_locus/pcu_1locus_nestBinary_courterRSadvantage_5_allelic-effects.txt")
+plot(ae$ParentQTL0,type = 'l')
+plot(ae$CourterQTL0,type = 'l')
+```
+
+So the population average allelic effects change as the population fixes for one morph or the other, unsurprisingly. But why is it only the two values to start with? 
+
+To dive into this I need to adjsut the outputs (put in a debugging output probably). I want basically want the genotypes for all individuals in gen 0 to find out how the alleles are distributed and if that makes sense. I've written this code but need to test it. 
+
+
 # 7 December 2020
 
 Ok so now I'm not sure if what I'm observing is expected or unexpected. I sort of would have expected sneakers all the time in my other scenarios -- but I guess I have female preferences inherent in the model so that might alter my expectations.  
