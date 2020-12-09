@@ -118,9 +118,10 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
-Some of these crashed (ones with generation 0), presumably becuase all of the non-courters were given nests.
 
-```{r}
+With the current set of conditions, when males are only permitted to mate once, some variation is able to be maintained in the population (Fig. \@ref(fig:courterRS)), even though the Parent/Courter morph has higher fitness at each step of the model. However, it does follow our prediction that only parents will be able to be maintained in the population. The final outcome of the population appears to be somewhat dependent on the initial frequencies of the parent and courter traits (Fig. \@ref(fig:courterRSinitialvfinal)).
+
+
 
 ```{r polyCourterRS, fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from.", fig.height=3,fig.width=6.5}
 courterRSpoly<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_polygyny_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
