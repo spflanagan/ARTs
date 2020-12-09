@@ -160,7 +160,7 @@ varDat<-lapply(var_patts,function(pattern){
   dat<-get.morph.freqs(plot.pc.reps(pattern=pattern,path="single_locus",cols,make.plot=FALSE))
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
         col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg = dat$Generation,
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
         las=2,
         border=NA,
         main=gsub("^.*nestBinary_(\\w+)[[:punct:]].*","\\1",pattern))
