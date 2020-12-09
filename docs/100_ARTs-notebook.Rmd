@@ -14,6 +14,20 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 7 December 2020
+
+Ok so now I'm not sure if what I'm observing is expected or unexpected. I sort of would have expected sneakers all the time in my other scenarios -- but I guess I have female preferences inherent in the model so that might alter my expectations.  
+
+Things to remind myself of:
+- who is allowed to sneak?
+
+Things to investigate:
+- how much variation exists in traits at the start and end of the model?
+- check whether all have variation or just some (barplots might not be showing small small values)
+- what happens with random mating?
+- is there a way to calculate expected numbers to be output?
+- is there a consistent pattern with starting proportions related to finishing proportions?
+
 # 25 November 2020
 
 So the problem with the lifetime RS counter was that I output the traits after I'd already reset the population, so I've cahnged it to output the info before the population resets in the final generation. 
