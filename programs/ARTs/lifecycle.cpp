@@ -247,10 +247,11 @@ int main(int argc, char*argv[])
 			pops[ii].determine_pop_size(global_params);
 			if(pops[ii].population_size > 0)
 			{
-				if(global_params.ae_vcf)
+				if(i == 0 && global_params.ae_vcf)
 				{
-					output_ae_vcf(global_params, ii);
+					pops[ii].output_ae_vcf(global_params, ii);
 				}
+				
 				if (global_params.verbose)
 				{
 					if (global_params.log_file)
