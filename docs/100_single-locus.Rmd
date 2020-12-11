@@ -110,7 +110,7 @@ bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")
         names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
         las=2,
         border=NA)
-
+text(x=bp,y=0.5,srt=90,labels = courterRS$FreqCP)
 par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
 plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
 legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
@@ -145,6 +145,7 @@ bp<-barplot(t(as.matrix(courterRSpoly[,c("FreqNcNp", "FreqCNp", "FreqNcP", "Freq
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
         las=2,
         border=NA)
+text(x=bp,y=0.5,srt=90,labels = courterRSpoly$FreqCP)
 
 par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
 plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
@@ -191,6 +192,7 @@ varDat<-lapply(var_patts,function(pattern){
         las=2,
         border=NA,
         main=gsub("^.*nestBinary_(\\w+)[[:punct:]].*","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
 })
