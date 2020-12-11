@@ -694,6 +694,7 @@ public:
 			}
 			
 		}
+		
 		for (j = 0; j < gp.carrying_capacity; j++)
 		{
 			if (j < gp.carrying_capacity)
