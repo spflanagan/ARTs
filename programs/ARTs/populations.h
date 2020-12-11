@@ -2743,7 +2743,7 @@ public:
 			}
 		}
 	}
-	void eval_rs(parameters gp) // calculate average reproductive success
+	void eval_rs(parameters gp, ofstream & logf) // calculate average reproductive success
 	{
 		int j;
 		for (j = 0; j < adults.size(); j++)
@@ -2758,34 +2758,65 @@ public:
 				adults[progeny[j].dad].lifetime_rs++;
 			}
 		}
-		if (gp.verbose)
+		if (gp.debug)
 		{
-			for (j = 0; j < adults.size(); j++)
+			if(gp.log_file)
 			{
-				if (adults[j].lifetime_rs > gp.rs_c)
+				for (j = 0; j < adults.size(); j++)
 				{
-					if (adults[j].alive)
-						std::cout << "\n\tLiving ind. " << j;
-					else
-						std::cout << "\n\tDead ind. " << j;
-					if (adults[j].female)
-						std::cout << ", female, had lifetime RS " << adults[j].lifetime_rs;
-					else
+					if (adults[j].lifetime_rs > gp.rs_c)
 					{
-						if (adults[j].courter && adults[j].parent)
-							std::cout << ", courter/parent, had lifetime RS " << adults[j].lifetime_rs;
-						if (adults[j].courter && !adults[j].parent)
-							std::cout << ", courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
-						if (!adults[j].courter && adults[j].parent)
-							std::cout << ", non-courter/parent, had lifetime RS " << adults[j].lifetime_rs;
-						if (!adults[j].courter && !adults[j].parent)
-							std::cout << ", non-courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+						if (adults[j].alive)
+							logf << "\n\tLiving ind. " << j;
+						else
+							logf << "\n\tDead ind. " << j;
+						if (adults[j].female)
+							logf << ", female, had lifetime RS " << adults[j].lifetime_rs;
+						else
+						{
+							if (adults[j].courter && adults[j].parent)
+								logf << ", courter/parent, had lifetime RS " << adults[j].lifetime_rs;
+							if (adults[j].courter && !adults[j].parent)
+								logf << ", courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+							if (!adults[j].courter && adults[j].parent)
+								logf << ", non-courter/parent, had lifetime RS " << adults[j].lifetime_rs;
+							if (!adults[j].courter && !adults[j].parent)
+								logf << ", non-courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+						}
 					}
 				}
 			}
+			else
+			{
+				for (j = 0; j < adults.size(); j++)
+				{
+					if (adults[j].lifetime_rs > gp.rs_c)
+					{
+						if (adults[j].alive)
+							std::cout << "\n\tLiving ind. " << j;
+						else
+							std::cout << "\n\tDead ind. " << j;
+						if (adults[j].female)
+							std::cout << ", female, had lifetime RS " << adults[j].lifetime_rs;
+						else
+						{
+							if (adults[j].courter && adults[j].parent)
+								std::cout << ", courter/parent, had lifetime RS " << adults[j].lifetime_rs;
+							if (adults[j].courter && !adults[j].parent)
+								std::cout << ", courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+							if (!adults[j].courter && adults[j].parent)
+								std::cout << ", non-courter/parent, had lifetime RS " << adults[j].lifetime_rs;
+							if (!adults[j].courter && !adults[j].parent)
+								std::cout << ", non-courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+						}
+					}
+				}
+			}
+			
+			
 		}
 	}
-	vector<double> avg_court_rs(parameters gp)
+	vector<double> avg_court_rs(parameters gp, ofstream & logf)
 	{
 		int k;
 		int num_courter, num_parent, num_noncourter, num_nonparent;
@@ -2794,7 +2825,7 @@ public:
 		num_noncourter = num_mal - num_courter;
 		num_parent = calc_freq_parent(gp)*num_mal;
 		num_nonparent = num_mal - num_parent;
-		eval_rs(gp);
+		eval_rs(gp, logf);
 		
 		vector<double> rs;// courter_rs, noncourter_rs, parent_rs, nonparent_rs
 		for (k = 0; k < 4; k++)
@@ -3271,13 +3302,13 @@ public:
 		output_file << std::flush;
 	}
 
-	void output_summary_info(parameters gp, ofstream & summary_output)
+	void output_summary_info(parameters gp, ofstream & summary_output, ofstream & logf)
 	{
         //pop info
         summary_output <<'\t' << population_size << '\t' << num_mal << '\t' << num_fem << '\t' << num_progeny;
 
 		double dtemp;
-		vector<double> rs = avg_court_rs(gp);
+		vector<double> rs = avg_court_rs(gp, logf);
 		if (gp.parent_trait || gp.parent_conditional)
 		{
 			dtemp = calc_freq_parent(gp);
@@ -3422,10 +3453,10 @@ public:
 				if (gp.court_trait)
 				{
 					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
-					{
+					{		
 						vcf << '\n' << j << '\t' << jj << '\t' << j << "." << jj << '\t' << "NA" << '\t' << "NA";
 						vcf << "\t100\tPASS\tAF\tGT";
-						for (jjj = 0; jjj < population_size; jjj++)
+						for (jjj = 0; jjj < population_size; jjj++)		
 						{
 							if (adults[jjj].alive)
 							{
@@ -3469,10 +3500,10 @@ public:
 			vcf.close();
 		}
 	}
-	void output_trait_info(parameters gp, int gen, int pop_id, ofstream & output)
+	void output_trait_info(parameters gp, int gen, int pop_id, ofstream & output, ofstream & logf)
 	{
 		int j;
-		eval_rs(gp);
+		eval_rs(gp, logf);
 		// "Pop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
 		for (j = 0; j < adults.size(); j++)
 		{
