@@ -536,7 +536,6 @@ public:
 	}
 	void initialize(parameters & gp)
 	{
-		std::cout << "Initializing a population.\n";
 		population_size = gp.carrying_capacity;
 		int j, jj, jjj;
 		num_fem = num_mal = 0;
