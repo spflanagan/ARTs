@@ -51,8 +51,7 @@ int main(int argc, char*argv[])
                 log_out.open(log_name);
                 log_out << "\nRunning the ARTs model (from the command line) with output to base name " << global_params.base_name << '\n' <<std::flush;
             }
-			else
-                std::cout << "\nRunning the ARTs model (from the command line) with output to base name " << global_params.base_name << '\n'<<std::flush;
+			std::cout << "\nRunning the ARTs model (from the command line) with output to base name " << global_params.base_name << '\n'<<std::flush;
 		}
 	}
 	else
@@ -212,7 +211,7 @@ int main(int argc, char*argv[])
 			else
 				pops[i].output_qtl_info(global_params, qtlinfo_output, true);
 			pops[i].output_allelic_effects(global_params,ae_output, true);
-			pops[i].output_trait_info(global_params, 0, i, trait_output);
+			pops[i].output_trait_info(global_params, 0, i, trait_output, log_out);
 		}
 		qtlinfo_output << "Pop" << i;
 		pops[i].output_qtl_info(global_params, qtlinfo_output, false);
@@ -306,7 +305,7 @@ int main(int argc, char*argv[])
                 }
 				//output summary stats
 				summary_output << "\n" << i << "\tPop" << ii;
-				pops[ii].output_summary_info(global_params, summary_output);//includes RS
+				pops[ii].output_summary_info(global_params, summary_output, log_out);//includes RS
                 //output allele frequencies
                 markers_output << "\n" << i << "\tPop" << ii;
                 pops[ii].output_allele_freqs(global_params, markers_output);
@@ -398,7 +397,7 @@ int main(int argc, char*argv[])
                     pops[ii].viability_selection(global_params);
 				//output summary stats
 				summary_output << "\n" << global_params.num_init_gen + i << "\tPop" << ii;
-				pops[ii].output_summary_info(global_params, summary_output);
+				pops[ii].output_summary_info(global_params, summary_output, log_out);
                 markers_output << '\n' <<global_params.num_init_gen + i << "\tPop" << ii;
                 pops[ii].output_allele_freqs(global_params, markers_output);
 				ae_output << '\n' << global_params.num_init_gen +i+1 << "\tPop" << ii;
@@ -406,7 +405,7 @@ int main(int argc, char*argv[])
 				if(i == (global_params.num_exp_gen - 1))
 				{
 					//output the trait values for the final generation of each population
-					pops[ii].output_trait_info(global_params,global_params.num_init_gen + global_params.num_exp_gen, ii, trait_output);
+					pops[ii].output_trait_info(global_params,global_params.num_init_gen + global_params.num_exp_gen, ii, trait_output, log_out);
 				}
 				//stochastic survival
 				//pops[i].density_regulation(global_params);
@@ -450,7 +449,7 @@ int main(int argc, char*argv[])
                         log_out << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n' << std::flush;
 					else
 						std::cout << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n' << std::flush;
-					pops[ii].output_trait_info(global_params, i, ii, trait_output);
+					pops[ii].output_trait_info(global_params, i, ii, trait_output, log_out);
 					crash_counter++;
 				}
 					
