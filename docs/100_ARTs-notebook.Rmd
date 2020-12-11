@@ -11,8 +11,105 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
 knitr::opts_knit$set(root.dir='../fixedART-results/') #change
-source("~/Research/ARTs/R/002_freq_functions.R")
+source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 ```
+
+# 11 December 2020
+
+So following on from yesterday, clearly something wonky is going on if they're all getting exactly the same alleles. 
+
+```{r}
+library(gwscaR)
+aevcf<-parse.vcf("arts_pop_0_ae.vcf")
+crtGT<-do.call(rbind,strsplit(t(aevcf[1,10:ncol(aevcf)]),"/"))
+crtGT<-apply(crtGT,2,as.numeric)
+
+prtGT<-do.call(rbind,strsplit(t(aevcf[2,10:ncol(aevcf)]),"/"))
+prtGT<-apply(prtGT,2,as.numeric)
+```
+
+Just checking -- this is true for both QTLs. 
+
+I'm going to have the program output the tempalleles during initialization. 
+
+Multiple alleles *are* initialized:
+Temp alleles: -0.18129 -0.650723 -0.0726133
+
+Temp alleles: -0.987933 0.513364 -0.570933
+
+```{r}
+aevcf<-parse.vcf("arts_test_pop_0_ae.vcf")
+crtGT<-do.call(rbind,strsplit(t(aevcf[1,10:ncol(aevcf)]),"/"))
+crtGT<-apply(crtGT,2,as.numeric)
+
+prtGT<-do.call(rbind,strsplit(t(aevcf[2,10:ncol(aevcf)]),"/"))
+prtGT<-apply(prtGT,2,as.numeric)
+```
+
+crtGT
+-0.18129 
+    2000 
+table(prtGT)
+prtGT
+0.513364 
+    2000 
+
+So it's only assigning one of them but inconsistently. I'm going to add some outputs just to try to track down what's going on here.
+In initializing the individuals, it seems that different alleles are being allocated -- so what's happening? 
+
+Ah I was outputting genotypes in every generation, not just the first one. Let's try this again (with a debug mode incorporated as well). Ok, now the vcf has variety
+
+table(crtGT)
+crtGT
+0.168514 0.624808 
+     978     1022 
+table(prtGT)
+prtGT
+-0.280098  0.251608 
+     1026       974 
+
+Ok, so why was I looking into this? Ah yes, because there's apparently no variation in traits at the start based on the summary info.
+
+```{r}
+traits<-read.delim("arts_test_traits.txt")
+hist(traits$CourtTrait[traits$Gen==0 & traits$Pop==0])
+
+hist(rowSums(crtGT))
+
+```
+
+Ahh, this is because they're all homozygotes, so this is expected. I could output trait values at gen 1 if I wanted too ensure things are mixing properly.
+
+```{r}
+traits<-read.delim("arts_test_traits.txt")
+hist(traits$CourtTrait[traits$Gen==3 & traits$Pop==0])
+
+
+```
+Ok well this works I think - by generation 3 there are some new combinations
+
+But otherwise I think I can move on?
+
+I'm going to look into:
+- check whether all have variation or just some (barplots might not be showing small small values)
+I was right to check this, because there are a number of runs that are not obvious in the barplots but do have tiny amounts of variation (prob 1-2 individuals of the sneaker phenotype).
+
+
+
+# 10 December 2020
+
+I've fixed a tiny bug from yesterday and am running some tests. One thing that I've done today is added the writing of some debug info to a log file, but this is a teensy bit slow (it's all the reproductive success outputs) and probably not useful -- considering adding a debug flag and having it only output it at that point rather than with --verbose.
+
+In the meantime, I can take a look at the vcf file that's been output.
+
+```{r}
+library(gwscaR)
+aevcf<-parse.vcf("arts_pop_0_ae.vcf")
+crtGT<-do.call(rbind,strsplit(t(aevcf[1,10:ncol(aevcf)]),"/"))
+crtGT<-apply(crtGT,2,as.numeric)
+```
+
+They're all the same!
 
 # 9 December 2020
 
@@ -26,7 +123,7 @@ plot(traits$CourtTrait[traits$Gen==0 & traits$Pop==0],
      pch=as.numeric(traits$Sex[traits$Gen==0 & traits$Pop==0]))
 ```
 
-Somehow we're still n2ot getting any variation in trait values at the start of the population.
+Somehow we're still not getting any variation in trait values at the start of the population.
 ```{r}
 plot(traits$CourtTrait[traits$Gen==12000 & traits$Pop==0],
      pch=as.numeric(traits$Sex[traits$Gen==12000 & traits$Pop==0]))
