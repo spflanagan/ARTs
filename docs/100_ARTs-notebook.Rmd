@@ -14,6 +14,84 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 ```
 
+
+# 14 December 2020
+
+I'm worried about going down unnecessary rabbit holes. What do I want to understand about the model that I don't currently understand?
+1. when variation exists, what casues one sneaker type to become prevalent?
+2. what causes the differences among runs in terms of variation vs no variation?
+3. If the only ones that sneak are non-parents, how do any non-courter/parents mate?
+
+For number 1, I think initial frequencies have something to do with it. For number 2, it could be that fitness is too flat aka the differences between the morphs are not exaggerated enough.
+
+The answer to #3 must arise from females exhausting their options searching for courters and randomly mating with a non-courter/parent. Courter/non-parents might sire a nest that fails but they will also be able to sneak fertilizations. ASK SUZANNE: should both non-courters and non-parents be added to the sneakers list? [I can test this assumption by increasing the female search space]
+
+So let's dig into initial frequencies first, then I'll start some more runs with starker differences and possibly with a larger search space for females.
+
+```{r}
+courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+courterRS1<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE),gen = "first")
+```
+```{r}
+par(mfrow=c(2,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend(x=5,y=0.04,bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+bp<-barplot(t(as.matrix(courterRS1[,c("CourterFreq", "ParentFreq")]))-0.5,
+        col=cols[c("courter","parent")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,beside = TRUE,
+        border=NA)
+legend(y=.04,x=15,xpd=TRUE,c("courter","parent"),col=cols[c("courter","parent")],
+       ncol=2,pch=15,bty='n',cex=1.25)
+
+```
+
+So, what this suggests is that the initial conditions seem to play a role but it doesn't seem to fully explain it. Also, it's odd because when courters start off as more abundant than parents, the non-courter/parent morph is the most successful one, and when parents start off as more frequent the courter/non-parent is the more successful morph (and I've checked it's not a plotting error).
+
+Could thresholds play a role? 
+
+```{r}
+par(mfrow=c(3,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend(x=5,y=0.04,bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+bp<-barplot(t(as.matrix(courterRS1[,c("CourterFreq", "ParentFreq")]))-0.5,
+        col=cols[c("courter","parent")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,beside = TRUE,
+        border=NA)
+legend(y=.04,x=15,xpd=TRUE,c("courter","parent"),col=cols[c("courter","parent")],
+       ncol=2,pch=15,bty='n',cex=1.25)
+bp<-barplot(t(as.matrix(courterRS1[,c("CourterThresh", "ParentThresh")])),
+        col=cols[c("courter","parent")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,beside = TRUE,
+        border=NA)
+legend(y=1.75,x=15,xpd=TRUE,c("courter","parent"),col=cols[c("courter","parent")],
+       ncol=2,pch=15,bty='n',cex=1.25)
+
+```
+
+So thresholds might be related -- noncourter/parents emerge when courters start off above 0.5 but parents have a higher threshold. courter/nonparents emerge when parents start off above 0.5 (most of the time), regardless of thresholds. Hmm this isn't helping make the picture any clearer. 
+
+
+I think I want to run a few tests:
+- random mating
+- females always exert a choice (i.e., they don't mate instead of random mating)
+- larger RS tradeoffs
+
+Ok, first running the original sets as before but with females not defaulting to random mating and with only random mating. No other parameter differences from what's in the single locus doc and results already.
+
+
 # 11 December 2020
 
 So following on from yesterday, clearly something wonky is going on if they're all getting exactly the same alleles. 
