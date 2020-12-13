@@ -2114,8 +2114,9 @@ public:
 				}
 			}
 			else
-			{ // if the female can't find a preferred male, she will mate at random
-				mate_found = random_mating(gp, fem_index, male_index);
+			{ 
+				if(!gp.allow_no_mating)	// if the female can't find a preferred male, she will mate at random
+					mate_found = random_mating(gp, fem_index, male_index);
 			}
 		}//end of finding the mates
 		return mate_found;
