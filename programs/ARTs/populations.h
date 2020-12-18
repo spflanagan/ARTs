@@ -2220,6 +2220,7 @@ public:
 				this_nest.off_props.push_back(fecundity_share[k]);
 			for(k = 0; k < male_ids.size(); k++)
 				this_nest.all_dads.push_back(male_ids[k]);
+			adults[male_id].lifetime_rs = adults[male_id].lifetime_rs + fecundity_share.size();
 		}
 	}
 	int fertilization(int fem_id,parameters gp)
