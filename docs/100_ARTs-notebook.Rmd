@@ -14,6 +14,267 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 18 December 2020
+
+I've tweaked the code to track sneaks as lifetime_rs, we'll see what the outputs of that look like -- in order to figure out how non-courters/parents persist, we need to determine whether they sneak or not.
+
+
+# 17 December 2020
+
+I tweaked the code but initial female frequencies don't seem to be massively important
+
+```{r}
+femFreqs<-get_female_freqs(pattern="pcu_1locus_nestBinary_nm_courterRSadvantage.*traits.txt",path="single_locus")
+courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_nm_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+par(mfrow=c(3,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend("topleft",bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+
+bp<-barplot(t(as.matrix(femFreqs[femFreqs$gen==0,c("NcNp", "CNp", "NcP","CP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =  femFreqs$rep[femFreqs$gen==0],
+        las=2,
+        border=NA)
+
+# barplot of just initial female frequencies
+bp<-barplot(t(as.matrix(femFreqs[femFreqs$gen==0,c("Courter", "Parent")])),
+        col=cols[c("courter","parent")],
+        names.arg = femFreqs$rep[femFreqs$gen==0],
+        las=2,
+        border=NA)
+abline(h=0.5,lty=2)
+legend(y=1.2,x=15,xpd=TRUE,c("courter","parent"),col=cols[c("courter","parent")],
+       ncol=2,pch=15,bty='n',cex=1.25)
+```
+
+When there are slightly more parents to start off with, the courter/non-parent is benefitted the most. This morph is able to sneak fertilizations and because it's a courter has a higher number of eggs -- so it can benefit. The non-courter/parent cannot sneak, so the only way that morph is retained is through females -- I'm still not sure how this one is maintained in these no-mating alternative scenarios! Mutation?
+
+And what causes the differences among runs? It's obviously something to do with the initial conditions.
+
+Let's look at the non-courter/parents:
+```{r}
+ traits[traits$Gen==12000 & traits$Courter==0 & traits$Parent==1,]
+```
+       Gen Pop Individual  Sex Courter CourtTrait Parent ParentTrait Preference PrefTrait MateFound PotRS LifetimeRS Alive
+5000 12000   0        999 MALE       0    1.18571      1    0.441494          1         0         0     8          0     1
+7000 12000   2        999 MALE       0    1.18571      1    0.441494          1         0         0     8          0     1
+8000 12000   3        999 MALE       0    1.18571      1    0.441494          1         0         0     8          0     1
+
+
+Hmm these ones are males...they did not mate -- but did they sneak? perhaps I should track/add that to the output, which could help me follow what's going on.
+
+# 16 December 2020
+
+So at the end of my work yesterday, the importance of female initial traits seemed to be important. 
+```{r}
+get_female_freqs<-function(pattern, path){
+  files<-list.files(pattern=pattern,path=path,full.names = TRUE)
+  femFreqs<-do.call(rbind,lapply(files, function(filename){
+    traits<-read.delim(filename)
+    allFreqs<-do.call(rbind, lapply(unique(traits$Pop),function (popindex, traits){
+      traitsF<-traits[traits$Gen==0 & traits$Pop==popindex,]
+      traitsL<-traits[traits$Gen==12000 & traits$Pop==popindex,]
+      
+      nums<-data.frame(NcNp=c(nrow(traitsF[traitsF$Sex=="FEMALE" & traitsF$Courter==0 & traitsF$Parent==0,]),
+                                nrow(traitsL[traitsL$Sex=="FEMALE" & traitsL$Courter==0 & traitsL$Parent==0,])),
+                         NcP=c(nrow(traitsF[traitsF$Sex=="FEMALE" & traitsF$Courter==0 & traitsF$Parent==1,]),
+                                nrow(traitsL[traitsL$Sex=="FEMALE" & traitsL$Courter==0 & traitsL$Parent==1,])),
+                         CNp=c(nrow(traitsF[traitsF$Sex=="FEMALE" & traitsF$Courter==1 & traitsF$Parent==0,]),
+                                nrow(traitsL[traitsL$Sex=="FEMALE" & traitsL$Courter==1 & traitsL$Parent==0,])),
+                         CP=c(nrow(traitsF[traitsF$Sex=="FEMALE" & traitsF$Courter==1 & traitsF$Parent==1,]),
+                                nrow(traitsL[traitsL$Sex=="FEMALE" & traitsL$Courter==1 & traitsL$Parent==1,])))
+      freqs<-nums/rowSums(nums)
+      freqs$Courter<-c(nrow(traitsF[traitsF$Sex=="FEMALE" & traitsF$Courter==1,])/nrow(traitsF[traitsF$Sex=="FEMALE",]),
+                       nrow(traitsL[traitsL$Sex=="FEMALE" & traitsL$Courter==1 ,])/nrow(traitsL[traitsL$Sex=="FEMALE",]))
+
+      freqs$Parent<-c(nrow(traitsF[traitsF$Sex=="FEMALE" & traitsF$Parent==1,])/nrow(traitsF[traitsF$Sex=="FEMALE",]),
+                      nrow(traitsL[traitsL$Sex=="FEMALE" & traitsL$Parent==1,])/nrow(traitsL[traitsL$Sex=="FEMALE",]))
+      freqs$gen<-c(0,12000)
+      freqs$rep<-as.numeric(gsub("^.*_(\\d)_traits.txt","\\1",filename))
+      freqs$pop<-popindex
+      return(freqs)
+    }, traits = traits))
+    return(allFreqs)
+  }))
+  return(femFreqs)
+}
+
+
+femFreqs<-get_female_freqs(pattern="pcu_1locus_nestBinary_courterRSadvantage.*traits.txt",path="single_locus")
+```
+
+Now to try to make some barplots
+
+```{r}
+courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+par(mfrow=c(2,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend(x=5,y=0.04,bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+
+# barplot of just initial female frequencies
+bp<-barplot(t(as.matrix(femFreqs[femFreqs$gen==0,c("NcNp", "CNp", "NcP","CP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg = femFreqs$rep[femFreqs$gen==0],
+        las=2,
+        border=NA)
+```
+
+Ok, apparently I didn't save the first generation of traits for most of the runs -- so I'm re-running them...ahh it turns out I only output gen 0 for pop 0! I've updated the code but need to stop all my processes and re-run all of my models. 
+
+```{r}
+femFreqs<-get_female_freqs(pattern="pcu_1locus_nestBinary_nm_courterRSadvantage.*traits.txt",path="single_locus")
+courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_nm_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+par(mfrow=c(2,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend(x=5,y=0.04,bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+
+# barplot of just initial female frequencies
+bp<-barplot(t(as.matrix(femFreqs[femFreqs$gen==0,c("Courter", "Parent")])),
+        col=cols[c("courter","parent")],
+        names.arg = femFreqs$rep[femFreqs$gen==0],
+        las=2,
+        border=NA)
+abline(h=0.5,lty=2)
+```
+
+# 15 December 2020
+
+Yesterday's runs seem to have finished, let's check them out.
+
+```{r}
+nm_patts<-c("pcu_1locus_nestBinary_nm_courterRSadvantage.*summary.txt",
+             "pcu_1locus_nestBinary_nm_equalFitness.*summary.txt",
+             "pcu_1locus_nestBinary_nm_onlySpermComp.*summary.txt",
+             "pcu_1locus_nestBinary_nm_sneakRSadvantage_\\d.*summary.txt",
+             "pcu_1locus_nestBinary_nm_sneakRSadvantage_courterRSadvantage.*summary.txt",
+             "pcu_1locus_polygyny_nm_nestBinary_courterRSadvantage.*summary.txt",
+             "pcu_1locus_polygyny_nm_nestBinary_equalFitness.*summary.txt",
+             "pcu_1locus_polygyny_nm_nestBinary_onlySpermComp.*summary.txt",
+             "pcu_1locus_polygyny_nm_nestBinary_sneakRSadvantage_\\d.*summary.txt",
+             "pcu_1locus_polygyny_nm_nestBinary_sneakRSadvantage_courterRSadvantage.*summary.txt")
+par(mfrow=c(2,length(nm_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+nmDat<-lapply(nm_patts,function(pattern){
+  dat<-get.morph.freqs(plot.pc.reps(pattern=pattern,path="single_locus",cols,make.plot=FALSE))
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=gsub("^.*nestBinary_(\\w+)[[:punct:]].*","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
+```
+
+Ok so ^ this brings up an important issue, which is that I don't know how the non-courter/parents exist in the population! Ohh maybe through females? 
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_nm_onlySpermComp_1_traits.txt")
+table(traits[traits$Gen==12000  & traits$Courter==0 & traits$Parent==1,c("Sex","Pop")])
+
+table(traits[traits$Gen==12000 & traits$Pop==0  & traits$Courter==0 & traits$Parent==1,c("Sex","MateFound")])
+```
+
+Ok, so the females are able to mate and maintain these traits in the population -- that's how!
+
+
+```{r}
+randm_patts<-c("pcu_1locus_nestBinary_RM_courterRSadvantage.*summary.txt",
+             "pcu_1locus_nestBinary_RM_equalFitness.*summary.txt",
+             "pcu_1locus_nestBinary_RM_onlySpermComp.*summary.txt",
+             "pcu_1locus_nestBinary_RM_sneakRSadvantage_\\d.*summary.txt",
+             "pcu_1locus_nestBinary_RM_sneakRSadvantage_courterRSadvantage.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_RM_courterRSadvantage.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_RM_equalFitness.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_RM_onlySpermComp.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_RM_sneakRSadvantage_\\d.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_RM_sneakRSadvantage_courterRSadvantage.*summary.txt")
+par(mfrow=c(2,length(randm_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+randDat<-lapply(randm_patts,function(pattern){
+  dat<-get.morph.freqs(plot.pc.reps(pattern=pattern,path="single_locus",cols,make.plot=FALSE))
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=gsub("^.*nestBinary_(\\w+)[[:punct:]].*","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
+```
+
+The fact that random mating is not substantially different from the other cases indicates to me that the fitness differentials must not be large enough, or something else needs to change because random processes perform just as well as our so-called deterministic one. 
+
+
+So these things suggest that:
+- selection differentials aren't strong enough
+- the model needs to run for a longer amount of time
+
+Could the initial frequencies of the morphs *in females* be important in determining the final outcomes?
+
+```{r}
+levels(traits$Parent)<-c(0,1)
+traits0f<-traits[traits$Gen==0 & traits$Pop==0,]
+traits0l<-traits[traits$Gen==12000 & traits$Pop==0,]
+
+nums0<-data.frame(NcNp=c(nrow(traits0f[traits0f$Sex=="FEMALE" & traits0f$Courter==0 & traits0f$Parent==0,]),
+                          nrow(traits0l[traits0l$Sex=="FEMALE" & traits0l$Courter==0 & traits0l$Parent==0,])),
+                   NcP=c(nrow(traits0f[traits0f$Sex=="FEMALE" & traits0f$Courter==0 & traits0f$Parent==1,]),
+                          nrow(traits0l[traits0l$Sex=="FEMALE" & traits0l$Courter==0 & traits0l$Parent==1,])),
+                   CNp=c(nrow(traits0f[traits0f$Sex=="FEMALE" & traits0f$Courter==1 & traits0f$Parent==0,]),
+                          nrow(traits0l[traits0l$Sex=="FEMALE" & traits0l$Courter==1 & traits0l$Parent==0,])),
+                   CP=c(nrow(traits0f[traits0f$Sex=="FEMALE" & traits0f$Courter==1 & traits0f$Parent==1,]),
+                          nrow(traits0l[traits0l$Sex=="FEMALE" & traits0l$Courter==1 & traits0l$Parent==1,])))
+freqs0<-nums0/rowSums(nums0)
+
+```
+
+Now I just need to do this for all of the pops so that I can make barplots like I Was doing yesterday.
+
+```{r}
+par(mfrow=c(2,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend(x=5,y=0.04,bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+
+# barplot of just initial female frequencies
+
+```
+
+
+
+
 
 # 14 December 2020
 
