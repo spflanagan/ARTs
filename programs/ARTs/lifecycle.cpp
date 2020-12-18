@@ -211,7 +211,6 @@ int main(int argc, char*argv[])
 			else
 				pops[i].output_qtl_info(global_params, qtlinfo_output, true);
 			pops[i].output_allelic_effects(global_params,ae_output, true);
-			pops[i].output_trait_info(global_params, 0, i, trait_output, log_out);
 		}
 		qtlinfo_output << "Pop" << i;
 		pops[i].output_qtl_info(global_params, qtlinfo_output, false);
@@ -280,6 +279,8 @@ int main(int argc, char*argv[])
 				string temp_file_name;
 				t1 = std::chrono::high_resolution_clock::now();
 				pops[ii].nest_and_fertilize(global_params, write_to_file, temp_file_name);
+				//output trait values for gen 0 to include mating success
+				if(i == 0) pops[ii].output_trait_info(global_params, i, ii, trait_output, log_out);
 				t2 = std::chrono::high_resolution_clock::now();
 				duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
 				if (global_params.optimize)
