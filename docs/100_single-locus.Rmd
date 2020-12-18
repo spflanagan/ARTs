@@ -203,3 +203,76 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
+These runs did not produce as much variation as I expected, and raised several questions:
+
+1. What causes one or another sneaker morph to become present in the population?
+2. How do non-intuitive morphs like the non-courter/parent persist, when they shouldn't mate at all?
+3. What causes the variation among morphs?
+
+The answers to these three questions seem to be somewhat linked. First, I 
+
+
+
+```{r}
+courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+courterRS1<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE),gen = "first")
+```
+```{r}
+par(mfrow=c(2,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend(x=5,y=0.04,bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+bp<-barplot(t(as.matrix(courterRS1[,c("CourterFreq", "ParentFreq")]))-0.5,
+        col=cols[c("courter","parent")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,beside = TRUE,
+        border=NA)
+legend(y=.04,x=15,xpd=TRUE,c("courter","parent"),col=cols[c("courter","parent")],
+       ncol=2,pch=15,bty='n',cex=1.25)
+
+```
+
+So, what this suggests is that the initial conditions seem to play a role but it doesn't seem to fully explain it. Also, it's odd because when courters start off as more abundant than parents, the non-courter/parent morph is the most successful one, and when parents start off as more frequent the courter/non-parent is the more successful morph. So I looked next into the role thresholds could play, and whether the random assignment of trait values contributes to the random success of one morph or another..
+
+
+```{r}
+par(mfrow=c(3,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend(x=5,y=0.04,bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+bp<-barplot(t(as.matrix(courterRS1[,c("CourterFreq", "ParentFreq")]))-0.5,
+        col=cols[c("courter","parent")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,beside = TRUE,
+        border=NA)
+legend(y=.04,x=15,xpd=TRUE,c("courter","parent"),col=cols[c("courter","parent")],
+       ncol=2,pch=15,bty='n',cex=1.25)
+bp<-barplot(t(as.matrix(courterRS1[,c("CourterThresh", "ParentThresh")])),
+        col=cols[c("courter","parent")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,beside = TRUE,
+        border=NA)
+legend(y=1.75,x=15,xpd=TRUE,c("courter","parent"),col=cols[c("courter","parent")],
+       ncol=2,pch=15,bty='n',cex=1.25)
+
+```
+
+What about males vs females? In the final generation, we can see that both males and females have the Non-Courter/Parent trait, but only the females were able to successfully mate. This suggests that this variation is maintained through females.
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_courterRSadvantage_1_traits.txt")
+table(traits[traits$Gen==12000  & traits$Courter==0 & traits$Parent==1,c("Sex","Pop")])
+
+table(traits[traits$Gen==12000 & traits$Pop==0  & traits$Courter==0 & traits$Parent==1,c("Sex","MateFound")])
+
+```
+
+
