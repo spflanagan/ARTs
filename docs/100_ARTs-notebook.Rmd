@@ -14,6 +14,110 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 22 December 2020 
+
+Ok so the models have re-run. 
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_nm_equalFitness_5_traits.txt")
+traits[traits$Gen==12000 & traits$Courter==0 & traits$Parent==1 & traits$Sex=="MALE",]
+
+```
+
+Still the RS is 0...but one male has a lifetime RS of 35?!?! I guess that's because of the density dependence. But also the males are able to have multiple mates??
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_polygyny_nm_nestBinary_courterRSadvantage_4_traits.txt")
+traits[traits$Gen==12000 & traits$Courter==1 & traits$Parent==0 & traits$Sex=="MALE",]
+
+```
+Hmm the same thing is happening here. So I think maybe something's broken in the sneakers bit of code? I'll try to dig into it. 
+
+One thing I've found is that I'm not actually enforcing the males-nesting-once rule when not in random mating. I also wasn't decreasing males' pot RS after sneaking. Ok, debuggin this, I'm finding that the max_sperm is getting HUGE, meaning that the fecundity share for each individual male is super small -- this is probably the problem. Why is this happening? because this idiot never initialized max_sperm. Now let's re-run those models and see what happens.
+
+# 21 December 2020
+
+Ok, so over the weekend I re-ran all the models, saving info on lifetime RS for sneaking males. Let's see what we can learn -- I've re-knitted the document, and it seems that re-running them has somewhat changed the outcomes. Let's take a look at one of the runs where non-courter/parents persist.
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_onlySpermComp_2_traits.txt")
+traits[traits$Gen==12000 & traits$Courter==0 & traits$Parent==1 & traits$Sex=="MALE",]
+summary(traits$LifetimeRS[traits$Gen==0 & traits$Courter==0 & traits$Parent==1 & traits$Sex=="MALE"])
+```
+
+None of these males are able to produce offspring -- at any generation. Which means this is not driven by the reversion to random mating.
+
+Next: look into the nm versions. And in those, there are indeed cases where non-courter/parents persist, which continues to surprise me. 
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_nm_equalFitness_2_traits.txt")
+traits[traits$Gen==12000 & traits$Courter==0 & traits$Parent==1 & traits$Sex=="MALE",]
+
+```
+Again, none of these males produce offspring -- do they produce offspring in gen 0?
+
+```{r}
+summary(traits$LifetimeRS[traits$Gen==0 & traits$Courter==0 & traits$Parent==1 & traits$Sex=="MALE"])
+```
+
+nope, as expected given the sneaker settings and non-mating settings. 
+
+```{r}
+traits[traits$Gen==12000 & traits$Courter==0 & traits$Parent==1 & traits$Sex=="FEMALE",]
+```
+
+The females produce fewer offspring than their allocation but do mate and produce offspring. Am I just not running the simulations for long enough? How close are the trait values to the threshold -- could mutations be flipping them over the edge?
+
+```{r}
+summary<-read.delim("single_locus/pcu_1locus_nestBinary_nm_equalFitness_2_summary.txt")
+```
+
+The parental threshold is fairly close to the mean trait value. I'm just not sure how NcP persists without NcNp also persisting. 
+
+```{r}
+par(mfrow=c(2,2))
+lapply(unique(summary$Pop),function(pop){
+  plot(summary$Generation[summary$Pop==pop],summary$FreqNcP[summary$Pop==pop],type="l")  
+})
+
+par(mfrow=c(2,2))
+lapply(unique(summary$Pop),function(pop){
+  plot(summary$Generation[summary$Pop==pop],summary$ParentAEmean[summary$Pop==pop],type="l")  
+  abline(h=unique(summary$ParentThresh),lty=2,col="cornflowerblue")
+})
+
+
+par(mfrow=c(2,2))
+lapply(unique(summary$Pop),function(pop){
+  plot(summary$Generation[summary$Pop==pop],summary$CourterAEmean[summary$Pop==pop],type="l")  
+  abline(h=unique(summary$CourterThresh),lty=2,col="cornflowerblue")
+})
+```
+
+I'm running them with 20000 initial generations now -- we'll see if it makes any difference.
+
+What about in the other runs where variation is maintained -- let's check to make sure those alternatives are maintained via males as we'd expect.
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_sneakRSadvantage_2_traits.txt")
+traits[traits$Gen==12000 & traits$Courter==1 & traits$Parent==0 & traits$Sex=="MALE",]
+
+```
+
+One interesting observation is that many of the individuals in generation 0 have a lifteime RS of 0, including females (this is because of no random mating, presumably). Huh, but in the random mating version females have a lifetime RS of 0. Oh, I guess if they randomly mate with a non-parent male.
+
+Hmm the courter/non-parent morph doesn't seem to have a lifetime RS >0 either. Many of them found mates -- I guess maybe they used up their sperm on their own nests? 
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_sneakRSadvantage_courterRSadvantage_4_traits.txt")
+traits[traits$Gen==12000 & traits$Courter==0 & traits$Parent==0 & traits$Sex=="MALE",]
+
+```
+
+Ok, and this is true for ALL of the male morphs that are retained. So something odd seems to be going on. 
+
+it turns out I did a bad job tracking sneaking and assigned all the fecundity shares to the parental male. So I've fixed the code and re-started the runs, but not with 20000 initial generations. We'll see where we get with the defaults. 
+
 # 18 December 2020
 
 I've tweaked the code to track sneaks as lifetime_rs, we'll see what the outputs of that look like -- in order to figure out how non-courters/parents persist, we need to determine whether they sneak or not.
