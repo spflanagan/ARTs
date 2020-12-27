@@ -1996,7 +1996,7 @@ public:
 			}
 			//sanity check
 			if(num_progeny != gp.carrying_capacity)
-				cout << "\nWARNING! There's something wrong with density dependent selection! " << num_progeny << " were produced but the carrying capacity is " << gp.carrying_capacity << std::flush;
+				std::cout << "\nWARNING! There's something wrong with density dependent selection! " << num_progeny << " were produced but the carrying capacity is " << gp.carrying_capacity << std::flush;
 		}
 		if (gp.verbose && !gp.log_file)
 			std::cout <<", and " << fem_ms << " mated" << std::flush;
