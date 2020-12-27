@@ -135,7 +135,7 @@ legend("bottomleft",pch=unique(as.numeric(gsub("^.*(\\d)_summary.txt.*$","\\1",r
        unique(gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS))))
 ```
 
-However, when males are allowed to mate multiply, the results are as predicted and only the courter/parent morph is retained in the population (Fig. \@ref(fig:polyCourterRS)).
+However, when males are allowed to mate multiply, the courter/parent morph dominates the population but is not always the only morph present (Fig. \@ref(fig:polyCourterRS)).
 
 ```{r polyCourterRS, fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from.", fig.height=3,fig.width=6.5}
 courterRSpoly<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_polygyny_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
@@ -213,7 +213,7 @@ These runs did not produce as much variation as I expected, and raised several q
 
 
 
-The answers to these three questions seem to be somewhat linked. First, I 
+The answers to these three questions seem to be somewhat linked. First, I dug into the results to look into the relationship with initial frequencies to see how important those stochasitic differences in morph frequencies are in the outcomes. 
 
 
 
@@ -280,7 +280,7 @@ table(traits[traits$Gen==12000 & traits$Pop==0  & traits$Courter==0 & traits$Par
 ```
 
 
-
+In the model, females sample 50 males in the population and if they do not find a courter male, they will then mate randomly. This random mating is the only pathway through with non-courter/parent males should be able to mate, because only non-parents are sneakers. To ensure that this is the case, I ran the model turning off the random-mating option, so females do not successfully mate if they cannot find a courter male. In these runs we would expect the dominant morph in the population to be a courter/parent, which we see is the case (Fig. \@ref(fig:multipleMorphsNM)).
 
 ```{r multipleMorphsNM,fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from. The top row are runs where males can only mate once and the bottom row are runs where males can mate with multiple females. The top row is for the case when males mate with one female, and the bottom is polygyny.", fig.height=6,fig.width=8}
 nm_patts<-c("pcu_1locus_nestBinary_nm_courterRSadvantage.*summary.txt",
