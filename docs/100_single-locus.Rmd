@@ -218,8 +218,8 @@ The answers to these three questions seem to be somewhat linked. First, I dug in
 
 
 ```{r}
-courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
-courterRS1<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE),gen = "first")
+courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_polygyny_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+courterRS1<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_polygyny_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE),gen = "first")
 ```
 ```{r}
 par(mfrow=c(2,1))
@@ -272,7 +272,7 @@ legend(y=1.75,x=15,xpd=TRUE,c("courter","parent"),col=cols[c("courter","parent")
 What about males vs females? In the final generation, we can see that both males and females have the Non-Courter/Parent trait, but only the females were able to successfully mate. This suggests that this variation is maintained through females.
 
 ```{r}
-traits<-read.delim("single_locus/pcu_1locus_nestBinary_courterRSadvantage_1_traits.txt")
+traits<-read.delim("single_locus/pcu_1locus_polygyny_nestBinary_courterRSadvantage_1_traits.txt")
 table(traits[traits$Gen==12000  & traits$Courter==0 & traits$Parent==1,c("Sex","Pop")])
 
 table(traits[traits$Gen==12000 & traits$Pop==0  & traits$Courter==0 & traits$Parent==1,c("Sex","MateFound")])
