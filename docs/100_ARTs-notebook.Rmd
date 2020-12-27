@@ -14,6 +14,14 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 28 December 2020
+
+Now the model returns non-courter/parents as a dominant one in most cases of monogamy! I guess they win in sperm competition somehow? Or sneakers are able to be more successful at fathering offspring? This is a bit confusing to me. non-courter/parents would NOT be able to sneak fertilizations so they must be chosen through random mating. 
+
+In polygyny, the courter/non-parents can survive because they can sneak fertilizations in nests belonging to parents. 
+
+To try to sort this out a bit better, I'm re-running the model but tracking the number of random matings that occur.
+
 # 22 December 2020 
 
 Ok so the models have re-run. 
