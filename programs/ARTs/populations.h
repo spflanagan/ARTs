@@ -22,7 +22,7 @@ using namespace std;
 class population
 {
 public:
-	int population_size, num_mal, num_fem, num_progeny, sex_trait;
+	int population_size, num_mal, num_fem, num_progeny, sex_trait, random_mating_counter;
 	double sex_theta, sex_omega, courter_thresh, parent_thresh,pref_thresh;
 	bool extinct;
 	vector<double> theta, mean_fem_traits, mean_mal_traits, d_parentfreq, d_courterfreq;
@@ -34,7 +34,7 @@ public:
 
 	population()
 	{
-		population_size = num_mal = num_fem = num_progeny = sex_trait = int();
+		population_size = num_mal = num_fem = num_progeny = sex_trait = random_mating_counter = int();
 		theta = mean_fem_traits = mean_mal_traits = vector<double>();
 		sex_theta = sex_omega = courter_thresh = parent_thresh = pref_thresh = double();
 		adults = progeny = vector<individual>();
@@ -1907,7 +1907,7 @@ public:
 		int fem_ms;
 
 		fem_ms = num_progeny = num_fem = num_mal = 0;
-
+		random_mating_counter = 0;
 		//set up pop level metrics
 		determine_pop_size(gp);
 		assign_preference(gp);
@@ -2000,6 +2000,8 @@ public:
 		}
 		if (gp.verbose && !gp.log_file)
 			std::cout <<", and " << fem_ms << " mated" << std::flush;
+		if(gp.verbose)
+			std::cout << "\n" << random_mating_counter << " females chose their nesting males randomly.\n";
 	}
 	bool random_mating(parameters gp,int fem_index, vector<int> & male_index)
 	{
@@ -2054,6 +2056,7 @@ public:
 		if (gp.random_mating)//then they randomly find males
 		{
 			mate_found = random_mating(gp, fem_index, male_index);
+			random_mating_counter++;
 		}//end random mating
 		else //preference for one morph or the other 
 		{ 
@@ -2115,9 +2118,13 @@ public:
 			}
 			else
 			{ 
-				if(!gp.allow_no_mating)	// if the female can't find a preferred male, she will mate at random
+				if(!gp.allow_no_mating)
+				{	// if the female can't find a preferred male, she will mate at random
 					mate_found = random_mating(gp, fem_index, male_index);
+					random_mating_counter++;
+				}
 			}
+
 		}//end of finding the mates
 		return mate_found;
 	}
