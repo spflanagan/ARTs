@@ -2067,7 +2067,7 @@ public:
 				male_id = male_index[irndnum];
 				if (adults[male_id].alive)
 				{
-					//if (adults[male_id].mate_found < gp.max_num_mates)
+					if ((gp.polygyny && adults[male_id].mate_found < gp.max_num_mates) || (!gp.polygyny && adults[male_id].mate_found < 1))
 					{
 						if (gp.gene_network)
 						{//redetermine traits and thresholds, given the mating experience and optimality of trait
@@ -2202,6 +2202,7 @@ public:
 			else
 				num_mates = gp.max_num_mates;
 			int tries = 0;
+			max_sperm = 0;
 			while (male_ids.size() < num_mates && tries < 10000)
 			{
 				randmale = randnum(sneakers.size());
@@ -2222,12 +2223,16 @@ public:
 			}
 			fecundity_share[0] = double(adults[male_id].pot_rs) / double(max_sperm); //it doesn't get weighted if r <= 1
 			for (k = 1; k < fecundity_share.size(); k++)
+			{
 				fecundity_share[k] = double(adults[male_ids[k]].pot_rs*gp.sperm_comp_r) / double(max_sperm);
+				adults[male_ids[k]].lifetime_rs = adults[male_ids[k]].lifetime_rs + fecundity_share[k];
+				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs -  fecundity_share[k];
+			}				
 			for(k = 0; k < fecundity_share.size(); k++)
 				this_nest.off_props.push_back(fecundity_share[k]);
 			for(k = 0; k < male_ids.size(); k++)
 				this_nest.all_dads.push_back(male_ids[k]);
-			adults[male_id].lifetime_rs = adults[male_id].lifetime_rs + fecundity_share.size();
+			
 		}
 	}
 	int fertilization(int fem_id,parameters gp)
