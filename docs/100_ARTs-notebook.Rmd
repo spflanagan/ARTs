@@ -14,6 +14,10 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 29 December 2020
+
+I realize now that outputting the number randomly mated to stdout doesn't make life easy, and that I should instead save it to the summary file -- so I'll change that. In the meantime, though, I can sift through the log to see if I can make sense of anything.
+
 # 28 December 2020
 
 Now the model returns non-courter/parents as a dominant one in most cases of monogamy! I guess they win in sperm competition somehow? Or sneakers are able to be more successful at fathering offspring? This is a bit confusing to me. non-courter/parents would NOT be able to sneak fertilizations so they must be chosen through random mating. 
