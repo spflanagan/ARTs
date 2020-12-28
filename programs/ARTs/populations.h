@@ -2000,8 +2000,6 @@ public:
 		}
 		if (gp.verbose && !gp.log_file)
 			std::cout <<", and " << fem_ms << " mated" << std::flush;
-		if(gp.verbose)
-			std::cout << "\n" << random_mating_counter << " females chose their nesting males randomly.\n";
 	}
 	bool random_mating(parameters gp,int fem_index, vector<int> & male_index)
 	{
@@ -3356,7 +3354,7 @@ public:
 		}
 		else
 			summary_output << "\tNA\tNA";
-		summary_output << std::flush;
+		summary_output << '\t' << random_mating_counter << std::flush;
 	}
 	void output_genotypes_vcf(parameters gp, int pop_id)
 	{
