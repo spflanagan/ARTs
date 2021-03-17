@@ -14,6 +14,31 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 18 January 2020
+
+I'm revisiting the document to get it ready to send to Suzanne, and have cleaned up some sloppy figure captions, labels, etc. 
+
+Things to sort out today:
+- what has happened with the summary file outputs, and can we see any patterns in terms of amount of sneaking?
+- can I detect any patterns of initial conditions driving the outcomes?
+- what might I suggest we discuss when I email her?
+
+The random mating counts match up with what I expected to find for monogamous cases:
+
+
+```{r}
+courterRS1<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_equalFitness.*summary.txt",path="single_locus",cols,make.plot=FALSE),gen="first")
+courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_equalFitness.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+summary(courterRS$NumRandMate)
+summary(courterRS1$NumRandMate)
+```
+
+Looking at equivalent polgynyous cases, there doesn't seem to be any random mating that occurs.
+
+
+
+
+
 # 29 December 2020
 
 I realize now that outputting the number randomly mated to stdout doesn't make life easy, and that I should instead save it to the summary file -- so I'll change that. In the meantime, though, I can sift through the log to see if I can make sense of anything. There are definitely some runs/generations where most/all females chose randomly and some where they did not -- it starts off with 0. So this is informative and will be more useful when paired with the info on the frequencies (i.e., when in the summary doc). 
