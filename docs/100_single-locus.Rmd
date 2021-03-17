@@ -98,11 +98,11 @@ I ran five independent instances of the model, each of which had four replicates
 
 I ran some simple sets of parameters where I have an expectation for the outcome. In these models, both the courter and parent traits existed and there was a single QTL that was not anchored to a physical chromosomal location and experienced no recombination. I also assumed that nests laid with non-parents have 0% chance of survival and those with parents have 100% chance of survival. In all of these cases, only non-courting males fertilized a nest that did not belong to them.
 
-### Expectation: courter-parents will dominate
+### Initial parameter combinations 
 
-The first of these scenarios arise when courters and parents have a reproductive advantage (they can fertilize 8 eggs compared to the non-courter and non-parent's 4 eggs). The nesting male (regardless of phenotype) experienced a reproductive advantage by fertilizing a higher proportion of the eggs. Furthermore, females always prefer courters to non-courters and only nest with non-courters when they cannot find a courter in the males they evaluate. 
+I first started off with my defaults for the model, which is when courters and parents have a reproductive advantage (they can fertilize 8 eggs compared to the non-courter and non-parent's 4 eggs). The nesting male (regardless of phenotype) experienced a reproductive advantage by fertilizing a higher proportion of the eggs. Furthermore, females always prefer courters to non-courters and only nest with non-courters when they cannot find a courter in the males they evaluate. I therefore expected that the courter/parent morph would dominate and no variation would be maintained.
 
-```{r courterRS, fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from.", fig.height=3,fig.width=6.5}
+```{r courterRS, fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from. The numbers in the bars state the frequency of the Courter-Parent morph.", fig.height=3,fig.width=6.5}
 courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
 courterRS$Courter2NonRS<-8/4
 bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
