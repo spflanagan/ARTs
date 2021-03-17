@@ -119,21 +119,7 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 ```
 
 
-With the current set of conditions, when males are only permitted to mate once, some variation is able to be maintained in the population (Fig. \@ref(fig:courterRS)), even though the Parent/Courter morph has higher fitness at each step of the model. However, it does follow our prediction that only parents will be able to be maintained in the population. The final outcome of the population appears to be somewhat dependent on the initial frequencies of the parent and courter traits (Fig. \@ref(fig:courterRSinitialvfinal)).
-
-
-```{r courterRSinitialvfinal,fig.cap="The influence of initial frequency of males with the parental trait on the final frequency of the parental trait in the population. The shapes represent independent rounds of sets of 4 replicates.",fig.height=4,fig.width=4}
-courterRS1<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE),gen = "first")
-plot(courterRS1$ParentFreq,courterRS$ParentFreq,
-     pch=as.numeric(gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS))),
-     xlab="Initial Parent Frequency",
-     ylab="Final Parent Frequency",
-     cex=3,
-     xlim=c(0.46,0.52),
-     ylim=c(0.95,1.01))
-legend("bottomleft",pch=unique(as.numeric(gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)))),
-       unique(gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS))))
-```
+With the current set of conditions, when males are only permitted to mate once, the non-courter/parent morph is the only one maintained in the population (Fig. \@ref(fig:courterRS)), which is counter to our prediction. However, it does follow our prediction that only parents will be able to be maintained in the population. 
 
 However, when males are allowed to mate multiply, the courter/parent morph dominates the population but is not always the only morph present (Fig. \@ref(fig:polyCourterRS)).
 
