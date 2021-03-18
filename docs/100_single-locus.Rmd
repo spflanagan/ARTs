@@ -121,7 +121,7 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 With the current set of conditions, when males are only permitted to mate once, the non-courter/parent morph is the only one maintained in the population (Fig. \@ref(fig:courterRS)), which is counter to our prediction. However, it does follow our prediction that only parents will be able to be maintained in the population. 
 
-However, when males are allowed to mate multiply, the courter/parent morph dominates the population but is not always the only morph present (Fig. \@ref(fig:polyCourterRS)).
+On the other hand, when males are allowed to mate multiply, the courter/parent morph dominates the population but is not always the only morph present (Fig. \@ref(fig:polyCourterRS)).
 
 ```{r polyCourterRS, fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from.", fig.height=3,fig.width=6.5}
 courterRSpoly<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_polygyny_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
