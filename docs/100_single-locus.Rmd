@@ -193,12 +193,13 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 These runs did not produce as much variation as I expected, and raised several questions:
 
-1. What causes one or another sneaker morph to become present in the population?
+1. What allows non-courter/parents to dominate in some cases, when they shouldn't be chosen as nesting mates by females?
 
-2. How do non-intuitive morphs like the non-courter/parent persist, when they shouldn't mate at all?
+2. What causes one or another sneaker morph to become present in the population?
 
-3. What causes the variation among morphs?
+3. What causes the variation among runs in terms of the outcomes?
 
+The answers to these three questions are likely to be somewhat linked. 
 
 
 The answers to these three questions seem to be somewhat linked. First, I dug into the results to look into the relationship with initial frequencies to see how important those stochasitic differences in morph frequencies are in the outcomes. 
