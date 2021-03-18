@@ -142,9 +142,10 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 
 
-### Expectation: multiple morphs will be maintained
 
-I ran a set of models with the following parameter variations, in which I expected multiple morphs to be maintained.
+### Combinations to try to maintain multiple morphs
+
+I ran a set of models with the following parameter variations, with my expectation for whether variation should be maintained or not.
 
 ```{r}
 expTab<-data.frame(Name=c("courterRSadvantage", "equalFitness","onlySpermComp","sneakRSadvantage","sneakRSadvantage_courterRSadvantage"),
