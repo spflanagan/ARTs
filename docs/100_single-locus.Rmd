@@ -123,7 +123,7 @@ With the current set of conditions, when males are only permitted to mate once, 
 
 On the other hand, when males are allowed to mate multiply, the courter/parent morph dominates the population but is not always the only morph present (Fig. \@ref(fig:polyCourterRS)).
 
-```{r polyCourterRS, fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from.", fig.height=3,fig.width=6.5}
+```{r polyCourterRS, fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from. The numbers in the bars state the frequency of the Courter-Parent morph.", fig.height=3,fig.width=6.5}
 courterRSpoly<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_polygyny_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
 courterRSpoly$Courter2NonRS<-8/4
 bp<-barplot(t(as.matrix(courterRSpoly[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
