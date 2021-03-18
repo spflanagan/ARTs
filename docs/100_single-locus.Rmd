@@ -161,7 +161,7 @@ kable(expTab,booktabs=TRUE,"latex",
 ```
 
 
-```{r multipleMorphs,fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from. The top row are runs where males can only mate once and the bottom row are runs where males can mate with multiple females. The top row is for the case when males mate with one female, and the bottom is polygyny.", fig.height=6,fig.width=8}
+```{r multipleMorphs,fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from. The top row are runs where males can only mate once and the bottom row are runs where males can mate with multiple females. The top row is for the case when males mate with one female, and the bottom is polygyny. The numbers in the bars state the frequency of the Courter-Parent morph.", fig.height=6,fig.width=8}
 var_patts<-c("pcu_1locus_nestBinary_equalFitness.*summary.txt",
              "pcu_1locus_nestBinary_onlySpermComp.*summary.txt",
              "pcu_1locus_nestBinary_sneakRSadvantage_\\d.*summary.txt",
