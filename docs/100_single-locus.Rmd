@@ -310,23 +310,50 @@ plot.morphs.reps(eqFitness,
 
 ```
 
-```{r multipleMorphsNM,fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from. The top row are runs where males can only mate once and the bottom row are runs where males can mate with multiple females. The top row is for the case when males mate with one female, and the bottom is polygyny.", fig.height=6,fig.width=8}
-nm_patts<-c("pcu_1locus_nestBinary_nm_courterRSadvantage.*summary.txt",
-             "pcu_1locus_nestBinary_nm_equalFitness.*summary.txt",
-             "pcu_1locus_nestBinary_nm_onlySpermComp.*summary.txt",
-             "pcu_1locus_nestBinary_nm_sneakRSadvantage_\\d.*summary.txt",
-             "pcu_1locus_nestBinary_nm_sneakRSadvantage_courterRSadvantage.*summary.txt",
-             "pcu_1locus_polygyny_nm_nestBinary_courterRSadvantage.*summary.txt",
-             "pcu_1locus_polygyny_nm_nestBinary_equalFitness.*summary.txt",
-             "pcu_1locus_polygyny_nm_nestBinary_onlySpermComp.*summary.txt",
-             "pcu_1locus_polygyny_nm_nestBinary_sneakRSadvantage_\\d.*summary.txt",
-             "pcu_1locus_polygyny_nm_nestBinary_sneakRSadvantage_courterRSadvantage.*summary.txt")
-par(mfrow=c(2,length(nm_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
-nmDat<-lapply(nm_patts,function(pattern){
-  dat<-get.morph.freqs(plot.pc.reps(pattern=pattern,path="single_locus",cols,make.plot=FALSE))
+
+If we narrow our attention to the final generations and the very small frequencies to focus in on the alternate morphs towards the end, it's clear that in some of these cases the different alternative morphs are trading off which one is persisting in the population (Fig. \@ref(fig:timeSeriesFreqsYlim)).
+
+```{r timeSeriesFreqsYlim,fig.cap="Time series of frequencies of all four morphs across all 12000 generations of the model when run with polygyny, the equal fitness parameters from the table, and without allowing females to mate randomly if they fail to find a courter male. All four morphs start around 0.25 and the courter/parent rapidly rises towards fixation. Each row is one set of replicates that all shared the same initial starting conditions."}
+plot.morphs.reps(eqFitness,
+                 cols2,
+                 ncols=4,
+                 xlim=c(11990,1200),
+                 ylim=c(0,0.1))
+
+```
+
+\newpage{}
+
+While these investigations help understand some of what's driving the model, it's still unclear:
+
+- what mechansims cause a gradual vs sharp decline in initial frequency
+
+- what drives one alternative to persist rather than another
+
+- why only one or two individuals can survive as alternative morphs
+
+
+## Without viability selection
+
+As Suzanne expected, if we have no viability selection, the courter/parent morph becomes fixed in the population.
+
+
+```{r multipleMorphsNoViability,fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from. The top row are runs where males can only mate once and the bottom row are runs where males can mate with multiple females. The top row is for the case when males mate with one female, and the bottom is polygyny. The numbers in the bars state the frequency of the Courter-Parent morph.", fig.height=6,fig.width=8}
+var_patts<-c("pcu_1locus_nestBinary_equalFitness.*summary.txt",
+             "pcu_1locus_nestBinary_onlySpermComp.*summary.txt",
+             "pcu_1locus_nestBinary_sneakRSadvantage_\\d.*summary.txt",
+             "pcu_1locus_nestBinary_sneakRSadvantage_courterRSadvantage.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_equalFitness.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_onlySpermComp.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_sneakRSadvantage_\\d.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_sneakRSadvantage_courterRSadvantage.*summary.txt")
+
+par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-get.morph.freqs(plot.pc.reps(pattern=pattern,path="single_locus/no_viability",cols,make.plot=FALSE))
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
         col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
         las=2,
         border=NA,
         main=gsub("^.*nestBinary_(\\w+)[[:punct:]].*","\\1",pattern))
@@ -340,4 +367,3 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
        col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
 
 ```
-
