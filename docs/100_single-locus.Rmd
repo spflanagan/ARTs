@@ -153,9 +153,10 @@ expTab<-data.frame(Name=c("courterRSadvantage", "equalFitness","onlySpermComp","
                    NonParentRS=c(4,4,4,8,8),
                    CourterRS=c(8,4,4,4,8),
                    NonCourterRS=c(4,4,4,4,4),
-                   SpermCompFactor=c(0.5,1,0.5,0.5,0.5))
+                   SpermCompFactor=c(0.5,1,0.5,0.5,0.5),
+                   MultipleMorphs=c("No","Yes","Yes","Yes","Yes"))
 kable(expTab,booktabs=TRUE,"latex",
-      caption = "The different parameter settings used for the models where multiple morphs are expected, because fitnesses should equal out between morphs.") %>%
+      caption = "The different parameter settings used for the models and whether I expected multiple morphs to be maintaned.") %>%
   kable_styling(latex_options=c("scale_down","HOLD_position"))
 ```
 
