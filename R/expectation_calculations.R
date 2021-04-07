@@ -10,20 +10,15 @@
 #' @param wn Selection strength on nesting trait in males, aka nest survival. Default is 1 (parental male nests survive and non-parental nests all die).
 #' @param wv Viability selection against courtship and nesting traits. Default is exp(-0.5/(2*50)).
 morph_predictions<-function(
-  morph,
-  freqs,
+  freqs=c(CP=0.25,CS=0.25,NP=0.25,NS=0.25),
   Nm=500,
   Nf=500,
-  pf=0.1,
   r=2/3,
   c=0.5,
   ws=1,
   wn=1,
   wv=exp(-0.5/(2*50))
 ){
-  ###### work in progress ######
-  # these are not properly integrated
-  # possibly need to run each step for each morph
   
   # sanity checks of morph and freqs
   
