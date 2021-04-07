@@ -41,6 +41,9 @@ morph_predictions<-function(
       warning("The given frequencies have been renamed in the order CP, CS, NP, and NS.")
     }  
   }
+  if(sum(freqs) != 1){
+    stop("The sum of the frequencies is not 1.")
+  }
   
   
   # run the calculations for each of the morphs given the inputs
