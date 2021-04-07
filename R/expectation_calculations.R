@@ -20,20 +20,26 @@ morph_predictions<-function(
   wv=exp(-0.5/(2*50))
 ){
   
-  # sanity checks of morph and freqs
-  
-  
-  # probability of finding a nest partner for courters
-  # really this is the number of times each male can be sampled
-  # should somehow make this the number of nests?
-  if(tolower(morph) %in% c("courter-parent","cp")){
-    pm <- ws*( (pf*Nm*Nf) / (Nm*freqs[["fCP"]]+Nm*freqs[["fCS"]]) )
-  } else if(tolower(morph) %in% c("courter-parent","cp")){
-    pm <- ws*( (pf*Nm*Nf) / (Nm*freqs[["fCP"]]+Nm*freqs[["fCS"]]) )
-  } else if(tolower(morph) %in% c("noncourter-parent","np")){
-    pm <- (1-ws)*( (pf*Nm*Nf) / (Nm*freqs[["fNP"]]+Nm*freqs[["fNS"]]) )
+  # sanity checks of freqs
+  if(length(freqs)<4){
+    if(length(freqs)==3){
+      if(length(which((names(freqs) %in% c("CP","CS","NP"))==TRUE))==3){
+        freqs["NS"]<-1-sum(freqs)
+      } else if (length(which((names(freqs) %in% c("CP","CS","NS"))==TRUE))==3){
+        freqs["NP"]<-1-sum(freqs)
+      } else if (length(which((names(freqs) %in% c("CP","NP","NS"))==TRUE))==3){
+        freqs["CS"]<-1-sum(freqs)
+      } else if (length(which((names(freqs) %in% c("CS","NP","NS"))==TRUE))==3){
+        freqs["CP"]<-1-sum(freqs)
+      }
+    }else{
+      stop("Too few frequencies were provided to the function.")
+    }
   } else{
-    pm <- (1-ws)*( (pf*Nm*Nf) / (Nm*freqs[["fNP"]]+Nm*freqs[["fNS"]]) )
+    if(length(which((names(freqs) %in% c("CP","CS","NP","NS"))==TRUE))<4){
+      names(freqs)<- c("CP","CS","NP","NS")
+      warning("The given frequencies have been renamed in the order CP, CS, NP, and NS.")
+    }  
   }
   # this is hacky and mimicking the simulation rather than being properly mathy
   if(pm > 1){
