@@ -4,7 +4,6 @@
 #'              If it is a vector with three values, the fourth is calculated as the frequency of the morph of interest.
 #' @param Nm number of males in the population. Default is 500.
 #' @param Nf number of females in the population. Default is 500.
-#' @param pf Proportion of males sampled by each female. Default is 0.1.
 #' @param r Relative reproductive effort/contribution within each clutch for parents. Default is 2/3.
 #' @param c Sperm competition coefficient. Default is 0.5
 #' @param ws Sexual selection strength, aka female preference for male type. Default is 1 (unidirectional preference for courters).
