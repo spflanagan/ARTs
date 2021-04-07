@@ -108,6 +108,14 @@ morph_predictions<-function(
   }))
   out$rs<-out$pv/sum(out$pv)
   
-  return(out)
+  out_rs<-data.frame(CP_freq=freqs[["CP"]],
+                     CS_freq=freqs[["CS"]],
+                     NP_freq=freqs[["NP"]],
+                     NS_freq=freqs[["NS"]],
+                     CP_rs=out["CP","rs"],
+                     CS_rs=out["CS","rs"],
+                     NP_rs=out["NP","rs"],
+                     NS_rs=out["NS","rs"])
+  return(list(all_out=out,rs_out=out_rs))
 }
 
