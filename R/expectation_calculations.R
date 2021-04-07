@@ -41,23 +41,7 @@ morph_predictions<-function(
       warning("The given frequencies have been renamed in the order CP, CS, NP, and NS.")
     }  
   }
-  # this is hacky and mimicking the simulation rather than being properly mathy
-  if(pm > 1){
-    pm <- 1
-  }
-
-  # proportion of eggs that are fertilized
-  # this should include the proportion of nests
-  if(tolower(morph) %in% c("courter-parent","cp","courter-sneaker","cs")){
-    pf <- r*( (freqs[["fCP"]]+freqs[["fCS"]]) + c*(freqs[["fNP"]]+freqs[["fNP"]]) ) 
-  } else{
-    pf <-  (1-r)*( (freqs[["fCP"]]+freqs[["fCS"]]) + c*(freqs[["fNP"]]+freqs[["fNP"]]) )
-  }
-
   
-  # proportion of nests that survive
-  pn <- wn*(freqs[["fCP"]] + freqs[["fNP"]]) + 
-    (1-wn)*(freqs[["fCS"]] + freqs[["fNS"]])
   
   
   
