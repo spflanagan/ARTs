@@ -1,10 +1,5 @@
 #' Function to generate predictions based on my life cycle diagram
-#' @param morph Specify which morph you want to know about. Options are:
-#'              "courter-parent" or "CP"
-#'              "courter-sneaker" or "CS"
-#'              "noncourter-parent" or "NP"
-#'              "noncourter-sneaker" or "NS"
-#' @param freqs A vector containing the frequencies of the other morphs (fCP,fCS,fNP,fNS). 
+#' @param freqs A vector containing the frequencies of the other morphs (CP,CS,NP,NS). 
 #'              The frequencies must be labelled or all four provided in the order above.
 #'              If it is a vector with three values, the fourth is calculated as the frequency of the morph of interest.
 #' @param Nm number of males in the population. Default is 500.
