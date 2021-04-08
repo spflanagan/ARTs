@@ -9,6 +9,7 @@
 #' @param ws Sexual selection strength, aka female preference for male type. Default is 1 (unidirectional preference for courters).
 #' @param wn Selection strength on nesting trait in males, aka nest survival. Default is 1 (parental male nests survive and non-parental nests all die).
 #' @param wv Viability selection against courtship and nesting traits. Default is exp(-0.5/(2*50)).
+#' @param output The type of output you want -- 'all' for the values for each morph along the way or 'rs' for reproductive success + frequencies. Default is rs.
 morph_predictions<-function(
   freqs=c(CP=0.25,CS=0.25,NP=0.25,NS=0.25),
   Nm=500,
@@ -17,7 +18,8 @@ morph_predictions<-function(
   c=0.5,
   ws=1,
   wn=1,
-  wv=exp(-0.5/(2*50))
+  wv=exp(-0.5/(2*50)),
+  output="rs"
 ){
   
   # sanity checks of freqs
@@ -116,6 +118,13 @@ morph_predictions<-function(
                      CS_rs=out["CS","rs"],
                      NP_rs=out["NP","rs"],
                      NS_rs=out["NS","rs"])
-  return(list(all_out=out,rs_out=out_rs))
+  if(output=="rs"){
+    return(out_rs)
+  } else if(output=="all"){
+    return(out)
+  } else{
+    return(list(all_out=out,rs_out=out_rs))  
+    warning("Unknown output type provided -- a list of both types of output returned instead.")
+  }
 }
 
