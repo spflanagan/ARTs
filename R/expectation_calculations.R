@@ -11,10 +11,9 @@ freqs_list<-expand.grid(CP=seq(0,1,0.05),
 freqs_list<-freqs_list[rowSums(freqs_list)==1,]
 
 # calculate the expected values for each combination
-expectations_list<-apply(freqs_list,1,morph_predictions)
+expectations_list<-do.call(rbind,apply(freqs_list,1,morph_predictions))
 
-# extract the rs and frequency info
-expected_rs<-do.call(rbind,sapply(expectations_list,"[[",1)) # this doesn't work
+saveRDS(expectations_list,"../results/expectations_list.RDS")
 
 # plot the expectated RS values
 library(plotly)
