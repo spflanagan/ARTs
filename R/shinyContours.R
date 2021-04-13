@@ -53,7 +53,9 @@ ui <- dashboardPage(
     fluidRow(
       box("Every combination results in noncourter-parents (NP) having a relative reproductive success of 0.")
     )
-  ))
+  )
+ 
+)
 
 # server to show the plot
 server <- function(input, output, session) { 
