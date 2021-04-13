@@ -30,9 +30,13 @@ no_plots<-function(data, sliderCP, sliderNP){
 
 # create UI
 ui <- dashboardPage(
-  dashboardHeader(),
-  dashboardSidebar(sliderInput("sliderCP","CP freq", min=0, max=1, step=0.05, value=1),
-                   sliderInput("sliderNS","NS freq", min=0, max=1, step=0.05, value=1)),
+  dashboardHeader(
+    title="Frequency-dependent predictions of alternative reproductive tactics"
+  ),
+  dashboardSidebar(
+    sliderInput("sliderCP","CP freq", min=0, max=1, step=0.05, value=1),
+    sliderInput("sliderNP","NP freq", min=0, max=1, step=0.05, value=1)
+  ),
   dashboardBody(
     plotlyOutput('contours')
   ))
