@@ -7,6 +7,28 @@ data<-readRDS("../results/expectations_list.RDS")
 # remove ones where population will crash
 data<-data[complete.cases(data),]
 
+
+no_rows<-function(data, sliderCP, sliderNP){
+  if(nrow(data[as.character(data$CP_freq)==as.character(sliderCP) & 
+               as.character(data$NP_freq)==as.character(sliderNP),]) == 0){
+    "The chosen combination does not have any results. Ensure the sum of frequencies is <= 1."
+  } else{
+    NULL
+  }
+}
+
+no_plots<-function(data, sliderCP, sliderNP){
+  subdat<-data[as.character(data$CP_freq)==as.character(sliderCP) & 
+         as.character(data$NP_freq)==as.character(sliderNP),]
+  if(sum(subdat$NS_rs)==0){
+    "The chosen combination results in 0 noncourter-sneakers, so there are no graphs to show."
+  } else{
+    NULL
+  }
+}
+
+
+# create UI
 ui <- dashboardPage(
   dashboardHeader(),
   dashboardSidebar(sliderInput("sliderCP","CP freq", min=0, max=1, step=0.05, value=1),
