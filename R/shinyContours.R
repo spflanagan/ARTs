@@ -7,7 +7,7 @@ data<-readRDS("../results/expectations_list.RDS")
 # remove ones where population will crash
 data<-data[complete.cases(data),]
 
-
+# Function to check if the current combination has any relevant rows
 no_rows<-function(data, sliderCP, sliderNP){
   if(nrow(data[as.character(data$CP_freq)==as.character(sliderCP) & 
                as.character(data$NP_freq)==as.character(sliderNP),]) == 0){
@@ -17,6 +17,7 @@ no_rows<-function(data, sliderCP, sliderNP){
   }
 }
 
+# Function to check if the combination results in zero NS, which means there is no plot.
 no_plots<-function(data, sliderCP, sliderNP){
   subdat<-data[as.character(data$CP_freq)==as.character(sliderCP) & 
          as.character(data$NP_freq)==as.character(sliderNP),]
@@ -45,12 +46,11 @@ ui <- dashboardPage(
     )
   ))
 
-# create the plots
+# server to show the plot
 server <- function(input, output, session) { 
   
-
-  
-  sliders<-reactive({
+  # check the inputs and create the subset
+  subdat<-reactive({
     validate(no_plots(data, input$sliderCP, input$sliderNP),
              no_rows(data, input$sliderCP, input$sliderNP)
     )
@@ -58,6 +58,7 @@ server <- function(input, output, session) {
     NP<-get(input$sliderNP)
   })
   
+  # create the plot
   output$contours <- renderPlotly({
     sub_calcs<-data[which(
       as.character(data$CP_freq)==as.character(sliders()$CP) & 
