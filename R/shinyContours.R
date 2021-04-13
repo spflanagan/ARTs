@@ -47,8 +47,21 @@ ui <- dashboardPage(
 
 # create the plots
 server <- function(input, output, session) { 
+  
+
+  
+  sliders<-reactive({
+    validate(no_plots(data, input$sliderCP, input$sliderNP),
+             no_rows(data, input$sliderCP, input$sliderNP)
+    )
+    CP<-get(input$sliderCP)
+    NP<-get(input$sliderNP)
+  })
+  
   output$contours <- renderPlotly({
-    sub_calcs<-expectations_list[which(expectations_list$CP_freq==input$sliderCP & expectations_list$NS_freq==input$sliderNS),]
+    sub_calcs<-data[which(
+      as.character(data$CP_freq)==as.character(sliders()$CP) & 
+        as.character(data$NP_freq)==as.character(sliders()$NP)),]  
     
     # fig 1: NS vs CS
     fig1 <- plot_ly(
