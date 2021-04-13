@@ -77,24 +77,7 @@ server <- function(input, output, session) {
     # add label to contour names
     fig1 <- fig1 %>% colorbar(title = "Relative RS")
     
-    # fig 2: NS vs CP
-    fig2 <- plot_ly(
-      x = sub_calcs$NP_freq, 
-      y = sub_calcs$NS_freq, 
-      z = as.matrix(sub_calcs[,c("NS_rs","CP_rs")]), 
-      type = "contour"
-    )
-    # add axis labels
-    x<-list(title="Noncourter-Sneaker frequency")
-    y<-list(title="Courter-Parent frequency")
-    fig2 <- fig2 %>% layout(xaxis=x,yaxis=y)
-    # add label to contour names
-    fig2 <- fig2 %>% colorbar(title = "Relative RS")
-    
-    # overall figure
-    fig <- subplot(fig1,fig2,titleX=TRUE,titleY=TRUE,margin=0.05)
-    
-    fig
+    fig1
   })
 }
 
