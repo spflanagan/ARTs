@@ -28,6 +28,13 @@ no_plots<-function(data, sliderCP, sliderNP){
   }
 }
 
+# Function to generate our subset of data
+create_subset<-function(data,sliderCP,sliderNP){
+  sub<-data[which(
+    as.character(data$CP_freq)==as.character(sliderCP) & 
+      as.character(data$NP_freq)==as.character(sliderNP)),]  
+  return(sub)
+}
 
 # create UI
 ui <- dashboardPage(
