@@ -1,9 +1,10 @@
 library(shiny) 
 library(shinydashboard)
+library(rsconnect)
 library(plotly)
 source("morph_predictions.R")
 
-data<-readRDS("../results/expectations_list.RDS")
+data<-readRDS("expectations_list.RDS")
 # remove ones where population will crash
 data<-data[complete.cases(data),]
 
