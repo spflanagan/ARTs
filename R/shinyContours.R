@@ -45,11 +45,12 @@ ui <- dashboardPage(
     )
   ))
 
+# create the plots
 server <- function(input, output, session) { 
   output$contours <- renderPlotly({
     sub_calcs<-expectations_list[which(expectations_list$CP_freq==input$sliderCP & expectations_list$NS_freq==input$sliderNS),]
     
-    # fig 1: NP vs CS
+    # fig 1: NS vs CS
     fig1 <- plot_ly(
       x = sub_calcs$NP_freq, 
       y = sub_calcs$CS_freq, 
@@ -63,7 +64,7 @@ server <- function(input, output, session) {
     # add label to contour names
     fig1 <- fig1 %>% colorbar(title = "Relative RS")
     
-    # fig 2: NP vs NS
+    # fig 2: NS vs CP
     fig2 <- plot_ly(
       x = sub_calcs$NP_freq, 
       y = sub_calcs$NS_freq, 
