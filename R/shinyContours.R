@@ -39,11 +39,13 @@ create_subset<-function(data,sliderCP,sliderNP){
 # create UI
 ui <- dashboardPage(
   dashboardHeader(
-    title="Frequency-dependent predictions of alternative reproductive tactics"
+    title="Frequency-dependence",
+    titleWidth=250
   ),
   dashboardSidebar(
     sliderInput("sliderCP","CP freq", min=0, max=1, step=0.05, value=1),
-    sliderInput("sliderNP","NP freq", min=0, max=1, step=0.05, value=1)
+    sliderInput("sliderNP","NP freq", min=0, max=1, step=0.05, value=1),
+    width=250
   ),
   dashboardBody(
     plotlyOutput('contours'),
