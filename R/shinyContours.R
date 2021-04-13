@@ -65,15 +65,14 @@ server <- function(input, output, session) {
     validate(no_plots(data, input$sliderCP, input$sliderNP),
              no_rows(data, input$sliderCP, input$sliderNP)
     )
-    CP<-get(input$sliderCP)
-    NP<-get(input$sliderNP)
+    create_subset(data, input$sliderCP, input$sliderNP)
+
   })
   
   # create the plot
   output$contours <- renderPlotly({
-    sub_calcs<-data[which(
-      as.character(data$CP_freq)==as.character(sliders()$CP) & 
-        as.character(data$NP_freq)==as.character(sliders()$NP)),]  
+    
+   sub_calcs<-subdat()
     
     # fig 1: NS vs CS
     fig1 <- plot_ly(
