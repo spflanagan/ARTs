@@ -4,6 +4,8 @@ library(plotly)
 source("morph_predictions.R")
 
 data<-readRDS("../results/expectations_list.RDS")
+# remove ones where population will crash
+data<-data[complete.cases(data),]
 
 ui <- dashboardPage(
   dashboardHeader(),
