@@ -38,7 +38,11 @@ ui <- dashboardPage(
     sliderInput("sliderNP","NP freq", min=0, max=1, step=0.05, value=1)
   ),
   dashboardBody(
-    plotlyOutput('contours')
+    plotlyOutput('contours'),
+    
+    fluidRow(
+      box("Every combination results in noncourter-parents (NP) having a relative reproductive success of 0.")
+    )
   ))
 
 server <- function(input, output, session) { 
