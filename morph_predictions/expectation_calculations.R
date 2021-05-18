@@ -34,3 +34,14 @@ fig <- fig %>% layout(xaxis=x,yaxis=y)
 fig <- fig %>% colorbar(title = "Relative RS")
 # plot
 fig
+
+
+# looping
+
+output<-data.frame(matrix(nrow=11,ncol=4))
+output[1,]<-c(CP=0.25,CS=0.25,NP=0.25,NS=0.25)
+for (i in 1:11){
+  output[i+1,]<-morph_predictions(output[i,])
+}
+
+
