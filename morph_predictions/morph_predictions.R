@@ -9,7 +9,7 @@
 #' @param ws Sexual selection strength, aka female preference for male type. Default is 1 (unidirectional preference for courters).
 #' @param wn Selection strength on nesting trait in males, aka nest survival. Default is 1 (parental male nests survive and non-parental nests all die).
 #' @param wv Viability selection against courtship and nesting traits. Default is exp(-0.5/(2*50)).
-#' @param output The type of output you want -- 'all' for the values for each morph along the way or 'rs' for reproductive success + frequencies. Default is rs.
+#' @return Returns a new vector of allele frequencies
 morph_predictions<-function(
   freqs=c(CP=0.25,CS=0.25,NP=0.25,NS=0.25),
   Nm=500,
@@ -18,8 +18,7 @@ morph_predictions<-function(
   c=0.5,
   ws=1,
   wn=1,
-  wv=exp(-0.5/(2*50)),
-  output="rs"
+  wv=exp(-0.5/(2*50))
 ){
   
   # sanity checks of freqs
@@ -93,14 +92,14 @@ morph_predictions<-function(
     
     # proportion of eggs that are fertilized in other nests
     pfs <- morph_sneak*((1-r)*( (freqs[["CP"]]+freqs[["CS"]]) + c*(freqs[["NP"]]+freqs[["NS"]]) ))
-   
+    
     # proportion of offspring that survive nest abandonment in your nest
     psn <- pfn*morph_wn
     # proportion of offspring that survive nest abandonment in sneaker nests
     psf <- pfs*(wn*(freqs[["CP"]] + freqs[["NP"]]) + (1-wn)*(freqs[["CS"]] + freqs[["NS"]]))
     # overall proportion that survive to juveniles
     ps <- psn + psf
-  
+    
     # probability of juvenile survival
     pv<-ps*freqs[[morph]]*morph_wv
     
@@ -110,21 +109,9 @@ morph_predictions<-function(
   }))
   out$rs<-out$pv/sum(out$pv)
   
-  out_rs<-data.frame(CP_freq=freqs[["CP"]],
-                     CS_freq=freqs[["CS"]],
-                     NP_freq=freqs[["NP"]],
-                     NS_freq=freqs[["NS"]],
-                     CP_rs=out["CP","rs"],
-                     CS_rs=out["CS","rs"],
-                     NP_rs=out["NP","rs"],
-                     NS_rs=out["NS","rs"])
-  if(output=="rs"){
-    return(out_rs)
-  } else if(output=="all"){
-    return(out)
-  } else{
-    return(list(all_out=out,rs_out=out_rs))  
-    warning("Unknown output type provided -- a list of both types of output returned instead.")
-  }
+  
+  return(c(CP=out["CP","rs"],
+           CS=out["CS","rs"],
+           NP=out["NP","rs"],
+           NS=out["NS","rs"]))
 }
-
