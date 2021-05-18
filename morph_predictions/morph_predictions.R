@@ -42,7 +42,7 @@ morph_predictions<-function(
       warning("The given frequencies have been renamed in the order CP, CS, NP, and NS.")
     }  
   }
-  if(sum(freqs) != 1){
+  if(round(sum(freqs)) != 1){
     stop("The sum of the frequencies is not 1.")
   }
   
