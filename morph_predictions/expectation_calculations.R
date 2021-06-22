@@ -2,6 +2,8 @@
 
 # set to directory of this script
 source("morph_predictions.R")
+source("check_freqs.R")
+
 
 # create all of the intersections
 freqs_list<-expand.grid(CP=seq(0,1,0.05),
