@@ -105,6 +105,12 @@ ui <- dashboardPage(
       ),
       tabItem(tabName = "params",
               fluidRow(
+                column(3,
+                       numericInput("gens",
+                                    h3("Number of generations"),
+                                    value=100))
+              ),
+              fluidRow(
                 column(3, 
                        numericInput("Nm", 
                                     h3("Number of males"), 
