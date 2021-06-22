@@ -164,6 +164,15 @@ server <- function(input, output, session) {
   freqs_list<-read.table("freqs_list.txt",sep='\t',header = TRUE)
   
   get_data<-reactive({
+    
+    create_predictions(gens=input$gens,
+                       Nm=input$Nm,
+                       Nf=input$Nf,
+                       r=input$r,
+                       c=input$c,
+                       ws=input$ws,
+                       wn=input$wn,
+                       wv=input$wv)
   })
   
   # check the inputs and create the subset
