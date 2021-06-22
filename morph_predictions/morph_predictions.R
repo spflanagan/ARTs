@@ -21,31 +21,8 @@ morph_predictions<-function(
   wv=exp(-0.5/(2*50))
 ){
   
-  # sanity checks of freqs
-  if(length(freqs)<4){
-    if(length(freqs)==3){
-      if(length(which((names(freqs) %in% c("CP","CS","NP"))==TRUE))==3){
-        freqs["NS"]<-1-sum(freqs)
-      } else if (length(which((names(freqs) %in% c("CP","CS","NS"))==TRUE))==3){
-        freqs["NP"]<-1-sum(freqs)
-      } else if (length(which((names(freqs) %in% c("CP","NP","NS"))==TRUE))==3){
-        freqs["CS"]<-1-sum(freqs)
-      } else if (length(which((names(freqs) %in% c("CS","NP","NS"))==TRUE))==3){
-        freqs["CP"]<-1-sum(freqs)
-      }
-    }else{
-      stop("Too few frequencies were provided to the function.")
-    }
-  } else{
-    if(length(which((names(freqs) %in% c("CP","CS","NP","NS"))==TRUE))<4){
-      names(freqs)<- c("CP","CS","NP","NS")
-      warning("The given frequencies have been renamed in the order CP, CS, NP, and NS.")
-    }  
-  }
-  if(round(sum(freqs)) != 1){
-    stop("The sum of the frequencies is not 1.")
-  }
-  
+  # check the frequency inputs with the function
+  freqs<-check_freqs(freqs)
   
   # run the calculations for each of the morphs given the inputs
   out<-do.call(rbind,lapply(c("CP","CS","NP","NS"),function(morph){
