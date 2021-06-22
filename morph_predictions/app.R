@@ -164,24 +164,6 @@ server <- function(input, output, session) {
   freqs_list<-read.table("freqs_list.txt",sep='\t',header = TRUE)
   
   get_data<-reactive({
-    if(round(input$Nm)==500 &
-       round(input$Nf)==500 &
-       round(input$r,2)==round(2/3,2) &
-       round(input$c,2)==0.5 &
-       input$ws==1 &
-       input$wn==1 &
-       round(input$wv,3)==round(exp(-0.5/(2*50)),3)){
-      
-      read_predictions()
-    }else{
-      create_predictions(Nm=input$Nm,
-                         Nf=input$Nf,
-                         r=input$r,
-                         c=input$c,
-                         ws=input$ws,
-                         wn=input$wn,
-                         wv=input$wv)
-    }
   })
   
   # check the inputs and create the subset
