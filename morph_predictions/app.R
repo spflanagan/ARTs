@@ -14,12 +14,6 @@ create_predictions<-function(gens,
                              ws,
                              wn,
                              wv){
-  # create all of the intersections
-  freqs_list<-expand.grid(CP=seq(0,1,0.05),
-                          CS=seq(0,1,0.05),
-                          NP=seq(0,1,0.05), 
-                          NS=seq(0,1,0.05))
-  freqs_list<-freqs_list[rowSums(freqs_list)==1,]
   data<-do.call(rbind,apply(freqs_list,1,
                       morph_predictions,
                       Nm=Nm,
