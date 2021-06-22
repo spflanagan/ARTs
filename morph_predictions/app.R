@@ -160,6 +160,9 @@ ui <- dashboardPage(
 # server to show the plot
 server <- function(input, output, session) { 
   
+  # get all of the possible frequency combos
+  freqs_list<-read.table("freqs_list.txt",sep='\t',header = TRUE)
+  
   get_data<-reactive({
     if(round(input$Nm)==500 &
        round(input$Nf)==500 &
