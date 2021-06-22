@@ -31,14 +31,6 @@ create_predictions<-function(gens,
   return(data)
 }
 
-read_predictions<-function(){
-  
-  data<-readRDS("expectations_list.RDS")
-  # remove ones where population will crash
-  data<-data[complete.cases(data),]
-  return(data)
-}
-
 
 # Function to check if the current combination has any relevant rows
 no_rows<-function(data, sliderCP, sliderNP){
