@@ -14,8 +14,11 @@ create_predictions<-function(gens,
                              ws,
                              wn,
                              wv){
-  data<-do.call(rbind,apply(freqs_list,1,
-                      morph_predictions,
+
+  
+  data<-t(apply(freqs_list,1,
+                      morph_gens,
+                      gens=gens,
                       Nm=Nm,
                       Nf=Nf,
                       r=r,
