@@ -3,6 +3,8 @@ library(shinydashboard)
 library(rsconnect)
 library(plotly)
 source("morph_predictions.R")
+source("morph_gens.R")
+source("check_freqs.R")
 
 create_predictions<-function(Nm,
                              Nf,
