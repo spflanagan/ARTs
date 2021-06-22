@@ -6,7 +6,8 @@ source("morph_predictions.R")
 source("morph_gens.R")
 source("check_freqs.R")
 
-create_predictions<-function(Nm,
+create_predictions<-function(gens,
+                             Nm,
                              Nf,
                              r,
                              c,
