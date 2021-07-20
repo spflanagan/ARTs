@@ -25,7 +25,7 @@ morph_predictions<-function(
   freqs<-check_freqs(freqs)
   
   # run the calculations for each of the morphs given the inputs
-  out<-do.call(rbind,lapply(c("CP","CS","NP","NS"),function(morph){
+  out<-unlist(lapply(c("CP","CS","NP","NS"),function(morph){
     
     # assign various weights to add to things
     if(tolower(morph) %in% c("courter-parent","cp")){
@@ -80,15 +80,14 @@ morph_predictions<-function(
     # probability of juvenile survival
     pv<-ps*freqs[[morph]]*morph_wv
     
-    summary<-data.frame(cbind(pn,pfn,pfs,psn,psf,ps,pv))
-    rownames(summary)<-morph
-    return(summary)
+    #summary<-data.frame(cbind(pn,pfn,pfs,psn,psf,ps,pv))
+    #rownames(summary)<-morph
+    
+    return(pv)
   }))
-  out$rs<-out$pv/sum(out$pv)
   
+  out<-out/sum(out)
+  names(out)<-c("CP","CS","NP","NS")
   
-  return(c(CP=out["CP","rs"],
-           CS=out["CS","rs"],
-           NP=out["NP","rs"],
-           NS=out["NS","rs"]))
+  return(out)
 }
