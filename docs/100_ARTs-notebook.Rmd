@@ -14,7 +14,19 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 ```
 
-# 18 January 2020
+
+# 23 June 2021
+
+I had reverted to using the paper notebook, but here I am switching back..
+
+I created a shiny app to be able to interactively play with different parameters but it's SO SLOW to run over multiple generations AND multiple initial frequencies. 
+
+I'm considering just running this across a list of various settings to see what happens. Alternatively, it looks like there's a bindCache() function that will store outputs -- this might be better. 
+
+I'm also considering my interface -- perhaps it would be good/better to have some scroll bars for some of the key parameters as well, like sperm competition, selection coefficients, etc.
+
+
+# 18 January 2021
 
 I'm revisiting the document to get it ready to send to Suzanne, and have cleaned up some sloppy figure captions, labels, etc. 
 
