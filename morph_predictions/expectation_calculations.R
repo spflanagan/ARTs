@@ -5,6 +5,9 @@ source("morph_predictions.R")
 source("check_freqs.R")
 source("morph_gens.R")
 
+init<-FALSE
+testing<-FALSE
+create_outputs<-TRUE
 
 # create all of the intersections
 freqs_list<-expand.grid(CP=seq(0,1,0.05),
