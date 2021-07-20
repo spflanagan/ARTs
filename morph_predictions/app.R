@@ -2,9 +2,17 @@ library(shiny)
 library(shinydashboard)
 library(rsconnect)
 library(plotly)
+library(dplyr)
 source("morph_predictions.R")
 source("morph_gens.R")
 source("check_freqs.R")
+
+
+get_freqs<-function(){
+  # get all of the possible frequency combos
+  freqs_list<-read.table("freqs_list.txt",sep='\t',header = TRUE)
+  return(freqs_list)
+}
 
 create_predictions<-function(gens,
                              Nm,
@@ -13,10 +21,11 @@ create_predictions<-function(gens,
                              c,
                              ws,
                              wn,
-                             wv){
+                             wv,
+                             freqs_list){
 
   
-  data<-t(apply(freqs_list,1,
+  data<-dplyr::bind_rows(apply(freqs_list,1,
                       morph_gens,
                       gens=gens,
                       Nm=Nm,
@@ -160,19 +169,24 @@ ui <- dashboardPage(
 # server to show the plot
 server <- function(input, output, session) { 
   
-  # get all of the possible frequency combos
-  freqs_list<-read.table("freqs_list.txt",sep='\t',header = TRUE)
-  
+ 
   get_data<-reactive({
     
-    create_predictions(gens=input$gens,
-                       Nm=input$Nm,
-                       Nf=input$Nf,
-                       r=input$r,
-                       c=input$c,
-                       ws=input$ws,
-                       wn=input$wn,
-                       wv=input$wv)
+    withProgress(
+      message = "Loading... Please wait", {
+        freqs_list<-get_freqs()
+        create_predictions(gens=input$gens,
+                           Nm=input$Nm,
+                           Nf=input$Nf,
+                           r=input$r,
+                           c=input$c,
+                           ws=input$ws,
+                           wn=input$wn,
+                           wv=input$wv,
+                           freqs_list=freqs_list)
+      }
+    )
+    
   })
   
   # check the inputs and create the subset
@@ -183,7 +197,9 @@ server <- function(input, output, session) {
     )
     create_subset(data, input$sliderCP, input$sliderNP)
 
-  })
+  }) %>%
+    bindCache(data)
+  
   
   
   # create the plot
@@ -228,7 +244,7 @@ server <- function(input, output, session) {
     
     
     
-  })
+  }) 
   
   output$table<-renderTable(subdat())
 }
