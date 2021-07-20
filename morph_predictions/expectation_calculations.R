@@ -3,6 +3,7 @@
 # set to directory of this script
 source("morph_predictions.R")
 source("check_freqs.R")
+source("morph_gens.R")
 
 
 # create all of the intersections
