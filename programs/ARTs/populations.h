@@ -22,7 +22,7 @@ using namespace std;
 class population
 {
 public:
-	int population_size, num_mal, num_fem, num_progeny, sex_trait;
+	int population_size, num_mal, num_fem, num_progeny, sex_trait, random_mating_counter;
 	double sex_theta, sex_omega, courter_thresh, parent_thresh,pref_thresh;
 	bool extinct;
 	vector<double> theta, mean_fem_traits, mean_mal_traits, d_parentfreq, d_courterfreq;
@@ -34,7 +34,7 @@ public:
 
 	population()
 	{
-		population_size = num_mal = num_fem = num_progeny = sex_trait = int();
+		population_size = num_mal = num_fem = num_progeny = sex_trait = random_mating_counter = int();
 		theta = mean_fem_traits = mean_mal_traits = vector<double>();
 		sex_theta = sex_omega = courter_thresh = parent_thresh = pref_thresh = double();
 		adults = progeny = vector<individual>();
@@ -536,7 +536,6 @@ public:
 	}
 	void initialize(parameters & gp)
 	{
-		std::cout << "Initializing a population.\n";
 		population_size = gp.carrying_capacity;
 		int j, jj, jjj;
 		num_fem = num_mal = 0;
@@ -695,6 +694,7 @@ public:
 			}
 			
 		}
+		
 		for (j = 0; j < gp.carrying_capacity; j++)
 		{
 			if (j < gp.carrying_capacity)
@@ -1907,7 +1907,7 @@ public:
 		int fem_ms;
 
 		fem_ms = num_progeny = num_fem = num_mal = 0;
-
+		random_mating_counter = 0;
 		//set up pop level metrics
 		determine_pop_size(gp);
 		assign_preference(gp);
@@ -1996,7 +1996,7 @@ public:
 			}
 			//sanity check
 			if(num_progeny != gp.carrying_capacity)
-				cout << "\nWARNING! There's something wrong with density dependent selection! " << num_progeny << " were produced but the carrying capacity is " << gp.carrying_capacity << std::flush;
+				std::cout << "\nWARNING! There's something wrong with density dependent selection! " << num_progeny << " were produced but the carrying capacity is " << gp.carrying_capacity << std::flush;
 		}
 		if (gp.verbose && !gp.log_file)
 			std::cout <<", and " << fem_ms << " mated" << std::flush;
@@ -2054,6 +2054,7 @@ public:
 		if (gp.random_mating)//then they randomly find males
 		{
 			mate_found = random_mating(gp, fem_index, male_index);
+			random_mating_counter++;
 		}//end random mating
 		else //preference for one morph or the other 
 		{ 
@@ -2064,7 +2065,7 @@ public:
 				male_id = male_index[irndnum];
 				if (adults[male_id].alive)
 				{
-					//if (adults[male_id].mate_found < gp.max_num_mates)
+					if ((gp.polygyny && adults[male_id].mate_found < gp.max_num_mates) || (!gp.polygyny && adults[male_id].mate_found < 1))
 					{
 						if (gp.gene_network)
 						{//redetermine traits and thresholds, given the mating experience and optimality of trait
@@ -2114,9 +2115,14 @@ public:
 				}
 			}
 			else
-			{ // if the female can't find a preferred male, she will mate at random
-				mate_found = random_mating(gp, fem_index, male_index);
+			{ 
+				if(!gp.allow_no_mating)
+				{	// if the female can't find a preferred male, she will mate at random
+					mate_found = random_mating(gp, fem_index, male_index);
+					random_mating_counter++;
+				}
 			}
+
 		}//end of finding the mates
 		return mate_found;
 	}
@@ -2194,6 +2200,7 @@ public:
 			else
 				num_mates = gp.max_num_mates;
 			int tries = 0;
+			max_sperm = 0;
 			while (male_ids.size() < num_mates && tries < 10000)
 			{
 				randmale = randnum(sneakers.size());
@@ -2214,11 +2221,16 @@ public:
 			}
 			fecundity_share[0] = double(adults[male_id].pot_rs) / double(max_sperm); //it doesn't get weighted if r <= 1
 			for (k = 1; k < fecundity_share.size(); k++)
+			{
 				fecundity_share[k] = double(adults[male_ids[k]].pot_rs*gp.sperm_comp_r) / double(max_sperm);
+				adults[male_ids[k]].lifetime_rs = adults[male_ids[k]].lifetime_rs + fecundity_share[k];
+				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs -  fecundity_share[k];
+			}				
 			for(k = 0; k < fecundity_share.size(); k++)
 				this_nest.off_props.push_back(fecundity_share[k]);
 			for(k = 0; k < male_ids.size(); k++)
 				this_nest.all_dads.push_back(male_ids[k]);
+			
 		}
 	}
 	int fertilization(int fem_id,parameters gp)
@@ -2743,7 +2755,7 @@ public:
 			}
 		}
 	}
-	void eval_rs(parameters gp) // calculate average reproductive success
+	void eval_rs(parameters gp, ofstream & logf) // calculate average reproductive success
 	{
 		int j;
 		for (j = 0; j < adults.size(); j++)
@@ -2758,34 +2770,65 @@ public:
 				adults[progeny[j].dad].lifetime_rs++;
 			}
 		}
-		if (gp.verbose && !gp.log_file)
+		if (gp.debug)
 		{
-			for (j = 0; j < adults.size(); j++)
+			if(gp.log_file)
 			{
-				if (adults[j].lifetime_rs > gp.rs_c)
+				for (j = 0; j < adults.size(); j++)
 				{
-					if (adults[j].alive)
-						std::cout << "\n\tLiving ind. " << j;
-					else
-						std::cout << "\n\tDead ind. " << j;
-					if (adults[j].female)
-						std::cout << ", female, had lifetime RS " << adults[j].lifetime_rs;
-					else
+					if (adults[j].lifetime_rs > gp.rs_c)
 					{
-						if (adults[j].courter && adults[j].parent)
-							std::cout << ", courter/parent, had lifetime RS " << adults[j].lifetime_rs;
-						if (adults[j].courter && !adults[j].parent)
-							std::cout << ", courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
-						if (!adults[j].courter && adults[j].parent)
-							std::cout << ", non-courter/parent, had lifetime RS " << adults[j].lifetime_rs;
-						if (!adults[j].courter && !adults[j].parent)
-							std::cout << ", non-courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+						if (adults[j].alive)
+							logf << "\n\tLiving ind. " << j;
+						else
+							logf << "\n\tDead ind. " << j;
+						if (adults[j].female)
+							logf << ", female, had lifetime RS " << adults[j].lifetime_rs;
+						else
+						{
+							if (adults[j].courter && adults[j].parent)
+								logf << ", courter/parent, had lifetime RS " << adults[j].lifetime_rs;
+							if (adults[j].courter && !adults[j].parent)
+								logf << ", courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+							if (!adults[j].courter && adults[j].parent)
+								logf << ", non-courter/parent, had lifetime RS " << adults[j].lifetime_rs;
+							if (!adults[j].courter && !adults[j].parent)
+								logf << ", non-courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+						}
 					}
 				}
 			}
+			else
+			{
+				for (j = 0; j < adults.size(); j++)
+				{
+					if (adults[j].lifetime_rs > gp.rs_c)
+					{
+						if (adults[j].alive)
+							std::cout << "\n\tLiving ind. " << j;
+						else
+							std::cout << "\n\tDead ind. " << j;
+						if (adults[j].female)
+							std::cout << ", female, had lifetime RS " << adults[j].lifetime_rs;
+						else
+						{
+							if (adults[j].courter && adults[j].parent)
+								std::cout << ", courter/parent, had lifetime RS " << adults[j].lifetime_rs;
+							if (adults[j].courter && !adults[j].parent)
+								std::cout << ", courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+							if (!adults[j].courter && adults[j].parent)
+								std::cout << ", non-courter/parent, had lifetime RS " << adults[j].lifetime_rs;
+							if (!adults[j].courter && !adults[j].parent)
+								std::cout << ", non-courter/non-parent, had lifetime RS " << adults[j].lifetime_rs;
+						}
+					}
+				}
+			}
+			
+			
 		}
 	}
-	vector<double> avg_court_rs(parameters gp)
+	vector<double> avg_court_rs(parameters gp, ofstream & logf)
 	{
 		int k;
 		int num_courter, num_parent, num_noncourter, num_nonparent;
@@ -2794,7 +2837,7 @@ public:
 		num_noncourter = num_mal - num_courter;
 		num_parent = calc_freq_parent(gp)*num_mal;
 		num_nonparent = num_mal - num_parent;
-		eval_rs(gp);
+		eval_rs(gp, logf);
 		
 		vector<double> rs;// courter_rs, noncourter_rs, parent_rs, nonparent_rs
 		for (k = 0; k < 4; k++)
@@ -3271,13 +3314,13 @@ public:
 		output_file << std::flush;
 	}
 
-	void output_summary_info(parameters gp, ofstream & summary_output)
+	void output_summary_info(parameters gp, ofstream & summary_output, ofstream & logf)
 	{
         //pop info
         summary_output <<'\t' << population_size << '\t' << num_mal << '\t' << num_fem << '\t' << num_progeny;
 
 		double dtemp;
-		vector<double> rs = avg_court_rs(gp);
+		vector<double> rs = avg_court_rs(gp, logf);
 		if (gp.parent_trait || gp.parent_conditional)
 		{
 			dtemp = calc_freq_parent(gp);
@@ -3311,7 +3354,7 @@ public:
 		}
 		else
 			summary_output << "\tNA\tNA";
-		summary_output << std::flush;
+		summary_output << '\t' << random_mating_counter << std::flush;
 	}
 	void output_genotypes_vcf(parameters gp, int pop_id)
 	{
@@ -3379,10 +3422,100 @@ public:
 			vcf.close();
 		}
 	}
-	void output_trait_info(parameters gp, int gen, int pop_id, ofstream & output)
+	void output_ae_vcf(parameters gp, int pop_id)
+	{
+		int j, jj, jjj;
+		if (gp.parent_trait || gp.court_trait || gp.courter_conditional || gp.parent_conditional || gp.ind_pref || gp.cor_prefs)
+		{
+			string vcf_name = gp.base_name + "_pop_" + to_string(pop_id) + "_ae.vcf";
+			ofstream vcf;
+			vcf.open(vcf_name);
+		
+			//output the header
+			vcf << "##fileformat=VCFv4.0";
+			string date = determine_date();
+			vcf << "\n##fileDate=" << date;
+			vcf << "\n##source=ARTsSimulation";
+			vcf << "\n##INFO=<ID=AF,Number=.,Type=Float,Description=\"Allele Frequency\">";
+			vcf << "\n##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">";
+			vcf << "\n##CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT";
+			for (j = 0; j < population_size; j++)
+			{
+				if (adults[j].alive)
+				{
+					if (adults[j].female)
+						vcf << "\tFEM" << j << "_pref" << adults[j].female_pref;
+					else
+					{
+						if (adults[j].courter && adults[j].parent)
+							vcf << "\tMAL" << j << "_CP";
+						if (adults[j].courter && !adults[j].parent)
+							vcf << "\tMAL" << j << "_C";
+						if (!adults[j].courter && adults[j].parent)
+							vcf << "\tMAL" << j << "_P";
+						if (!adults[j].courter && !adults[j].parent)
+							vcf << "\tMAL" << j << "_NON";
+					}
+				}
+			}
+			//output genotype info
+
+			for (j = 0; j < gp.num_chrom; j++)
+			{
+				if (gp.court_trait)
+				{
+					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+					{		
+						vcf << '\n' << j << '\t' << jj << '\t' << j << "." << jj << '\t' << "NA" << '\t' << "NA";
+						vcf << "\t100\tPASS\tAF\tGT";
+						for (jjj = 0; jjj < population_size; jjj++)		
+						{
+							if (adults[jjj].alive)
+							{
+								vcf << '\t' << adults[jjj].maternal[j].courter_ae[jj] << "/" << adults[jjj].paternal[j].courter_ae[jj];
+							}
+						}
+					}
+				}
+				if (gp.parent_trait)
+				{
+					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+					{
+						vcf << '\n' << j << '\t' << jj << '\t' << j << "." << jj << '\t' << "NA" << '\t' << "NA";
+						vcf << "\t100\tPASS\tAF\tGT";
+						for (jjj = 0; jjj < population_size; jjj++)
+						{
+							if (adults[jjj].alive)
+							{
+								vcf << '\t' << adults[jjj].maternal[j].parent_ae[jj] << "/" << adults[jjj].paternal[j].parent_ae[jj];
+							}
+						}
+					}
+				}
+				if (gp.cor_prefs || gp.ind_pref)
+				{
+					for (jj = 0; jj < gp.qtl_per_chrom[j]; jj++)
+					{
+						vcf << '\n' << j << '\t' << jj << '\t' << j << "." << jj << '\t' << "NA" << '\t' << "NA";
+						vcf << "\t100\tPASS\tAF\tGT";
+						for (jjj = 0; jjj < population_size; jjj++)
+						{
+							if (adults[jjj].alive)
+							{
+								vcf << '\t' << adults[jjj].maternal[j].pref_ae[jj] << "/" << adults[jjj].paternal[j].pref_ae[jj];
+							}
+						}
+					}
+				}
+				
+			}
+			vcf.close();
+		}
+	}
+	void output_trait_info(parameters gp, int gen, int pop_id, ofstream & output, ofstream & logf)
 	{
 		int j;
-		eval_rs(gp);
+		eval_rs(gp, logf);
 		// "Pop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
 		for (j = 0; j < adults.size(); j++)
 		{

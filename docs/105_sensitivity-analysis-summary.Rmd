@@ -44,7 +44,7 @@ library(sm)
 library(kableExtra)
 source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
-cols2<-c(CP='#a1dab4',NCP='#41b6c4',CNP='#2c7fb8',NCNP='#253494')
+cols2<-c(CP='#d7191c',NCP='#fdae61',CNP='#abd9e9',NCNP='#2c7bb6')
 ```
 ```{r baseCols}
 base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
@@ -192,6 +192,15 @@ cpu_all_freqs<-rbind(cpu_ra_freqs[,base_keep_cols],cpu_all_freqs)
 ```{r plotRAunlinkedSumm, fig.cap="(ref:plotRAunlinkedSumm)"}
 plot_2vars_summary(cpu_all_freqs,"Courter2NonRS","Parent2NonSurvival",mar=c(5.1,4.1,4.1,2.1))
 ```
+
+```{r}
+cpu_var<-cpu_all_freqs[which(round(cpu_all_freqs$Parent2NonSurvival,1)==3.5 & cpu_all_freqs$Courter2NonRS==0.5),]
+cpu_var_init<-get.morph.freqs(plot.pc.reps(pattern=unique(gsub("(.*)\\/(.*)\\_\\d$","\\2",rownames(cpu_var))),
+                                           path=unique(gsub("(.*)\\/(.*)\\_\\d$","\\1",rownames(cpu_var))),
+                                           cols,make.plot=FALSE),
+                              gen="first")
+```
+
 
 ### Linked QTLs
 

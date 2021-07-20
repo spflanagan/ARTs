@@ -11,8 +11,765 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
 knitr::opts_knit$set(root.dir='../fixedART-results/') #change
-source("~/Research/ARTs/R/002_freq_functions.R")
+source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 ```
+
+
+# 23 June 2021
+
+I had reverted to using the paper notebook, but here I am switching back..
+
+I created a shiny app to be able to interactively play with different parameters but it's SO SLOW to run over multiple generations AND multiple initial frequencies. 
+
+I'm considering just running this across a list of various settings to see what happens. Alternatively, it looks like there's a bindCache() function that will store outputs -- this might be better. 
+
+I'm also considering my interface -- perhaps it would be good/better to have some scroll bars for some of the key parameters as well, like sperm competition, selection coefficients, etc.
+
+
+# 18 January 2021
+
+I'm revisiting the document to get it ready to send to Suzanne, and have cleaned up some sloppy figure captions, labels, etc. 
+
+Things to sort out today:
+- what has happened with the summary file outputs, and can we see any patterns in terms of amount of sneaking?
+- can I detect any patterns of initial conditions driving the outcomes?
+- what might I suggest we discuss when I email her?
+
+The random mating counts match up with what I expected to find for monogamous cases:
+
+
+```{r}
+courterRS1<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_equalFitness.*summary.txt",path="single_locus",cols,make.plot=FALSE),gen="first")
+courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_equalFitness.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+summary(courterRS$NumRandMate)
+summary(courterRS1$NumRandMate)
+```
+
+Looking at equivalent polgynyous cases, there doesn't seem to be any random mating that occurs.
+
+
+
+
+
+# 29 December 2020
+
+I realize now that outputting the number randomly mated to stdout doesn't make life easy, and that I should instead save it to the summary file -- so I'll change that. In the meantime, though, I can sift through the log to see if I can make sense of anything. There are definitely some runs/generations where most/all females chose randomly and some where they did not -- it starts off with 0. So this is informative and will be more useful when paired with the info on the frequencies (i.e., when in the summary doc). 
+
+# 28 December 2020
+
+Now the model returns non-courter/parents as a dominant one in most cases of monogamy! I guess they win in sperm competition somehow? Or sneakers are able to be more successful at fathering offspring? This is a bit confusing to me. non-courter/parents would NOT be able to sneak fertilizations so they must be chosen through random mating. 
+
+In polygyny, the courter/non-parents can survive because they can sneak fertilizations in nests belonging to parents. 
+
+To try to sort this out a bit better, I'm re-running the model but tracking the number of random matings that occur.
+
+# 22 December 2020 
+
+Ok so the models have re-run. 
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_nm_equalFitness_5_traits.txt")
+traits[traits$Gen==12000 & traits$Courter==0 & traits$Parent==1 & traits$Sex=="MALE",]
+
+```
+
+Still the RS is 0...but one male has a lifetime RS of 35?!?! I guess that's because of the density dependence. But also the males are able to have multiple mates??
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_polygyny_nm_nestBinary_courterRSadvantage_4_traits.txt")
+traits[traits$Gen==12000 & traits$Courter==1 & traits$Parent==0 & traits$Sex=="MALE",]
+
+```
+Hmm the same thing is happening here. So I think maybe something's broken in the sneakers bit of code? I'll try to dig into it. 
+
+One thing I've found is that I'm not actually enforcing the males-nesting-once rule when not in random mating. I also wasn't decreasing males' pot RS after sneaking. Ok, debuggin this, I'm finding that the max_sperm is getting HUGE, meaning that the fecundity share for each individual male is super small -- this is probably the problem. Why is this happening? because this idiot never initialized max_sperm. Now let's re-run those models and see what happens.
+
+# 21 December 2020
+
+Ok, so over the weekend I re-ran all the models, saving info on lifetime RS for sneaking males. Let's see what we can learn -- I've re-knitted the document, and it seems that re-running them has somewhat changed the outcomes. Let's take a look at one of the runs where non-courter/parents persist.
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_onlySpermComp_2_traits.txt")
+traits[traits$Gen==12000 & traits$Courter==0 & traits$Parent==1 & traits$Sex=="MALE",]
+summary(traits$LifetimeRS[traits$Gen==0 & traits$Courter==0 & traits$Parent==1 & traits$Sex=="MALE"])
+```
+
+None of these males are able to produce offspring -- at any generation. Which means this is not driven by the reversion to random mating.
+
+Next: look into the nm versions. And in those, there are indeed cases where non-courter/parents persist, which continues to surprise me. 
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_nm_equalFitness_2_traits.txt")
+traits[traits$Gen==12000 & traits$Courter==0 & traits$Parent==1 & traits$Sex=="MALE",]
+
+```
+Again, none of these males produce offspring -- do they produce offspring in gen 0?
+
+```{r}
+summary(traits$LifetimeRS[traits$Gen==0 & traits$Courter==0 & traits$Parent==1 & traits$Sex=="MALE"])
+```
+
+nope, as expected given the sneaker settings and non-mating settings. 
+
+```{r}
+traits[traits$Gen==12000 & traits$Courter==0 & traits$Parent==1 & traits$Sex=="FEMALE",]
+```
+
+The females produce fewer offspring than their allocation but do mate and produce offspring. Am I just not running the simulations for long enough? How close are the trait values to the threshold -- could mutations be flipping them over the edge?
+
+```{r}
+summary<-read.delim("single_locus/pcu_1locus_nestBinary_nm_equalFitness_2_summary.txt")
+```
+
+The parental threshold is fairly close to the mean trait value. I'm just not sure how NcP persists without NcNp also persisting. 
+
+```{r}
+par(mfrow=c(2,2))
+lapply(unique(summary$Pop),function(pop){
+  plot(summary$Generation[summary$Pop==pop],summary$FreqNcP[summary$Pop==pop],type="l")  
+})
+
+par(mfrow=c(2,2))
+lapply(unique(summary$Pop),function(pop){
+  plot(summary$Generation[summary$Pop==pop],summary$ParentAEmean[summary$Pop==pop],type="l")  
+  abline(h=unique(summary$ParentThresh),lty=2,col="cornflowerblue")
+})
+
+
+par(mfrow=c(2,2))
+lapply(unique(summary$Pop),function(pop){
+  plot(summary$Generation[summary$Pop==pop],summary$CourterAEmean[summary$Pop==pop],type="l")  
+  abline(h=unique(summary$CourterThresh),lty=2,col="cornflowerblue")
+})
+```
+
+I'm running them with 20000 initial generations now -- we'll see if it makes any difference.
+
+What about in the other runs where variation is maintained -- let's check to make sure those alternatives are maintained via males as we'd expect.
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_sneakRSadvantage_2_traits.txt")
+traits[traits$Gen==12000 & traits$Courter==1 & traits$Parent==0 & traits$Sex=="MALE",]
+
+```
+
+One interesting observation is that many of the individuals in generation 0 have a lifteime RS of 0, including females (this is because of no random mating, presumably). Huh, but in the random mating version females have a lifetime RS of 0. Oh, I guess if they randomly mate with a non-parent male.
+
+Hmm the courter/non-parent morph doesn't seem to have a lifetime RS >0 either. Many of them found mates -- I guess maybe they used up their sperm on their own nests? 
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_sneakRSadvantage_courterRSadvantage_4_traits.txt")
+traits[traits$Gen==12000 & traits$Courter==0 & traits$Parent==0 & traits$Sex=="MALE",]
+
+```
+
+Ok, and this is true for ALL of the male morphs that are retained. So something odd seems to be going on. 
+
+it turns out I did a bad job tracking sneaking and assigned all the fecundity shares to the parental male. So I've fixed the code and re-started the runs, but not with 20000 initial generations. We'll see where we get with the defaults. 
+
+# 18 December 2020
+
+I've tweaked the code to track sneaks as lifetime_rs, we'll see what the outputs of that look like -- in order to figure out how non-courters/parents persist, we need to determine whether they sneak or not.
+
+
+# 17 December 2020
+
+I tweaked the code but initial female frequencies don't seem to be massively important
+
+```{r}
+femFreqs<-get_female_freqs(pattern="pcu_1locus_nestBinary_nm_courterRSadvantage.*traits.txt",path="single_locus")
+courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_nm_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+par(mfrow=c(3,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend("topleft",bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+
+bp<-barplot(t(as.matrix(femFreqs[femFreqs$gen==0,c("NcNp", "CNp", "NcP","CP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =  femFreqs$rep[femFreqs$gen==0],
+        las=2,
+        border=NA)
+
+# barplot of just initial female frequencies
+bp<-barplot(t(as.matrix(femFreqs[femFreqs$gen==0,c("Courter", "Parent")])),
+        col=cols[c("courter","parent")],
+        names.arg = femFreqs$rep[femFreqs$gen==0],
+        las=2,
+        border=NA)
+abline(h=0.5,lty=2)
+legend(y=1.2,x=15,xpd=TRUE,c("courter","parent"),col=cols[c("courter","parent")],
+       ncol=2,pch=15,bty='n',cex=1.25)
+```
+
+When there are slightly more parents to start off with, the courter/non-parent is benefitted the most. This morph is able to sneak fertilizations and because it's a courter has a higher number of eggs -- so it can benefit. The non-courter/parent cannot sneak, so the only way that morph is retained is through females -- I'm still not sure how this one is maintained in these no-mating alternative scenarios! Mutation?
+
+And what causes the differences among runs? It's obviously something to do with the initial conditions.
+
+Let's look at the non-courter/parents:
+```{r}
+ traits[traits$Gen==12000 & traits$Courter==0 & traits$Parent==1,]
+```
+       Gen Pop Individual  Sex Courter CourtTrait Parent ParentTrait Preference PrefTrait MateFound PotRS LifetimeRS Alive
+5000 12000   0        999 MALE       0    1.18571      1    0.441494          1         0         0     8          0     1
+7000 12000   2        999 MALE       0    1.18571      1    0.441494          1         0         0     8          0     1
+8000 12000   3        999 MALE       0    1.18571      1    0.441494          1         0         0     8          0     1
+
+
+Hmm these ones are males...they did not mate -- but did they sneak? perhaps I should track/add that to the output, which could help me follow what's going on.
+
+# 16 December 2020
+
+So at the end of my work yesterday, the importance of female initial traits seemed to be important. 
+```{r}
+get_female_freqs<-function(pattern, path){
+  files<-list.files(pattern=pattern,path=path,full.names = TRUE)
+  femFreqs<-do.call(rbind,lapply(files, function(filename){
+    traits<-read.delim(filename)
+    allFreqs<-do.call(rbind, lapply(unique(traits$Pop),function (popindex, traits){
+      traitsF<-traits[traits$Gen==0 & traits$Pop==popindex,]
+      traitsL<-traits[traits$Gen==12000 & traits$Pop==popindex,]
+      
+      nums<-data.frame(NcNp=c(nrow(traitsF[traitsF$Sex=="FEMALE" & traitsF$Courter==0 & traitsF$Parent==0,]),
+                                nrow(traitsL[traitsL$Sex=="FEMALE" & traitsL$Courter==0 & traitsL$Parent==0,])),
+                         NcP=c(nrow(traitsF[traitsF$Sex=="FEMALE" & traitsF$Courter==0 & traitsF$Parent==1,]),
+                                nrow(traitsL[traitsL$Sex=="FEMALE" & traitsL$Courter==0 & traitsL$Parent==1,])),
+                         CNp=c(nrow(traitsF[traitsF$Sex=="FEMALE" & traitsF$Courter==1 & traitsF$Parent==0,]),
+                                nrow(traitsL[traitsL$Sex=="FEMALE" & traitsL$Courter==1 & traitsL$Parent==0,])),
+                         CP=c(nrow(traitsF[traitsF$Sex=="FEMALE" & traitsF$Courter==1 & traitsF$Parent==1,]),
+                                nrow(traitsL[traitsL$Sex=="FEMALE" & traitsL$Courter==1 & traitsL$Parent==1,])))
+      freqs<-nums/rowSums(nums)
+      freqs$Courter<-c(nrow(traitsF[traitsF$Sex=="FEMALE" & traitsF$Courter==1,])/nrow(traitsF[traitsF$Sex=="FEMALE",]),
+                       nrow(traitsL[traitsL$Sex=="FEMALE" & traitsL$Courter==1 ,])/nrow(traitsL[traitsL$Sex=="FEMALE",]))
+
+      freqs$Parent<-c(nrow(traitsF[traitsF$Sex=="FEMALE" & traitsF$Parent==1,])/nrow(traitsF[traitsF$Sex=="FEMALE",]),
+                      nrow(traitsL[traitsL$Sex=="FEMALE" & traitsL$Parent==1,])/nrow(traitsL[traitsL$Sex=="FEMALE",]))
+      freqs$gen<-c(0,12000)
+      freqs$rep<-as.numeric(gsub("^.*_(\\d)_traits.txt","\\1",filename))
+      freqs$pop<-popindex
+      return(freqs)
+    }, traits = traits))
+    return(allFreqs)
+  }))
+  return(femFreqs)
+}
+
+
+femFreqs<-get_female_freqs(pattern="pcu_1locus_nestBinary_courterRSadvantage.*traits.txt",path="single_locus")
+```
+
+Now to try to make some barplots
+
+```{r}
+courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+par(mfrow=c(2,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend(x=5,y=0.04,bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+
+# barplot of just initial female frequencies
+bp<-barplot(t(as.matrix(femFreqs[femFreqs$gen==0,c("NcNp", "CNp", "NcP","CP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg = femFreqs$rep[femFreqs$gen==0],
+        las=2,
+        border=NA)
+```
+
+Ok, apparently I didn't save the first generation of traits for most of the runs -- so I'm re-running them...ahh it turns out I only output gen 0 for pop 0! I've updated the code but need to stop all my processes and re-run all of my models. 
+
+```{r}
+femFreqs<-get_female_freqs(pattern="pcu_1locus_nestBinary_nm_courterRSadvantage.*traits.txt",path="single_locus")
+courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_nm_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+par(mfrow=c(2,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend(x=5,y=0.04,bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+
+# barplot of just initial female frequencies
+bp<-barplot(t(as.matrix(femFreqs[femFreqs$gen==0,c("Courter", "Parent")])),
+        col=cols[c("courter","parent")],
+        names.arg = femFreqs$rep[femFreqs$gen==0],
+        las=2,
+        border=NA)
+abline(h=0.5,lty=2)
+```
+
+# 15 December 2020
+
+Yesterday's runs seem to have finished, let's check them out.
+
+```{r}
+nm_patts<-c("pcu_1locus_nestBinary_nm_courterRSadvantage.*summary.txt",
+             "pcu_1locus_nestBinary_nm_equalFitness.*summary.txt",
+             "pcu_1locus_nestBinary_nm_onlySpermComp.*summary.txt",
+             "pcu_1locus_nestBinary_nm_sneakRSadvantage_\\d.*summary.txt",
+             "pcu_1locus_nestBinary_nm_sneakRSadvantage_courterRSadvantage.*summary.txt",
+             "pcu_1locus_polygyny_nm_nestBinary_courterRSadvantage.*summary.txt",
+             "pcu_1locus_polygyny_nm_nestBinary_equalFitness.*summary.txt",
+             "pcu_1locus_polygyny_nm_nestBinary_onlySpermComp.*summary.txt",
+             "pcu_1locus_polygyny_nm_nestBinary_sneakRSadvantage_\\d.*summary.txt",
+             "pcu_1locus_polygyny_nm_nestBinary_sneakRSadvantage_courterRSadvantage.*summary.txt")
+par(mfrow=c(2,length(nm_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+nmDat<-lapply(nm_patts,function(pattern){
+  dat<-get.morph.freqs(plot.pc.reps(pattern=pattern,path="single_locus",cols,make.plot=FALSE))
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=gsub("^.*nestBinary_(\\w+)[[:punct:]].*","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
+```
+
+Ok so ^ this brings up an important issue, which is that I don't know how the non-courter/parents exist in the population! Ohh maybe through females? 
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_nm_onlySpermComp_1_traits.txt")
+table(traits[traits$Gen==12000  & traits$Courter==0 & traits$Parent==1,c("Sex","Pop")])
+
+table(traits[traits$Gen==12000 & traits$Pop==0  & traits$Courter==0 & traits$Parent==1,c("Sex","MateFound")])
+```
+
+Ok, so the females are able to mate and maintain these traits in the population -- that's how!
+
+
+```{r}
+randm_patts<-c("pcu_1locus_nestBinary_RM_courterRSadvantage.*summary.txt",
+             "pcu_1locus_nestBinary_RM_equalFitness.*summary.txt",
+             "pcu_1locus_nestBinary_RM_onlySpermComp.*summary.txt",
+             "pcu_1locus_nestBinary_RM_sneakRSadvantage_\\d.*summary.txt",
+             "pcu_1locus_nestBinary_RM_sneakRSadvantage_courterRSadvantage.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_RM_courterRSadvantage.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_RM_equalFitness.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_RM_onlySpermComp.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_RM_sneakRSadvantage_\\d.*summary.txt",
+             "pcu_1locus_polygyny_nestBinary_RM_sneakRSadvantage_courterRSadvantage.*summary.txt")
+par(mfrow=c(2,length(randm_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+randDat<-lapply(randm_patts,function(pattern){
+  dat<-get.morph.freqs(plot.pc.reps(pattern=pattern,path="single_locus",cols,make.plot=FALSE))
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=gsub("^.*nestBinary_(\\w+)[[:punct:]].*","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
+```
+
+The fact that random mating is not substantially different from the other cases indicates to me that the fitness differentials must not be large enough, or something else needs to change because random processes perform just as well as our so-called deterministic one. 
+
+
+So these things suggest that:
+- selection differentials aren't strong enough
+- the model needs to run for a longer amount of time
+
+Could the initial frequencies of the morphs *in females* be important in determining the final outcomes?
+
+```{r}
+levels(traits$Parent)<-c(0,1)
+traits0f<-traits[traits$Gen==0 & traits$Pop==0,]
+traits0l<-traits[traits$Gen==12000 & traits$Pop==0,]
+
+nums0<-data.frame(NcNp=c(nrow(traits0f[traits0f$Sex=="FEMALE" & traits0f$Courter==0 & traits0f$Parent==0,]),
+                          nrow(traits0l[traits0l$Sex=="FEMALE" & traits0l$Courter==0 & traits0l$Parent==0,])),
+                   NcP=c(nrow(traits0f[traits0f$Sex=="FEMALE" & traits0f$Courter==0 & traits0f$Parent==1,]),
+                          nrow(traits0l[traits0l$Sex=="FEMALE" & traits0l$Courter==0 & traits0l$Parent==1,])),
+                   CNp=c(nrow(traits0f[traits0f$Sex=="FEMALE" & traits0f$Courter==1 & traits0f$Parent==0,]),
+                          nrow(traits0l[traits0l$Sex=="FEMALE" & traits0l$Courter==1 & traits0l$Parent==0,])),
+                   CP=c(nrow(traits0f[traits0f$Sex=="FEMALE" & traits0f$Courter==1 & traits0f$Parent==1,]),
+                          nrow(traits0l[traits0l$Sex=="FEMALE" & traits0l$Courter==1 & traits0l$Parent==1,])))
+freqs0<-nums0/rowSums(nums0)
+
+```
+
+Now I just need to do this for all of the pops so that I can make barplots like I Was doing yesterday.
+
+```{r}
+par(mfrow=c(2,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend(x=5,y=0.04,bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+
+# barplot of just initial female frequencies
+
+```
+
+
+
+
+
+# 14 December 2020
+
+I'm worried about going down unnecessary rabbit holes. What do I want to understand about the model that I don't currently understand?
+1. when variation exists, what casues one sneaker type to become prevalent?
+2. what causes the differences among runs in terms of variation vs no variation?
+3. If the only ones that sneak are non-parents, how do any non-courter/parents mate?
+
+For number 1, I think initial frequencies have something to do with it. For number 2, it could be that fitness is too flat aka the differences between the morphs are not exaggerated enough.
+
+The answer to #3 must arise from females exhausting their options searching for courters and randomly mating with a non-courter/parent. Courter/non-parents might sire a nest that fails but they will also be able to sneak fertilizations. ASK SUZANNE: should both non-courters and non-parents be added to the sneakers list? [I can test this assumption by increasing the female search space]
+
+So let's dig into initial frequencies first, then I'll start some more runs with starker differences and possibly with a larger search space for females.
+
+```{r}
+courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+courterRS1<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE),gen = "first")
+```
+```{r}
+par(mfrow=c(2,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend(x=5,y=0.04,bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+bp<-barplot(t(as.matrix(courterRS1[,c("CourterFreq", "ParentFreq")]))-0.5,
+        col=cols[c("courter","parent")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,beside = TRUE,
+        border=NA)
+legend(y=.04,x=15,xpd=TRUE,c("courter","parent"),col=cols[c("courter","parent")],
+       ncol=2,pch=15,bty='n',cex=1.25)
+
+```
+
+So, what this suggests is that the initial conditions seem to play a role but it doesn't seem to fully explain it. Also, it's odd because when courters start off as more abundant than parents, the non-courter/parent morph is the most successful one, and when parents start off as more frequent the courter/non-parent is the more successful morph (and I've checked it's not a plotting error).
+
+Could thresholds play a role? 
+
+```{r}
+par(mfrow=c(3,1))
+bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP")])),
+        col=cols2[c("NCNP","CNP","NCP")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,
+        border=NA)
+legend(x=5,y=0.04,bty='n',legend = c("Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=3,cex=1.25)
+bp<-barplot(t(as.matrix(courterRS1[,c("CourterFreq", "ParentFreq")]))-0.5,
+        col=cols[c("courter","parent")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,beside = TRUE,
+        border=NA)
+legend(y=.04,x=15,xpd=TRUE,c("courter","parent"),col=cols[c("courter","parent")],
+       ncol=2,pch=15,bty='n',cex=1.25)
+bp<-barplot(t(as.matrix(courterRS1[,c("CourterThresh", "ParentThresh")])),
+        col=cols[c("courter","parent")],
+        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        las=2,beside = TRUE,
+        border=NA)
+legend(y=1.75,x=15,xpd=TRUE,c("courter","parent"),col=cols[c("courter","parent")],
+       ncol=2,pch=15,bty='n',cex=1.25)
+
+```
+
+So thresholds might be related -- noncourter/parents emerge when courters start off above 0.5 but parents have a higher threshold. courter/nonparents emerge when parents start off above 0.5 (most of the time), regardless of thresholds. Hmm this isn't helping make the picture any clearer. 
+
+
+I think I want to run a few tests:
+- random mating
+- females always exert a choice (i.e., they don't mate instead of random mating)
+- larger RS tradeoffs
+
+Ok, first running the original sets as before but with females not defaulting to random mating and with only random mating. No other parameter differences from what's in the single locus doc and results already.
+
+
+# 11 December 2020
+
+So following on from yesterday, clearly something wonky is going on if they're all getting exactly the same alleles. 
+
+```{r}
+library(gwscaR)
+aevcf<-parse.vcf("arts_pop_0_ae.vcf")
+crtGT<-do.call(rbind,strsplit(t(aevcf[1,10:ncol(aevcf)]),"/"))
+crtGT<-apply(crtGT,2,as.numeric)
+
+prtGT<-do.call(rbind,strsplit(t(aevcf[2,10:ncol(aevcf)]),"/"))
+prtGT<-apply(prtGT,2,as.numeric)
+```
+
+Just checking -- this is true for both QTLs. 
+
+I'm going to have the program output the tempalleles during initialization. 
+
+Multiple alleles *are* initialized:
+Temp alleles: -0.18129 -0.650723 -0.0726133
+
+Temp alleles: -0.987933 0.513364 -0.570933
+
+```{r}
+aevcf<-parse.vcf("arts_test_pop_0_ae.vcf")
+crtGT<-do.call(rbind,strsplit(t(aevcf[1,10:ncol(aevcf)]),"/"))
+crtGT<-apply(crtGT,2,as.numeric)
+
+prtGT<-do.call(rbind,strsplit(t(aevcf[2,10:ncol(aevcf)]),"/"))
+prtGT<-apply(prtGT,2,as.numeric)
+```
+
+crtGT
+-0.18129 
+    2000 
+table(prtGT)
+prtGT
+0.513364 
+    2000 
+
+So it's only assigning one of them but inconsistently. I'm going to add some outputs just to try to track down what's going on here.
+In initializing the individuals, it seems that different alleles are being allocated -- so what's happening? 
+
+Ah I was outputting genotypes in every generation, not just the first one. Let's try this again (with a debug mode incorporated as well). Ok, now the vcf has variety
+
+table(crtGT)
+crtGT
+0.168514 0.624808 
+     978     1022 
+table(prtGT)
+prtGT
+-0.280098  0.251608 
+     1026       974 
+
+Ok, so why was I looking into this? Ah yes, because there's apparently no variation in traits at the start based on the summary info.
+
+```{r}
+traits<-read.delim("arts_test_traits.txt")
+hist(traits$CourtTrait[traits$Gen==0 & traits$Pop==0])
+
+hist(rowSums(crtGT))
+
+```
+
+Ahh, this is because they're all homozygotes, so this is expected. I could output trait values at gen 1 if I wanted too ensure things are mixing properly.
+
+```{r}
+traits<-read.delim("arts_test_traits.txt")
+hist(traits$CourtTrait[traits$Gen==3 & traits$Pop==0])
+
+
+```
+Ok well this works I think - by generation 3 there are some new combinations
+
+But otherwise I think I can move on?
+
+I'm going to look into:
+- check whether all have variation or just some (barplots might not be showing small small values)
+I was right to check this, because there are a number of runs that are not obvious in the barplots but do have tiny amounts of variation (prob 1-2 individuals of the sneaker phenotype).
+
+
+
+# 10 December 2020
+
+I've fixed a tiny bug from yesterday and am running some tests. One thing that I've done today is added the writing of some debug info to a log file, but this is a teensy bit slow (it's all the reproductive success outputs) and probably not useful -- considering adding a debug flag and having it only output it at that point rather than with --verbose.
+
+In the meantime, I can take a look at the vcf file that's been output.
+
+```{r}
+library(gwscaR)
+aevcf<-parse.vcf("arts_pop_0_ae.vcf")
+crtGT<-do.call(rbind,strsplit(t(aevcf[1,10:ncol(aevcf)]),"/"))
+crtGT<-apply(crtGT,2,as.numeric)
+```
+
+They're all the same!
+
+# 9 December 2020
+
+The only ones that sneak are non-parents (I wonder if this is the best way to do it?)
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_courterRSadvantage_5_traits.txt")
+summary<-read.delim("single_locus/pcu_1locus_nestBinary_courterRSadvantage_5_summary.txt")
+
+plot(traits$CourtTrait[traits$Gen==0 & traits$Pop==0],
+     pch=as.numeric(traits$Sex[traits$Gen==0 & traits$Pop==0]))
+```
+
+Somehow we're still not getting any variation in trait values at the start of the population.
+```{r}
+plot(traits$CourtTrait[traits$Gen==12000 & traits$Pop==0],
+     pch=as.numeric(traits$Sex[traits$Gen==12000 & traits$Pop==0]))
+```
+
+I guess it's because we have only one locus with its allelic effects? 
+
+```{r}
+ae<-read.delim("single_locus/pcu_1locus_nestBinary_courterRSadvantage_5_allelic-effects.txt")
+plot(ae$ParentQTL0,type = 'l')
+plot(ae$CourterQTL0,type = 'l')
+```
+
+So the population average allelic effects change as the population fixes for one morph or the other, unsurprisingly. But why is it only the two values to start with? 
+
+To dive into this I need to adjsut the outputs (put in a debugging output probably). I want basically want the genotypes for all individuals in gen 0 to find out how the alleles are distributed and if that makes sense. I've written this code but need to test it. 
+
+
+# 7 December 2020
+
+Ok so now I'm not sure if what I'm observing is expected or unexpected. I sort of would have expected sneakers all the time in my other scenarios -- but I guess I have female preferences inherent in the model so that might alter my expectations.  
+
+Things to remind myself of:
+- who is allowed to sneak?
+
+Things to investigate:
+- how much variation exists in traits at the start and end of the model?
+- check whether all have variation or just some (barplots might not be showing small small values)
+- what happens with random mating?
+- is there a way to calculate expected numbers to be output?
+- is there a consistent pattern with starting proportions related to finishing proportions?
+
+# 25 November 2020
+
+So the problem with the lifetime RS counter was that I output the traits after I'd already reset the population, so I've cahnged it to output the info before the population resets in the final generation. 
+
+How do any courter/non-parents have surviving offspring? Is it if the female mates with a courter/parent?
+-> So it looks like the female mates once but then there can be sneakers, so courter/non-parents must be senakers (I don't track this info).
+
+Also, somehow males are getting more than their potential RS - ah this must be because of density dependent selection where offspring are assigned to nests proportional to mating success.
+
+All of the parent and courter trait values are the same though -- at the beginnng they are binary and by the end they appear to be fixed. Not sure what's going on there...I think it has to do with the fact that the index of the adult determines which allele they have, so there are equal numbers of both. Perhaps recombination/mutation rate are not high enough? I could let them have a random allele at each locus. -- it turns out this is what I'm doing!
+
+
+
+# 12 November 2020
+
+Unsurprisingly in runs with courter/non parents existing at the end, both males and females have that morph. However, they have a LifetimeRS of 0 - so how are they maintained??? Ahh except LifetimeRS is 0 for everyone so this is not a useful metric!
+
+```{r}
+traits<-read.delim("single_locus/pcu_1locus_nestBinary_courterRSadvantage_5_traits.txt")
+traits0<-traits[which(traits$Pop==0),]
+traits0last<-traits0[which(traits0$Gen==12000),]
+table(traits0last$Sex[which(traits0last$Courter!=traits0last$Parent)])
+traits0last[which(traits0last$Courter!=traits0last$Parent),]
+```
+```{r}
+traits[which(traits$Pop==0 & traits$Individual %in% traits0last$Individual[which(traits0last$Courter!=traits0last$Parent)]),]
+```
+
+Compare this to the thresholds?
+
+# 11 November 2020
+
+I thought I'd solved it with the changes that I implmented, but I'm still getting some weird appeaances of the courter/non-parent, which shouldn't be reproducing at all! I want to check a couple things, though:
+1. how are the fitnesses calculated?
+2. is there a relationship between parent W vs courter W and the emergence of different combinations?
+3. are the morph frequencies including females? because that could be a pathway to maintain them, though I wouldn't think so.
+4. Which aspects of the intiial conditions seem to be most important in determining outcomes? 
+5. will initial generation trait distributions help at all? 
+
+# 5 November 2020
+
+I'm not sure what I've done but I've broken something because now all of the outputs are identical, even with different parameter settings. There seem to be a few possibilities:
+1. I've broken the set seed component and randomizer isn't working properly
+2. I need to spawn all of these commands in a different way that doesn't start them all at the same time
+3. the changes I've made to the initialization isn't working
+
+So a few things I'm trying:
+1. using gnu parallel to run the code rather than sending to the background
+2. I'll try using time(NULL)*pid(), which should be unique for each run, to set the seed
+3. I should do some investigation of what's happening in the first couple of generations -- maybe output individual data for gen 0/1
+
+
+# 4 November 2020
+
+Yesterday I discovered that my code --  which spawns things using nohup and & -- doesn't necessarily set the seed properly. Somehow multiple runs have the same initial conditions. I should check my C++ code to see what's going on.
+-> looking at my code, I'm using a custom function sgenrand(time(0)) which should get around this (it adjusts the seed after it's set as time(0)), but it was within population(), which is probably not the right place for it. So I've moved it to the top of main() in lifecycle.cpp.
+-> could also try the suggestions in this thread: https://stackoverflow.com/questions/7617587/is-there-an-alternative-to-using-time-to-seed-a-random-number-generation
+
+I also have realized what's causing the main issue: I randomly assign males to be courter/non-courter and parent/non-parent, and somehow sometimes I wind up with my population being entirely courter/non-parent and non-courter/parent. This means that unless females find a courter, then the population will crash. So this is something funky in my setup which I should probably change. 
+-> In the final generation, there's no variation in trait values - but what about at the start?
+-> Also I think the way I'm randomizing the alleles is creating problems:
+
+```{c++}
+vector<double> tempallele1, tempallele2, tempallele3;
+for (j = 0; j < gp.num_alleles; j++) //set up specific alleles.
+{
+	tempallele1.push_back(randnorm(0, gp.allelic_std_dev/gp.num_qtl));
+	tempallele2.push_back(randnorm(0, gp.allelic_std_dev / gp.num_qtl));
+	tempallele3.push_back(randnorm(0, gp.allelic_std_dev / gp.num_qtl));
+}
+for (j = 0; j < gp.carrying_capacity; j++)
+{
+	if (j < gp.carrying_capacity)
+		adults[j].alive = true;
+	else
+		adults[j].alive = false; 
+	adults[j].lifetime_rs = 0;
+	for (jj = 0; jj < gp.num_chrom; jj++)
+	{
+		if (gp.court_trait)
+		{
+			for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
+			{
+				adults[j].maternal[jj].courter_ae[jjj] = tempallele1[j%gp.num_alleles];
+				adults[j].paternal[jj].courter_ae[jjj] = tempallele1[j%gp.num_alleles];
+			}
+		}
+		if (gp.parent_trait)
+		{
+			for (jjj = 0; jjj < gp.qtl_per_chrom[jj]; jjj++)
+			{
+				adults[j].maternal[jj].parent_ae[jjj] = tempallele2[j%gp.num_alleles];
+				adults[j].paternal[jj].parent_ae[jjj] = tempallele2[j%gp.num_alleles];
+			}
+		}
+		if (gp.cor_prefs || gp.ind_pref)
+		{
+			for (jjj = 0; jjj < adults[j].maternal[jj].pref_ae.size(); jjj++)
+			{
+				adults[j].maternal[jj].pref_ae[jjj] = tempallele3[j%gp.num_alleles];
+				adults[j].paternal[jj].pref_ae[jjj] = tempallele3[j%gp.num_alleles];
+			}
+		}
+		for (jjj = 0; jjj < gp.num_markers; jjj++)
+		{
+			adults[j].maternal[jj].loci[jjj] = j%gp.num_alleles;
+			adults[j].paternal[jj].loci[jjj] = j%gp.num_alleles;
+		}
+	}
+```
+
+What this does is create two alleles for each trait and even/odd individuals get each set of alleles. This means that the population is incredibly bimodal in trait values, which is not what we want I think. I want biallelic loci, but I don't want all of the loci to be the same. What if I set up the tempalleles with `gp.numalleles*gp.num_chrom*gp.qtl_per_chrom`? Then each biallelic locus would be different.
+Or I could randomly assign one of the tempalleles rather than using j. That might be easier actually- then I'd expect an ~ equal distribution of trait combinations at the start.
+
+# 15 October 2020
+
+For now I'm adding text to each section, which will help me with the narrative structure of the summary and to identify some next steps.
+
+I've now covered the reproductive allocation and nest survival tradeoffs and the supergene proportion - mating system is still a bit elusive on what to show. 
+Currently it's got the thresholds for being courter/parent as the x axis but I don't think this is overly useful. 
+I think I was using that to try to explain why some sets of runs resulted in courter-parents and others resulted in courters-nonparents.
+But thresholds don't seem to explain any patterns - I would guess it's initial frequency.
 
 # 14 October 2020
 

@@ -107,7 +107,7 @@ public:
 	bool same_base, court_trait, parent_trait, gene_network, env_cue, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
     bool density_dependent,all_sneak, per_fem_mating, supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive,optimize, output_vcf, viability_selection;
 	vector <int> qtl_per_chrom;
-	bool log_file;
+	bool log_file, ae_vcf, debug,allow_no_mating;
 
 	parameters()
 	{
@@ -117,7 +117,7 @@ public:
 		same_base = gene_network = env_cue = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
 		density_dependent = all_sneak = per_fem_mating = random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive = optimize= output_vcf=viability_selection = bool();
 		qtl_per_chrom = vector<int>();
-		log_file = bool();
+		log_file = ae_vcf = debug =allow_no_mating= bool();
 	}
 
 	void set_defaults()
@@ -172,6 +172,9 @@ public:
         output_vcf = false; //if true, a vcf will be output
         viability_selection = false; // if true, viability selection will act on offspring
 		log_file = true; //saves std out to log instead of outputting it to the console
+		ae_vcf = false; //creates a vcf of allelic effects
+		debug = false; //outputs extra info that we don't really want usually
+		allow_no_mating=false; //when true, unsuccessfully mated females will not nest.
 	}
 
 	void help_message()
@@ -231,10 +234,13 @@ public:
 		std::cout << "--linked-additive:\t(default) Traits are determined by genome-wide additive genetic variance distributed among chromosomes.\n";
 		std::cout << "--viability:\tIf included, viability selection acts on offspring. If not, viability selection is turned off.\n";
 		std::cout << "--density-independent:\tTurns off density-dependent selection. This is not recommended as it will likely lead to population crashes.\n";
+		std::cout << "--allow-no-mating:\tIf females cannot find an acceptable male, rather than mate randomly they will not nest at all. (default is false)\n";
 		std::cout << "--optimize:\tOutput time steps for initial generations, for optimizing the code. (default is false)\n";
 		std::cout << "--same-base:\tStart each replicate population with the same base population (default is true)\n";
         std::cout << "--output-vcf:\tInclude vcf output for all genotypes of individuals (default is false)\n";
+		std::cout << "--ae-vcf:\tInclude vcf output for the allelic effects for QTLs for all individuals in generation 0 (default is false)\n";
 		std::cout << "--log-file:\tSave output to logfile instead of std::cout\n";
+		std::cout << "--debug:\tOutput additional information that could be useful in debugging to either log or std::cout\n";
 		std::cout << "-h or --help:\tPrint this help message.\n";
 	}
 
@@ -340,6 +346,7 @@ public:
 			linked_additive = false;
 		if(per_fem_mating && density_dependent)
 			per_fem_mating = false;
+			
 	}
 
 	bool parse_parameters(int argc, char*argv[])
@@ -484,12 +491,18 @@ public:
 							same_base = true;
                         if(tempstring1 == "--output-vcf")
                             output_vcf = true;
+						if(tempstring1 == "--ae-vcf")
+                            ae_vcf = true;
 						if (tempstring1 == "--log-file")
 							log_file = true;
+						if (tempstring1 == "--debug")
+							debug = true;
 						if(tempstring1 == "--density-independent")
 							density_dependent = false;
 						if(tempstring1 == "--viability")
 							viability_selection = true;
+						if(tempstring1 == "--allow-no-mating")
+							allow_no_mating = true;
 					}
 				}
 				
@@ -583,6 +596,8 @@ public:
 			param_out << "\n--all-sneak";
         if(output_vcf)
             param_out << "\n--output-vcf";
+		if(ae_vcf)
+            param_out << "\n--ae-vcf";
 		if(density_dependent)
 			param_out << "\ndensity dependent";
 		else
@@ -593,6 +608,10 @@ public:
 			param_out <<"\nviability selection";
         if(log_file)
             param_out << "\n--log-file ";
+		if(debug)
+            param_out << "\n--debug ";
+		if(allow_no_mating)
+			param_out << "\n--allow-no-mating";
 		param_out.close();
 	}
 };

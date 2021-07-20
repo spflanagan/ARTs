@@ -51,8 +51,7 @@ int main(int argc, char*argv[])
                 log_out.open(log_name);
                 log_out << "\nRunning the ARTs model (from the command line) with output to base name " << global_params.base_name << '\n' <<std::flush;
             }
-			else
-                std::cout << "\nRunning the ARTs model (from the command line) with output to base name " << global_params.base_name << '\n'<<std::flush;
+			std::cout << "\nRunning the ARTs model (from the command line) with output to base name " << global_params.base_name << '\n'<<std::flush;
 		}
 	}
 	else
@@ -103,7 +102,7 @@ int main(int argc, char*argv[])
 	summary_output_name = global_params.base_name + "_summary.txt";
 	summary_output.open(summary_output_name);
 	summary_output << "Generation\tPop\tPopSize\tNumMal\tNumFem\tNumProgeny\tParentThresh\tParentFreq\tParentAEmean\tParentAEsd\tParentW\tNonParentW\tCourterThresh\tCourterFreq\tCourterAEmean\tCourterAEsd\tCourterW\tNonCourterW"
-		<< "\tFreqNcNp\tFreqCNp\tFreqNcP\tFreqCP\tPrefThresh\tPrefFreq";
+		<< "\tFreqNcNp\tFreqCNp\tFreqNcP\tFreqCP\tPrefThresh\tPrefFreq\tNumRandMate";
 	
 
 	//Initialize
@@ -212,7 +211,6 @@ int main(int argc, char*argv[])
 			else
 				pops[i].output_qtl_info(global_params, qtlinfo_output, true);
 			pops[i].output_allelic_effects(global_params,ae_output, true);
-			pops[i].output_trait_info(global_params, 0, i, trait_output);
 		}
 		qtlinfo_output << "Pop" << i;
 		pops[i].output_qtl_info(global_params, qtlinfo_output, false);
@@ -233,7 +231,7 @@ int main(int argc, char*argv[])
 			std::cout << "\n   Initialize took " << duration << " seconds." << std::flush;
 
 	}
-		
+	
 	
 	//Run the program
 	if (global_params.log_file)
@@ -248,6 +246,11 @@ int main(int argc, char*argv[])
 			pops[ii].determine_pop_size(global_params);
 			if(pops[ii].population_size > 0)
 			{
+				if(i == 0 && global_params.ae_vcf)
+				{
+					pops[ii].output_ae_vcf(global_params, ii);
+				}
+				
 				if (global_params.verbose)
 				{
 					if (global_params.log_file)
@@ -276,6 +279,8 @@ int main(int argc, char*argv[])
 				string temp_file_name;
 				t1 = std::chrono::high_resolution_clock::now();
 				pops[ii].nest_and_fertilize(global_params, write_to_file, temp_file_name);
+				//output trait values for gen 0 to include mating success
+				if(i == 0) pops[ii].output_trait_info(global_params, i, ii, trait_output, log_out);
 				t2 = std::chrono::high_resolution_clock::now();
 				duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
 				if (global_params.optimize)
@@ -302,7 +307,7 @@ int main(int argc, char*argv[])
                 }
 				//output summary stats
 				summary_output << "\n" << i << "\tPop" << ii;
-				pops[ii].output_summary_info(global_params, summary_output);//includes RS
+				pops[ii].output_summary_info(global_params, summary_output, log_out);//includes RS
                 //output allele frequencies
                 markers_output << "\n" << i << "\tPop" << ii;
                 pops[ii].output_allele_freqs(global_params, markers_output);
@@ -394,11 +399,16 @@ int main(int argc, char*argv[])
                     pops[ii].viability_selection(global_params);
 				//output summary stats
 				summary_output << "\n" << global_params.num_init_gen + i << "\tPop" << ii;
-				pops[ii].output_summary_info(global_params, summary_output);
+				pops[ii].output_summary_info(global_params, summary_output, log_out);
                 markers_output << '\n' <<global_params.num_init_gen + i << "\tPop" << ii;
                 pops[ii].output_allele_freqs(global_params, markers_output);
 				ae_output << '\n' << global_params.num_init_gen +i+1 << "\tPop" << ii;
 				pops[ii].output_allelic_effects(global_params,ae_output, false);
+				if(i == (global_params.num_exp_gen - 1))
+				{
+					//output the trait values for the final generation of each population
+					pops[ii].output_trait_info(global_params,global_params.num_init_gen + global_params.num_exp_gen, ii, trait_output, log_out);
+				}
 				//stochastic survival
 				//pops[i].density_regulation(global_params);
 				pops[ii].regulate_popsize(global_params);
@@ -441,7 +451,7 @@ int main(int argc, char*argv[])
                         log_out << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n' << std::flush;
 					else
 						std::cout << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n' << std::flush;
-					pops[ii].output_trait_info(global_params, i, ii, trait_output);
+					pops[ii].output_trait_info(global_params, i, ii, trait_output, log_out);
 					crash_counter++;
 				}
 					
@@ -536,8 +546,6 @@ int main(int argc, char*argv[])
             if(global_params.output_vcf)
                 pops[i].output_genotypes_vcf(global_params, i);	
 		}
-		//output the trait values for the final generation of each population
-		pops[i].output_trait_info(global_params,global_params.num_init_gen + global_params.num_exp_gen, i, trait_output);
 	}
 	
 	//close output files
