@@ -5,8 +5,8 @@ account: spflanagan
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3958414
-bundleId: 4467552
+bundleId: 4493283
 url: https://spflanagan.shinyapps.io/morph_predictions/
-when: 1618349127.90647
+when: 1618882096.39581
 asMultiple: FALSE
 asStatic: FALSE
