@@ -75,6 +75,7 @@ if(isTRUE(create_outputs)){
   for(r in rs){
     for(c in cs){
       outputs<-dplyr::bind_rows(apply(freqs_list,1,morph_gens,gens=100, r=r,c=c))
+      print(paste("r=",r,"c=",c))
       to_save<-dplyr::bind_cols(freqs_list,outputs,.name_repair = "minimal")
       colnames(to_save)[1:4]<-paste0("initial_",colnames(to_save)[1:4])
       to_save$r<-r
