@@ -17,10 +17,10 @@ if(isTRUE(init)){
                           NS=seq(0,1,0.05))
   freqs_list<-freqs_list[rowSums(freqs_list)==1,]
   
-  write.table(freqs_list,"freqs_list.txt",col.names=TRUE,row.names=TRUE)
+  write.table(freqs_list,"freqs_list.txt",col.names=TRUE,row.names=FALSE,sep='\t')
   
 } else{
-  freqs_list<-read.delim("freqs_list.txt",header=TRUE)
+  freqs_list<-read.delim("freqs_list.txt",header=TRUE, sep='\t')
 }
 
 
