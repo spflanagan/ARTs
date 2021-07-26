@@ -71,10 +71,12 @@ no_plots<-function(data, sliderCP, sliderNP, chosenR, chosenC){
 }
 
 # Function to generate our subset of data
-create_subset<-function(data,sliderCP,sliderNP){
+create_subset<-function(data,sliderCP,sliderNP, chosenR, chosenC){
   sub<-data[which(
-    as.character(data$CP_freq)==as.character(sliderCP) & 
-      as.character(data$NP_freq)==as.character(sliderNP)),]  
+    as.character(data$initial_CP)==as.character(sliderCP) & 
+      as.character(data$initial_NP)==as.character(sliderNP)) &
+      as.character(data$r) == as.character(chosenR) &
+      as.character(data$c) == as.character(chosenC),]  
   return(sub)
 }
 
