@@ -58,10 +58,12 @@ no_rows<-function(data, sliderCP, sliderNP, chosenR, chosenC){
 }
 
 # Function to check if the combination results in zero NS, which means there is no plot.
-no_plots<-function(data, sliderCP, sliderNP){
-  subdat<-data[as.character(data$CP_freq)==as.character(sliderCP) & 
-         as.character(data$NP_freq)==as.character(sliderNP),]
-  if(sum(subdat$NS_rs)==0){
+no_plots<-function(data, sliderCP, sliderNP, chosenR, chosenC){
+  subdat<-data[as.character(data$initial_CP)==as.character(sliderCP) & 
+         as.character(data$initial_NP)==as.character(sliderNP) & 
+           as.character(data$r) == as.character(chosenR) &
+           as.character(data$c) == as.character(chosenC),]
+  if(sum(subdat$NS)==0){
     "The chosen combination results in 0 noncourter-sneakers, so there are no graphs to show."
   } else{
     NULL
