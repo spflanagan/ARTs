@@ -46,9 +46,11 @@ create_predictions<-function(gens,
 
 
 # Function to check if the current combination has any relevant rows
-no_rows<-function(data, sliderCP, sliderNP){
-  if(nrow(data[as.character(data$CP_freq)==as.character(sliderCP) & 
-               as.character(data$NP_freq)==as.character(sliderNP),]) == 0){
+no_rows<-function(data, sliderCP, sliderNP, chosenR, chosenC){
+  if(nrow(data[as.character(data$initial_CP)==as.character(sliderCP) & 
+               as.character(data$initial_NP)==as.character(sliderNP) & 
+               as.character(data$r) == as.character(chosenR) &
+               as.character(data$c) == as.character(chosenC),]) == 0){
     "The chosen combination does not have any results. Ensure the sum of frequencies is <= 1."
   } else{
     NULL
