@@ -201,19 +201,19 @@ server <- function(input, output, session) {
     
     # fig 1: NS vs CS
     fig1 <- plot_ly(
-      x = sub_calcs$NS_freq, 
-      y = sub_calcs$CS_freq, 
-      z = as.matrix(sub_calcs[,c("CS_rs","NS_rs")]), 
+      x = sub_calcs$initial_NS, 
+      y = sub_calcs$initial_CS, 
+      z = as.matrix(sub_calcs[,c("CS","NS")]), 
       colorscale=list(seq(0,1,length.out = 9),
                       c('#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58')),
       type = "contour"
     )
     # add axis labels
-    x<-list(title="Noncourter-Sneaker frequency (NS RS)")
-    y<-list(title="Courter-Sneaker frequency (CS RS)")
+    x<-list(title="Initial Noncourter-Sneaker frequency")
+    y<-list(title="Initial Courter-Sneaker frequency")
     fig1 <- fig1 %>% layout(xaxis=x,yaxis=y)
     # add label to contour names
-    fig1 <- fig1 %>% colorbar(title = "Relative RS")
+    fig1 <- fig1 %>% colorbar(title = "Frequency at equilibrium")
     
     fig1
     # # fig 1: CP and NP RS
