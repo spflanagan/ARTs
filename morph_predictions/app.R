@@ -184,10 +184,10 @@ server <- function(input, output, session) {
   # check the inputs and create the subset
   subdat<-reactive({
     data<-get_data()
-    validate(no_plots(data, input$sliderCP, input$sliderNP),
-             no_rows(data, input$sliderCP, input$sliderNP)
+    validate(no_plots(data, input$sliderCP, input$sliderNP, input$r, input$c),
+             no_rows(data, input$sliderCP, input$sliderNP, input$r, input$c)
     )
-    create_subset(data, input$sliderCP, input$sliderNP)
+    create_subset(data, input$sliderCP, input$sliderNP, input$r, input$c)
 
   }) %>%
     bindCache(data)
