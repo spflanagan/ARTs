@@ -70,16 +70,16 @@ if(isTRUE(create_outputs)){
   colnames(morph_results)<-c("initial_CP","initial_CS","initial_NP","initial_NS",
                              "CP","CS","NP","NS","r","c")
   
-  expectations_list<-dplyr::bind_rows(apply(freqs_list,1,morph_gens,gens=100, r=0.11,c=1))
+  #expectations_list<-dplyr::bind_rows(apply(freqs_list,1,morph_gens,gens=100, r=0.11,c=1))
   
   for(r in rs){
-    for(c in cs){
-      outputs<-dplyr::bind_rows(apply(freqs_list,1,morph_gens,gens=100, r=r,c=c))
-      print(paste("r=",r,"c=",c))
+    for(cv in cs){
+      outputs<-dplyr::bind_rows(apply(freqs_list,1,morph_gens,gens=100, r=r,c=cv))
+      print(paste("r=",r,"c=",cv))
       to_save<-dplyr::bind_cols(freqs_list,outputs,.name_repair = "minimal")
       colnames(to_save)[1:4]<-paste0("initial_",colnames(to_save)[1:4])
       to_save$r<-r
-      to_save$c<-c
+      to_save$c<-cv
       morph_results<-dplyr::bind_rows(morph_results,to_save)
     }
   }
