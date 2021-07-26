@@ -14,6 +14,10 @@ get_freqs<-function(){
   return(freqs_list)
 }
 
+get_results<-function(){
+  morph_results<-readRDS("morph_results.RDS")
+}
+
 create_predictions<-function(gens,
                              Nm,
                              Nf,
