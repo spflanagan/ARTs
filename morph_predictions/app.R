@@ -98,6 +98,8 @@ ui <- dashboardPage(
     conditionalPanel("input.tabs == 'plot'",
                      sliderInput("sliderCP","CP freq", min=0, max=1, step=0.05, value=0.9),
                      sliderInput("sliderNP","NP freq", min=0, max=1, step=0.05, value=0),
+                     sliderInput("r","Relative reproductive input (parents)",min=0.11, max=0.211,step=0.1,value=0.11),
+                     sliderInput("c","Sperm competition coefficient",min=0, max=1,step=0.25,value=0),
                      width=250
     )
    
@@ -139,18 +141,6 @@ ui <- dashboardPage(
                        numericInput("Nf", 
                                     h3("Number of females"), 
                                     value = 500)
-                )
-              ),
-              fluidRow(
-                column(3, 
-                       numericInput("r", 
-                                    h3("Relative reproductive input (parents)"), 
-                                    value = 2/3)
-                ),
-                column(3, 
-                       numericInput("c", 
-                                    h3("Sperm competition coefficient"), 
-                                    value = 0.5)
                 )
               ),
               fluidRow(
