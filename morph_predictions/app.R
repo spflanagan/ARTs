@@ -141,10 +141,7 @@ ui <- dashboardPage(
     tabItems(
       tabItem(tabName = "readme",
               fluidPage(
-                tags$iframe(src = './README.md', 
-                            width = '100%', height = '800px', 
-                            frameborder = 0, scrolling = 'auto'
-                )
+                includeMarkdown( 'README.md')
               )
       ),
       tabItem(tabName="plot",
