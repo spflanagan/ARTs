@@ -1,5 +1,7 @@
 # code to calculate expectations for all sorts of morph frequencies
 
+library(tidyr)
+library(vegan)
 # set to directory of this script
 source("morph_predictions.R")
 source("check_freqs.R")
