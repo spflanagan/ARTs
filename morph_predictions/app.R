@@ -304,7 +304,7 @@ server <- function(input, output, session) {
     
   }) 
   
-  output$table<-renderTable(subdat())
+  #output$table<-renderTable(subdat())
 }
 
 shinyApp(ui, server)
