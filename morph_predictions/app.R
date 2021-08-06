@@ -94,13 +94,21 @@ no_plots<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
 }
 
 # Function to generate our subset of data
-create_subset<-function(data,sliderCP,sliderNP, chosenR, chosenC){
-  sub<-data[which(
-    as.character(data$initial_CP)==as.character(sliderCP) & 
-      as.character(data$initial_NP)==as.character(sliderNP)) &
-      as.character(data$r) == as.character(chosenR) &
-      as.character(data$c) == as.character(chosenC),]  
-  return(sub)
+create_subset<-function(data,whichSlider, sliderFreq,chosenR, chosenC){
+  if(whichSlider=="sliderCP"){
+    sub<-data[which(
+      as.character(data$initial_CP)==as.character(sliderFreq) & 
+        as.character(data$r) == as.character(chosenR) &
+        as.character(data$c) == as.character(chosenC)),]  
+    return(sub)
+  }else {
+    sub<-data[which(
+        as.character(data$initial_NP)==as.character(sliderFreq) &
+        as.character(data$r) == as.character(chosenR) &
+        as.character(data$c) == as.character(chosenC)),]  
+    return(sub)
+  }
+  
 }
 
 # create UI
