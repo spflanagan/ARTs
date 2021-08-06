@@ -242,31 +242,30 @@ server <- function(input, output, session) {
      initial_CS,
      diversity
     )
-    # add axis labels
-    x<-list(title="Initial Noncourter-Sneaker frequency")
-    y<-list(title="Initial Courter-Sneaker frequency")
-    fig1 <- fig1 %>% layout(xaxis=x,yaxis=y)
-    # add label to contour names
-    fig1 <- fig1 %>% colorbar(title = "Frequency at equilibrium")
-    
-    fig1
-    # # fig 1: CP and NP RS
-    # fig2 <- plot_ly(
-    #   x = sub_calcs$NS_freq, 
-    #   y = sub_calcs$CS_freq, 
-    #   z = as.matrix(sub_calcs[,c("CP_rs","NP_rs")]), 
-    #   type = "contour",
-    #   colorscale=list(seq(0,1,length.out = 9),
-    #                   c('#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58')),
-    # )
-    # # add axis labels
-    # x<-list(title="Noncourter-Sneaker frequency (NP RS)")
-    # y<-list(title="Courter-Sneaker frequency (CP RS)")
-    # fig2 <- fig2 %>% layout(xaxis=x,yaxis=y)
-    # # add label to contour names
-    # fig2 <- fig2 %>% colorbar(title = "Relative RS")
-    # 
-    # fig<-subplot(fig1,fig2,titleX=TRUE,titleY=TRUE,margin=0.1)
+   rownames(data_wide)<-data_wide[,1]
+   data_wide<-data_wide[,-1]
+   
+   # fig 1: diversity with NS vs CS
+   fig1<-plot_ly(
+     x = as.numeric(colnames(data_wide)), 
+     y = as.numeric(rownames(data_wide)), 
+     z = as.matrix(data_wide),
+     colorscale=list(seq(0,1,length.out = 9),
+                     c('#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58')),
+     type = "contour"
+   )
+   # add axis labels
+   x<-list(title="Initial Noncourter-Sneaker frequency")
+   y<-list(title="Initial Courter-Sneaker frequency")
+   fig1 <- fig1 %>% layout(xaxis=x,yaxis=y, annotations=list(text="initial CP from slider, initial NP=0",
+                                                             x=0.5,y=1,
+                                                             showarrow=FALSE)
+   )
+   # add label to contour names
+   fig1 <- fig1 %>% colorbar(title = "Diversity of the population")
+   
+   
+   
     
     
     
