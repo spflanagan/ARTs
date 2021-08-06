@@ -18,6 +18,8 @@ get_freqs<-function(){
 
 get_results<-function(){
   morph_results<-readRDS("morph_results.RDS")
+  morph_results$diversity<-vegan::diversity(round(morph_results[,c("CP","CS","NP","NS")],4))
+  return(morph_results)
 }
 
 create_predictions<-function(gens,
