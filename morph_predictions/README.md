@@ -9,7 +9,7 @@ The model pertains to a population with four male reproductive morphs (courter-p
 
 Here is the model:
 
-![Diagram of the predictive, non-genetic, population model](../figs/frequency_dependence.png)
+<img src="../figs/frequency_dependence.png" alt="model" width="500"/>
 
 It contains the following parameters:
 
