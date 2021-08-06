@@ -219,9 +219,15 @@ server <- function(input, output, session) {
     )
     create_subset(data, "sliderCP", input$sliderCP,  input$r, input$c)
 
-  }) %>%
-    bindCache(data)
-  
+  }) 
+  subdatNP<-reactive({
+    data<-get_data()
+    validate(no_plots(data,"sliderNP", input$sliderNP, input$r, input$c),
+             no_rows(data, "sliderNP",input$sliderNP,  input$r, input$c)
+    )
+    create_subset(data, "sliderNP", input$sliderNP,  input$r, input$c)
+    
+  }) 
   
   
   # create the plot
