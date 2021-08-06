@@ -69,6 +69,7 @@ no_rows<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
       NULL
     }
   }
+
 }
 
 # Function to check if the combination results in zero NS, which means there is no plot.
