@@ -233,16 +233,14 @@ server <- function(input, output, session) {
   # create the plot
   output$contours <- renderPlotly({
     
-   sub_calcs<-subdat()
-    
-    # fig 1: NS vs CS
-    fig1 <- plot_ly(
-      x = sub_calcs$initial_NS, 
-      y = sub_calcs$initial_CS, 
-      z = as.matrix(sub_calcs[,c("CS","NS")]), 
-      colorscale=list(seq(0,1,length.out = 9),
-                      c('#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58')),
-      type = "contour"
+    # fig 1: adjusting the CP bar
+   sub_calcs<-subdatCP()
+   
+   
+   data_wide <- tidyr::spread(
+     sub_calcs[,c("initial_CS","initial_NS","diversity")],
+     initial_CS,
+     diversity
     )
     # add axis labels
     x<-list(title="Initial Noncourter-Sneaker frequency")
