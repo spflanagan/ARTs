@@ -267,7 +267,40 @@ server <- function(input, output, session) {
    
    
     
+    # fig 2: adjusting the NP bar
+   sub_calcs<-subdatNP()
+   
+   
+   data_wide <- tidyr::spread(
+     sub_calcs[,c("initial_CS","initial_NS","diversity")],
+     initial_CS,
+     diversity
+   )
+   rownames(data_wide)<-data_wide[,1]
+   data_wide<-data_wide[,-1]
+   
+   fig2<-plot_ly(
+     x = as.numeric(colnames(data_wide)), 
+     y = as.numeric(rownames(data_wide)), 
+     z = as.matrix(data_wide),
+     colorscale=list(seq(0,1,length.out = 9),
+                     c('#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58')),
+     type = "contour"
+   )
+   # add axis labels
+   x<-list(title="Initial Noncourter-Sneaker frequency")
+   y<-list(title="Initial Courter-Sneaker frequency")
+   fig2 <- fig2 %>% layout(xaxis=x,yaxis=y, annotations=list(
+     text="initial NP from slider, initial CP=0",
+     x=0.5,y=1,
+     showarrow=FALSE))
+   # add label to contour names
+   fig2 <- fig2 %>% colorbar(title = "Diversity of the population")
+   
+   
+    fig<-subplot(fig1,fig2,titleX=TRUE,titleY=TRUE,margin=0.1)
     
+   fig 
     
   }) 
   
