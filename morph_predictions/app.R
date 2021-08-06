@@ -123,8 +123,8 @@ ui <- dashboardPage(
     
     hr(),
     sidebarMenu(id="tabs",
-                menuItem("Parameter Settings", tabName = "params", icon=icon("table"), selected=TRUE),
-                menuItem("Plots", tabName="plot", icon=icon("line-chart")),
+               # menuItem("Parameter Settings", tabName = "params", icon=icon("table")),
+                menuItem("Plots", tabName="plot", icon=icon("line-chart"), selected=TRUE),
                 menuItem("ReadMe", tabName = "readme", icon=icon("book"))
     ),
     hr(),
@@ -156,44 +156,44 @@ ui <- dashboardPage(
               fluidRow(
                 column(12, tableOutput('table'))
               )
-      ),
-      tabItem(tabName = "params",
-              fluidRow(
-                column(3,
-                       numericInput("gens",
-                                    h3("Number of generations"),
-                                    value=100))
-              ),
-              fluidRow(
-                column(3, 
-                       numericInput("Nm", 
-                                    h3("Number of males"), 
-                                    value = 500)
-                       ),
-                column(3, 
-                       numericInput("Nf", 
-                                    h3("Number of females"), 
-                                    value = 500)
-                )
-              ),
-              fluidRow(
-                column(3, 
-                       numericInput("ws", 
-                                    h3("Sexual selection strength"), 
-                                    value = 1)
-                ),
-                column(3, 
-                       numericInput("wn", 
-                                    h3("Nest survival selection"), 
-                                    value = 1)
-                ),
-                column(3, 
-                       numericInput("wv", 
-                                    h3("Viability selection strength"), 
-                                    value = exp(-0.5/(2*50)))
-                )
-              )
-      )
+      )#,
+      # tabItem(tabName = "params",
+      #         fluidRow(
+      #           column(3,
+      #                  numericInput("gens",
+      #                               h3("Number of generations"),
+      #                               value=100))
+      #         ),
+      #         fluidRow(
+      #           column(3, 
+      #                  numericInput("Nm", 
+      #                               h3("Number of males"), 
+      #                               value = 500)
+      #                  ),
+      #           column(3, 
+      #                  numericInput("Nf", 
+      #                               h3("Number of females"), 
+      #                               value = 500)
+      #           )
+      #         ),
+      #         fluidRow(
+      #           column(3, 
+      #                  numericInput("ws", 
+      #                               h3("Sexual selection strength"), 
+      #                               value = 1)
+      #           ),
+      #           column(3, 
+      #                  numericInput("wn", 
+      #                               h3("Nest survival selection"), 
+      #                               value = 1)
+      #           ),
+      #           column(3, 
+      #                  numericInput("wv", 
+      #                               h3("Viability selection strength"), 
+      #                               value = exp(-0.5/(2*50)))
+      #           )
+      #         )
+      # )
     )
   )
  
