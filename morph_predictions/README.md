@@ -9,7 +9,7 @@ The model pertains to a population with four male reproductive morphs (courter-p
 
 Here is the model:
 
-<img src="../figs/frequency_dependence.png" alt="model" width="500"/>
+<img src="frequency_dependence.png" alt="model" width="500"/>
 
 It contains the following parameters:
 
