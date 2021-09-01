@@ -1498,10 +1498,10 @@ public:
 		double c;
 		if (gp.gene_network)
 		{
-			if (gp.parent_trait)
+			if (gp.court_trait)
 			{
 				if (gp.env_cue)
-					c = double(adults[mal_id].mate_found) / gp.max_num_mates - exp((adults[mal_id].pot_rs - gp.rs_p)*(adults[mal_id].pot_rs - gp.rs_p));
+					c = double(adults[mal_id].mate_found) / gp.max_num_mates - exp((adults[mal_id].pot_rs - gp.rs_c)*(adults[mal_id].pot_rs - gp.rs_c));
 				else
 					c = 0;
 				adults[mal_id].calc_parent_trait(gp, parent_env_qtls, c, false);
