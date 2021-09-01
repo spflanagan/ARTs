@@ -1269,37 +1269,42 @@ public:
 		}
 		return morph_freqs;
 	}
-	void parent_fd_rs(parameters gp)
+	void fd_rs(parameters gp)
 	{
 		int j;
 		double freqT;
 		freqT = calc_freq_parent(gp);
-		if (freqT < 0.5) //parents have higher RS
+		int highRS, lowRS;
+		highRS = max(gp.rs_c, gp.rs_nc);
+		lowRS = min(gp.rs_c, gp.rs_nc);
+
+		if (freqT < 0.5) //courters have higher RS
 		{
 			for (j = 0; j < gp.carrying_capacity; j++)
 			{
 				if (adults[j].alive && !adults[j].female)
 				{
-					if(adults[j].parent)
-						adults[j].pot_rs = gp.rs_p;
+					if (adults[j].courter)
+						adults[j].pot_rs = highRS;
 					else
-						adults[j].pot_rs = gp.rs_np;
+						adults[j].pot_rs = lowRS;
 				}
 			}
 		}
-		else //non parents have higher RS
+		else //non courters have higher RS
 		{
 			for (j = 0; j < gp.carrying_capacity; j++)
 			{
 				if (adults[j].alive && !adults[j].female)
 				{
-					if (adults[j].parent)
-						adults[j].pot_rs = gp.rs_np;
+					if (adults[j].courter)
+						adults[j].pot_rs = lowRS;
 					else
-						adults[j].pot_rs = gp.rs_p;
+						adults[j].pot_rs = highRS;
 				}
 			}
 		}
+		
 	}
 
 	//all of the ways to calculate preferences
