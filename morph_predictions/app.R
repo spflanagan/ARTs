@@ -53,17 +53,17 @@ create_predictions<-function(gens,
 # Function to check if the current combination has any relevant rows
 no_rows<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
   if(whichSlider=="sliderCP"){
-    if(nrow(data[as.character(data$initial_CP)==as.character(sliderFreq) & 
-                 as.character(data$r) == as.character(chosenR) &
-                 as.character(data$c) == as.character(chosenC),]) == 0){
+    if(nrow(data[round(data$initial_CP,2)==round(sliderFreq,2) & 
+                 round(data$r,1) == round(chosenR,1) &
+                 round(data$c,1) == round(chosenC,1),]) == 0){
       "The chosen combination does not have any results. Ensure the sum of frequencies is <= 1."
     } else{
       NULL
     }
   }else {
-    if(nrow(data[as.character(data$initial_NP)==as.character(sliderFreq) & 
-                 as.character(data$r) == as.character(chosenR) &
-                 as.character(data$c) == as.character(chosenC),]) == 0){
+    if(nrow(data[round(data$initial_NP,2)==round(sliderFreq,2) & 
+                 round(data$r,1) == round(chosenR,1) &
+                 round(data$c,1) == round(chosenC,1),]) == 0){
       "The chosen combination does not have any results. Ensure the sum of frequencies is <= 1."
     } else{
       NULL
@@ -75,18 +75,18 @@ no_rows<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
 # Function to check if the combination results in zero NS, which means there is no plot.
 no_plots<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
   if(whichSlider=="sliderCP"){
-    subdat<-data[as.character(data$initial_CP)==as.character(sliderFreq) & 
-             as.character(data$r) == as.character(chosenR) &
-             as.character(data$c) == as.character(chosenC),]
+    subdat<-data[round(data$initial_CP,2)==round(sliderFreq,2) & 
+             round(data$r,1) == round(chosenR,1) &
+             round(data$c,1) == round(chosenC,1),]
     if(sum(subdat$NS)==0){
       "The chosen combination results in 0 noncourter-sneakers, so there are no graphs to show."
     } else{
       NULL
     }
   } else {
-    subdat<-data[as.character(data$initial_NP)==as.character(sliderFreq) & 
-                   as.character(data$r) == as.character(chosenR) &
-                   as.character(data$c) == as.character(chosenC),]
+    subdat<-data[round(data$initial_NP,2)==round(sliderFreq,2) & 
+                   round(data$r,1) == round(chosenR,1) &
+                   round(data$c,1) == round(chosenC,1),]
     if(sum(subdat$NS)==0){
       "The chosen combination results in 0 noncourter-sneakers, so there are no graphs to show."
     } else{
@@ -99,15 +99,15 @@ no_plots<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
 create_subset<-function(data,whichSlider, sliderFreq,chosenR, chosenC){
   if(whichSlider=="sliderCP"){
     sub<-data[which(
-      as.character(data$initial_CP)==as.character(sliderFreq) & 
-        as.character(data$r) == as.character(chosenR) &
-        as.character(data$c) == as.character(chosenC)),]  
+      round(data$initial_CP,2)==round(sliderFreq,2) &
+        round(data$r,1) == round(chosenR,1) &
+        round(data$c,1) == round(chosenC),1),] 
     return(sub)
   }else {
     sub<-data[which(
-        as.character(data$initial_NP)==as.character(sliderFreq) &
-        as.character(data$r) == as.character(chosenR) &
-        as.character(data$c) == as.character(chosenC)),]  
+        round(data$initial_NP,2)==round(sliderFreq,2) &
+        round(data$r,1) == round(chosenR,1) &
+        round(data$c,1) == round(chosenC),1),]  
     return(sub)
   }
   
