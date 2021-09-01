@@ -151,7 +151,9 @@ ui <- dashboardPage(
               ),
               
               fluidRow(
-                column(12, tableOutput('table'))
+                column(6, tableOutput('tableCP')),
+              
+                column(6, tableOutput('tableNP'))
               )
       )#,
       # tabItem(tabName = "params",
@@ -234,11 +236,11 @@ server <- function(input, output, session) {
   output$contours <- renderPlotly({
     
     # fig 1: adjusting the CP bar
-   sub_calcs<-subdatCP()
+   sub_calcsCP<-subdatCP()
    
    
    data_wide <- tidyr::spread(
-     sub_calcs[,c("initial_CS","initial_NS","diversity")],
+     sub_calcsCP[,c("initial_CS","initial_NS","diversity")],
      initial_CS,
      diversity
     )
@@ -268,11 +270,11 @@ server <- function(input, output, session) {
    
     
     # fig 2: adjusting the NP bar
-   sub_calcs<-subdatNP()
+   sub_calcsNP<-subdatNP()
    
    
    data_wide <- tidyr::spread(
-     sub_calcs[,c("initial_CS","initial_NS","diversity")],
+     sub_calcsNP[,c("initial_CS","initial_NS","diversity")],
      initial_CS,
      diversity
    )
