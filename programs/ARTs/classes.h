@@ -155,9 +155,9 @@ public:
 		polygyny = false;//default false
 		base_name = "../../results/arts";//default: "../../results/arts"
 		num_ld_comparisons = 100;//default 100
-		rs_c = 8;//default 8
-		rs_nc = 4;//default 4
-		rs_p = 8;//default 8
+		rs_c = 4;//default 4
+		rs_nc = 8;//default 8
+		rs_p = 4;//default 4
 		rs_np = 4;//default 4
 		max_num_mates = 3;//default 3 - used to cap number of sneakers allowed to fertilize a nest
 		egg_surv_noparent = 0.1;//default 0.1
@@ -199,10 +199,10 @@ public:
 		std::cout << "-v:\tviability selection strength against courters and parents (50).\n";
 		std::cout << "-r:\tRecombination rate. (0.2) \n";
 		std::cout << "-asd:\tAllelic Standard Deviation (0.5)\n";
-		std::cout << "-prs:\tParental male reproductive success (8)\n";
-		std::cout << "-nprs:\tNon-parental male reproductive success (4)\n";
-		std::cout << "-crs:\tCourter male reproductive success (8)\n";
-		std::cout << "-ncrs:\tNon-courter male reproductive success (4)\n";
+		std::cout << "-prs:\tParental male reproductive success (only used if no courter trait)\n";
+		std::cout << "-nprs:\tNon-parental male reproductive success (only used if no courter trait)\n";
+		std::cout << "-crs:\tCourter male reproductive success (4)\n";
+		std::cout << "-ncrs:\tNon-courter male reproductive success (8)\n";
 		std::cout << "-sprop:\tSupergene proportion of a chromosome (0.1). NOTE: must be > the total number of qtls.\n";
 		std::cout << "-sperm-r:\tSperm competition r. If r = 1, paternity is determined through a fair raffle. \n\tIf 0 < r < 1, the parental male has a higher share of paternity and the sneakers fertilize with penalty r (rs2/(s1+s2); default 0.5)\n";
 		std::cout << "-surv-noparent:\tSurvival probability of eggs without a parent (0.1)\n";
