@@ -14,6 +14,11 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 6 Aug 2021
+
+So the issue is that if I constrain both CP and NS initial frequencies, there's not enough parameter space to see patterns. But if I don't constrain both, then I've got another extra variable potentially playing a role in it...
+
+Maybe add contour lines with the NS initial frequencies?
 
 # 23 June 2021
 
