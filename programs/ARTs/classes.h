@@ -986,12 +986,14 @@ public:
 			parent = false;
 		else
 			parent = true;
-		if (!female)
-		{
-			if (parent)
-				pot_rs = gp.rs_p;
-			else
-				pot_rs = gp.rs_np;
+		if (!gp.court_trait){
+			if (!female)
+			{
+				if (parent)
+					pot_rs = gp.rs_p;
+				else
+					pot_rs = gp.rs_np;
+			}
 		}
 	}
 	void assign_conditional_traits(parameters gp)
