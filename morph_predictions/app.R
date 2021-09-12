@@ -146,10 +146,12 @@ ui <- dashboardPage(
       ),
       tabItem(tabName="plot",
               fluidRow(
-                column(12,
-                       plotlyOutput('contours'))
+                column(6,
+                       plotlyOutput('contoursCP')),
+                column(6,
+                       plotlyOutput('contoursNP'))
               ),
-              
+              fluidRow( column(12,verbatimTextOutput('info'))),
               fluidRow(
                 column(6, tableOutput('tableCP')),
               
@@ -233,7 +235,7 @@ server <- function(input, output, session) {
   
   
   # create the plot
-  output$contours <- renderPlotly({
+  output$contoursCP <- renderPlotly({
     
     # fig 1: adjusting the CP bar
    sub_calcsCP<-subdatCP()
@@ -252,9 +254,11 @@ server <- function(input, output, session) {
      x = as.numeric(colnames(data_wide)), 
      y = as.numeric(rownames(data_wide)), 
      z = as.matrix(data_wide),
+     customdata = sub_calcsCP[,c("CP","CS","NP","NS")],
      colorscale=list(seq(0,1,length.out = 9),
                      c('#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58')),
-     type = "contour"
+     type = "contour",
+     source="contoursCP"
    )
    # add axis labels
    x<-list(title="Initial Noncourter-Sneaker frequency")
@@ -264,12 +268,13 @@ server <- function(input, output, session) {
                                                              showarrow=FALSE)
    )
    # add label to contour names
-   fig1 <- fig1 %>% colorbar(title = "Diversity of the population")
-   
-   
-   
+   fig1 <- fig1 %>% colorbar(title = "Diversity of the population") %>%
+     event_register('plotly_brushed')
     
-    # fig 2: adjusting the NP bar
+  })
+  
+  # fig 2: adjusting the NP bar
+  output$contoursNP <- renderPlotly({
    sub_calcsNP<-subdatNP()
    
    
@@ -287,7 +292,8 @@ server <- function(input, output, session) {
      z = as.matrix(data_wide),
      colorscale=list(seq(0,1,length.out = 9),
                      c('#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58')),
-     type = "contour"
+     type = "contour", 
+     hoverinfo="none"
    )
    # add axis labels
    x<-list(title="Initial Noncourter-Sneaker frequency")
@@ -295,18 +301,42 @@ server <- function(input, output, session) {
    fig2 <- fig2 %>% layout(xaxis=x,yaxis=y, annotations=list(
      text="initial NP from slider, initial CP=0",
      x=0.5,y=1,
-     showarrow=FALSE))
+     showarrow=FALSE)) 
    # add label to contour names
    fig2 <- fig2 %>% colorbar(title = "Diversity of the population")
    
-   
-    fig<-subplot(fig1,fig2,titleX=TRUE,titleY=TRUE,margin=0.1)
-    
-   fig 
     
   }) 
   
-  #output$table<-renderTable(subdat())
+
+  test<-observe({
+    
+    brush<-event_data('plotly_brushed',source="contoursCP",priority="event")
+  
+    if(is.null(brush)){
+      renderPrint("Waiting for brush")
+    }
+    else{
+      output$info<-renderPrint(brush)
+    }
+  })  
+ 
+  
+  
+  output$tableCP <- renderTable({
+    d<-subdatCP()
+    d<-d[round(d[,"initial_CP"],2)==0.25 & 
+           round(d[,"initial_CS"],2) == 0.25 & 
+           round(d[,"initial_NP"],2)==0.25 & 
+           round(d[,"initial_NS"],2)==0.25,]
+  })
+  output$tableNP<-renderTable({
+    d<-subdatNP()
+    d<-d[round(d[,"initial_CP"],2)==0.25 & 
+           round(d[,"initial_CS"],2) == 0.25 & 
+           round(d[,"initial_NP"],2)==0.25 & 
+           round(d[,"initial_NS"],2)==0.25,]
+  })
 }
 
 shinyApp(ui, server)
