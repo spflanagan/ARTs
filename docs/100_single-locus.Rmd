@@ -70,7 +70,7 @@ A female samples 50 males and chooses a male to nest with based on his courtship
 
 Once a female decides to nest, up to three males can fertilize the nest. Courters and parental males can contribute more sperm than non-courter and non-parental males: $r_{courter}=8$ and $r_{non-courter}=4$. The male with whom the female is nesting gets $r_{courter}/\Sigma{n_{sperm}}$ and additional non-courting males (up to 2) get $(r_{non-courter}*0.5/\Sigma{n_{sperm}})$, where $\Sigma{n_{sperm}}$ is the total number of sperm contributed by all of the males, weighted by the sperm competition factor (0.5 is the default for all males except the chosen male). So, when a female mates with one courter and two non-courters, $\Sigma{n_{sperm}}$ = $r_{courter}$ + 2$*$(0.5$*$$r_{non-courter}$), where $r_{courter}$ = 8 and $r_{non-courter}$ = 4, therefore $\Sigma{n_{sperm}}$ = `r sum(8,rep((0.5*4),2))`. 
 
-That being said, every time a male mates he uses his sperm, so after one mating where a courter fertilizes 50% of the female's 4 eggs, he only has 6 sperm for his next mating. 
+That being said, every time a male mates he uses his sperm, so after one mating where a courter fertilizes 50% of the female's 4 eggs, he only has $n_{sperm}-2$ sperm for his next mating. 
 
 In these runs, males who are courters cannot sneak fertilizations.
 
