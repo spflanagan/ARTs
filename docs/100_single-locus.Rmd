@@ -128,7 +128,7 @@ courterRSpoly<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_polygyny_nestBin
 courterRSpoly$Courter2NonRS<-8/4
 bp<-barplot(t(as.matrix(courterRSpoly[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
         col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRSpoly)),
         las=2,
         border=NA)
 text(x=bp,y=0.5,srt=90,labels = courterRSpoly$FreqCP)
@@ -176,7 +176,7 @@ varDat<-lapply(var_patts,function(pattern){
   dat<-get.morph.freqs(plot.pc.reps(pattern=pattern,path="single_locus",cols,make.plot=FALSE))
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
         col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
         main=gsub("^.*nestBinary_(\\w+)[[:punct:]].*","\\1",pattern))
@@ -353,7 +353,7 @@ varDat<-lapply(var_patts,function(pattern){
   dat<-get.morph.freqs(plot.pc.reps(pattern=pattern,path="single_locus/no_viability",cols,make.plot=FALSE))
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
         col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
         main=gsub("^.*nestBinary_(\\w+)[[:punct:]].*","\\1",pattern))
