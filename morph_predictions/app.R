@@ -151,7 +151,7 @@ ui <- dashboardPage(
                 column(6,
                        plotlyOutput('contoursNP'))
               ),
-              
+              fluidRow( column(12,verbatimTextOutput('info'))),
               fluidRow(
                 column(6, tableOutput('tableCP')),
               
@@ -268,10 +268,8 @@ server <- function(input, output, session) {
                                                              showarrow=FALSE)
    )
    # add label to contour names
-   fig1 <- fig1 %>% colorbar(title = "Diversity of the population")
-   
-   
-   
+   fig1 <- fig1 %>% colorbar(title = "Diversity of the population") %>%
+     event_register('plotly_brushed')
     
   })
   
@@ -310,7 +308,21 @@ server <- function(input, output, session) {
     
   }) 
   
-  #output$table<-renderTable(subdat())
+
+  test<-observe({
+    
+    brush<-event_data('plotly_brushed',source="contoursCP",priority="event")
+  
+    if(is.null(brush)){
+      renderPrint("Waiting for brush")
+    }
+    else{
+      output$info<-renderPrint(brush)
+    }
+  })  
+ 
+  
+  
   output$tableCP <- renderTable({
     d<-subdatCP()
     d<-d[round(d[,"initial_CP"],2)==0.25 & 
