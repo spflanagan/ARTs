@@ -98,6 +98,66 @@ I ran five independent instances of the model, each of which had four replicates
 
 I ran some simple sets of parameters where I have an expectation for the outcome. In these models, both the courter and parent traits existed and there was a single QTL that was not anchored to a physical chromosomal location and experienced no recombination. I also assumed that nests laid with non-parents have 0% chance of survival and those with parents have 100% chance of survival. In all of these cases, only non-courting males fertilized a nest that did not belong to them.
 
+### Frequency-dependent expectations
+
+I used the frequency-dependent mathematical model to identify parameter space when diversity is maintained and when it is expected to be lost. I then ran the single-locus model (essentially, adding stochasticity) to see if I am reproducing those expectations using the simulation model.
+
+```{r highDiv}
+highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+```
+```{r highDivPlot}
+var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
+
+par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=pattern)
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
+```
+
+Low diversity
+
+
+```{r lowDiv}
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+```
+```{r lowDivPlot}
+var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(lowDiv)))
+
+par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=pattern)
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
+```
+
+
 ### Initial parameter combinations 
 
 I first started off with my defaults for the model, which is when courters and parents have a reproductive advantage (they can fertilize 8 eggs compared to the non-courter and non-parent's 4 eggs). The nesting male (regardless of phenotype) experienced a reproductive advantage by fertilizing a higher proportion of the eggs. Furthermore, females always prefer courters to non-courters and only nest with non-courters when they cannot find a courter in the males they evaluate. I therefore expected that the courter/parent morph would dominate and no variation would be maintained.
@@ -141,11 +201,7 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 ```
 
 
-
-
-### Combinations to try to maintain multiple morphs
-
-I ran a set of models with the following parameter variations, with my expectation for whether variation should be maintained or not.
+I ran a set of models with the following parameter variations, with my naiive expectation (prior to the numerical analysis) for whether variation should be maintained or not.
 
 ```{r}
 expTab<-data.frame(Name=c("courterRSadvantage", "equalFitness","onlySpermComp","sneakRSadvantage","sneakRSadvantage_courterRSadvantage"),
