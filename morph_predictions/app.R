@@ -235,7 +235,7 @@ server <- function(input, output, session) {
   
   
   # create the plot
-  output$contours <- renderPlotly({
+  output$contoursCP <- renderPlotly({
     
     # fig 1: adjusting the CP bar
    sub_calcsCP<-subdatCP()
