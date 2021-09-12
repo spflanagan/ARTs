@@ -311,6 +311,20 @@ server <- function(input, output, session) {
   }) 
   
   #output$table<-renderTable(subdat())
+  output$tableCP <- renderTable({
+    d<-subdatCP()
+    d<-d[round(d[,"initial_CP"],2)==0.25 & 
+           round(d[,"initial_CS"],2) == 0.25 & 
+           round(d[,"initial_NP"],2)==0.25 & 
+           round(d[,"initial_NS"],2)==0.25,]
+  })
+  output$tableNP<-renderTable({
+    d<-subdatNP()
+    d<-d[round(d[,"initial_CP"],2)==0.25 & 
+           round(d[,"initial_CS"],2) == 0.25 & 
+           round(d[,"initial_NP"],2)==0.25 & 
+           round(d[,"initial_NS"],2)==0.25,]
+  })
 }
 
 shinyApp(ui, server)
