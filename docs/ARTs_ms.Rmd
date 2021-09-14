@@ -1,0 +1,155 @@
+---
+title: "Genetic architecthure of alternative reproductive tactics"
+author:
+- affilnum: 1
+  corresponding: yes
+  email: spflanagan.phd@gmail.com
+  name: Sarah P. Flanagan
+- affilnum: 2
+  name: Suzanne Alonzo
+output:
+  bookdown::pdf_document2:
+    fig_caption: yes
+    keep_tex: yes
+    number_sections: no
+    template: manuscript.latex
+    toc: yes
+    toc_depth: 2
+  html_document: null
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+  word_document: null
+zotero: "My Library"
+capsize: normalsize
+csl: https://github.com/citation-style-language/styles/blob/master/proceedings-of-the-royal-society-b.csl
+documentclass: article
+editor_options:
+  chunk_output_type: console
+  markdown: 
+    wrap: 72
+fontsize: 11pt
+abstract: |
+header-includes: |
+  \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H}
+affiliation:
+- affil: School of Biological Sciences, University of Canterbury, 4800 Private Bag,
+    Christchurch 8140 New Zealand
+  affilnum: 1
+- affil: University of California Santa Cruz, Santa Cruz, California, USA
+  affilnum: 2
+preprint: no
+spacing: singlespacing
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",
+                      warning=FALSE,message=FALSE)
+knitr::opts_knit$set(root.dir='../fwsw_results/')
+```
+
+# Introduction
+
+Maintenance of variation in populations.
+
+Alternative reproductive tactics as stable polymorphisms,
+
+\- often maintained through frequency-dependent selection
+
+\- possibly resolves sexual conflict
+
+Genetic basis of alternative reproductive tactics shows that there is
+some propensity for these to be grouped together into supergenes.
+
+\- white-collared sparrow
+
+\- ruffs [@kupper2016][@lamichhaney2016]
+
+\- side-blotched lizards (maybe)
+
+\- ??
+
+But, we don't know which came first, and to what extent genetic
+architecture determines the evolution of alternative reproductive
+tactics. Therefore, we used simulation models to understand this.
+
+# Methods
+
+Our model focusses on a single population of diploid males and females
+with non-overlapping generations. 
+We model two independent traits, courtship and parental care, 
+both of which are expressed only in males, but are also inherited by females.
+As such, males are one of four morphs: 
+courter/parents; courter/non-parents; non-courters/parents; or non-courters/non-parents.
+The model is inspired by fish species like the ocellated wrasse, *Symphodus ocellatus*, 
+and as such we will use terminology appropriate to that species.
+Nonetheless, our model can be generalized to any species in which one sex (but not the other) has two traits that impact mating success and the survival of their offspring. 
+
+Each generation has three distinct phases: 
+(1) mate choice and fertilization; (2) parental care; and (3) viability selection. 
+In the mate choice phase of the model, females always prefer to mate with males displaying the courtship trait.
+If a female decides to mate with a male, he receives all of her eggs to care for.
+The male is not guaranteed paternity of his mates' entire brood, however, 
+because non-courting males are able to fertilize a proportion of the eggs. 
+The chosen parent does receive first-male priority.
+The consequences of this setup are that the only mechanism by which non-courters can produce offspring is through these sneak fertilizations.
+In the parental care phase of the model, males with the parental care trait have 100% nest survival
+while males without the parental care trait have 0% nest survival, 
+independent of the male's courtship trait.
+Consequently, non-parents will only be sustained in the population by sneaking fertilizations in the parental males' nests.
+Finally, viability selection is imposed on offspring as they mature to adulthood,
+such that males carrying the courtship trait and/or the parental care trait have a lower probability of survival than females and males without either courtship or parenting.
+Males who are both courters and parents have a multiplicative effect of viability selection.
+**Who is allowed to sneak?**
+
+We implemented our model first as a mathematical model and then as an individual-based simulation model.
+The purpose of the mathematical model was to generate baseline predictions for when multiple morphs are maintained. 
+
+
+## Frequency-dependent population dynamics model
+
+In the mathematical model, we model the proportion of the population that belong to morphs at each stage of the lifecycle (Fig. \@ref(fig:mathModel)). 
+In the first stage, we consider the proportion of the population's nests that will be allocated to each morph. 
+The maximum number of nests that could be laid is proportional to the number of males in the population ($N_m$), if each male has the same likelihood of attracting a female to deposit eggs with him. 
+However, in our model, males are not equally likely to be chosen by females, and therefore the maximum number of nests is scaled by the probability of females mating with each type of male morph.
+In the case of our model, the total number of nests laid in the population becomes 
+$$
+\frac{N_f}{N_mf_{CP}+N_m f_{CNp}}
+$$
+because we have constrained females to only mate with courting males.
+
+
+
+```{r mathModel, fig.cap="Diagram of the mathematical model describing the inheritance of alternative male reproductive morphs given courtship and parenting traits."}
+knitr::include_graphics("../figs/frequency_dependence.png")
+```
+
+
+## Individual-based simulation model
+
+# Results
+
+## Frequency-dependent population dynamics model
+
+## Individual-based simulation model
+
+# Discussion
+
+# Acknowledgments
+
+We acknowledge Ngāi Tūāhuriri, upon whose lands the analyses and writing
+was conducted. This work was conducted in part while SPF was a
+postdoctoral fellowship at the National Institute for Mathematical and
+Biological Synthesis, sponsored by the National Science Foundation
+through NSF Award \#DBI-1300426, with additional support from The
+University of Tennessee, Knoxville.
+
+# Data Accessibility
+
+All code has been archived on Zenodo (DOI: ) and is maintained on github
+(). Simulation results are archived on dryad ().
+
+# Author Contributions
+
+# References
