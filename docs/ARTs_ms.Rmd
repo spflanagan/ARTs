@@ -55,20 +55,20 @@ Maintenance of variation in populations.
 
 Alternative reproductive tactics as stable polymorphisms,
 
-\- often maintained through frequency-dependent selection
+-   often maintained through frequency-dependent selection
 
-\- possibly resolves sexual conflict
+-   possibly resolves sexual conflict
 
-Genetic basis of alternative reproductive tactics shows that there is
-some propensity for these to be grouped together into supergenes.
+-   Genetic basis of alternative reproductive tactics shows that there
+    is some propensity for these to be grouped together into supergenes.
 
-\- white-collared sparrow
+-   white-collared sparrow
 
-\- ruffs [@kupper2016][@lamichhaney2016]
+-   ruffs [@kupper2016][@lamichhaney2016]
 
-\- side-blotched lizards (maybe)
+-   side-blotched lizards (maybe)
 
-\- ??
+-   \- ??
 
 But, we don't know which came first, and to what extent genetic
 architecture determines the evolution of alternative reproductive
