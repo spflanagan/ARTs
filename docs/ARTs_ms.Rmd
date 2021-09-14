@@ -77,54 +77,108 @@ tactics. Therefore, we used simulation models to understand this.
 # Methods
 
 Our model focusses on a single population of diploid males and females
-with non-overlapping generations. 
-We model two independent traits, courtship and parental care, 
-both of which are expressed only in males, but are also inherited by females.
-As such, males are one of four morphs: 
-courter/parents; courter/non-parents; non-courters/parents; or non-courters/non-parents.
-The model is inspired by fish species like the ocellated wrasse, *Symphodus ocellatus*, 
-and as such we will use terminology appropriate to that species.
-Nonetheless, our model can be generalized to any species in which one sex (but not the other) has two traits that impact mating success and the survival of their offspring. 
+with non-overlapping generations. We model two independent traits,
+courtship and parental care, both of which are expressed only in males,
+but are also inherited by females. As such, males are one of four
+morphs: courter/parents; courter/non-parents; non-courters/parents; or
+non-courters/non-parents. The model is inspired by fish species like the
+ocellated wrasse, *Symphodus ocellatus*, and as such we will use
+terminology appropriate to that species. Nonetheless, our model can be
+generalized to any species in which one sex (but not the other) has two
+traits that impact mating success and the survival of their offspring.
 
-Each generation has three distinct phases: 
-(1) mate choice and fertilization; (2) parental care; and (3) viability selection. 
-In the mate choice phase of the model, females always prefer to mate with males displaying the courtship trait.
-If a female decides to mate with a male, he receives all of her eggs to care for.
-The male is not guaranteed paternity of his mates' entire brood, however, 
-because non-courting males are able to fertilize a proportion of the eggs. 
-The chosen parent does receive first-male priority.
-The consequences of this setup are that the only mechanism by which non-courters can produce offspring is through these sneak fertilizations.
-In the parental care phase of the model, males with the parental care trait have 100% nest survival
-while males without the parental care trait have 0% nest survival, 
-independent of the male's courtship trait.
-Consequently, non-parents will only be sustained in the population by sneaking fertilizations in the parental males' nests.
-Finally, viability selection is imposed on offspring as they mature to adulthood,
-such that males carrying the courtship trait and/or the parental care trait have a lower probability of survival than females and males without either courtship or parenting.
-Males who are both courters and parents have a multiplicative effect of viability selection.
-**Who is allowed to sneak?**
+Each generation has three distinct phases: (1) mate choice and
+fertilization; (2) parental care; and (3) viability selection. In the
+mate choice phase of the model, females always prefer to mate with males
+displaying the courtship trait. If a female decides to mate with a male,
+he receives all of her eggs to care for. The male is not guaranteed
+paternity of his mates' entire brood, however, because non-courting
+males are able to fertilize a proportion of the eggs. The chosen parent
+does receive first-male priority. The consequences of this setup are
+that the only mechanism by which non-courters can produce offspring is
+through these sneak fertilizations. In the parental care phase of the
+model, males with the parental care trait have 100% nest survival while
+males without the parental care trait have 0% nest survival, independent
+of the male's courtship trait. Consequently, non-parents will only be
+sustained in the population by sneaking fertilizations in the parental
+males' nests. Finally, viability selection is imposed on offspring as
+they mature to adulthood, such that males carrying the courtship trait
+and/or the parental care trait have a lower probability of survival than
+females and males without either courtship or parenting. Males who are
+both courters and parents have a multiplicative effect of viability
+selection. **Who is allowed to sneak?**
 
-We implemented our model first as a mathematical model and then as an individual-based simulation model.
-The purpose of the mathematical model was to generate baseline predictions for when multiple morphs are maintained. 
-
+We implemented our model first as a mathematical model and then as an
+individual-based simulation model. The purpose of the mathematical model
+was to generate baseline predictions for when multiple morphs are
+maintained.
 
 ## Frequency-dependent population dynamics model
 
-In the mathematical model, we model the proportion of the population that belong to morphs at each stage of the lifecycle (Fig. \@ref(fig:mathModel)). 
-In the first stage, we consider the proportion of the population's nests that will be allocated to each morph. 
-The maximum number of nests that could be laid is proportional to the number of males in the population ($N_m$), if each male has the same likelihood of attracting a female to deposit eggs with him. 
-However, in our model, males are not equally likely to be chosen by females, and therefore the maximum number of nests is scaled by the probability of females mating with each type of male morph.
-In the case of our model, the total number of nests laid in the population becomes 
-$$
+In the mathematical model, we model the proportion of the population
+that belong to morphs at each stage of the lifecycle (Fig.
+\@ref(fig:mathModel)). In the first stage, we consider the proportion of
+the population's nests that will be allocated to each morph. The maximum
+number of nests that could be laid is proportional to the number of
+males in the population ($N_m$), if each male has the same likelihood of
+attracting a female to deposit eggs with him. However, in our model,
+males are not equally likely to be chosen by females, and therefore the
+maximum number of nests is scaled by the probability of females mating
+with each type of male morph. In the case of our model, the total number
+of nests laid in the population becomes $$
 \frac{N_f}{N_mf_{CP}+N_m f_{CNp}}
-$$
-because we have constrained females to only mate with courting males.
-
-
+$$ because we have constrained females to only mate with courting males.
 
 ```{r mathModel, fig.cap="Diagram of the mathematical model describing the inheritance of alternative male reproductive morphs given courtship and parenting traits."}
 knitr::include_graphics("../figs/frequency_dependence.png")
 ```
 
+Likewise, the proportion of nests each type of male receives (${p_n}_M$)
+is determined by the number of morphs in the population ($N_mf_M$ for
+the $M$ morph), the probability of a female choosing that morph
+(${w_s}_M$), and the ratio of the number of nests to the number of
+females ($n/N_f$).
+
+Within a given nest, the offspring could either be fertilized by the
+nest-holding male or other males sneaking fertilizations. Therefore,
+each morph has a proportion of eggs fertilized within their own nests
+(${p_{fn}}_M$) and a proportion of eggs fertilized in other males' nests
+(${p_{fs}}_M$). These proportions were determined by the sperm
+competition coefficient, $c$, which penalized non-courting males, and
+the relative reproductive investment for that morph ($r_M$).
+Analogously, the proportion of offspring in a nest surviving due to
+parental care investment can be split into the proportion surviving in a
+male's own nest (${p_{sn}}_M$) or in another male's nest (${p_{ss}}_M$),
+which is simply the proportions from the fertilization step weighted by
+the probability of the nest surviving if the morph is a parent ($w_n=1$)
+or of the morph is a non-parent ($w_n=0$). These proportions
+(${p_{sn}}_M$ and ${p_{ss}}_M$) are summed to determine the the overall
+proportion of embryos in the population that survive the parenting phase
+in each morph's nests (${p_s}_M$).
+
+The final stage of the lifecycle is for offspring surviving in the nest
+to undergo viability selection by multiplying the viability selection
+coefficient (${w_v}_M$) by the surviving proportion (${p_s}_M$) and the
+original frequency of the morph in the population (**Note: does pv need
+the frequency multiplication??)**. Finally, the frequency of each morph
+in the next generation was calculated by dividing the surviving
+proportion (${p_v}_M$ by the sum of all proportions.
+
+To evaluate the outcomes of this mathematical model, we iterated forward
+in time for 100 generations from XX combinations of initial morph
+frequencies and repeated those iterations across XX values for the sperm
+competition coefficient ($c$ = {0..1}) and XX values for the relative
+reproductive coefficient ($r_M$ = {0...1}). The iterations were
+implemented in R v. 4.1.1 [@rcoreteam2021] using some features of tidyR
+[@wickham2021]. To facilitate visualisation of the results, we
+calculated the Shannon's diversity index for the morphs remaining in the
+100th generation using the R package vegan [@oksanen2015]. We then
+visualised the diversity of the population using contour plots produced
+by plotly [@sievert2020] in a shiny app that relies on R packages shiny
+[@chang2021], shinydashboard [@chang2018], rsconnect [@mcpherson2021],
+dplyr [@wickham2021], and rmarkdown [@allaire2021; @xie2020; @xie2018].
+The interactive app is available at
+<https://spflanagan.shinyapps.io/morph_predictions/>.
 
 ## Individual-based simulation model
 
