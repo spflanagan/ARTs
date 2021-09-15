@@ -7,7 +7,7 @@
 morph_gens<-function(gens,freqs,...){
   freqs<-check_freqs(freqs)
   output<-data.frame(matrix(nrow=gens+1,ncol=4))
-  colnames(output)<-c("CP","CS","NP","NS")
+  colnames(output)<-c("CP","CN","NP","NN")
   output[1,]<-freqs
   for (i in 1:(gens+1)){
     output[i+1,]<-morph_predictions(freqs=output[i,], ...)
