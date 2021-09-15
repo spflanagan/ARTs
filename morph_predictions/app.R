@@ -18,8 +18,8 @@ get_freqs<-function(){
 }
 
 get_results<-function(){
-  morph_results<-readRDS("morph_results.RDS")
-  morph_results$diversity<-vegan::diversity(round(morph_results[,c("CP","CS","NP","NS")],4))
+  morph_results<-readRDS("morph_results_20210915.RDS")
+  morph_results$diversity<-vegan::diversity(round(morph_results[,c("CP","CN","NP","NN")],4))
   return(morph_results)
 }
 
@@ -72,14 +72,14 @@ no_rows<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
 
 }
 
-# Function to check if the combination results in zero NS, which means there is no plot.
+# Function to check if the combination results in zero NN, which means there is no plot.
 no_plots<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
   if(whichSlider=="sliderCP"){
     subdat<-data[round(data$initial_CP,2)==round(sliderFreq,2) & 
              round(data$r,1) == round(chosenR,1) &
              round(data$c,1) == round(chosenC,1),]
-    if(sum(subdat$NS)==0){
-      "The chosen combination results in 0 noncourter-sneakers, so there are no graphs to show."
+    if(sum(subdat$NN)==0){
+      "The chosen combination results in 0 noncourter-nonparents, so there are no graphs to show."
     } else{
       NULL
     }
@@ -87,8 +87,8 @@ no_plots<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
     subdat<-data[round(data$initial_NP,2)==round(sliderFreq,2) & 
                    round(data$r,1) == round(chosenR,1) &
                    round(data$c,1) == round(chosenC,1),]
-    if(sum(subdat$NS)==0){
-      "The chosen combination results in 0 noncourter-sneakers, so there are no graphs to show."
+    if(sum(subdat$NN)==0){
+      "The chosen combination results in 0 noncourter-nonparents, so there are no graphs to show."
     } else{
       NULL
     }
@@ -242,27 +242,27 @@ server <- function(input, output, session) {
    
    
    data_wide <- tidyr::spread(
-     sub_calcsCP[,c("initial_CS","initial_NS","diversity")],
+     sub_calcsCP[,c("initial_CS","initial_NN","diversity")],
      initial_CS,
      diversity
     )
    rownames(data_wide)<-data_wide[,1]
    data_wide<-data_wide[,-1]
    
-   # fig 1: diversity with NS vs CS
+   # fig 1: diversity with NN vs CN
    fig1<-plot_ly(
      x = as.numeric(colnames(data_wide)), 
      y = as.numeric(rownames(data_wide)), 
      z = as.matrix(data_wide),
-     customdata = sub_calcsCP[,c("CP","CS","NP","NS")],
+     customdata = sub_calcsCP[,c("CP","CN","NP","NN")],
      colorscale=list(seq(0,1,length.out = 9),
                      c('#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58')),
      type = "contour",
      source="contoursCP"
    )
    # add axis labels
-   x<-list(title="Initial Noncourter-Sneaker frequency")
-   y<-list(title="Initial Courter-Sneaker frequency")
+   x<-list(title="Initial Noncourter-Nonparent frequency")
+   y<-list(title="Initial Courter-Nonparent frequency")
    fig1 <- fig1 %>% layout(xaxis=x,yaxis=y, annotations=list(text="initial CP from slider, initial NP=0",
                                                              x=0.5,y=1,
                                                              showarrow=FALSE)
@@ -279,7 +279,7 @@ server <- function(input, output, session) {
    
    
    data_wide <- tidyr::spread(
-     sub_calcsNP[,c("initial_CS","initial_NS","diversity")],
+     sub_calcsNP[,c("initial_CN","initial_NN","diversity")],
      initial_CS,
      diversity
    )
@@ -296,8 +296,8 @@ server <- function(input, output, session) {
      hoverinfo="none"
    )
    # add axis labels
-   x<-list(title="Initial Noncourter-Sneaker frequency")
-   y<-list(title="Initial Courter-Sneaker frequency")
+   x<-list(title="Initial Noncourter-Nonparent frequency")
+   y<-list(title="Initial Courter-Nonparent frequency")
    fig2 <- fig2 %>% layout(xaxis=x,yaxis=y, annotations=list(
      text="initial NP from slider, initial CP=0",
      x=0.5,y=1,
@@ -326,16 +326,16 @@ server <- function(input, output, session) {
   output$tableCP <- renderTable({
     d<-subdatCP()
     d<-d[round(d[,"initial_CP"],2)==0.25 & 
-           round(d[,"initial_CS"],2) == 0.25 & 
+           round(d[,"initial_CN"],2) == 0.25 & 
            round(d[,"initial_NP"],2)==0.25 & 
-           round(d[,"initial_NS"],2)==0.25,]
+           round(d[,"initial_NN"],2)==0.25,]
   })
   output$tableNP<-renderTable({
     d<-subdatNP()
     d<-d[round(d[,"initial_CP"],2)==0.25 & 
-           round(d[,"initial_CS"],2) == 0.25 & 
+           round(d[,"initial_CN"],2) == 0.25 & 
            round(d[,"initial_NP"],2)==0.25 & 
-           round(d[,"initial_NS"],2)==0.25,]
+           round(d[,"initial_NN"],2)==0.25,]
   })
 }
 

@@ -15,9 +15,9 @@ plot_test<-FALSE
 if(isTRUE(init)){
   # create all of the intersections
   freqs_list<-expand.grid(CP=seq(0,1,0.05),
-                          CS=seq(0,1,0.05),
+                          CN=seq(0,1,0.05),
                           NP=seq(0,1,0.05), 
-                          NS=seq(0,1,0.05))
+                          NN=seq(0,1,0.05))
   freqs_list<-freqs_list[rowSums(freqs_list)==1,]
   
   write.table(freqs_list,"freqs_list.txt",col.names=TRUE,row.names=FALSE,sep='\t')
@@ -45,12 +45,12 @@ if(isTRUE(testing)){
   fig <- plot_ly(
     x = sub_calcs$CP_freq, 
     y = sub_calcs$CS_freq, 
-    z = as.matrix(sub_calcs[,c("CP_rs","CS_rs")]), 
+    z = as.matrix(sub_calcs[,c("CP_rs","CN_rs")]), 
     type = "contour"
   )
   # add axis labels
   x<-list(title="Courter-Parent frequency")
-  y<-list(title="Courter-Sneaker frequency")
+  y<-list(title="Courter-Nonparent frequency")
   fig <- fig %>% layout(xaxis=x,yaxis=y)
   # add label to contour names
   fig <- fig %>% colorbar(title = "Relative RS")
@@ -70,8 +70,8 @@ if(isTRUE(create_outputs)){
   cs<-seq(0,1,0.25)
   
   morph_results<-as.data.frame(matrix(ncol=10,nrow=0))
-  colnames(morph_results)<-c("initial_CP","initial_CS","initial_NP","initial_NS",
-                             "CP","CS","NP","NS","r","c")
+  colnames(morph_results)<-c("initial_CP","initial_CN","initial_NP","initial_NN",
+                             "CP","CN","NP","NN","r","c")
   
   #expectations_list<-dplyr::bind_rows(apply(freqs_list,1,morph_gens,gens=100, r=0.11,c=1))
   
@@ -93,20 +93,20 @@ if(isTRUE(create_outputs)){
 
 if(isTRUE(plot_test)){
   morph_results<-readRDS("morph_results.RDS")
-  morph_results$diversity<-vegan::diversity(round(morph_results[,c("CP","CS","NP","NS")],4))
+  morph_results$diversity<-vegan::diversity(round(morph_results[,c("CP","CN","NP","NN")],4))
   
   vars<-morph_results[morph_results$CS>0 & morph_results$NS>0,]
   sub_calcs<-morph_results[morph_results$r == 0.11 & morph_results$c == 0 &
                              morph_results$initial_CP==0.05,]
   data_wide <- tidyr::spread(
-    sub_calcs[,c("initial_CS","initial_NS","diversity")],
+    sub_calcs[,c("initial_CN","initial_NN","diversity")],
     initial_CS,
     diversity
   )
   rownames(data_wide)<-data_wide[,1]
   data_wide<-data_wide[,-1]
   
-  # fig 1: diversity with NS vs CS
+  # fig 1: diversity with NN vs CN
   fig1<-plot_ly(
     x = as.numeric(colnames(data_wide)), 
     y = as.numeric(rownames(data_wide)), 
@@ -116,8 +116,8 @@ if(isTRUE(plot_test)){
     type = "contour"
   )
   # add axis labels
-  x<-list(title="Initial Noncourter-Sneaker frequency")
-  y<-list(title="Initial Courter-Sneaker frequency")
+  x<-list(title="Initial Noncourter-Nonparent frequency")
+  y<-list(title="Initial Courter-Nonparent frequency")
   fig1 <- fig1 %>% layout(xaxis=x,yaxis=y)
   # add label to contour names
   fig1 <- fig1 %>% colorbar(title = "Diversity of the population")

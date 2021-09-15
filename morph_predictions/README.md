@@ -17,8 +17,8 @@ It contains the following parameters:
 
 - initCP: Initial frequency of the courter-parent morph in the population. You can control this in the slider bar and see its effect when initNP==0 in the left-hand plot.
 - initNP: Initial frequency of the noncourter-parent morph in the population. You can control this in the slider bar and see its effect when initCP==0 in the right-hand plot.
-- initCS: Initial frequency of the courter-sneaker morph in the population. These values are plotted in the two graphs on the y-axis.
-- initNS: Initial frequency of the noncourter-sneaker morph in the population. These values are plotted in the two graphs on the x-axis.
+- initCN: Initial frequency of the courter-sneaker morph in the population. These values are plotted in the two graphs on the y-axis.
+- initNN: Initial frequency of the noncourter-sneaker morph in the population. These values are plotted in the two graphs on the x-axis.
 - c: Sperm competition coefficient. You can adjust this in the slider bar.
 - r: Relative reproductive effort/contribution within each clutch for courting morphs, bounded between 0 and 1. This is the proportion of a female's eggs (aka female fecundity) that a given morph can fertilize, given his maximum amount of sperm. Default simulation conditions are 8/12 (0.6667) for non-courting morphs (noncourter-parent and noncourter-nonparent) and 4/12 (0.3333) for courting morphs (courter-parent and courter-nonparents). You can adjust this in the slider bar. 
 

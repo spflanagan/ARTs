@@ -1,6 +1,6 @@
 #' Function to loop over some number of generations to get the equilibiral morph frequencies
 #' @param gens The number of generations
-#' @param freqs A vector containing the frequencies of the other morphs (CP,CS,NP,NS). 
+#' @param freqs A vector containing the frequencies of the other morphs (CP,CN,NP,NN). 
 #'              The frequencies must be labelled or all four provided in the order above.
 #'              If it is a vector with three values, the fourth is calculated as the frequency of the morph of interest.
 #' @return Returns the vector of allele frequencies in the final generation
