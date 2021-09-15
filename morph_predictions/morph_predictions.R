@@ -1,5 +1,5 @@
 #' Function to generate predictions based on my life cycle diagram
-#' @param freqs A vector containing the frequencies of the other morphs (CP,CS,NP,NS). 
+#' @param freqs A vector containing the frequencies of the other morphs (CP,CN,NP,NN). 
 #'              The frequencies must be labelled or all four provided in the order above.
 #'              If it is a vector with three values, the fourth is calculated as the frequency of the morph of interest.
 #' @param Nm number of males in the population. Default is 500.
@@ -11,7 +11,7 @@
 #' @param wv Viability selection against courtship and nesting traits. Default is exp(-0.5/(2*50)).
 #' @return Returns a new vector of allele frequencies
 morph_predictions<-function(
-  freqs=c(CP=0.25,CS=0.25,NP=0.25,NS=0.25),
+  freqs=c(CP=0.25,CN=0.25,NP=0.25,NN=0.25),
   Nm=500,
   Nf=500,
   r=2/3,
@@ -24,8 +24,8 @@ morph_predictions<-function(
   # check the frequency inputs with the function
   freqs<-check_freqs(freqs)
   
-  # run the calculations for each of the morphs given the inputs
-  out<-unlist(lapply(c("CP","CS","NP","NS"),function(morph){
+  # run the calculatioNN for each of the morphs given the inputs
+  out<-unlist(lapply(c("CP","CN","NP","NN"),function(morph){
     
     # assign various weights to add to things
     if(tolower(morph) %in% c("courter-parent","cp")){
@@ -61,19 +61,19 @@ morph_predictions<-function(
     
     # proportion of nests
     ## nests per chosen male / total number of nests (which is Nf)
-    n<-Nf/((Nm*freqs[["CP"]]+Nm*freqs[["CS"]])*ws + (Nm*freqs[["NP"]]+Nm*freqs[["NS"]])*(1-ws))
+    n<-Nf/((Nm*freqs[["CP"]]+Nm*freqs[["CN"]])*ws + (Nm*freqs[["NP"]]+Nm*freqs[["NN"]])*(1-ws))
     pn<-(Nm*freqs[[morph]]*n*morph_ws)/Nf
     
     # proportion of eggs that are fertilized in your nest
-    pfn <- pn*(r*(freqs[["CP"]] + freqs[["CS"]]) + (1-r)*c*(freqs[["NP"]] + freqs[["NP"]])  )
+    pfn <- pn*(r*(freqs[["CP"]] + freqs[["CN"]]) + (1-r)*c*(freqs[["NP"]] + freqs[["NP"]])  )
     
     # proportion of eggs that are fertilized in other nests
-    pfs <- morph_sneak*((1-r)*( (freqs[["CP"]]+freqs[["CS"]]) + c*(freqs[["NP"]]+freqs[["NS"]]) ))
+    pfs <- morph_sneak*((1-r)*( (freqs[["CP"]]+freqs[["CN"]]) + c*(freqs[["NP"]]+freqs[["NN"]]) ))
     
     # proportion of offspring that survive nest abandonment in your nest
     psn <- pfn*morph_wn
     # proportion of offspring that survive nest abandonment in sneaker nests
-    psf <- pfs*(wn*(freqs[["CP"]] + freqs[["NP"]]) + (1-wn)*(freqs[["CS"]] + freqs[["NS"]]))
+    psf <- pfs*(wn*(freqs[["CP"]] + freqs[["NP"]]) + (1-wn)*(freqs[["CN"]] + freqs[["NN"]]))
     # overall proportion that survive to juveniles
     ps <- psn + psf
     
@@ -87,7 +87,7 @@ morph_predictions<-function(
   }))
   
   out<-out/sum(out)
-  names(out)<-c("CP","CS","NP","NS")
+  names(out)<-c("CP","CN","NP","NN")
   
   return(out)
 }
