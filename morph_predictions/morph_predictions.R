@@ -78,7 +78,7 @@ morph_predictions<-function(
     ps <- psn + psf
     
     # probability of juvenile survival
-    pv<-ps*freqs[[morph]]*morph_wv
+    pv<-ps*morph_wv
     
     #summary<-data.frame(cbind(pn,pfn,pfs,psn,psf,ps,pv))
     #rownames(summary)<-morph
