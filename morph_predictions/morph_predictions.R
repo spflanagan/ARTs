@@ -24,7 +24,7 @@ morph_predictions<-function(
   # check the frequency inputs with the function
   freqs<-check_freqs(freqs)
   
-  # run the calculatioNN for each of the morphs given the inputs
+  # run the calculations for each of the morphs given the inputs
   out<-unlist(lapply(c("CP","CN","NP","NN"),function(morph){
     
     # assign various weights to add to things
