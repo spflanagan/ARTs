@@ -116,6 +116,15 @@ if(isTRUE(plot_test)){
     type = "contour"
   )
   # add axis labels
+  x<-list(title="Initial Noncourter-Sneaker frequency")
+  y<-list(title="Initial Courter-Sneaker frequency")
+  fig1 <- fig1 %>% layout(xaxis=x,yaxis=y)
+  # add label to contour names
+  fig1 <- fig1 %>% colorbar(title = "Diversity of the population")
+  
+  fig1
+  
+}
 
 
 
