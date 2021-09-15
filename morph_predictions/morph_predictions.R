@@ -14,7 +14,7 @@ morph_predictions<-function(
   freqs=c(CP=0.25,CN=0.25,NP=0.25,NN=0.25),
   Nm=500,
   Nf=500,
-  r=2/3,
+  r=1/3,
   c=0.5,
   ws=1,
   wn=1,
