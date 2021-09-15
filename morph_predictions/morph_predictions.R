@@ -37,7 +37,7 @@ morph_predictions<-function(
       morph_wn<-1
       # courter-parents get doubly hit by viability selection
       morph_wv<-wv*wv
-    } else if(tolower(morph) %in% c("courter-sneaker","cs")){
+    } else if(tolower(morph) %in% c("courter-nonparent","cn")){
       morph_ws<-ws
       morph_sneak<-1
       # sneakers have nests that die
@@ -55,7 +55,7 @@ morph_predictions<-function(
       morph_sneak<-1
       # sneakers have nests that die
       morph_wn<-0
-      # no viability selection against noncourter-sneakers
+      # no viability selection agaiNNt noncourter-nonparents
       morph_wv<-1
     }
     
