@@ -10,6 +10,7 @@ source("morph_gens.R")
 init<-FALSE
 testing<-FALSE
 create_outputs<-TRUE
+plot_test<-FALSE
 
 if(isTRUE(init)){
   # create all of the intersections
@@ -90,37 +91,31 @@ if(isTRUE(create_outputs)){
 }
 
 
-morph_results<-readRDS("morph_results.RDS")
-morph_results$diversity<-vegan::diversity(round(morph_results[,c("CP","CS","NP","NS")],4))
-
-vars<-morph_results[morph_results$CS>0 & morph_results$NS>0,]
-sub_calcs<-morph_results[morph_results$r == 0.11 & morph_results$c == 0 &
-                  morph_results$initial_CP==0.05,]
-data_wide <- tidyr::spread(
-  sub_calcs[,c("initial_CS","initial_NS","diversity")],
-  initial_CS,
-  diversity
-)
-rownames(data_wide)<-data_wide[,1]
-data_wide<-data_wide[,-1]
-
-# fig 1: diversity with NS vs CS
-fig1<-plot_ly(
-  x = as.numeric(colnames(data_wide)), 
-  y = as.numeric(rownames(data_wide)), 
-  z = as.matrix(data_wide),
-  colorscale=list(seq(0,1,length.out = 9),
-                  c('#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58')),
-  type = "contour"
-)
-# add axis labels
-x<-list(title="Initial Noncourter-Sneaker frequency")
-y<-list(title="Initial Courter-Sneaker frequency")
-fig1 <- fig1 %>% layout(xaxis=x,yaxis=y)
-# add label to contour names
-fig1 <- fig1 %>% colorbar(title = "Diversity of the population")
-
-fig1
+if(isTRUE(plot_test)){
+  morph_results<-readRDS("morph_results.RDS")
+  morph_results$diversity<-vegan::diversity(round(morph_results[,c("CP","CS","NP","NS")],4))
+  
+  vars<-morph_results[morph_results$CS>0 & morph_results$NS>0,]
+  sub_calcs<-morph_results[morph_results$r == 0.11 & morph_results$c == 0 &
+                             morph_results$initial_CP==0.05,]
+  data_wide <- tidyr::spread(
+    sub_calcs[,c("initial_CS","initial_NS","diversity")],
+    initial_CS,
+    diversity
+  )
+  rownames(data_wide)<-data_wide[,1]
+  data_wide<-data_wide[,-1]
+  
+  # fig 1: diversity with NS vs CS
+  fig1<-plot_ly(
+    x = as.numeric(colnames(data_wide)), 
+    y = as.numeric(rownames(data_wide)), 
+    z = as.matrix(data_wide),
+    colorscale=list(seq(0,1,length.out = 9),
+                    c('#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58')),
+    type = "contour"
+  )
+  # add axis labels
 
 
 
