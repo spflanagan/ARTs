@@ -180,6 +180,8 @@ dplyr [@wickham2021], and rmarkdown [@allaire2021; @xie2020; @xie2018].
 The interactive app is available at
 <https://spflanagan.shinyapps.io/morph_predictions/>.
 
+**this model has no recombination/females do not pass on a morph**
+
 ## Individual-based simulation model
 
 To evaluate the role of genetic architecture in the maintenance of
