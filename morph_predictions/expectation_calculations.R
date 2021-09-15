@@ -66,7 +66,7 @@ if(isTRUE(testing)){
 if(isTRUE(create_outputs)){
   # create a HUGE data.frame with the different outputs, 
   # so that they can be loaded into the shiny app.
-  rs<-seq(0.11,2.11,0.1)
+  rs<-seq(0,1,0.1)
   cs<-seq(0,1,0.25)
   
   morph_results<-as.data.frame(matrix(ncol=10,nrow=0))
