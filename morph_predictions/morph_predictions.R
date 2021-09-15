@@ -31,7 +31,7 @@ morph_predictions<-function(
     if(tolower(morph) %in% c("courter-parent","cp")){
       # courters are preferred
       morph_ws<-ws
-      # parents can't sneak
+      # courters can't sneak
       morph_sneak<-0
       # parents have nests that survive
       morph_wn<-1
@@ -39,19 +39,21 @@ morph_predictions<-function(
       morph_wv<-wv*wv
     } else if(tolower(morph) %in% c("courter-nonparent","cn")){
       morph_ws<-ws
-      morph_sneak<-1
-      # sneakers have nests that die
+      # courters can't sneak
+      morph_sneak<-0
+      # non-parents have nests that die
       morph_wn<-0
       morph_wv<-wv
     } else if(tolower(morph) %in% c("noncourter-parent","np")){
       morph_ws<-1-ws
-      # parents can't sneak
-      morph_sneak<-0
+      # noncourters sneak
+      morph_sneak<-1
       # parents have nests that survive
       morph_wn<-1
       morph_wv<-wv
     } else{
       morph_ws<-1-ws
+      # noncourters sneak
       morph_sneak<-1
       # sneakers have nests that die
       morph_wn<-0
