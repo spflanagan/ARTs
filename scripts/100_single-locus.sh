@@ -23,7 +23,7 @@ PROGDIR="../programs/ARTs"
 cd $DIR
 cd $PROGDIR
 
-
+rm parallel_cmds.sh
 ### --- RUN THE PARAMETER COMBINATIONS --- ###
 
 for i in `seq ${NUMREPS}`; do
