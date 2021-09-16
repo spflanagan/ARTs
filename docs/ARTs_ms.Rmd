@@ -230,6 +230,78 @@ still experience mutation but experienced reduced recombination.
 
 The lifecycle:
 
+When we ran the model, we initialized four replicate populations with
+the identical starting conditions to evaluate the impact of
+stochasticity on the model. These identical conditions included
+randomly-generated values for the allelic effects of QTLs, exact number
+of individuals of each sex and morph, and thresholds for determining
+morph traits (i.e., the values at which an individual is deemed a
+courter vs a non-courter and a parent vs a non-parent). For each set of
+four populations, we ran 10,000 burn-in generations followed by 2,000
+'experimental' generations. Doing so ensured that the population reached
+a steady state in which we could examine any stable polymorphisms or
+cyclical fluctuations in morph frequencies.
+
+Within each of those generations, the population underwent four main
+phases: (1) mate choice and fertilization; (2) nest survival; (3)
+viability selection on juveniles; (4) maturation to adulthood. The main
+difference between the individual-based simulation model and the
+mathematical model were the introduction of stochasticity during mate
+choice and the introduction of recombination and mutation during
+reproduction. During the mate choice phase, females searched through a
+set number of males and chose the first attractive male (i.e., the first
+courter male she encountered). If a female did not find an acceptable
+mate, she chose a male at random with from the population and allocated
+all of her offspring to him.
+
+Once a female chose a male, fertilization of the eggs occurred, in which
+the chosen male had first male priority (i.e., the chosen male allocated
+all of his reproductive effort to his own nest) and up to 3 non-courting
+males could 'sneak' fertilizations, with their contributions discounted
+by a factor of $c$. After the males were assigned their paternity
+shares, the nests survived if the chosen male was also a parent.
+Subsequently, the total number of offspring in the population were
+created based on the proportion of population reproductive success
+achieved by each individual male and female (i.e., each generation, the
+number of offspring created was equal to the carrying capacity).
+
+When fertilization occurred, the parents' genotypes (both neutral
+markers and QTLs) had the opportunity to recombine. Recombination
+occurred independently on the chromosome inherited from the mother and
+the chromosome inherited from the father. The number of recombination
+events for a given chromosome was determined by drawing from a Poisson
+distribution with the recombination rate as the mean, which we set to
+0.2. For each recombination event, breakpoints were chosen by randomly
+drawing from the total number of markers on a chromosome. These
+breakpoints defined the segments of the chromosome that experienced
+recombination, and each segment was randomly chosen to be assigned the
+genotypes and effects from the parents' maternal or paternal chromosome.
+When the genetic architecture was that of a supergene, if the
+breakpoints fell within the region containing the aggregated QTLs for
+the traits, the offspring was considered not viable.
+
+After recombination occurred, if the progeny survived, the genotypes
+underwent mutation, which occurred at a rate of $mu$. For a given
+individual, the number of mutations introduced was determined as
+$2\mu*n_SNPs*n_chrom$. The location of each mutation was randomly
+selected and the allele at that location was randomly chosen from the
+set of existing alleles. The mutation also impacted the phenotypic
+effects of QTLs by altering the original effect by a value drawn from a
+normal distribution with a mean of 0 and a standard deviation of
+$sigma_\mu$. Finally, offspring were also randomly assigned a sex.
+
+The next stage in the lifecycle was viability selection, which impacted
+only male offspring. For each male offspring, a survival probability was
+calculated as $e^{\frac{-morph2}{2\omega_v}}$. Viability selection acted
+multiplicatively on courter-parents (their survival probability was
+$e^{\frac{-morph2}{2\omega_v}}*e^{\frac{-morph2}{2\omega_v}}$). A random
+value between 0 and 1 was drawn, and if the number was larger than the
+survival probability for an individual, that individual did not survive
+to adulthood. If, at this point, the number of surviving offpsring was
+larger than the carrying capacity, offspring were randomly selected to
+become adults. When offspring matured to adulthood, the previous
+generation's adults were replaced, and the lifecycle began again.
+
 # Results
 
 ## Frequency-dependent population dynamics model
