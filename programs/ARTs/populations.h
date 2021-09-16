@@ -1638,7 +1638,8 @@ public:
 						double first_qtl, last_qtl;
 						first_qtl = courter_qtls[which_chrom].first_qtl();
 						last_qtl = courter_qtls[which_chrom].last_qtl();
-						if (first_qtl >= segment_start[RCi] && last_qtl >= segment_end[RCi])
+						// if the breakpoints are within the supergene, the offspring dies
+						if (first_qtl >= segment_start[RCi] && last_qtl <= segment_end[RCi])
 						{
 							alive = false;
 						}
@@ -1648,6 +1649,7 @@ public:
 						int first_qtl, last_qtl;
 						first_qtl = parent_qtls[which_chrom].first_qtl();
 						last_qtl = parent_qtls[which_chrom].last_qtl();
+						// if the breakpoints are within the supergene, the offspring dies
 						if(first_qtl >= segment_start[RCi] && last_qtl <= segment_end[RCi])
 						{
 							alive = false;
