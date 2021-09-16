@@ -131,7 +131,7 @@ ui <- dashboardPage(
     conditionalPanel("input.tabs == 'plot'",
                      sliderInput("sliderCP","CP freq", min=0, max=1, step=0.05, value=0.25,round=2),
                      sliderInput("sliderNP","NP freq", min=0, max=1, step=0.05, value=0.25,round=2),
-                     sliderInput("r","Relative reproductive input (courters/non-courters)",min=0.11, max=2.11,step=0.1,value=0.67,round=2),
+                     sliderInput("r","Relative reproductive input (courters/non-courters)",min=0, max=1,step=0.1,value=0.67,round=2),
                      sliderInput("c","Sperm competition coefficient",min=0, max=1,step=0.25,value=0.5, round=2),
                      width=250
     )
