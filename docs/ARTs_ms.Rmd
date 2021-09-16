@@ -140,12 +140,12 @@ the $M$ morph), the probability of a female choosing that morph
 females ($n/N_f$).
 
 Within a given nest, the offspring could either be fertilized by the
-nest-holding male or other males sneaking fertilizations. Therefore,
-each morph has a proportion of eggs fertilized within their own nests
-(${p_{fn}}_M$) and a proportion of eggs fertilized in other males' nests
-(${p_{fs}}_M$). These proportions were determined by the sperm
-competition coefficient, $c$, which penalized non-courting males, and
-the relative reproductive investment for that morph ($r_M$).
+nest-holding male or non-courting males 'sneaking' fertilizations.
+Therefore, each morph has a proportion of eggs fertilized within their
+own nests (${p_{fn}}_M$) and a proportion of eggs fertilized in other
+males' nests (${p_{fs}}_M$). These proportions were determined by the
+sperm competition coefficient, $c$, which penalized non-courting males,
+and the relative reproductive investment for that morph ($r_M$).
 Analogously, the proportion of offspring in a nest surviving due to
 parental care investment can be split into the proportion surviving in a
 male's own nest (${p_{sn}}_M$) or in another male's nest (${p_{ss}}_M$),
