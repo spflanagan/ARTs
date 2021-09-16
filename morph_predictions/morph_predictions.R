@@ -57,7 +57,7 @@ morph_predictions<-function(
       morph_sneak<-1
       # sneakers have nests that die
       morph_wn<-0
-      # no viability selection agaiNNt noncourter-nonparents
+      # no viability selection against noncourter-nonparents
       morph_wv<-1
     }
     
