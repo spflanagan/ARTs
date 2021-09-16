@@ -2144,7 +2144,7 @@ public:
 				}
 				else
 				{
-					if(!adults[k].parent && adults[k].pot_rs > 0)
+					if(!adults[k].courter && adults[k].pot_rs > 0)
 						sneakers.push_back(k);
 				}
 			}
@@ -2211,7 +2211,7 @@ public:
 				randmale = randnum(sneakers.size());
 				if (randmale != male_id)
 				{
-					if (!adults[sneakers[randmale]].parent && (adults[sneakers[randmale]].pot_rs > 0))//if it's a sneaker: sanity check!
+					if (!adults[sneakers[randmale]].courter && (adults[sneakers[randmale]].pot_rs > 0))//if it's a sneaker: sanity check!
 					{
 						fecundity_share.push_back(0);
 						male_ids.push_back(sneakers[randmale]);
