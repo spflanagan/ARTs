@@ -85,11 +85,13 @@ class nest
 {
 public:
 	int mom, nest_dad;
+	bool alive;
 	vector<int> all_dads;
 	vector<double> off_props;
 
 	nest()
 	{
+		alive = bool();
 		mom = nest_dad = int();
 		all_dads = vector<int>();
 		off_props = vector<double>();
