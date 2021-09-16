@@ -1961,9 +1961,9 @@ public:
 		}
 		else
 		{ //THIS IS THE DEFAULT ONE!
-			bool nest_alive;
 			vector<nest> nests;
 			int nest_count = 0;
+			int nests_surviving = 0;
 			//set up the nests
 			for (j = 0; j < adults.size(); j++)
 			{
@@ -1974,30 +1974,35 @@ public:
 					{
 						if (gp.gene_network)
 							parent_cue_eval(gp, adults[j].mate_id); //determine the parental male's morph
+
+						// create the nest
+						nests.push_back(nest());
+						nests[nest_count].mom = j;
+						nests[nest_count].nest_dad = adults[j].mate_id;
+						//assign paternity proportions						
+						dd_assign_sneakers(nests[nest_count].mom, gp, nests[nest_count]);
+						nest_count++;
+						fem_ms++;
 						//does the nest survive?
-						nest_alive = dd_nest_survival(gp, adults[j].mate_id);
-						if(nest_alive)
-						{
-							nests.push_back(nest());
-							nests[nest_count].mom = j;
-							nests[nest_count].nest_dad = adults[j].mate_id;
-							//assign paternity proportions						
-							dd_assign_sneakers(nests[nest_count].mom, gp, nests[nest_count]);
-							nest_count++;
-							fem_ms++;
-						}
+						nests[nest_count].alive = dd_nest_survival(gp, adults[j].mate_id);
+						if (nests[nest_count].alive)
+							nests_surviving++;
 					}
 				}
 			}
 			//create offspring in proportion to successful nests
 			int off_remaining = gp.carrying_capacity;
-			int nests_remaining = nest_count;
+			
 			for(j = 0; j < nest_count; j++)
 			{
-				int off_to_make = off_remaining/nests_remaining;
-				int off_made = dd_make_offspring(nests[j], num_progeny, off_to_make, gp);
-				off_remaining = off_remaining - off_made;
-				nests_remaining = nests_remaining - 1;
+				// allocate offspring if th nest is alive
+				if (nests[j].alive)
+				{
+					int off_to_make = off_remaining / nests_surviving;
+					int off_made = dd_make_offspring(nests[j], num_progeny, off_to_make, gp);
+					off_remaining = off_remaining - off_made;
+					nests_surviving = nests_surviving - 1;
+				}		
 			}
 			//sanity check
 			if(num_progeny != gp.carrying_capacity)
