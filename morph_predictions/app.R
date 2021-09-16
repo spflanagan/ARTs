@@ -242,8 +242,8 @@ server <- function(input, output, session) {
    
    
    data_wide <- tidyr::spread(
-     sub_calcsCP[,c("initial_CS","initial_NN","diversity")],
-     initial_CS,
+     sub_calcsCP[,c("initial_CN","initial_NN","diversity")],
+     initial_CN,
      diversity
     )
    rownames(data_wide)<-data_wide[,1]
@@ -280,7 +280,7 @@ server <- function(input, output, session) {
    
    data_wide <- tidyr::spread(
      sub_calcsNP[,c("initial_CN","initial_NN","diversity")],
-     initial_CS,
+     initial_CN,
      diversity
    )
    rownames(data_wide)<-data_wide[,1]
