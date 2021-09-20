@@ -14,6 +14,21 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 17 September 2021
+
+I've been brainstorming and taking notes outside of this document for the last week or so, but I'll detail some of the things I've found needed to be changed here:
+
+- both the mathematical model and the simulation model had non-parents, not non-courters, be the sneakers, despite giving the non-courters the increased reproductive allocation and discounting them by c. So I've updated this.
+- The simulation model had the nests survive before sneaking happened, which likely changed the fertilization patterns and costs of sneaking rather dramatically. I've now adjusted this to have all fertilization occur *before* nest survival is evaluated.
+- the mathematical model determined the proportion of sneak-fertilized nests in a sort of strange way that didn't really make sense upon close examination, so I've re-done that.
+- the final step in the mathematical model, evaluating $p_v$, included the morph frequency, but I don't think it should because the morph frequency is included in the first step and therefore doesn't need to be repeated. 
+
+I've also adjusted my temrinology to remove the term 'sneaker' because I think that was causing me confusion. 
+
+So now I'm re-running both the expectation_calculations.R and 100_single-locus.sh to see how these changes impact my initial results. Once I look at the results of expectation_calculations.R, I'll also re-run 101_model-informed-single-locus.sh.
+
+I came across these inconsistencies by writing up the methods, so that's a really useful exercise! 
+
 # 7 September 2021
 
 I'm back to working on this. I found a region of parameter space taht *should* yield diverisity, based on the frequency-dependent mathematical model, but it doesn't necessarily in the simulations -- only with monogamy and only on occasion. It's very strange. It's also not that different from the low-diversity outcome. 
