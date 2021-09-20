@@ -14,6 +14,10 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 20 September 2021
+
+Based on the new calculations, it looks like the updated mathematical model is suggesting that the sperm competition coefficient needs to be higher if we're going to have any diversity. So that's interesting. I'll try running those simulations along with the old baselines and see how they match up. 
+
 # 17 September 2021
 
 I've been brainstorming and taking notes outside of this document for the last week or so, but I'll detail some of the things I've found needed to be changed here:
