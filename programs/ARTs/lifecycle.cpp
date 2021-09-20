@@ -82,22 +82,28 @@ int main(int argc, char*argv[])
     trait_output.open(trait_output_name);
     trait_output << "Gen\tPop\tIndividual\tSex\tCourter\tCourtTrait\tParent\tParentTrait\tPreference\tPrefTrait\tMateFound\tPotRS\tLifetimeRS\tAlive";
     
-	markers_output_name = global_params.base_name + "_markers.txt";
-	markers_output.open(markers_output_name);
-	markers_output << "Generation\tPop";
-    for (i = 0; i < global_params.num_chrom; i++)
-    {
-        for (ii = 0; ii < global_params.num_markers; ii++)
-            markers_output << "\tMarker" << i << "." << ii;
-    }
+	// only create output files with summary genetics info 
+	// if genetics are actually being used!
+	if (!global_params.no_genetics) 
+	{
+		markers_output_name = global_params.base_name + "_markers.txt";
+		markers_output.open(markers_output_name);
+		markers_output << "Generation\tPop";
+		for (i = 0; i < global_params.num_chrom; i++)
+		{
+			for (ii = 0; ii < global_params.num_markers; ii++)
+				markers_output << "\tMarker" << i << "." << ii;
+		}
 
-	qtlinfo_output_name = global_params.base_name + "_qtlinfo.txt";
-	qtlinfo_output.open(qtlinfo_output_name);
-	qtlinfo_output << "Pop";
+		qtlinfo_output_name = global_params.base_name + "_qtlinfo.txt";
+		qtlinfo_output.open(qtlinfo_output_name);
+		qtlinfo_output << "Pop";
 
-	ae_output_name = global_params.base_name + "_allelic-effects.txt";
-	ae_output.open(ae_output_name);
-	ae_output << "Gen\tPop";
+		ae_output_name = global_params.base_name + "_allelic-effects.txt";
+		ae_output.open(ae_output_name);
+		ae_output << "Gen\tPop";
+	}
+	
 
 	summary_output_name = global_params.base_name + "_summary.txt";
 	summary_output.open(summary_output_name);
@@ -120,7 +126,13 @@ int main(int argc, char*argv[])
 		if (!run)
 		{
 			summary_output.close();
-			markers_output.close();
+			trait_output.close;
+			if (!global_params.no_genetics)
+			{
+				markers_output.close();
+				qtlinfo_output.close();
+				ae_output.close();
+			}
 			if (command_line)
 				return 0;
 			else
@@ -138,7 +150,13 @@ int main(int argc, char*argv[])
 			if (!run)
 			{
 				summary_output.close();
-				markers_output.close();
+				trait_output.close;
+				if (!global_params.no_genetics)
+				{
+					markers_output.close();
+					qtlinfo_output.close();
+					ae_output.close();
+				}
 				if (command_line)
 					return 0;
 				else
@@ -160,7 +178,13 @@ int main(int argc, char*argv[])
 			if (!run)
 			{
 				summary_output.close();
-				markers_output.close();
+				trait_output.close;
+				if (!global_params.no_genetics)
+				{
+					markers_output.close();
+					qtlinfo_output.close();
+					ae_output.close();
+				}
 				if (command_line)
 					return 0;
 				else
@@ -201,26 +225,30 @@ int main(int argc, char*argv[])
 			}				
 		}
 		eq_reached.push_back(false);
-		//output QTL info
-		if (i == 0)//if it's the first/only pop, write the header
+		if (!global_params.no_genetics)
 		{
-			if (global_params.gene_network)
-				pops[i].output_qtl_info(global_params, qtlinfo_output, true,
-					pops[i].courter_env_qtls, pops[i].parent_env_qtls, pops[i].pref_env_qtls,
-					pops[i].cthresh_env_qtls, pops[i].pthresh_env_qtls);
-			else
-				pops[i].output_qtl_info(global_params, qtlinfo_output, true);
-			pops[i].output_allelic_effects(global_params,ae_output, true);
+			//output QTL info
+			if (i == 0)//if it's the first/only pop, write the header
+			{
+				if (global_params.gene_network)
+					pops[i].output_qtl_info(global_params, qtlinfo_output, true,
+						pops[i].courter_env_qtls, pops[i].parent_env_qtls, pops[i].pref_env_qtls,
+						pops[i].cthresh_env_qtls, pops[i].pthresh_env_qtls);
+				else
+					pops[i].output_qtl_info(global_params, qtlinfo_output, true);
+				pops[i].output_allelic_effects(global_params, ae_output, true);
+			}
+			qtlinfo_output << "Pop" << i;
+			pops[i].output_qtl_info(global_params, qtlinfo_output, false);
+			ae_output << '\n' << 0 << "\tPop" << i;
+			pops[i].output_allelic_effects(global_params, ae_output, false);
 		}
-		qtlinfo_output << "Pop" << i;
-		pops[i].output_qtl_info(global_params, qtlinfo_output, false);
-		ae_output << '\n' << 0 << "\tPop" << i;
-		pops[i].output_allelic_effects(global_params,ae_output, false);
 	}
 		
 	
 	global_params.output_parameters();
-	qtlinfo_output.close();
+	if (!global_params.no_genetics)
+		qtlinfo_output.close();
 	std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
 	if (global_params.optimize)
@@ -308,11 +336,14 @@ int main(int argc, char*argv[])
 				//output summary stats
 				summary_output << "\n" << i << "\tPop" << ii;
 				pops[ii].output_summary_info(global_params, summary_output, log_out);//includes RS
-                //output allele frequencies
-                markers_output << "\n" << i << "\tPop" << ii;
-                pops[ii].output_allele_freqs(global_params, markers_output);
-				ae_output << '\n' << i+1 << "\tPop" << ii;
-				pops[ii].output_allelic_effects(global_params,ae_output, false);
+				if (!global_params.no_genetics)
+				{
+					//output allele frequencies
+					markers_output << "\n" << i << "\tPop" << ii;
+					pops[ii].output_allele_freqs(global_params, markers_output);
+					ae_output << '\n' << i + 1 << "\tPop" << ii;
+					pops[ii].output_allelic_effects(global_params, ae_output, false);
+				}
 				//stochastic survival
 				//pops[ii].density_regulation(global_params);
 				t1 = std::chrono::high_resolution_clock::now();
@@ -352,8 +383,12 @@ int main(int argc, char*argv[])
 			else
 				std::cout << "\n" << global_params.base_name << ": All populations have crashed at experimental generation " << i << '\n' << std::flush;
 			summary_output.close();
-			markers_output.close();
-			ae_output.close();
+			trait_output.close;
+			if (!global_params.no_genetics)
+			{
+				markers_output.close();
+				ae_output.close();
+			}
 			if (!command_line)
 				return 0;
 			else
@@ -400,10 +435,13 @@ int main(int argc, char*argv[])
 				//output summary stats
 				summary_output << "\n" << global_params.num_init_gen + i << "\tPop" << ii;
 				pops[ii].output_summary_info(global_params, summary_output, log_out);
-                markers_output << '\n' <<global_params.num_init_gen + i << "\tPop" << ii;
-                pops[ii].output_allele_freqs(global_params, markers_output);
-				ae_output << '\n' << global_params.num_init_gen +i+1 << "\tPop" << ii;
-				pops[ii].output_allelic_effects(global_params,ae_output, false);
+				if (!global_params.no_genetics)
+				{
+					markers_output << '\n' << global_params.num_init_gen + i << "\tPop" << ii;
+					pops[ii].output_allele_freqs(global_params, markers_output);
+					ae_output << '\n' << global_params.num_init_gen + i + 1 << "\tPop" << ii;
+					pops[ii].output_allelic_effects(global_params, ae_output, false);
+				}
 				if(i == (global_params.num_exp_gen - 1))
 				{
 					//output the trait values for the final generation of each population
@@ -466,10 +504,13 @@ int main(int argc, char*argv[])
 				log_out<< "\n" << global_params.base_name << ": All populations have crashed at experimental generation " << i << '\n' << std::flush;
 			else
 				std::cout << "\n" << global_params.base_name << ": All populations have crashed at experimental generation " << i << '\n' << std::flush;
-			trait_output.close();
 			summary_output.close();
-			markers_output.close();
-			ae_output.close();
+			trait_output.close;
+			if (!global_params.no_genetics)
+			{
+				markers_output.close();
+				ae_output.close();
+			}
 			if (command_line)
 				return 0;
 			else
@@ -550,9 +591,12 @@ int main(int argc, char*argv[])
 	
 	//close output files
 	summary_output.close();
-	trait_output.close();
-	markers_output.close();
-	ae_output.close();
+	trait_output.close;
+	if (!global_params.no_genetics)
+	{
+		markers_output.close();
+		ae_output.close();
+	}
 	if (global_params.log_file)
 		log_out<< "\nDone!\n";
 	else
