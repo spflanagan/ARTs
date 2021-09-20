@@ -1983,12 +1983,13 @@ public:
 						nests[nest_count].nest_dad = adults[j].mate_id;
 						//assign paternity proportions						
 						dd_assign_sneakers(nests[nest_count].mom, gp, nests[nest_count]);
-						nest_count++;
-						fem_ms++;
 						//does the nest survive?
 						nests[nest_count].alive = dd_nest_survival(gp, adults[j].mate_id);
+						// increment trackers
 						if (nests[nest_count].alive)
 							nests_surviving++;
+						nest_count++;
+						fem_ms++;
 					}
 				}
 			}
