@@ -126,7 +126,7 @@ int main(int argc, char*argv[])
 		if (!run)
 		{
 			summary_output.close();
-			trait_output.close;
+			trait_output.close();
 			if (!global_params.no_genetics)
 			{
 				markers_output.close();
@@ -150,7 +150,7 @@ int main(int argc, char*argv[])
 			if (!run)
 			{
 				summary_output.close();
-				trait_output.close;
+				trait_output.close();
 				if (!global_params.no_genetics)
 				{
 					markers_output.close();
@@ -178,7 +178,7 @@ int main(int argc, char*argv[])
 			if (!run)
 			{
 				summary_output.close();
-				trait_output.close;
+				trait_output.close();
 				if (!global_params.no_genetics)
 				{
 					markers_output.close();
@@ -383,7 +383,7 @@ int main(int argc, char*argv[])
 			else
 				std::cout << "\n" << global_params.base_name << ": All populations have crashed at experimental generation " << i << '\n' << std::flush;
 			summary_output.close();
-			trait_output.close;
+			trait_output.close();
 			if (!global_params.no_genetics)
 			{
 				markers_output.close();
@@ -505,7 +505,7 @@ int main(int argc, char*argv[])
 			else
 				std::cout << "\n" << global_params.base_name << ": All populations have crashed at experimental generation " << i << '\n' << std::flush;
 			summary_output.close();
-			trait_output.close;
+			trait_output.close();
 			if (!global_params.no_genetics)
 			{
 				markers_output.close();
@@ -591,7 +591,7 @@ int main(int argc, char*argv[])
 	
 	//close output files
 	summary_output.close();
-	trait_output.close;
+	trait_output.close();
 	if (!global_params.no_genetics)
 	{
 		markers_output.close();
