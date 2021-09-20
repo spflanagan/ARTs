@@ -18,7 +18,7 @@ CRS=5
 #-ncrs
 NRS=7
 #-sperm-r
-C=0.5
+C=0.75
 ## for low diversity
 #-crs
 LCRS=6
