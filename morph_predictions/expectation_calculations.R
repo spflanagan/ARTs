@@ -7,7 +7,7 @@ source("morph_predictions.R")
 source("check_freqs.R")
 source("morph_gens.R")
 
-init<-TRUE
+init<-FALSE
 testing<-FALSE
 create_outputs<-TRUE
 plot_test<-FALSE
