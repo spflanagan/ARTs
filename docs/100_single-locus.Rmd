@@ -105,7 +105,7 @@ I used the frequency-dependent mathematical model to identify parameter space wh
 ```{r highDiv}
 highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",path="single_locus",cols,make.plot=FALSE))
 ```
-```{r highDivPlot}
+```{r highDivPlot, fig.cap="Final generation frequencies based on the single locus model with parameters that are expected to result in diversity, based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available). Those labelled with 'RM' were runs where females mated at random. Runs labelled 'v0' did not impose viability selection on males."}
 var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
 
 par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
@@ -128,10 +128,8 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
-Low diversity
 
-
-```{r lowDiv}
+```{r lowDiv, fig.cap="Final generation frequencies based on the single locus model with parameters that are expected to result in no diversity, based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available). Those labelled with 'RM' were runs where females mated at random. Runs labelled 'v0' did not impose viability selection on males."}
 lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*summary.txt",path="single_locus",cols,make.plot=FALSE))
 ```
 ```{r lowDivPlot}
