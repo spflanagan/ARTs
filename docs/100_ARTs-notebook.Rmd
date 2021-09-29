@@ -14,6 +14,14 @@ knitr::opts_knit$set(root.dir='../fixedART-results/') #change
 source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
 ```
 
+# 23 September 2021
+
+So, evaluating the outputs from the simulation model, I'm not sure what's going on. First of all, the extent of diversity is really quite low in most cases, based on the expectations from the mathematical model -- only a few instances have substantial variation maintained, and most of the variation is quite low.
+
+Somehow there are courter/non-parents surviving too, which is troubling, but could be due to the females also having the traits? Still, you'd expect them to be lost by the end of all the generations. I wonder if this is somehow related to the density dependence that we implemented to stop populations from crashing. 
+
+But I've also realized that the `c` slider isn't working quite right in the app, so I'll need to fix that -- fixed! It seems as though the app might be constantly expecting diversity now, though, so maybe that's the problem -- perhaps I haven't solved the issue of the math at all. 
+
 # 20 September 2021
 
 Based on the new calculations, it looks like the updated mathematical model is suggesting that the sperm competition coefficient needs to be higher if we're going to have any diversity. So that's interesting. I'll try running those simulations along with the old baselines and see how they match up. 
