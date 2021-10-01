@@ -66,11 +66,13 @@ morph_predictions<-function(
     n<-Nf/((Nm*freqs[["CP"]]+Nm*freqs[["CN"]])*ws + (Nm*freqs[["NP"]]+Nm*freqs[["NN"]])*(1-ws))
     pn<-(Nm*freqs[[morph]]*n*morph_ws)/Nf
     
+    # update to 'actual' r, scaled by frequencies
+    actR<-(r*(freqs[["CP"]] + freqs[["CN"]]))/(r*(freqs[["CP"]] + freqs[["CN"]]) + (1-r)*(freqs[["NP"]] + freqs[["NP"]])  )
     # proportion of eggs that are fertilized in your nest
-    pfn <- pn*(r*(freqs[["CP"]] + freqs[["CN"]]) + (1-r)*c*(freqs[["NP"]] + freqs[["NP"]])  )
+    pfn <- pn*actR
     
     # proportion of eggs that are fertilized in other nests
-    pfs <- morph_sneak*(1-pfn)*c*( (r*(freqs[["CP"]]+freqs[["CN"]])) + ((1-r)*(freqs[["NP"]]+freqs[["NN"]])) )
+    pfs <- morph_sneak*(1-pfn)*actR
     
     # proportion of offspring that survive nest abandonment in your nest
     psn <- pfn*morph_wn
