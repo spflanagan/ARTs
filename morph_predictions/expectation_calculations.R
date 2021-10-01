@@ -11,6 +11,7 @@ init<-FALSE
 testing<-FALSE
 create_outputs<-TRUE
 plot_test<-FALSE
+step_by_step<-FALSE
 
 if(isTRUE(init)){
   # create all of the intersections
@@ -128,3 +129,79 @@ if(isTRUE(plot_test)){
 
 
 
+# walking through an example
+if(isTRUE(step_by_step)){
+  freqs=c(CP=0.25,CN=0.25,NP=0.25,NN=0.25)
+  Nm=500
+  Nf=500
+  r=1/4
+  c=0.5
+  ws=1
+  wn=1
+  wv=exp(-0.5/(2*50))
+  
+  freqs<-check_freqs(freqs)
+  
+  out<-t(do.call(rbind,lapply(c("CP","CN","NP","NN"),function(morph){
+    
+    # assign various weights to add to things
+    if(tolower(morph) %in% c("courter-parent","cp")){
+      # courters are preferred
+      morph_ws<-ws
+      # courters can't sneak
+      morph_sneak<-0
+      # parents have nests that survive
+      morph_wn<-1
+      # courter-parents get doubly hit by viability selection
+      morph_wv<-wv*wv
+    } else if(tolower(morph) %in% c("courter-nonparent","cn")){
+      morph_ws<-ws
+      # courters can't sneak
+      morph_sneak<-0
+      # non-parents have nests that die
+      morph_wn<-0
+      morph_wv<-wv
+    } else if(tolower(morph) %in% c("noncourter-parent","np")){
+      morph_ws<-1-ws
+      # noncourters sneak
+      morph_sneak<-1
+      # parents have nests that survive
+      morph_wn<-1
+      morph_wv<-wv
+    } else{
+      morph_ws<-1-ws
+      # noncourters sneak
+      morph_sneak<-1
+      # sneakers have nests that die
+      morph_wn<-0
+      # no viability selection against noncourter-nonparents
+      morph_wv<-1
+    }
+    
+    # proportion of nests
+    ## nests per chosen male / total number of nests (which is Nf)
+    n<-Nf/((Nm*freqs[["CP"]]+Nm*freqs[["CN"]])*ws + (Nm*freqs[["NP"]]+Nm*freqs[["NN"]])*(1-ws))
+    pn<-(Nm*freqs[[morph]]*n*morph_ws)/Nf
+    
+    # proportion of eggs that are fertilized in your nest
+    pfn <- pn*r
+    
+    # proportion of eggs that are fertilized in other nests
+    pfs <- morph_sneak*(1-pfn)*(1-r)
+    
+    # proportion of offspring that survive nest abandonment in your nest
+    psn <- pfn*morph_wn
+    # proportion of offspring that survive nest abandonment in sneaker nests
+    psf <- pfs*(wn*(freqs[["CP"]] + freqs[["NP"]]) + (1-wn)*(freqs[["CN"]] + freqs[["NN"]]))
+    # overall proportion that survive to juveniles
+    ps <- psn + psf
+    
+    # probability of juvenile survival
+    pv<-ps*morph_wv
+    
+    summary<-data.frame(cbind(n,pn,pfn,pfs,psn,psf,ps,pv))
+    rownames(summary)<-morph
+    
+    return(summary)
+  })))
+}
