@@ -9,6 +9,8 @@ nest_fertilize<-function(freqs, Nm, max_off,ws=c(1,1,0,0), rs=c(4,4,8,8)){
   # max offspring and the difference
   NnM<-sum(n)*max_off
   diffs<-NnM-sperm
+  # any negatives become zero
+  diffs[diffs<0] <-0
   # the courters get to use all of theirs
   ferts<-sperm
   ferts[which(ws==1)]<-sperm[which(ws==1)]
