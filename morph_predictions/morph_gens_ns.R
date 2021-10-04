@@ -15,8 +15,8 @@ nest_fertilize<-function(freqs, Nm, max_off,ws=c(1,1,0,0), rs=c(4,4,8,8)){
   ferts<-sperm
   ferts[which(ws==1)]<-sperm[which(ws==1)]
   # non-courters get to keep either all of their sperm or as much as can be used
-  ferts[which(ws==0)]<-min(sperm[which(ws==0)],
-                                 diffs[which(ws==0)])
+  ferts[which(ws==0)]<-apply(rbind(sperm[which(ws==0)],
+                                   diffs[which(ws==0)]),2,min)
   return(ferts)
 }
 
