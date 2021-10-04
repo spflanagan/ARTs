@@ -48,10 +48,10 @@ viability<-function(surv,morph_wvs){
 one_gen<-function(rs=c(4,4,8,8),
                   freqs=c(CP=0.25,CN=0.25,NP=0.25,NN=0.25),
                   Nm=500,
-                  max_off=16,
+                  cv=16,
                   wn=1,
                   wv=exp(-0.5/(2*50))){
-  
+  max_off<-cv*3*rs[4]
   freqs<-check_freqs(freqs)
   eggs<-nest_fertilize(freqs, Nm=Nm,max_off,ws=c(1,1,0,0), rs=rs)
   nests<-nest_survival(eggs,morph_sneak=c(0,0,1,1),morph_wn=c(wn,0,wn,0))
@@ -68,7 +68,7 @@ one_gen<-function(rs=c(4,4,8,8),
 #'              The frequencies must be labelled or all four provided in the order above.
 #'              If it is a vector with three values, the fourth is calculated as the frequency of the morph of interest.
 #' @return Returns the vector of allele frequencies in the final generation
-morph_gens<-function(gens,freqs, ...){
+morph_gens_ns<-function(gens,freqs, ...){
   freqs<-check_freqs(freqs)
   output<-data.frame(matrix(nrow=gens+1,ncol=4))
   colnames(output)<-c("CP","CN","NP","NN")
@@ -85,9 +85,4 @@ morph_gens<-function(gens,freqs, ...){
   return(output[gens+1,])
 }
 
-r_test<-do.call(rbind, lapply(seq(0,2,0.1),function(r){
-  rs<-c(r*8,r*8,8,8)
-  out<-morph_gens(100,freqs=c(CP=0.25,CN=0.25,NP=0.25,NN=0.25),rs=rs)
-  out<-round(out,digits=3)
-  return(out)
-}))
+
