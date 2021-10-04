@@ -5,11 +5,12 @@ library(vegan)
 # set to directory of this script
 source("morph_predictions.R")
 source("check_freqs.R")
-source("morph_gens.R")
+source("morph_gens_ns.R")
 
 init<-FALSE
 testing<-FALSE
-create_outputs<-TRUE
+create_outputs<-FALSE
+create_outputs_Ns<-TRUE
 plot_test<-FALSE
 step_by_step<-FALSE
 
@@ -89,6 +90,33 @@ if(isTRUE(create_outputs)){
   }
   
   saveRDS(morph_results,"morph_results_20210915.RDS")
+}
+
+if(isTRUE(create_outputs_Ns)){
+  # create a HUGE data.frame with the different outputs, 
+  # so that they can be loaded into the shiny app.
+  rs<-seq(0,2,0.1)
+  cs<-seq(0,1,0.25)
+  
+  morph_results<-as.data.frame(matrix(ncol=10,nrow=0))
+  colnames(morph_results)<-c("initial_CP","initial_CN","initial_NP","initial_NN",
+                             "CP","CN","NP","NN","r","c")
+  
+  
+  for(r in rs){
+    for(cv in cs){
+      outputs<-dplyr::bind_rows(apply(freqs_list,1,morph_gens_ns,gens=100, 
+                                      rs=c(r*8,r*8,8,8),cv=cv))
+      print(paste("r=",r,"c=",cv))
+      to_save<-dplyr::bind_cols(freqs_list,outputs,.name_repair = "minimal")
+      colnames(to_save)[1:4]<-paste0("initial_",colnames(to_save)[1:4])
+      to_save$r<-r
+      to_save$c<-cv
+      morph_results<-dplyr::bind_rows(morph_results,to_save)
+    }
+  }
+  
+  saveRDS(morph_results,"morph_results_Ns.RDS")
 }
 
 
