@@ -85,8 +85,8 @@ morph_gens<-function(gens,freqs, ...){
   return(output[gens+1,])
 }
 
-r_test<-do.call(rbind, lapply(seq(0,1,0.1),function(r){
-  rs<-c(r*8,r*8,(1-r)*8,(1-r)*8)
+r_test<-do.call(rbind, lapply(seq(0,2,0.1),function(r){
+  rs<-c(r*8,r*8,8,8)
   out<-morph_gens(100,freqs=c(CP=0.25,CN=0.25,NP=0.25,NN=0.25),rs=rs)
   out<-round(out,digits=3)
   return(out)
