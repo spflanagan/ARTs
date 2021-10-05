@@ -2165,7 +2165,7 @@ public:
 		int start_numprog = num_progeny;
 		for(k = 0; k < this_nest.off_props.size(); k++)
 		{//each dad gets babies
-			int fecundity = off_to_make*this_nest.off_props[k];
+			int fecundity = round(off_to_make*this_nest.off_props[k]);
 			making_babies(gp, fecundity, num_progeny, this_nest.mom, this_nest.all_dads[k]);
 			off_counter = off_counter+ fecundity;
 		}
@@ -2306,7 +2306,7 @@ public:
 			num_prog = 0;
 			for (k = 0; k < fecundity_share.size(); k++)
 			{
-				fecundity = fecundity_share[k] * adults[fem_id].pot_rs;
+				fecundity = round(fecundity_share[k] * adults[fem_id].pot_rs);
 				if ((num_prog + fecundity) > adults[fem_id].pot_rs)
 					fecundity = adults[fem_id].pot_rs - num_prog;
 				if (fecundity > adults[male_ids[k]].pot_rs)
