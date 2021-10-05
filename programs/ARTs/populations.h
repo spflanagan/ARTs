@@ -2235,9 +2235,10 @@ public:
 			fecundity_share[0] = double(adults[male_id].pot_rs) / double(max_sperm); //it doesn't get weighted if r <= 1
 			for (k = 1; k < fecundity_share.size(); k++)
 			{
-				fecundity_share[k] = double(adults[male_ids[k]].pot_rs*gp.sperm_comp_r) / double(max_sperm);
-				adults[male_ids[k]].lifetime_rs = adults[male_ids[k]].lifetime_rs + fecundity_share[k];
-				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs -  fecundity_share[k];
+				int sperm_used = round(adults[male_ids[k]].pot_rs*gp.sperm_comp_r);
+				fecundity_share[k] =  double(sperm_used / max_sperm);
+				adults[male_ids[k]].lifetime_rs = adults[male_ids[k]].lifetime_rs + sperm_used;
+				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - sperm_used;
 			}				
 			for(k = 0; k < fecundity_share.size(); k++)
 				this_nest.off_props.push_back(fecundity_share[k]);
