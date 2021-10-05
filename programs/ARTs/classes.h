@@ -1362,7 +1362,7 @@ public:
 	
 	//DEPRECATED DON'T USE
 	//original way of mutating gene network
-	int mut_env_Y(parameters gp, vector<tracker>&Y, vector<tracker>&in, double alpha, double sigma_mu)
+	void mut_env_Y(parameters gp, vector<tracker>&Y, vector<tracker>&in, double alpha, double sigma_mu)
 	{
 		int rand_loc1, rand_loc2;
 		rand_loc1 = randnum(gp.num_qtl);
@@ -1379,7 +1379,7 @@ public:
 			in[rand_loc1].per_locus[rand_loc2] = in[rand_loc1].per_locus[rand_loc2] + randnorm(0, sigma_mu);
 		}
 	}
-	int mut_env_Z(parameters gp, double locus, vector<int> &Z,double maternal_ae, double paternal_ae, double alpha, double sigma_mu)
+	void mut_env_Z(parameters gp, double locus, vector<int> &Z,double maternal_ae, double paternal_ae, double alpha, double sigma_mu)
 	{
 		if (genrand() <= alpha)//then it add/removes interactions by mutating Y or Z.
 		{
