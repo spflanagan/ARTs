@@ -640,23 +640,23 @@ string determine_date()
 class individual
 {
 public:
-	double courter_trait, parent_trait, female_pref,pref_trait, ind_cthresh, ind_pthresh;
+	double courter_trait, parent_trait,pref_trait, ind_cthresh, ind_pthresh;
 	vector<chromosome> maternal, paternal;
 	vector<tracker> courter_int, parent_int, pref_int, cthresh_int, pthresh_int, courter_Y, parent_Y, pref_Y,cthresh_Y,pthresh_Y;
 	vector<int> courter_Z, parent_Z, pref_Z, cthresh_Z, pthresh_Z;
 	vector<double> courter_x, parent_x, pref_x, cthresh_x, pthresh_x;
-	bool female, alive, courter, parent;
+	bool female, alive, courter, parent, female_pref;
 	int mate_found, pot_rs, mate_id,lifetime_rs, mom,dad;
 
 	individual()
 	{
-		courter_trait = parent_trait = female_pref = pref_trait = ind_cthresh = ind_pthresh = double();
+		courter_trait = parent_trait = pref_trait = ind_cthresh = ind_pthresh = double();
 		maternal = paternal = vector<chromosome>();
 		courter_int = parent_int = pref_int =cthresh_int = pthresh_int, courter_Y = parent_Y = pref_Y = cthresh_Y=pthresh_Y =vector<tracker>();
 		courter_Z = parent_Z = pref_Z = cthresh_Z = pthresh_Z = vector<int>();
 		courter_x = parent_x = pref_x = cthresh_x = pthresh_x = vector<double>();
 		mate_found = pot_rs = mate_id = lifetime_rs =mom = dad = int();
-		female = alive = parent = courter = bool();
+		female = alive = parent = courter = female_pref = bool();
 	}
 
 	//reset
@@ -914,37 +914,35 @@ public:
 	void calc_preference_trait(parameters gp, double threshold)
 	{
 		int k, kk;
-		female_pref = 0;
+		pref_trait = 0;
 		if (!gp.gene_network)
 		{
 			for (k = 0; k < gp.num_chrom; k++)
 			{
 				for (kk = 0; kk < maternal[k].pref_ae.size(); kk++)
-					female_pref = female_pref + maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk];
+					pref_trait = pref_trait + maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk];
 			}
-			pref_trait = female_pref;
 		}
 		else
 		{
 			std::cout << "\nWARNING: Preference traits not calculated because environmentally responsive QTL are turned on but not specified in function calls.\n";
 		}
-		if (female_pref < threshold)
-			female_pref = 0;
+		if (pref_trait < threshold)
+			female_pref = false;
 		else
-			female_pref = 1;
+			female_pref = true;
 	}
 	void calc_preference_trait(parameters gp, double threshold, vector<tracker>& pref_env, double env_cue = 0, bool stability = true)
 	{
 		int k, kk;
-		female_pref = 0;
+		pref_trait = 0;
 		if (!gp.gene_network)
 		{
 			for (k = 0; k < gp.num_chrom; k++)
 			{
 				for (kk = 0; kk < maternal[k].pref_ae.size(); kk++)
-					female_pref = female_pref + maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk];
+					pref_trait = pref_trait + maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk];
 			}
-			pref_trait = female_pref;
 		}
 		else
 		{
@@ -956,17 +954,16 @@ public:
 				{
 					if (pref_env[k].per_locus[kk] >= gp.num_env_qtl)//if it's not an environmental qtl
 					{
-						female_pref = female_pref + (pref_Z[qtl_index] * (maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk])*pref_x[qtl_index]);
+						pref_trait = pref_trait + (pref_Z[qtl_index] * (maternal[k].pref_ae[kk] + paternal[k].pref_ae[kk])*pref_x[qtl_index]);
 						qtl_index++;
 					}
 				}
 			}
-			pref_trait = female_pref;
 		}
-		if (female_pref < threshold)
-			female_pref = 0;
+		if (pref_trait < threshold)
+			female_pref = false;
 		else
-			female_pref = 1;
+			female_pref = true;
 	}
 	void assign_court_morph(parameters gp)
 	{
@@ -1009,9 +1006,9 @@ public:
 	void assign_random_prefs()
 	{
 		if (genrand() > 0.5)
-			female_pref = 0;
+			female_pref = false;
 		else
-			female_pref = 1;
+			female_pref = true;
 	}
 	void update_traits(parameters gp, double courter_thresh, double parent_thresh, double pref_thresh)//non-environmental
 	{

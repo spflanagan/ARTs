@@ -1232,7 +1232,7 @@ public:
 		{
 			if (adults[j].alive && adults[j].female)
 			{
-				if (adults[j].female_pref==1)
+				if (adults[j].female_pref==true)
 					freqT++;
 				count++;
 			}
@@ -1314,7 +1314,7 @@ public:
 		for (j = 0; j < gp.carrying_capacity; j++)
 		{
 			if (adults[j].alive && adults[j].female)
-				adults[j].female_pref = 1;
+				adults[j].female_pref = true;
 		}
 	}
 	void pref_femtrait(parameters gp)
@@ -1342,7 +1342,7 @@ public:
 			for (j = 0; j < gp.carrying_capacity; j++)
 			{
 				if (adults[j].alive && adults[j].female)
-					adults[j].female_pref = 1;
+					adults[j].female_pref = true;
 			}
 		}
 		else //females prefer non-courter (courter is more frequent)
@@ -1351,7 +1351,7 @@ public:
 			for (j = 0; j < gp.carrying_capacity; j++)
 			{
 				if (adults[j].alive && adults[j].female)
-					adults[j].female_pref = 0;
+					adults[j].female_pref = false;
 			}
 		}
 	}
@@ -1367,7 +1367,7 @@ public:
 			for (j = 0; j < gp.carrying_capacity; j++)
 			{
 				if (adults[j].alive && adults[j].female)
-					adults[j].female_pref = 1;
+					adults[j].female_pref = true;
 			}
 		}
 		else //parent is more frequent; prefer non-parent
@@ -1376,7 +1376,7 @@ public:
 			for (j = 0; j < gp.carrying_capacity; j++)
 			{
 				if (adults[j].alive && adults[j].female)
-					adults[j].female_pref = 0;
+					adults[j].female_pref = false;
 			}
 		}
 	}
@@ -1392,12 +1392,12 @@ public:
 					adults[j].calc_preference_trait(gp, pref_thresh,pref_env_qtls,0);//consider environmental cue...
 				else
 					adults[j].calc_preference_trait(gp, pref_thresh);
-				mean = poissonrand(gp.max_fecund + adults[j].female_pref);
-				adults[j].pot_rs = adults[j].female_pref + mean; //this is her fecundity
+				mean = poissonrand(gp.max_fecund + adults[j].pref_trait);
+				adults[j].pot_rs = adults[j].pref_trait + mean; //this is her fecundity
 				if (xswitch < adults[j].pot_rs)//then she prefers rs_c
-					adults[j].female_pref = meanT;
+					adults[j].pref_trait = meanT;
 				else
-					adults[j].female_pref = meanF;
+					adults[j].pref_trait = meanF;
 			}
 		}		
 	}
@@ -1486,7 +1486,7 @@ public:
 		if (gp.gene_network)
 		{
 			if (gp.env_cue)
-				c = double(num_encounters) / gp.max_encounters - exp((adults[fem_id].female_pref - male_trait)*(adults[fem_id].female_pref - male_trait));
+				c = double(num_encounters) / gp.max_encounters - exp((adults[fem_id].pref_trait - male_trait)*(adults[fem_id].pref_trait - male_trait));
 			else
 				c = 0;
 			adults[fem_id].calc_preference_trait(gp, pref_thresh, pref_env_qtls, c, false);
@@ -2082,7 +2082,7 @@ public:
 					{
 						if (gp.gene_network)
 						{//redetermine traits and thresholds, given the mating experience and optimality of trait
-							nesting_cue_eval(gp, male_id, gp.court_trait, adults[fem_index].female_pref);
+							nesting_cue_eval(gp, male_id, gp.court_trait, adults[fem_index].pref_trait);
 							if ((gp.ind_pref || gp.cor_prefs) && gp.court_trait)
 								preference_cue_eval(gp, fem_index, encounters, adults[male_id].courter);
 							/*if ((gp.ind_pref || gp.cor_prefs) && !gp.court_trait)
