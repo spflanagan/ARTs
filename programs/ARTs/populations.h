@@ -2236,7 +2236,7 @@ public:
 			for (k = 1; k < fecundity_share.size(); k++)
 			{
 				int sperm_used = round(adults[male_ids[k]].pot_rs*gp.sperm_comp_r);
-				fecundity_share[k] =  double(sperm_used / max_sperm);
+				fecundity_share[k] =  double(sperm_used) / double(max_sperm);
 				adults[male_ids[k]].lifetime_rs = adults[male_ids[k]].lifetime_rs + sperm_used;
 				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - sperm_used;
 			}				
