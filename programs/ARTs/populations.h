@@ -2646,7 +2646,7 @@ public:
 			for (p = prog_alive; p < adults.size(); p++) //designate any remainder as dead.
 				adults[p].reset(false);
 			for (p = prog_alive; p < progeny.size(); p++)
-				progeny[p].reset(false);
+				progeny[itracker[p]].reset(false);
 		}
 		else
 		{//all of the progeny survive
