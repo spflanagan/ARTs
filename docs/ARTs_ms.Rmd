@@ -31,7 +31,7 @@ editor_options:
 fontsize: 11pt
 abstract: |
 header-includes: |
-  \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H}
+  \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H} \usepackage{luamplib} \usepackage{unicode-math}
 affiliation:
 - affil: School of Biological Sciences, University of Canterbury, 4800 Private Bag,
     Christchurch 8140 New Zealand
