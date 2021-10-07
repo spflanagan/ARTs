@@ -2383,7 +2383,7 @@ public:
 	{
 		double surv_prob,optimum;
 		optimum = 0;
-		surv_prob = exp(-1 * (progeny[ind_id].courter - optimum)*(progeny[ind_id].courter - optimum)
+		surv_prob = exp(-1 * (int(progeny[ind_id].courter) - optimum)*(int(progeny[ind_id].courter) - optimum)
 			/ (2 * selection_strength));
 		return surv_prob;
 	}
@@ -2391,7 +2391,7 @@ public:
 	{
 		double surv_prob, optimum;
 		optimum = 0;
-		surv_prob = exp(-1 * (progeny[ind_id].parent - optimum)*(progeny[ind_id].parent - optimum)
+		surv_prob = exp(-1 * (int(progeny[ind_id].parent) - optimum)*(int(progeny[ind_id].parent) - optimum)
 			/ (2 * selection_strength));
 		return surv_prob;
 	}
