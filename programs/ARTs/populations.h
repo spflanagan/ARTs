@@ -1203,7 +1203,7 @@ public:
 				count++;
 			}
 		}
-		freqT = freqT / count;
+		freqT = freqT / double(count);
 		return freqT;
 	}
 	double calc_freq_parent(parameters gp)
@@ -1220,7 +1220,7 @@ public:
 				count++;
 			}
 		}
-		freqT = freqT / count;
+		freqT = freqT / double(count);
 		return freqT;
 	}
 	double calc_freq_pref(parameters gp)
