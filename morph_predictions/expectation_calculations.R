@@ -13,6 +13,7 @@ create_outputs<-FALSE
 create_outputs_Ns<-TRUE
 plot_test<-FALSE
 step_by_step<-FALSE
+plot_generations<-FALSE
 
 if(isTRUE(init)){
   # create all of the intersections
@@ -234,4 +235,28 @@ if(isTRUE(step_by_step)){
     
     return(summary)
   })))
+}
+
+if(isTRUE(plot_generations)){
+  
+  gens=100
+  freqs=c(0.25,0.25,0.25,0.25)
+  
+  freqs<-check_freqs(freqs)
+  output<-data.frame(matrix(nrow=gens+1,ncol=4))
+  colnames(output)<-c("CP","CN","NP","NN")
+  output[1,]<-freqs
+  for (i in 1:(gens+1)){
+    output[i+1,]<-one_gen(freqs=output[i,],rs=c(0.5*8,0.5*8,8,8),c=0.5)
+    if(all(is.na(output[i+1,]))){
+      #then the population has crashed
+      output[(i+1):(gens+1),]<-c(0,0,0,0)
+      break
+      
+    }
+  }
+  plot(output$NN,type='l',ylim=c(0,1))
+  lines(output$NP,type='l',col=2)
+  lines(output$CP,type='l',col=3)
+  
 }
