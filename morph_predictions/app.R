@@ -51,11 +51,12 @@ create_predictions<-function(gens,
 
 
 # Function to check if the current combination has any relevant rows
-no_rows<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
+no_rows<-function(data, whichSlider, sliderFreq, chosenR, chosenC, chosenNs){
   if(whichSlider=="sliderCP"){
     if(nrow(data[round(data$initial_CP,2)==round(sliderFreq,2) & 
                  round(data$r,1) == round(chosenR,1) &
-                 round(data$c,2) == round(chosenC,2),]) == 0){
+                 round(data$c,2) == round(chosenC,2) &
+                 data$Ns == chosenNs,]) == 0){
       "The chosen combination does not have any results. Ensure the sum of frequencies is <= 1."
     } else{
       NULL
@@ -63,7 +64,8 @@ no_rows<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
   }else {
     if(nrow(data[round(data$initial_NP,2)==round(sliderFreq,2) & 
                  round(data$r,1) == round(chosenR,1) &
-                 round(data$c,2) == round(chosenC,2),]) == 0){
+                 round(data$c,2) == round(chosenC,2) &
+                 data$Ns == chosenNs,]) == 0){
       "The chosen combination does not have any results. Ensure the sum of frequencies is <= 1."
     } else{
       NULL
@@ -73,11 +75,12 @@ no_rows<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
 }
 
 # Function to check if the combination results in zero NN, which means there is no plot.
-no_plots<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
+no_plots<-function(data, whichSlider, sliderFreq, chosenR, chosenC, chosenNs){
   if(whichSlider=="sliderCP"){
     subdat<-data[round(data$initial_CP,2)==round(sliderFreq,2) & 
              round(data$r,1) == round(chosenR,1) &
-             round(data$c,2) == round(chosenC,2),]
+             round(data$c,2) == round(chosenC,2) &
+               data$Ns == chosenNs,]
     if(sum(subdat$NN)==0){
       "The chosen combination results in 0 noncourter-nonparents, so there are no graphs to show."
     } else{
@@ -86,7 +89,8 @@ no_plots<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
   } else {
     subdat<-data[round(data$initial_NP,2)==round(sliderFreq,2) & 
                    round(data$r,1) == round(chosenR,1) &
-                   round(data$c,2) == round(chosenC,2),]
+                   round(data$c,2) == round(chosenC,2) &
+                   data$Ns == chosenNs,]
     if(sum(subdat$NN)==0){
       "The chosen combination results in 0 noncourter-nonparents, so there are no graphs to show."
     } else{
@@ -96,18 +100,20 @@ no_plots<-function(data, whichSlider, sliderFreq, chosenR, chosenC){
 }
 
 # Function to generate our subset of data
-create_subset<-function(data,whichSlider, sliderFreq,chosenR, chosenC){
+create_subset<-function(data,whichSlider, sliderFreq,chosenR, chosenC, chosenNs){
   if(whichSlider=="sliderCP"){
     sub<-data[which(
       round(data$initial_CP,2)==round(sliderFreq,2) &
         round(data$r,1) == round(chosenR,1) &
-        round(data$c,2) == round(chosenC,2)),] 
+        round(data$c,2) == round(chosenC,2) &
+        data$Ns == chosenNs),] 
     return(sub)
   }else {
     sub<-data[which(
         round(data$initial_NP,2)==round(sliderFreq,2) &
         round(data$r,1) == round(chosenR,1) &
-        round(data$c,2) == round(chosenC,2)),]  
+        round(data$c,2) == round(chosenC,2) &
+          data$Ns == chosenNs),]  
     return(sub)
   }
   
@@ -133,6 +139,7 @@ ui <- dashboardPage(
                      sliderInput("sliderNP","NP freq", min=0, max=1, step=0.05, value=0.25,round=2),
                      sliderInput("r","Relative reproductive input (courters/non-courters)",min=0, max=2,step=0.1,value=0.5,round=2),
                      sliderInput("c","Sperm competition coefficient",min=0, max=1,step=0.25,value=0.5, round=2),
+                     sliderInput("Ns","Maximum number of sneakers",min=1, max=5,step=1,value=3, round=0),
                      width=250
     )
    
@@ -218,18 +225,18 @@ server <- function(input, output, session) {
   # check the inputs and create the subset
   subdatCP<-reactive({
     data<-get_data()
-    validate(no_plots(data, "sliderCP",input$sliderCP, input$r, input$c),
-             no_rows(data, "sliderCP",input$sliderCP,  input$r, input$c)
+    validate(no_plots(data, "sliderCP",input$sliderCP, input$r, input$c, input$Ns),
+             no_rows(data, "sliderCP",input$sliderCP,  input$r, input$c, input$Ns)
     )
-    create_subset(data, "sliderCP", input$sliderCP,  input$r, input$c)
+    create_subset(data, "sliderCP", input$sliderCP,  input$r, input$c, input$Ns)
 
   }) 
   subdatNP<-reactive({
     data<-get_data()
-    validate(no_plots(data,"sliderNP", input$sliderNP, input$r, input$c),
-             no_rows(data, "sliderNP",input$sliderNP,  input$r, input$c)
+    validate(no_plots(data,"sliderNP", input$sliderNP, input$r, input$c, input$Ns),
+             no_rows(data, "sliderNP",input$sliderNP,  input$r, input$c, input$Ns)
     )
-    create_subset(data, "sliderNP", input$sliderNP,  input$r, input$c)
+    create_subset(data, "sliderNP", input$sliderNP,  input$r, input$c, input$Ns)
     
   }) 
   
