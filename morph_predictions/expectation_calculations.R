@@ -98,25 +98,27 @@ if(isTRUE(create_outputs_Ns)){
   # so that they can be loaded into the shiny app.
   rs<-seq(0,2,0.1)
   cs<-seq(0,1,0.25)
+  num_sneak<-1:5
   
-  morph_results<-as.data.frame(matrix(ncol=10,nrow=0))
+  morph_results<-as.data.frame(matrix(ncol=11,nrow=0))
   colnames(morph_results)<-c("initial_CP","initial_CN","initial_NP","initial_NN",
-                             "CP","CN","NP","NN","r","c")
+                             "CP","CN","NP","NN","r","c", "num_sneak")
   
-  
-  for(r in rs){
-    for(cv in cs){
-      outputs<-dplyr::bind_rows(apply(freqs_list,1,morph_gens_ns,gens=100, 
-                                      rs=c(r*8,r*8,8,8),cv=cv))
-      print(paste("r=",r,"c=",cv))
-      to_save<-dplyr::bind_cols(freqs_list,outputs,.name_repair = "minimal")
-      colnames(to_save)[1:4]<-paste0("initial_",colnames(to_save)[1:4])
-      to_save$r<-r
-      to_save$c<-cv
-      morph_results<-dplyr::bind_rows(morph_results,to_save)
+  for(ns in num_sneak){
+    for(r in rs){
+      for(cv in cs){
+        outputs<-dplyr::bind_rows(apply(freqs_list,1,morph_gens_ns,gens=100, 
+                                        rs=c(r*8,r*8,8,8),cv=cv,max_sneakers=ns))
+        print(paste("r=",r,"c=",cv))
+        to_save<-dplyr::bind_cols(freqs_list,outputs,.name_repair = "minimal")
+        colnames(to_save)[1:4]<-paste0("initial_",colnames(to_save)[1:4])
+        to_save$r<-r
+        to_save$c<-cv
+        to_save$num_sneak<-ns
+        morph_results<-dplyr::bind_rows(morph_results,to_save)
+      }
     }
   }
-  
   saveRDS(morph_results,"morph_results_Ns.RDS")
 }
 
