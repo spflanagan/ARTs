@@ -48,10 +48,11 @@ viability<-function(surv,morph_wvs){
 one_gen<-function(rs=c(4,4,8,8),
                   freqs=c(CP=0.25,CN=0.25,NP=0.25,NN=0.25),
                   Nm=500,
+                  max_sneakers=2,
                   cv=0.5,
                   wn=1,
                   wv=exp(-0.5/(2*50))){
-  max_off<-cv*3*rs[4]
+  max_off<-cv*max_sneakers*rs[4]
   freqs<-check_freqs(freqs)
   eggs<-nest_fertilize(freqs, Nm=Nm,max_off,ws=c(1,1,0,0), rs=rs)
   nests<-nest_survival(eggs,morph_sneak=c(0,0,1,1),morph_wn=c(wn,0,wn,0))
