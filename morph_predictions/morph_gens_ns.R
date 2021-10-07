@@ -48,6 +48,7 @@ viability<-function(surv,morph_wvs){
 one_gen<-function(rs=c(4,4,8,8),
                   freqs=c(CP=0.25,CN=0.25,NP=0.25,NN=0.25),
                   Nm=500,
+                  cv=0.5,
                   wn=1,
                   wv=exp(-0.5/(2*50))){
   max_off<-cv*3*rs[4]
