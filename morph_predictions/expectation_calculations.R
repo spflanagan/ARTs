@@ -71,13 +71,12 @@ if(isTRUE(create_outputs)){
   # so that they can be loaded into the shiny app.
   rs<-seq(0,1,0.1)
   cs<-seq(0,1,0.25)
-  
+ 
   morph_results<-as.data.frame(matrix(ncol=10,nrow=0))
   colnames(morph_results)<-c("initial_CP","initial_CN","initial_NP","initial_NN",
                              "CP","CN","NP","NN","r","c")
   
   #expectations_list<-dplyr::bind_rows(apply(freqs_list,1,morph_gens,gens=100, r=0.11,c=1))
-  
   for(r in rs){
     for(cv in cs){
       outputs<-dplyr::bind_rows(apply(freqs_list,1,morph_gens,gens=100, r=r,c=cv))
@@ -89,7 +88,7 @@ if(isTRUE(create_outputs)){
       morph_results<-dplyr::bind_rows(morph_results,to_save)
     }
   }
-  
+
   saveRDS(morph_results,"morph_results_20210915.RDS")
 }
 
