@@ -4,7 +4,7 @@ source("check_freqs.R")
 nest_fertilize<-function(freqs, Nm, max_off,ws=c(1,1,0,0), rs=c(4,4,8,8)){
   # number of nests 
   n<-freqs*ws*Nm
-  # number of sprerm
+  # number of sperm
   sperm<-freqs*Nm*rs
   # max offspring and the difference
   NnM<-sum(n)*max_off
