@@ -2201,6 +2201,7 @@ public:
 			}
 			else
 			{
+				this_nest.all_dads.push_back(male_id);
 				this_nest.off_props.push_back(0);
 			}
 		}
