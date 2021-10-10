@@ -2179,7 +2179,7 @@ public:
 			cout << "\nWrong number of offspring created for nest with female " << this_nest.mom << std::flush;
 		return off_counter;
 	}
-	void dd_assign_sneakers(int fem_id, parameters gp, nest this_nest)
+	void dd_assign_sneakers(int fem_id, parameters gp, nest& this_nest)
 	{
 		int k, fecundity, randmale, max_sperm, first_progeny, num_mates, num_prog;
 		int male_id = adults[fem_id].mate_id;
