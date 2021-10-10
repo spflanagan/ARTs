@@ -156,14 +156,16 @@ plot.pc.reps<-function(pattern,path="./",cols,x.lim=c(0,12000),make.plot=TRUE){
       pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
       pop<-pop[!is.na(pop$ParentFreq),]
       n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
+      
       if(isTRUE(make.plot)){
+        
         points(pop$Generation,pop$CourterFreq,col=alpha(courtr.cols[n],0.5),
                lwd=2,type="l")
         points(pop$Generation,pop$ParentFreq,col=alpha(parent.cols[n],0.5),
                lwd=2,type="l")
       }
       if(length(grep("AE",colnames(pop)))==0){
-        browser()
+        print("Warning: AE not one of the column names")
         pop<-cbind(pop,ParentAEmean=NA,ParentAEsd=NA,CourterAEmean=NA,CourterAEsd=NA)
       }
       rownames(pop)<-NULL
