@@ -2233,6 +2233,8 @@ public:
 				}
 				tries++;//just to break out of a while loop in case.
 			}
+			// if there are no sneakers, proceed as above (based on female RS)
+			if (max_sperm == 0) max_sperm = adults[fem_id].pot_rs; 
 			fecundity_share[0] = double(adults[male_id].pot_rs) / double(max_sperm); //it doesn't get weighted if r <= 1
 			adults[male_ids[0]].pot_rs = adults[male_id].pot_rs - int(fecundity_share[0]* double(max_sperm)); // nesting male has used all of his sperm
 			for (k = 1; k < fecundity_share.size(); k++)
