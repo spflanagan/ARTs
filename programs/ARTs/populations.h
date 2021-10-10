@@ -2245,6 +2245,8 @@ public:
 				this_nest.off_props.push_back(fecundity_share[k]);
 			for(k = 0; k < male_ids.size(); k++)
 				this_nest.all_dads.push_back(male_ids[k]);
+			if (this_nest.off_props.size() != this_nest.all_dads.size())
+				cout << "\nWarning! number of dads and number of offspring proportions do not match.\n";
 			
 		}
 	}
