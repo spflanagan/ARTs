@@ -334,6 +334,64 @@ traits<-read.delim("single_locus/pcu_1locus_highDiversity_polygyny_nm_1_traits.t
 ```
 
 
+```{r make_trait_hists}
+make_trait_hists<-function(traits,which_trait,which_sex,which_gen,which_pop,cols){
+  these_traits<-traits[traits$Gen==which_gen & 
+                         traits$Pop==which_pop &
+                         traits$Sex==which_sex,]
+  if(which_sex=="MALE"){
+    ylabel<-"Number of males"
+  } else{
+    ylabel<-"Number of females"
+  }
+  cp<-these_traits[these_traits$Courter==1 & these_traits$Parent==1,which_trait]
+  cn<-these_traits[these_traits$Courter==1 & these_traits$Parent==0,which_trait]
+  np<-these_traits[these_traits$Courter==0 & these_traits$Parent==1,which_trait]
+  nn<-these_traits[these_traits$Courter==0 & these_traits$Parent==0,which_trait]
+  
+  num<-sum(c(length(cp)>0,length(cn)>0,length(np)>0,length(nn)>0))
+  bks<-seq(-0.5,max(these_traits[,which_trait])+0.5,1)
+  if(num>2){
+    par(mfrow=c(2,2))
+  } else if(num==2){
+    par(mfrow=c(1,2))
+  } else if(num==1){
+    par(mfrow=c(1,1))
+  }
+  
+  if(length(cp)>0){
+    hist(cp,
+     col = cols["CP"], 
+     main="Courter-Parents",
+     xlab=which_trait,
+     ylab=ylabel,
+     breaks=bks)
+  }
+  if(length(cn)>0){
+    hist(cn,
+     col = cols["CNP"], 
+     main="Courter-Nonparents",
+     xlab=which_trait,
+     ylab=ylabel,
+     breaks=bks)
+  }
+  if(length(np)>0){
+    hist(np,
+     col = cols["NCP"], 
+     main="Noncourter-Parents",
+     xlab=which_trait,
+     ylab=ylabel,
+     breaks=bks)
+  }
+  if(length(nn)>0){
+    hist(nn,
+     col = cols["NCNP"], 
+     main="Nonourter-Nonparents",
+     xlab=which_trait,
+     ylab=ylabel,
+     breaks=bks)
+  }
+}
 ```
 
 
