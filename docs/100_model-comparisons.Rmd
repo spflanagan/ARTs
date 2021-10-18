@@ -554,4 +554,5 @@ legend("right",c("courter-parent","noncourter-parent", "courter-nonparent","nonc
 ```
 
 
+Some other important differences between the simulation model and the mathematical model that could be underlying any differences between the two are that the simulation model includes recombination (and inheritance of traits via females) whereas the mathematical model does not. Additionally, the simulation model has a reasonable amount of stochasticity embedded within it, which the mathematical model does not include -- this is especially true for the parameter settings when females randomly mate if they do not find an acceptable male. 
 
