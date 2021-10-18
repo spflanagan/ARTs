@@ -1,6 +1,6 @@
 # object-oriented version of morph_gens
 # also now in terms of actual numbers!
-source("check_freqs.R")
+#source("check_freqs.R")
 nest_fertilize<-function(freqs, Nm, max_off,ws=c(1,1,0,0), rs=c(4,4,8,8)){
   # number of nests 
   n<-freqs*ws*Nm
