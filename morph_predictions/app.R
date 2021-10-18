@@ -56,7 +56,7 @@ no_rows<-function(data, whichSlider, sliderFreq, chosenR, chosenC, chosenNs){
     if(nrow(data[round(data$initial_CP,2)==round(sliderFreq,2) & 
                  round(data$r,1) == round(chosenR,1) &
                  round(data$c,2) == round(chosenC,2) &
-                 data$Ns == chosenNs,]) == 0){
+                 data$num_sneak == chosenNs,]) == 0){
       "The chosen combination does not have any results. Ensure the sum of frequencies is <= 1."
     } else{
       NULL
@@ -65,7 +65,7 @@ no_rows<-function(data, whichSlider, sliderFreq, chosenR, chosenC, chosenNs){
     if(nrow(data[round(data$initial_NP,2)==round(sliderFreq,2) & 
                  round(data$r,1) == round(chosenR,1) &
                  round(data$c,2) == round(chosenC,2) &
-                 data$Ns == chosenNs,]) == 0){
+                 data$num_sneak == chosenNs,]) == 0){
       "The chosen combination does not have any results. Ensure the sum of frequencies is <= 1."
     } else{
       NULL
@@ -80,7 +80,7 @@ no_plots<-function(data, whichSlider, sliderFreq, chosenR, chosenC, chosenNs){
     subdat<-data[round(data$initial_CP,2)==round(sliderFreq,2) & 
              round(data$r,1) == round(chosenR,1) &
              round(data$c,2) == round(chosenC,2) &
-               data$Ns == chosenNs,]
+               data$num_sneak == chosenNs,]
     if(sum(subdat$NN)==0){
       "The chosen combination results in 0 noncourter-nonparents, so there are no graphs to show."
     } else{
@@ -90,7 +90,7 @@ no_plots<-function(data, whichSlider, sliderFreq, chosenR, chosenC, chosenNs){
     subdat<-data[round(data$initial_NP,2)==round(sliderFreq,2) & 
                    round(data$r,1) == round(chosenR,1) &
                    round(data$c,2) == round(chosenC,2) &
-                   data$Ns == chosenNs,]
+                   data$num_sneak == chosenNs,]
     if(sum(subdat$NN)==0){
       "The chosen combination results in 0 noncourter-nonparents, so there are no graphs to show."
     } else{
@@ -106,14 +106,14 @@ create_subset<-function(data,whichSlider, sliderFreq,chosenR, chosenC, chosenNs)
       round(data$initial_CP,2)==round(sliderFreq,2) &
         round(data$r,1) == round(chosenR,1) &
         round(data$c,2) == round(chosenC,2) &
-        data$Ns == chosenNs),] 
+        data$num_sneak == chosenNs),] 
     return(sub)
   }else {
     sub<-data[which(
         round(data$initial_NP,2)==round(sliderFreq,2) &
         round(data$r,1) == round(chosenR,1) &
         round(data$c,2) == round(chosenC,2) &
-          data$Ns == chosenNs),]  
+          data$num_sneak == chosenNs),]  
     return(sub)
   }
   
