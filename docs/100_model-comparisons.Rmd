@@ -68,7 +68,7 @@ Each step is explained in further detail below.
 
 ### 1. Choosing a nest
 
-A female samples 50 males and chooses a male to nest with based on his courtship trait. If there are no courtship traits in the model, she chooses based on the male's parental trait. If she does not encounter an acceptable male, she nests with a randomly chosen male. If she encounters multiple equally-acceptable males, she randomly selects one of them.  
+A female samples 50 males and chooses a male to nest with based on his courtship trait. If there are no courtship traits in the model, she chooses based on the male's parental trait. If she does not encounter an acceptable male, she nests with a randomly chosen male. If she encounters multiple equally-acceptable males, she either randomly selects a male from the population or does not mate, depending on the chosen parameter settings.  
 
 ### 2. Fertilization
 
