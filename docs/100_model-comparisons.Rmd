@@ -395,14 +395,43 @@ make_trait_hists<-function(traits,which_trait,which_sex,which_gen,which_pop,cols
 ```
 
 
+```{r maleMS0, fig.cap="Male mating success in generation 0 for each morph."}
+make_trait_hists(traits,
+                 which_trait="MateFound",
+                 which_sex="MALE",
+                 which_gen=0,
+                 which_pop=0,
+                 cols=cols2)
 
 ```
 
+```{r maleRS0, fig.cap="Male lifetime reproductive success in generation 0 for each morph."}
+make_trait_hists(traits,
+                 which_trait="LifetimeRS",
+                 which_sex="MALE",
+                 which_gen=0,
+                 which_pop=0,
+                 cols=cols2)
 ```
 
+```{r femaleMS0, fig.cap="Female mating success in generation 0 for each morph."}
+make_trait_hists(traits,
+                 which_trait="MateFound",
+                 which_sex="FEMALE",
+                 which_gen=0,
+                 which_pop=0,
+                 cols=cols2)
 
 ```
 
+```{r femaleRS0, fig.cap="Female lifetime reproductive success in generation 0 for each morph."}
+make_trait_hists(traits,
+                 which_trait="LifetimeRS",
+                 which_sex="FEMALE",
+                 which_gen=0,
+                 which_pop=0,
+                 cols=cols2)
+```
 
 
 
