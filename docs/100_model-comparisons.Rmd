@@ -156,22 +156,8 @@ highDivParams<-data.frame(
 kable(highDivParams, "latex",booktab=TRUE,
       caption="Table of parameters selected to create a low-diversity population. All morphs started at equal frequencies.")
 
-```{r highDiv}
-highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",path="single_locus",cols,make.plot=FALSE))
 ```
-```{r highDivPlot, fig.cap="Final generation frequencies based on the single locus model with parameters that are expected to result in diversity, based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available). Those labelled with 'RM' were runs where females mated at random. Runs labelled 'v0' did not impose viability selection on males."}
-var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
-varDat<-lapply(var_patts,function(pattern){
-  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
-  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
-        col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
-        las=2,
-        border=NA,
-        main=pattern)
-  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 Based on the mathematical model, we expected the courter-parent morph to dominate the population (Table \@ref(tab:lowMathResults)), and that it would dominate the population rapidly (Fig. \@ref(fig:mathOverTimeLow)). The same patterns are observed in the simulation model results (Fig. \@ref(fig:lowDivPlot)).
 
 ```{r lowMathResults}
@@ -187,12 +173,6 @@ kable(morph_results[morph_results$initial_CP == 0.25 &
       caption="Expected frequencies of the four morphs after 100 generations with the chosen high-diversity parameter settings.")
 ```
 
-  return(dat)
-})
-par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
-plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
-legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
-       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
 
 ```{r mathOverTimeLow, fig.cap="The frequencies of the morphs cycle over time in the mathematical model with the low diversity paramter set.", fig.height=4, fig.height=6}
 
@@ -250,84 +230,92 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 ```
 
 
-### Initial parameter combinations 
+## High diversity parameter space
 
-I first started off with my defaults for the model, which is when courters and parents have a reproductive advantage (they can fertilize 8 eggs compared to the non-courter and non-parent's 4 eggs). The nesting male (regardless of phenotype) experienced a reproductive advantage by fertilizing a higher proportion of the eggs. Furthermore, females always prefer courters to non-courters and only nest with non-courters when they cannot find a courter in the males they evaluate. I therefore expected that the courter/parent morph would dominate and no variation would be maintained.
+The [results from the mathematical model](https://spflanagan.shinyapps.io/morph_predictions/) were inspected to identify parameter regions where multiple morphs were maintained. I focused on parameter sets when morphs had equal initial frequencies, as the simulation model initiates populations with nearly equal frequencies of the morphs. I selected the high-diversity parameters in Table \@ref(tab:highDivParams) to implement in the simulation model with a single locus underpinning the courter and parent traits. 
 
-```{r courterRS, fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from. The numbers in the bars state the frequency of the Courter-Parent morph.", fig.height=3,fig.width=6.5, eval=FALSE}
-courterRS<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
-courterRS$Courter2NonRS<-8/4
-bp<-barplot(t(as.matrix(courterRS[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
-        col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg = gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRS)),
-        las=2,
-        border=NA)
-text(x=bp,y=0.5,srt=90,labels = courterRS$FreqCP)
-par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
-plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
-legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
-       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
-
-```
-
-
-With the current set of conditions, when males are only permitted to mate once, the non-courter/parent morph is the only one maintained in the population (Fig. \@ref(fig:courterRS)), which is counter to our prediction. However, it does follow our prediction that only parents will be able to be maintained in the population. 
-
-On the other hand, when males are allowed to mate multiply, the courter/parent morph dominates the population but is not always the only morph present (Fig. \@ref(fig:polyCourterRS)).
-
-```{r polyCourterRS, fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from. The numbers in the bars state the frequency of the Courter-Parent morph.", fig.height=3,fig.width=6.5, eval=FALSE}
-courterRSpoly<-get.morph.freqs(plot.pc.reps(pattern="pcu_1locus_polygyny_nestBinary_courterRSadvantage.*summary.txt",path="single_locus",cols,make.plot=FALSE))
-courterRSpoly$Courter2NonRS<-8/4
-bp<-barplot(t(as.matrix(courterRSpoly[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
-        col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(courterRSpoly)),
-        las=2,
-        border=NA)
-text(x=bp,y=0.5,srt=90,labels = courterRSpoly$FreqCP)
-
-par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
-plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
-legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
-       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+```{r highDivParams}
+highDivParams<-data.frame(
+  parameter = c("r (in shiny app)",
+                "r_CP",
+                "r_CN",
+                "r_NP",
+                "r_NN",
+                "c",
+                "number of sneakers"),
+  value = c( 0.5, 
+             4,
+             4,
+             8,
+             8,
+             0.5,
+             4)
+)
+kable(highDivParams, "latex",booktab=TRUE,
+      caption="Table of parameters selected to create a high-diversity population. All morphs started at equal frequencies.")
 
 ```
 
+Based on the mathematical model, we expected the courter-parent, noncourter-parent, and noncourter-nonparent morphs to be maintained at reasonably high frequencies (Table \@ref(tab:highMathResults)). Interestingly, the polymorphism maintained in the mathematical model seems to be maintained through cyclical shifting of morph frequencies (Fig. \@ref(fig:mathOverTime)).
 
-I ran a set of models with the following parameter variations, with my naiive expectation (prior to the numerical analysis) for whether variation should be maintained or not.
-
-```{r}
-expTab<-data.frame(Name=c("courterRSadvantage", "equalFitness","onlySpermComp","sneakRSadvantage","sneakRSadvantage_courterRSadvantage"),
-                   ParentRS=c(8,4,4,4,4),
-                   NonParentRS=c(4,4,4,8,8),
-                   CourterRS=c(8,4,4,4,8),
-                   NonCourterRS=c(4,4,4,4,4),
-                   SpermCompFactor=c(0.5,1,0.5,0.5,0.5),
-                   MultipleMorphs=c("No","Yes","Yes","Yes","Yes"))
-kable(expTab,booktabs=TRUE,"latex",
-      caption = "The different parameter settings used for the models and whether I expected multiple morphs to be maintaned.") %>%
-  kable_styling(latex_options=c("scale_down","HOLD_position"))
+```{r highMathResults}
+kable(morph_results[morph_results$initial_CP == 0.25 & 
+                      morph_results$initial_CN == 0.25 & 
+                      morph_results$initial_NP == 0.25 & 
+                      morph_results$initial_NN == 0.25 & 
+                      morph_results$r==0.5 &
+                      morph_results$c == 0.5 &
+                      morph_results$num_sneak == 3,
+                    c("CP","CN","NP","NN")],
+      "latex",booktab=TRUE,
+      caption="Expected frequencies of the four morphs after 100 generations with the chosen high-diversity parameter settings.")
 ```
 
+```{r mathOverTime, fig.cap="The frequencies of the morphs cycle over time in the mathematical model, with polymorphism being maintained by the dominant morph shifting every few generations.", fig.height=4, fig.width=6}
+gens<-100
+freqs<-c(CP=0.25,CN=0.25,NP=0.25,NN=0.25)
+output<-data.frame(matrix(nrow=gens+1,ncol=4))
+colnames(output)<-c("CP","CN","NP","NN")
+output[1,]<-freqs
+for (i in 1:(gens+1)){
+  output[i+1,]<-one_gen(freqs=output[i,],rs=c(0.5*8,0.5*8,8,8),c=0.5, max_sneakers=3)
+  if(all(is.na(output[i+1,]))){
+    #then the population has crashed
+    output[(i+1):(gens+1),]<-c(0,0,0,0)
+    break
+    
+  }
+}
+plot(output$NN,type='l',ylim=c(0,1), col=cols2["NCNP"],lwd=2,
+     xlab="Generation",
+     ylab="Morph Frequency",
+     bty='L')
+lines(output$NP,type='l',col=cols2["NCP"], lty=2,lwd=2)
+lines(output$CP,type='l',col=cols2["CP"], lty=3,lwd=2)
+lines(output$CN,type='l',col=cols2["CNP"],lty=4,lwd=2)
+legend("top",c("courter-parent","noncourter-parent", "courter-nonparent","noncourter-nonparent"),
+       col=cols2,lty=c(3,2,4,1),lwd=2,ncol=4,bty='n')
+```
 
-```{r multipleMorphs,fig.cap="Stacked bar charts showing the frequencies of the four morph types in the final generation of each replicate. Five rounds of the model were run, each with 4 replicates that all started with the same initial conditions, and the numbers on the x-axis refer to which indepedent round these results are from. The top row are runs where males can only mate once and the bottom row are runs where males can mate with multiple females. The top row is for the case when males mate with one female, and the bottom is polygyny. The numbers in the bars state the frequency of the Courter-Parent morph.", fig.height=6,fig.width=8, eval=FALSE}
-var_patts<-c("pcu_1locus_nestBinary_equalFitness.*summary.txt",
-             "pcu_1locus_nestBinary_onlySpermComp.*summary.txt",
-             "pcu_1locus_nestBinary_sneakRSadvantage_\\d.*summary.txt",
-             "pcu_1locus_nestBinary_sneakRSadvantage_courterRSadvantage.*summary.txt",
-             "pcu_1locus_polygyny_nestBinary_equalFitness.*summary.txt",
-             "pcu_1locus_polygyny_nestBinary_onlySpermComp.*summary.txt",
-             "pcu_1locus_polygyny_nestBinary_sneakRSadvantage_\\d.*summary.txt",
-             "pcu_1locus_polygyny_nestBinary_sneakRSadvantage_courterRSadvantage.*summary.txt")
+The simulation model with the same parameter settings also resulted in polymorphism, especially when males were permitted to mate with multiple females (Fig. \@ref(fig:highDivPlot)). Surprisingly, few of the simulation runs resulted in the maintenance of all three predicted morphs. 
+
+
+```{r highDiv}
+highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+```
+```{r highDivPlot, fig.cap="Final generation frequencies based on the single locus model with parameters that are expected to result in diversity, based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests. Under 'polygyny' males accepted eggs from multiple females but were still constrained by the number of offspring they could fertilize. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available).", fig.height=8,fig.width=8}
+var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
+var_patts<-grep("v0",grep("RM", var_patts, invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)
 
 par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
-  dat<-get.morph.freqs(plot.pc.reps(pattern=pattern,path="single_locus",cols,make.plot=FALSE))
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
         col=cols2[c("NCNP","CNP","NCP","CP")],
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=gsub("^.*nestBinary_(\\w+)[[:punct:]].*","\\1",pattern))
+        main=pattern)
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
