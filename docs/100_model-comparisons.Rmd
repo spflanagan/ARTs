@@ -474,11 +474,50 @@ make_trait_hists(traits,
 ```
 
 
+One element of the simulation model is that the frequencies of the morphs do not start of at exactly equal frequencies. If we use the initial conditions from the simulation model to predict the equilibrial frequencies, we can see that the expected outcomes shift, and in some cases have a better qualitative match to the simulated outcomes (Table \@ref(tab:actualInitialFreqCals))
 
+```{r getPolyHighGens}
+polyHigh<-plot.pc.reps(pattern="highDiversity_polygyny_nm_\\d.*summary.txt",
+                            path="single_locus",cols,make.plot=FALSE)
+```
+
+```{r actualInitialFreqCals}
+freq0<-do.call(rbind,lapply(polyHigh,function(x,morph_results){
+  gen0<-x[1,c("FreqCP","FreqCNp","FreqNcP","FreqNcNp")]
+  expected<-morph_gens_ns(gens=100,
+                         freqs=c(
+                           CP =  round(gen0$FreqCP,2),
+                           CN = round(gen0$FreqCNp,2),
+                           NP = round(gen0$FreqNcP,2),
+                           NN = round(gen0$FreqNcNp,2) 
+                         ),
+                         rs=c(0.5*8,0.5*8,8,8),
+                         c=0.5, 
+                         max_sneakers=3
+                         )
+  output<-cbind(gen0,expected, 
+                x[nrow(x),c("FreqCP","FreqCNp","FreqNcP","FreqNcNp")])
+  colnames(output)<-paste0(colnames(output),
+                           c(rep("_initial",4),
+                             rep("_expected",4),
+                              rep("_observed",4)))
+  return(output)
+}, morph_results=morph_results))
+
+rownames(freq0)<-gsub("^(.*_nm)_(\\d)_summary.txt_(\\d)$",
+                      "Rep\\2_Pop\\3",
+                      rownames(freq0))
+
+kable(round(freq0,3),"latex",booktab=TRUE,
+      caption="Initial allele frequencies from each of the simulations alongside the expected frequency, based on those starting conditions, from the mathematical model (after 100 generations).",
+      col.names = gsub("(\\w+)_\\w+","\\1",colnames(freq0))) %>%
+  add_header_above(c(" " = 1, "Actual initial" = 4,
+                     "Expected final" = 4, "Actual final" = 4)) %>%
+  landscape()
 ```
 
 
-
+As we saw above, the mathematical model showed cyclic patterns (Fig. \@ref(fig:mathOverTime)). Interestingly, the same cycling pattern does not seem to occur in the dynamics of the simulation model (Fig. \@ref(fig:polyNMoverTime)).
 
 
 
