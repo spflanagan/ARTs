@@ -96,6 +96,7 @@ After 10000 generations, I begin tracking the change in frequency of the courter
 Using the parameter settings described below, I ran five independent instances of the model, each of which had four replicates spawned from identical starting conditions. This approach was chosen to reduce the effects of stochasticity in this type of model. In the multi-panel figures from the simulation model, each row contains the four replicates that originated with identical starting conditions. 
 
 
+\newpage{}
 
 ## Overview of the mathematical model 
 
