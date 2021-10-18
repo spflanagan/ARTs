@@ -93,11 +93,9 @@ After 10000 generations, I begin tracking the change in frequency of the courter
 
 ### Replicates
 
-I ran five independent instances of the model, each of which had four replicates spawned from identical starting conditions. This approach was chosen to reduce the effects of stochasticity in this type of model. In the multi-panel figures below, each row contains the four replicates that originated with identical starting conditions. 
+Using the parameter settings described below, I ran five independent instances of the model, each of which had four replicates spawned from identical starting conditions. This approach was chosen to reduce the effects of stochasticity in this type of model. In the multi-panel figures from the simulation model, each row contains the four replicates that originated with identical starting conditions. 
 
-## Single locus models
 
-I ran some simple sets of parameters where I have an expectation for the outcome. In these models, both the courter and parent traits existed and there was a single QTL that was not anchored to a physical chromosomal location and experienced no recombination. I also assumed that nests laid with non-parents have 0% chance of survival and those with parents have 100% chance of survival. In all of these cases, only non-courting males fertilized a nest that did not belong to them.
 
 ## Overview of the mathematical model 
 
