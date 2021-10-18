@@ -106,7 +106,7 @@ if(isTRUE(create_outputs_Ns)){
   for(ns in num_sneak){
     for(r in rs){
       for(cv in cs){
-        outputs<-dplyr::bind_rows(apply(freqs_list,1,morph_gens_ns,gens=100, 
+        outputs<-dplyr::bind_rows(apply(freqs_list,1,morph_gens_ns,gens=10000, 
                                         rs=c(r*8,r*8,8,8),cv=cv,max_sneakers=ns))
         print(paste("r=",r,"c=",cv))
         to_save<-dplyr::bind_cols(freqs_list,outputs,.name_repair = "minimal")
@@ -118,7 +118,7 @@ if(isTRUE(create_outputs_Ns)){
       }
     }
   }
-  saveRDS(morph_results,"morph_results_Ns.RDS")
+  saveRDS(morph_results,"morph_results_Ns_10000.RDS")
 }
 
 
