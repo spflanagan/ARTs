@@ -106,35 +106,29 @@ The mathematical model was designed with the same population of courters and non
 ![Flowchart of mathematical model](../figs/mathModel_Ns_diagram.png)
 
 
-## 1. Establishing nests
+### 1. Establishing nests
 
-The number of nests that can be created in the population is determined by the number of males that will be chosen by females. This is determined by the $w_s$ parameter, which in currrent settings is 1 for courters and 0 for non-courters. Each morph has a total reproductive effort (total number of sperm from that morph), $s_M$, which is the individual reproductive effort $r_M$ multiplied by the number of males of each morph. 
+The number of nests that can be created in the population is determined by the number of males that will be chosen by females. This is determined by the $w_s$ parameter, which in current settings is 1 for courters and 0 for non-courters. Each morph has a total reproductive effort (total number of sperm from that morph), $s_M$, which is the individual reproductive effort $r_M$ multiplied by the number of males of each morph. 
 
-## 2. Fertilization
+### 2. Fertilization
 
-In the fertilization step, there are two components: the eggs males fertilize in their own nests ($e_o$) and the egg fertilized in other males' nests through sneaking ($e_s$. Only courters are chosen by females, so only courters fertilize their own eggs (this is controlled by the ${w_s}_M$ term, which is 1 for courters and 0 for non-courters). 
+In the fertilization step, there are two components: the eggs males fertilize in their own nests ($e_o$) and the eggs fertilized in other males' nests through sneaking ($e_s$. Only courters are chosen by females, so only courters fertilize their own eggs (this is controlled by the ${w_s}_M$ term, which is 1 for courters and 0 for non-courters). 
 
-The number of eggs fertilized by non-courters is dependent on the availability of nests. For that reason, the number of eggs fertilized in others' nests is either the difference between the maximum number of offspring that can be produced by non-courters ($N_s$). This value is determined by the reproductive effort of non-courters (represented by $r_{NN}$), the total number of nests ($n$), and the number of sneakers per female ($num_{sneakers}$) weighted by the sperm competition coefficient ($c$).
+The number of eggs fertilized by non-courters (${e_s}_M$) is dependent on the availability of nests. For that reason, ${e_s}_M$ is either the difference between the maximum number of offspring that can be produced by non-courters ($N_s$). This value is determined by the reproductive effort of non-courters (represented by $r_{NN}$), the total number of nests ($n$), and the number of sneakers per female ($num_{sneakers}$) weighted by the sperm competition coefficient ($c$).
 
-## 3. Nest survival
+### 3. Nest survival
 
-Nests survive based on whether the male is a parent (it survives) or a non-parent (it does not survive). 
+Nests survive based on whether the male is a parent (it survives) or a non-parent (it does not survive). Males therefore have two types of offspring: those that survive in their own nests (if they are a courter) and those that survive in other males' nests (if they are a non-courter). 
 
-## 4. Offspring survival
+### 4. Offspring survival
 
-Offspring who are in surviving nests are subjected to (relatively weak) viability selection against the courter and parent traits. This selection is multiplicative for courter-parents. 
+Offspring who are in surviving nests are subjected to (relatively weak) viability selection against the courter and parent traits, using the same selection coefficient as in the simulation model. This selection is multiplicative for courter-parents. 
 
-## 5. Equilibrial results
+### 5. Equilibrial results
 
-The next generation's frequencies are determined by 
-
-
-### Frequency-dependent expectations
+The next generation's frequencies are determined by the frequency of the morphs that survive to adulthood. To investigate equilibrial outcomes, I performed numerical analysis over 100 generations. These results were saved from across a range of initial morph frequencies, reproductive contributions for male morphs ($r_M$), sperm competition coefficients ($c$) and number of sneakers that can fertilize each nest ($num_{sneakers}$). Interactive plots of the diversity of the population at the end of 100 generations can be viewed as [a shiny app](https://spflanagan.shinyapps.io/morph_predictions/). 
 
 
-$r_{courter}=4$ and $r_{non-courter}=8$. , where $r_{courter}$ = 8 and $r_{non-courter}$ = 4, therefore $\Sigma{n_{sperm}}$ = `r sum(8,rep((0.5*4),2))`. 
-
-I used the frequency-dependent mathematical model to identify parameter space when diversity is maintained and when it is expected to be lost. I then ran the single-locus model (essentially, adding stochasticity) to see if I am reproducing those expectations using the simulation model.
 
 ```{r highDiv}
 highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",path="single_locus",cols,make.plot=FALSE))
