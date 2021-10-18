@@ -433,13 +433,45 @@ make_trait_hists(traits,
                  cols=cols2)
 ```
 
-
+By the final generation, only two morphs remain, and as expected courter-parents receive all of the matings and noncourter-nonparents receive no mates (Fig. \@ref(fig:maleMS12000)), but both have net-positive lifetime reproductive success, with noncourter-nonparents having more variable numbers of offspring (Fig. \@ref(fig:maleRS12000)). Females of the two morphs both have similar problems finding mates (Fig. \@ref(fig:femaleMS12000)) but have similar distributions of lifetime reproductive success (Fig. \@ref(fig:femaleRS12000)). Combined, these results suggest that the model is behaving as expected, and in a manner similar to the mathematical model.
+ 
+```{r maleMS12000, fig.cap="Male mating success in generation 12000 for each morph.", fig.height=4}
+make_trait_hists(traits,
+                 which_trait="MateFound",
+                 which_sex="MALE",
+                 which_gen=12000,
+                 which_pop=0,
+                 cols=cols2)
 
 ```
 
+```{r maleRS12000, fig.cap="Male lifetime reproductive success in generation 12000 for each morph.", fig.height=4}
+make_trait_hists(traits,
+                 which_trait="LifetimeRS",
+                 which_sex="MALE",
+                 which_gen=12000,
+                 which_pop=0,
+                 cols=cols2)
+```
+
+```{r femaleMS12000, fig.cap="Female mating success in generation 12000 for each morph.", fig.height=4}
+make_trait_hists(traits,
+                 which_trait="MateFound",
+                 which_sex="FEMALE",
+                 which_gen=12000,
+                 which_pop=0,
+                 cols=cols2)
 
 ```
 
+```{r femaleRS12000, fig.cap="Female lifetime reproductive success in generation 12000 for each morph.", fig.height=4}
+make_trait_hists(traits,
+                 which_trait="LifetimeRS",
+                 which_sex="FEMALE",
+                 which_gen=12000,
+                 which_pop=0,
+                 cols=cols2)
+```
 
 
 
