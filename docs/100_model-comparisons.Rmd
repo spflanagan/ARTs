@@ -85,7 +85,7 @@ Once the identities of the surviving nests are known--along with the identities 
 
 ### 5. Viability selection 
 
-Before becoming adults, the offspring experience viability selection. Courters and parental males are disfavored in viability selection, with a survival probability of `r exp(-0.5/(2*50))`. If an individual is both a courter and a parental male, the survival probability is `r exp(-0.5/(2*50))*exp(-0.5/(2*50))`. Non-courters and non-parental males have survival probabilities of 1. 
+Before becoming adults, the offspring experience viability selection. Courters and parental males are disfavored in viability selection, with a survival probability of `r exp(-0.5/(2*50))`. If an individual is both a courter and a parental male, the survival probability is `r exp(-1/(2*50))*exp(-1/(2*50))`. Non-courters and non-parental males have survival probabilities of 1. 
 
 ### Evaluating equilibrium
 
