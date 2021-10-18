@@ -128,6 +128,9 @@ Offspring who are in surviving nests are subjected to (relatively weak) viabilit
 
 The next generation's frequencies are determined by the frequency of the morphs that survive to adulthood. To investigate equilibrial outcomes, I performed numerical analysis over 100 generations. These results were saved from across a range of initial morph frequencies, reproductive contributions for male morphs ($r_M$), sperm competition coefficients ($c$) and number of sneakers that can fertilize each nest ($num_{sneakers}$). Interactive plots of the diversity of the population at the end of 100 generations can be viewed as [a shiny app](https://spflanagan.shinyapps.io/morph_predictions/). 
 
+```{r getMathModelResults}
+morph_results<-readRDS("../morph_predictions/morph_results_Ns.RDS")
+```
 
 
 ```{r highDiv}
