@@ -39,6 +39,10 @@ library(RColorBrewer)
 library(scales)
 library(sm)
 library(kableExtra)
+library(plotly)
+library(dplyr)
+library(vegan)
+library(tidyr)
 source("../R/002_freq_functions.R")
 
 source("../morph_predictions/check_freqs.R")
@@ -130,7 +134,117 @@ The next generation's frequencies are determined by the frequency of the morphs 
 
 ```{r getMathModelResults}
 morph_results<-readRDS("../morph_predictions/morph_results_Ns.RDS")
+morph_results$diversity<-vegan::diversity(round(morph_results[,c("CP","CN","NP","NN")],4))
 ```
+
+
+The shiny app shows the results for a variety of initial morph frequencies, but I also wanted to explore the relationships between the key parameters (the sperm competition coefficient, $c$, the relative reproductive allocation, $r$, and the number of sneakers/mates allowed ($num_{sneak}$)). We can see that each one plays an important role in facilitating diversity, with $r$ driving the most restrictive areas of parameter space (Fig. \@ref(fig:rVc), \@ref(fig:rVsneak)). Nonetheless, $c$ and $num_{sneak}$ interact to create areas of high-diversity space (Fig. \@ref(fig:cVsneak)), which is why it is important to include variation in all three.
+
+```{r rVc, fig.cap="The diversity of the population for different values of the sperm competition coefficient (c) and the reproductive allocation (r). These results are assuming 4 mates allowed and equal initial frequencies of all four morphs, and are the frequencies after 100 generations."}
+
+morph_equal<-morph_results[morph_results$initial_CP == 0.25 &
+                             morph_results$initial_CN == 0.25 &
+                             morph_results$initial_NP == 0.25 &
+                             morph_results$initial_NN == 0.25 &
+                             morph_results$num_sneak == 4 ,]
+morph_equal$ident<-paste0(morph_equal$r,"_",morph_equal$c,"_",morph_equal$num_sneak)
+data_wide <- tidyr::spread(
+    morph_equal[,c("r","c","diversity")],
+    r,
+    diversity
+  )
+rownames(data_wide)<-data_wide$c
+data_wide<-data_wide[,-1]
+  
+fig1<-plot_ly(
+    x = as.numeric(colnames(data_wide)), 
+    y = as.numeric(rownames(data_wide)), 
+    z = as.matrix(data_wide),
+    colorscale=list(seq(0,1,length.out = 9),
+                    c('#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58')),
+    type = "contour"
+  )
+  # add axis labels
+  x<-list(title="r")
+  y<-list(title="c")
+  fig1 <- fig1 %>% layout(xaxis=x,yaxis=y)
+  # add label to contour names
+  fig1 <- fig1 %>% colorbar(title = "Diversity of the population")
+  
+  fig1
+  
+
+```
+
+```{r rVnsneak, fig.cap="The diversity of the population for different values of the reproductive allocation (r) and the number of mates allowed. These results are assuming a sperm competition coefficient (c) of 0.5 and equal initial frequencies of all four morphs, and are the frequencies after 100 generations."}
+morph_equal<-morph_results[morph_results$initial_CP == 0.25 &
+                             morph_results$initial_CN == 0.25 &
+                             morph_results$initial_NP == 0.25 &
+                             morph_results$initial_NN == 0.25 &
+                             morph_results$c == 0.5 ,]
+
+data_wide <- tidyr::spread(
+    morph_equal[,c("r","num_sneak","diversity")],
+    r,
+    diversity
+  )
+rownames(data_wide)<-data_wide$num_sneak
+data_wide<-data_wide[,-1]
+  
+fig1<-plot_ly(
+    x = as.numeric(colnames(data_wide)), 
+    y = as.numeric(rownames(data_wide)), 
+    z = as.matrix(data_wide),
+    colorscale=list(seq(0,1,length.out = 9),
+                    c('#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58')),
+    type = "contour"
+  )
+  # add axis labels
+  x<-list(title="r")
+  y<-list(title="number of mates allowed")
+  fig1 <- fig1 %>% layout(xaxis=x,yaxis=y)
+  # add label to contour names
+  fig1 <- fig1 %>% colorbar(title = "Diversity of the population")
+  
+  fig1
+
+```
+
+
+```{r cVnsneak, fig.cap="The diversity of the population for different values of the sperm competition coefficient (c) and the number of mates allowed. These results are assuming a reproductive allocation (r) of 0.5 and equal initial frequencies of all four morphs, and are the frequencies after 100 generations."}
+morph_equal<-morph_results[morph_results$initial_CP == 0.25 &
+                             morph_results$initial_CN == 0.25 &
+                             morph_results$initial_NP == 0.25 &
+                             morph_results$initial_NN == 0.25 &
+                             morph_results$r == 0.5 ,]
+
+data_wide <- tidyr::spread(
+    morph_equal[,c("c","num_sneak","diversity")],
+    c,
+    diversity
+  )
+rownames(data_wide)<-data_wide$num_sneak
+data_wide<-data_wide[,-1]
+  
+fig1<-plot_ly(
+    x = as.numeric(colnames(data_wide)), 
+    y = as.numeric(rownames(data_wide)), 
+    z = as.matrix(data_wide),
+    colorscale=list(seq(0,1,length.out = 9),
+                    c('#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58')),
+    type = "contour"
+  )
+  # add axis labels
+  x<-list(title="c")
+  y<-list(title="number of mates allowed")
+  fig1 <- fig1 %>% layout(xaxis=x,yaxis=y)
+  # add label to contour names
+  fig1 <- fig1 %>% colorbar(title = "Diversity of the population")
+  
+  fig1
+
+```
+
 
 ## Low diversity parameter space
 
