@@ -670,3 +670,67 @@ legend("right",c("courter-parent","noncourter-parent", "courter-nonparent","nonc
 
 Some other important differences between the simulation model and the mathematical model that could be underlying any differences between the two are that the simulation model includes recombination (and inheritance of traits via females) whereas the mathematical model does not. Additionally, the simulation model has a reasonable amount of stochasticity embedded within it, which the mathematical model does not include -- this is especially true for the parameter settings when females randomly mate if they do not find an acceptable male. 
 
+
+# Genetic architectures
+
+Out of interest, I also ran some iterations with genetic architectures -- QTLs distributed throughout the genome (labelled 'qtls') and QTLs linked in a supergene with low recombination. The two model runs -- for these parameter settings -- show quite different outcomes. In the low diversity expectation, on some occasions additional unexpected diversity can occur with either case (Fi.g \@ref(fig:lowDivQTLs)). However, supergenes cause a consistent maintenance of two morphs, the courter-parent and noncourter-parent (Fig. \@ref(fig:highDivQTLs)).
+
+```{r lowDivGenetics}
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*summary.txt",path="baseline",cols,make.plot=FALSE))
+```
+
+```{r lowDivQTLs, fig.cap="Final generation frequencies based on the model with QTLs and the model with a supergene, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+
+var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(lowDiv)))
+
+
+par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=pattern)
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+
+```
+
+```{r highDivGenetics}
+highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",path="baseline",cols,make.plot=FALSE))
+```
+
+```{r highDivQTLs, fig.cap="Final generation frequencies based on the model with QTLs and the model with a supergene, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+
+var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
+
+
+par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=pattern)
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+
+```
+
+
