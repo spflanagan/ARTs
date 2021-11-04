@@ -131,7 +131,7 @@ if(isTRUE(plot_test)){
                              morph_results$initial_CP==0.05,]
   data_wide <- tidyr::spread(
     sub_calcs[,c("initial_CN","initial_NN","diversity")],
-    initial_CS,
+    initial_CN,
     diversity
   )
   rownames(data_wide)<-data_wide[,1]
