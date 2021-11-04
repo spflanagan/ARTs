@@ -138,7 +138,7 @@ morph_results$diversity<-vegan::diversity(round(morph_results[,c("CP","CN","NP",
 ```
 
 
-The shiny app shows the results for a variety of initial morph frequencies, but I also wanted to explore the relationships between the key parameters (the sperm competition coefficient, $c$, the relative reproductive allocation, $r$, and the number of sneakers/mates allowed ($num_{sneak}$)). We can see that each one plays an important role in facilitating diversity, with $r$ driving the most restrictive areas of parameter space (Fig. \@ref(fig:rVc), \@ref(fig:rVsneak)). Nonetheless, $c$ and $num_{sneak}$ interact to create areas of high-diversity space (Fig. \@ref(fig:cVsneak)), which is why it is important to include variation in all three.
+The shiny app shows the results for a variety of initial morph frequencies, but I also wanted to explore the relationships between the key parameters (the sperm competition coefficient, $c$, the relative reproductive allocation, $r$, and the number of sneakers/mates allowed ($num_{sneak}$)). We can see that each one plays an important role in facilitating diversity, with $r$ driving the most restrictive areas of parameter space (Fig. \@ref(fig:rVc), \@ref(fig:rVnsneak)). Nonetheless, $c$ and $num_{sneak}$ interact to create areas of high-diversity space (Fig. \@ref(fig:cVnsneak)), which is why it is important to include variation in all three.
 
 ```{r rVc, fig.cap="The diversity of the population for different values of the sperm competition coefficient (c) and the reproductive allocation (r). These results are assuming 4 mates allowed and equal initial frequencies of all four morphs, and are the frequencies after 100 generations."}
 
