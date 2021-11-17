@@ -109,7 +109,7 @@ public:
 	bool same_base, court_trait, parent_trait, gene_network, env_cue, cor_prefs, ind_pref, FD_pref, CD_pref, FD_court, FD_parent,CD_court, CD_parent, polygyny, cor_mal_traits;
     bool density_dependent,all_sneak, per_fem_mating, supergene, random_mating, courter_conditional, parent_conditional, thresholds_evolve, thresholds_in_supergene, verbose, no_genetics, linked_additive,optimize, output_vcf, viability_selection;
 	vector <int> qtl_per_chrom;
-	bool log_file, ae_vcf, debug,allow_no_mating;
+	bool log_file, ae_vcf, debug,allow_no_mating, save_markers;
 
 	parameters()
 	{
@@ -119,7 +119,7 @@ public:
 		same_base = gene_network = env_cue = court_trait = parent_trait = cor_prefs = ind_pref = FD_pref = CD_pref = FD_court = FD_parent = CD_court = CD_parent = polygyny = cor_mal_traits = supergene =  bool();
 		density_dependent = all_sneak = per_fem_mating = random_mating = courter_conditional = parent_conditional = thresholds_evolve = thresholds_in_supergene = no_genetics=linked_additive = optimize= output_vcf=viability_selection = bool();
 		qtl_per_chrom = vector<int>();
-		log_file = ae_vcf = debug =allow_no_mating= bool();
+		log_file = ae_vcf = debug =allow_no_mating=save_markers = bool();
 	}
 
 	void set_defaults()
@@ -177,6 +177,7 @@ public:
 		ae_vcf = false; //creates a vcf of allelic effects
 		debug = false; //outputs extra info that we don't really want usually
 		allow_no_mating=false; //when true, unsuccessfully mated females will not nest.
+		save_markers = false; //marker frequencies are not saved and output each generation
 	}
 
 	void help_message()
@@ -243,6 +244,7 @@ public:
 		std::cout << "--ae-vcf:\tInclude vcf output for the allelic effects for QTLs for all individuals in generation 0 (default is false)\n";
 		std::cout << "--log-file:\tSave output to logfile instead of std::cout\n";
 		std::cout << "--debug:\tOutput additional information that could be useful in debugging to either log or std::cout\n";
+		std::cout << "--save-markers:\tCreate a file with the frequencies of each marker in each generation (default is false; be warned, marker files become large).\n";
 		std::cout << "-h or --help:\tPrint this help message.\n";
 	}
 
@@ -505,6 +507,8 @@ public:
 							viability_selection = true;
 						if(tempstring1 == "--allow-no-mating")
 							allow_no_mating = true;
+						if(tempstring1 == "--save=markers")
+							save_markers = true;
 					}
 				}
 				
@@ -614,6 +618,8 @@ public:
             param_out << "\n--debug ";
 		if(allow_no_mating)
 			param_out << "\n--allow-no-mating";
+		if(save_markers)
+			param_out << "\n--save-markers";
 		param_out.close();
 	}
 };
