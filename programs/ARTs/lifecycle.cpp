@@ -584,9 +584,9 @@ int main(int argc, char*argv[])
 				log_out	<< "\nNo equilibrium could be reached for population " << i << " with population size " << pops[i].population_size << " by generation " << global_params.num_init_gen + global_params.num_exp_gen;
 			else
 				std::cout << "\nNo equilibrium could be reached for population " << i << " with population size " << pops[i].population_size << " by generation " << global_params.num_init_gen + global_params.num_exp_gen << std::flush;
-            if(global_params.output_vcf)
-                pops[i].output_genotypes_vcf(global_params, i);	
 		}
+		if(global_params.output_vcf)
+            pops[i].output_genotypes_vcf(global_params, i);	
 	}
 	
 	//close output files
