@@ -86,15 +86,18 @@ int main(int argc, char*argv[])
 	// if genetics are actually being used!
 	if (!global_params.no_genetics) 
 	{
-		markers_output_name = global_params.base_name + "_markers.txt";
-		markers_output.open(markers_output_name);
-		markers_output << "Generation\tPop";
-		for (i = 0; i < global_params.num_chrom; i++)
+		if(global_params.save_markers)
 		{
-			for (ii = 0; ii < global_params.num_markers; ii++)
-				markers_output << "\tMarker" << i << "." << ii;
+			markers_output_name = global_params.base_name + "_markers.txt";
+			markers_output.open(markers_output_name);
+			markers_output << "Generation\tPop";
+			for (i = 0; i < global_params.num_chrom; i++)
+			{
+				for (ii = 0; ii < global_params.num_markers; ii++)
+					markers_output << "\tMarker" << i << "." << ii;
+			}
 		}
-
+		
 		qtlinfo_output_name = global_params.base_name + "_qtlinfo.txt";
 		qtlinfo_output.open(qtlinfo_output_name);
 		qtlinfo_output << "Pop";
@@ -129,7 +132,8 @@ int main(int argc, char*argv[])
 			trait_output.close();
 			if (!global_params.no_genetics)
 			{
-				markers_output.close();
+				if(global_params.save_markers)
+					markers_output.close();
 				qtlinfo_output.close();
 				ae_output.close();
 			}
@@ -153,7 +157,8 @@ int main(int argc, char*argv[])
 				trait_output.close();
 				if (!global_params.no_genetics)
 				{
-					markers_output.close();
+					if(global_params.save_markers)
+						markers_output.close();
 					qtlinfo_output.close();
 					ae_output.close();
 				}
@@ -181,7 +186,8 @@ int main(int argc, char*argv[])
 				trait_output.close();
 				if (!global_params.no_genetics)
 				{
-					markers_output.close();
+					if(global_params.save_markers)
+						markers_output.close();
 					qtlinfo_output.close();
 					ae_output.close();
 				}
@@ -338,9 +344,12 @@ int main(int argc, char*argv[])
 				pops[ii].output_summary_info(global_params, summary_output, log_out);//includes RS
 				if (!global_params.no_genetics)
 				{
-					//output allele frequencies
-					markers_output << "\n" << i << "\tPop" << ii;
-					pops[ii].output_allele_freqs(global_params, markers_output);
+					if(global_params.save_markers)
+					{
+						//output allele frequencies
+						markers_output << "\n" << i << "\tPop" << ii;
+						pops[ii].output_allele_freqs(global_params, markers_output);
+					}
 					ae_output << '\n' << i + 1 << "\tPop" << ii;
 					pops[ii].output_allelic_effects(global_params, ae_output, false);
 				}
@@ -386,7 +395,8 @@ int main(int argc, char*argv[])
 			trait_output.close();
 			if (!global_params.no_genetics)
 			{
-				markers_output.close();
+				if(global_params.save_markers)
+					markers_output.close();
 				ae_output.close();
 			}
 			if (!command_line)
@@ -437,8 +447,11 @@ int main(int argc, char*argv[])
 				pops[ii].output_summary_info(global_params, summary_output, log_out);
 				if (!global_params.no_genetics)
 				{
-					markers_output << '\n' << global_params.num_init_gen + i << "\tPop" << ii;
-					pops[ii].output_allele_freqs(global_params, markers_output);
+					if(global_params.save_markers)
+					{
+						markers_output << '\n' << global_params.num_init_gen + i << "\tPop" << ii;
+						pops[ii].output_allele_freqs(global_params, markers_output);
+					}
 					ae_output << '\n' << global_params.num_init_gen + i + 1 << "\tPop" << ii;
 					pops[ii].output_allelic_effects(global_params, ae_output, false);
 				}
@@ -508,7 +521,8 @@ int main(int argc, char*argv[])
 			trait_output.close();
 			if (!global_params.no_genetics)
 			{
-				markers_output.close();
+				if(global_params.save_markers)
+					markers_output.close();
 				ae_output.close();
 			}
 			if (command_line)
@@ -594,7 +608,8 @@ int main(int argc, char*argv[])
 	trait_output.close();
 	if (!global_params.no_genetics)
 	{
-		markers_output.close();
+		if(global_params.save_markers)
+			markers_output.close();
 		ae_output.close();
 	}
 	if (global_params.log_file)
