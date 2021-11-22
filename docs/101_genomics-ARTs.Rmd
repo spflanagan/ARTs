@@ -1,0 +1,117 @@
+---
+title: "Investigating the genomics of alternative reproductive tactics"
+author: "Sarah P. Flanagan"
+date:  "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  bookdown::pdf_document2:
+    fig_caption: yes
+    keep_tex: yes
+    number_sections: no
+    template: manuscript.latex
+    toc: yes
+    toc_depth: 2
+spacing: singlespacing
+fontsize: 11pt
+capsize: normalsize
+documentclass: article
+footerdate: yes
+graphics: yes
+csl: evolution.csl
+editor_options:
+  chunk_output_type: console
+---
+
+The purpose of this model is to understand how genetic architectures of alternative reproductive tactics impact their maintenance in populations. I'm using an individual-based simulation model with different selection scenarios, types of alternative tactics, and genetic architectures (genome-wide additive genetic variance, supergenes, expression networks). To explore the parameter space, I'm also using a mathematical model without the genetic architectures to identify regions of parameter space where we expect multiple morphs to be maintained. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
+knitr::opts_knit$set(root.dir='../results/') #change
+
+```
+```{r opts, echo = FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+  fig.path = "figs/"
+)
+```
+```{r librarysetup, echo=FALSE,echo=FALSE,message=FALSE}
+library(RColorBrewer)
+library(scales)
+library(sm)
+library(kableExtra)
+library(plotly)
+library(dplyr)
+library(vegan)
+library(tidyr)
+library(vcfR)
+library(gwscaR)
+source("../R/002_freq_functions.R")
+
+source("../morph_predictions/check_freqs.R")
+source("../morph_predictions/morph_gens_ns.R")
+
+cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
+cols2<-c(CP='#d7191c',NCP='#fdae61',CNP='#abd9e9',NCNP='#2c7bb6')
+```
+```{r baseCols}
+base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                   "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
+poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                    "FreqNcP","FreqCP","Polygyny")
+
+```
+
+## The goal
+
+We want to be able to link empirical data to our model predictions. To do that, we want to be able to look at patterns of genetic variation genome-wide. 
+
+```{r}
+path<-"/mnt/BigData/fixedART-results/qtls/"
+vcfname<-paste0(path,"highDiversity_qtls_q8_c4_1_pop_2.vcf")
+
+ex1<-get.morph.freqs(plot.pc.reps(pattern="highDiversity_qtls_q8_c4_1_summary.txt",path=path,cols,make.plot=FALSE))
+
+vcf1<-read.vcfR(vcfname)
+```
+
+```{r}
+qtl_info<-read.delim("highDiversity_qtls_q8_c4_1_qtlinfo.txt")
+qtl_locs<-which(vcf1@fix[,"ID"] %in% qtl_info[1,])
+```
+
+It would be great to calculate Fsts between the different groups, including males and females. 
+
+```{r}
+mf_pop<-as.factor(gsub("^(\\w{3}).*$","\\1",colnames(vcf1@gt)[-1]))
+mt_pop<-as.factor(gsub("^(\\w{3}).*_(\\w+)$","\\2",colnames(vcf1@gt)[-1]))
+mt_mal<-factor(mt_pop[mf_pop=="MAL"])
+```
+
+```{r}
+mf_diff<-genetic_diff(vcf1, pops = mf_pop, method = 'nei')
+plot(mf_diff$Gst,pch=19,
+     xlab="Locus",
+     ylab="Gst between males and females")
+points(qtl_locs, mf_diff$Gst[qtl_locs],cex=2,col="red",pch=8)
+```
+
+```{r}
+mt_diff<-genetic_diff(vcf1, pops = mt_pop, method = 'nei')
+plot(mt_diff$Gst,pch=19,
+     xlab="Locus",
+     ylab="Gst between types, including female preferences")
+points(qtl_locs, mt_diff$Gst[qtl_locs],cex=2,col="red",pch=8)
+```
+
+```{r}
+mal_vcf<-vcf1[,c(1,which(mf_pop=="MAL"))]
+mtm_diff<-genetic_diff(mal_vcf, pops = mt_mal, method = 'nei')
+plot(mtm_diff$Gst,pch=19,
+     xlab="Locus",
+     ylab="Gst between male types")
+points(qtl_locs, mtm_diff$Gst[qtl_locs],cex=2,col="red",pch=8)
+```
+
+
+
+
