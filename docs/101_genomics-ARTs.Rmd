@@ -115,5 +115,5 @@ abline(h=median(mtm_diff$Gst, na.rm = TRUE),col="grey",lty=3)
 ```
 
 
-
+So this works well for visualising, but in this particular example the QTLs aren't outliers. I would like to find a way to summarize this across runs. 
 
