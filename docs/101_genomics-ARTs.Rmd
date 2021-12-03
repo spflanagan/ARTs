@@ -110,6 +110,8 @@ plot(mtm_diff$Gst,pch=19,
      xlab="Locus",
      ylab="Gst between male types")
 points(qtl_locs, mtm_diff$Gst[qtl_locs],cex=2,col="red",pch=8)
+abline(h=mean(mtm_diff$Gst, na.rm = TRUE),col="grey",lty=2)
+abline(h=median(mtm_diff$Gst, na.rm = TRUE),col="grey",lty=3)
 ```
 
 
