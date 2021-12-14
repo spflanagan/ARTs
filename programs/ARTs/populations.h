@@ -2176,7 +2176,7 @@ public:
 		}	
 		//sanity check
 		if(off_counter != (num_progeny - start_numprog))
-			cout << "\nWrong number of offspring created for nest with female " << this_nest.mom << std::flush;
+			cout << "\nNest with female " << this_nest.mom << " had " << off_counter << " babies instead of " << (num_progeny - start_numprog) << std::flush;
 		return off_counter;
 	}
 	void dd_assign_sneakers(int fem_id, parameters gp, nest& this_nest)
