@@ -28,11 +28,13 @@ summarize_peaks<-function(path, pattern, pop, m=50){
   qtl_locs<-which(vcf1@fix[,"ID"] %in% qtl_info[1,])
   
   # define male types
+  mf_pop<-as.factor(gsub("^(\\w{3}).*$","\\1",colnames(vcf1@gt)[-1]))
   mt_pop<-as.factor(gsub("^(\\w{3}).*_(\\w+)$","\\2",colnames(vcf1@gt)[-1]))
   mt_mal<-factor(mt_pop[mf_pop=="MAL"])
   
   # get differentiation info
-  mal_vcf<-vcf1[,c(1,which(mf_pop=="MAL"))]
+  mal_vcf<-vcf1
+  mal_vcf@gt<-vcf1@gt[,c(1,which(mf_pop=="MAL")+1)]
   mtm_diff<-genetic_diff(mal_vcf, pops = mt_mal, method = 'nei')
   mtm_diff$Gprimest[is.na(mtm_diff$Gprimest)]<-0
   
