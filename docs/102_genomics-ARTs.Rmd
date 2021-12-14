@@ -66,7 +66,7 @@ poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
 We want to be able to link empirical data to our model predictions. To do that, we want to be able to look at patterns of genetic variation genome-wide. 
 
 ```{r}
-path<-"/mnt/BigData/fixedART-results/qtls/"
+path<-"../results/"#"/mnt/BigData/fixedART-results/qtls/"
 vcfname<-paste0(path,"highDiversity_qtls_q8_c4_1_pop_2.vcf")
 
 ex1<-get.morph.freqs(plot.pc.reps(pattern="highDiversity_qtls_q8_c4_1_summary.txt",path=path,cols,make.plot=FALSE))
