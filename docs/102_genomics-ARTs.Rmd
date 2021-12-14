@@ -66,7 +66,7 @@ poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
 We want to be able to link empirical data to our model predictions. To do that, we want to be able to look at patterns of genetic variation genome-wide. 
 
 ```{r}
-path<-"./"#"/mnt/BigData/fixedART-results/qtls/"
+path<-"/mnt/BigData/fixedART-results/qtls/"
 vcfname<-paste0(path,"highDiversity_qtls_q8_c4_1_pop_2.vcf")
 
 ex1<-get.morph.freqs(plot.pc.reps(pattern="highDiversity_qtls_q8_c4_1_summary.txt",path=path,cols,make.plot=FALSE))
@@ -89,11 +89,17 @@ mt_mal<-factor(mt_pop[mf_pop=="MAL"])
 
 ```{r}
 mf_diff<-genetic_diff(vcf1, pops = mf_pop, method = 'nei')
-plot(mf_diff$Gst,pch=19,
+plot(mf_diff$Gprimest,pch=19,
      xlab="Locus",
      ylab="Gst between males and females")
-points(qtl_locs, mf_diff$Gst[qtl_locs],cex=2,col="red",pch=8)
+points(qtl_locs, mf_diff$Gprimest[qtl_locs],cex=2,col="red",pch=8)
 ```
+
+```{r}
+hist(mf_diff$Gprimest)
+lapply(mf_diff$Gprimest[qtl_locs],function(d){ abline( v = d) })
+```
+
 
 ```{r}
 mt_diff<-genetic_diff(vcf1, pops = mt_pop, method = 'nei')
@@ -106,14 +112,110 @@ points(qtl_locs, mt_diff$Gst[qtl_locs],cex=2,col="red",pch=8)
 ```{r}
 mal_vcf<-vcf1[,c(1,which(mf_pop=="MAL"))]
 mtm_diff<-genetic_diff(mal_vcf, pops = mt_mal, method = 'nei')
-plot(mtm_diff$Gst,pch=19,
+plot(mtm_diff$Gprimest,pch=19,
      xlab="Locus",
-     ylab="Gst between male types")
-points(qtl_locs, mtm_diff$Gst[qtl_locs],cex=2,col="red",pch=8)
-abline(h=mean(mtm_diff$Gst, na.rm = TRUE),col="grey",lty=2)
-abline(h=median(mtm_diff$Gst, na.rm = TRUE),col="grey",lty=3)
+     ylab="Gst' between male types")
+points(qtl_locs, mtm_diff$Gprimest[qtl_locs],cex=2,col="red",pch=8)
+abline(h=mean(mtm_diff$Gprimest, na.rm = TRUE),col="grey",lty=2)
+abline(h=median(mtm_diff$Gprimest, na.rm = TRUE),col="grey",lty=3)
 ```
 
 
+```{r}
+hist(mtm_diff$Gprimest)
+lapply(mtm_diff$Gprimest[qtl_locs],function(d){ abline( v = d) })
+```
+
+
+
 So this works well for visualising, but in this particular example the QTLs aren't outliers. I would like to find a way to summarize this across runs. 
+
+If I use a similar approach as I did for my gwsca model, I want to find peaks and identify if a QTL exists in the peak. In my previous model, I hard-coded that in C++, but I'm feeling lazy and would prefer to just do it in R at this point. So I found some code online that should find peaks for me.
+
+```{r}
+# From https://stats.stackexchange.com/questions/22974/how-to-find-local-peaks-valleys-in-a-series-of-data
+# answer/code by stas g, posted 5 Aug 2015, accessed 6 Dec 2021
+find_peaks <- function (x, m = 3){
+  
+  # remove NAs (my modification)
+  x<-x[!is.na(x)]
+    shape <- diff(sign(diff(x, na.pad = FALSE)))
+    pks <- sapply(which(shape < 0), FUN = function(i){
+       z <- i - m + 1
+       z <- ifelse(z > 0, z, 1)
+       w <- i + m + 1
+       w <- ifelse(w < length(x), w, length(x))
+       if(all(x[c(z : i, (i + 2) : w)] <= x[i + 1])) return(i + 1) else return(numeric(0))
+    })
+     pks <- unlist(pks)
+     pks
+}
+```
+
+```{r}
+mtm_diff$Gprimest[is.na(mtm_diff$Gprimest)]<-0
+peaks<-find_peaks(mtm_diff$Gprimest,m = 50)
+plot(mtm_diff$Gprimest,
+     type="l",
+     xlab="Locus",
+     ylab="Gst' between male types")
+points(qtl_locs, mtm_diff$Gprimest[qtl_locs],cex=2,col="red",pch=8)
+points(peaks,mtm_diff$Gprimest[peaks],cex=2,col="purple",pch=6)
+```
+
+```{r}
+Gcutoff<-qnorm(p = 0.99,
+               mean=mean(mtm_diff$Gprimest),
+               sd = sd(mtm_diff$Gprimest))
+sigPeaks<-peaks[which(mtm_diff$Gprimest[peaks] >= Gcutoff)]
+QTLsInPeaks<-sapply(qtl_locs,function(q,peaks){
+  n<-sapply(peaks, function (p){
+    if(p-50 <= q & p + 50 >= q){
+      return(TRUE)
+    }  else{
+      return(FALSE)
+    }
+  })
+  return(sum(n))
+}, peaks=sigPeaks)
+```
+
+Focusing on the Male-Male comparison, without females:
+
+```{r}
+simSum<-data.frame(
+  sim = vcfname,
+  # Heterozygosity
+  gHtMean = mean(mtm_diff$Ht),
+  gHtMedian = median(mtm_diff$Ht),
+  gHtVar = var(mtm_diff$Ht),
+  qHtMean = mean(mtm_diff$Ht[qtl_locs]),
+  qHtMedian = median(mtm_diff$Ht[qtl_locs]),
+  qHtVar = var(mtm_diff$Ht[qtl_locs]),
+  # Gprime
+  gGpMean = mean(mtm_diff$Gprimest),
+  gGpMedian = median(mtm_diff$Gprimest),
+  gGpVar = var(mtm_diff$Gprimest),
+  qGpMean = mean(mtm_diff$Gprimest[qtl_locs]),
+  qGpMedian = median(mtm_diff$Gprimest[qtl_locs]),
+  qGpVar = var(mtm_diff$Gprimest[qtl_locs]),
+  # peaks
+  nPeaks = length(peaks),
+  nSigPeaks = length(sigPeaks),
+  nQTLS = length(qtl_locs),
+  propQTLsInPeaks = length(QTLsInPeaks[QTLsInPeaks > 0])/length(QTLsInPeaks)
+)
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
