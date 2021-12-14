@@ -208,6 +208,39 @@ simSum<-data.frame(
 ```
 
 
+## Summarizing multiple files
+
+```{r}
+source("../R/003_genomic_summaries.R")
+qtl_outliers<-dplyr::bind_rows(lapply(
+  list.files("*.vcf",
+             path="/mnt/BigData/fixedART-results/qtls/", 
+             full.names = TRUE),
+  function(filename){
+    pattern <- gsub(paste0(path,"(.*)_(pop_\\d).vcf"),"\\1",filename)
+    pop <-gsub(paste0(path,"(.*)_(pop_\\d).vcf"),"\\2",filename)
+    summarize_peaks(path, pattern=pattern, pop=pop)
+}))
+write.csv(qtl_outliers,"qtl_outliers.csv",quote=FALSE,row.names = FALSE)
+
+```
+
+
+```{r}
+supergene_outliers<-dplyr::bind_rows(lapply(
+  list.files("*.vcf",
+             path="/mnt/BigData/fixedART-results/supergene/", 
+             full.names = TRUE),
+  function(filename){
+    pattern <- gsub(paste0(path,"(.*)_(pop_\\d).vcf"),"\\1",filename)
+    pop <-gsub(paste0(path,"(.*)_(pop_\\d).vcf"),"\\2",filename)
+    summarize_peaks(path, pattern=pattern, pop=pop)
+}))
+write.csv(supergene_outliers,"supergene_outliers.csv",quote=FALSE,row.names = FALSE)
+
+```
+
+
 
 
 
