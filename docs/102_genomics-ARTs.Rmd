@@ -75,7 +75,7 @@ vcf1<-read.vcfR(vcfname)
 ```
 
 ```{r}
-qtl_info<-read.delim("highDiversity_qtls_q8_c4_1_qtlinfo.txt")
+qtl_info<-read.delim(paste0(path,"highDiversity_qtls_q8_c4_1_qtlinfo.txt"))
 qtl_locs<-which(vcf1@fix[,"ID"] %in% qtl_info[1,])
 ```
 
