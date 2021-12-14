@@ -224,15 +224,13 @@ write.csv(qtl_outliers,"qtl_outliers.csv",quote=FALSE,row.names = FALSE)
 
 
 ```{r}
+path <- "/mnt/BigData/fixedART-results/supergene/"
 supergene_outliers<-dplyr::bind_rows(lapply(
-  list.files("*.vcf",
-             path="/mnt/BigData/fixedART-results/supergene/", 
+  list.files(pattern="*.vcf",
+             path= path, 
              full.names = TRUE),
-  function(filename){
-    pattern <- gsub(paste0(path,"(.*)_(pop_\\d).vcf"),"\\1",filename)
-    pop <-gsub(paste0(path,"(.*)_(pop_\\d).vcf"),"\\2",filename)
-    summarize_peaks(path, pattern=pattern, pop=pop)
-}))
+  get_summary,
+  path = path))
 write.csv(supergene_outliers,"supergene_outliers.csv",quote=FALSE,row.names = FALSE)
 
 ```
