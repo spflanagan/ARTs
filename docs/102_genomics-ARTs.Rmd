@@ -211,7 +211,6 @@ simSum<-data.frame(
 ## Summarizing multiple files
 
 ```{r}
-source("../R/003_genomic_summaries.R")
 qtl_outliers<-dplyr::bind_rows(lapply(
   list.files("*.vcf",
              path="/mnt/BigData/fixedART-results/qtls/", 
