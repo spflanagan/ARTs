@@ -3392,7 +3392,7 @@ public:
 			vcf << "\n##source=ARTsSimulation";
 			vcf << "\n##INFO=<ID=AF,Number=.,Type=Float,Description=\"Allele Frequency\">";
 			vcf << "\n##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">";
-			vcf << "\n##CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT";
+			vcf << "\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT";
 			for (j = 0; j < population_size; j++)
 			{
 				if (adults[j].alive)
