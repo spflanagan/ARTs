@@ -44,7 +44,7 @@ library(dplyr)
 library(vegan)
 library(tidyr)
 library(vcfR)
-library(gwscaR)
+source("../R/003_genomic_summaries.R")
 source("../R/002_freq_functions.R")
 
 source("../morph_predictions/check_freqs.R")
