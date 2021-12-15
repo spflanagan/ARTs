@@ -44,16 +44,23 @@ summarize_peaks<-function(path, pattern, pop, m=50){
                  mean=mean(mtm_diff$Gprimest),
                  sd = sd(mtm_diff$Gprimest))
   sigPeaks<-peaks[which(mtm_diff$Gprimest[peaks] >= Gcutoff)]
-  QTLsInPeaks<-sapply(qtl_locs,function(q,peaks){
-    n<-sapply(peaks, function (p){
-      if(p - m <= q & p + m >= q){
-        return(TRUE)
-      }  else{
-        return(FALSE)
-      }
-    })
-    return(sum(n))
-  }, peaks=sigPeaks)
+  if(is.null(sigPeaks)) { 
+    sigPeaks<-0
+    QTLsInPeaks <- 0
+  }  else {
+
+    QTLsInPeaks<-sapply(qtl_locs,function(q,peaks, m){
+      n<-sapply(peaks, function (p){
+        if(p - m <= q & p + m >= q){
+          return(TRUE)
+        }  else{
+          return(FALSE)
+        }
+      })
+      return(sum(n))
+    }, peaks=sigPeaks, m = m)
+  }
+  
   
   # summarize data
   simSum<-data.frame(
