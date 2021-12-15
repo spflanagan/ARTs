@@ -2235,17 +2235,41 @@ public:
 			}
 			// if there are no sneakers, proceed as above (based on female RS)
 			if (max_sperm == 0) max_sperm = adults[fem_id].pot_rs; 
+
 			fecundity_share[0] = double(adults[male_id].pot_rs) / double(max_sperm); //it doesn't get weighted if r <= 1
-			adults[male_ids[0]].pot_rs = adults[male_id].pot_rs - int(fecundity_share[0]* double(max_sperm)); // nesting male has used all of his sperm
+			// force fecundity_share to be a proportion
+			if(fecundity_share[0] > 1) fecundity_share[0] = 1;
+			// track the ones that are fertilized
+			int num_fertilized = 0;
+			num_fertilized = int(fecundity_share[0]* double(max_sperm));
+			adults[male_ids[0]].pot_rs = adults[male_id].pot_rs - num_fertilized; // nesting male has used his sperm
+			// now deal with the sneakers
 			for (k = 1; k < fecundity_share.size(); k++)
 			{
-				int sperm_used = round(adults[male_ids[k]].pot_rs*gp.sperm_comp_r);
-				fecundity_share[k] =  double(sperm_used) / double(max_sperm);
-				adults[male_ids[k]].lifetime_rs = adults[male_ids[k]].lifetime_rs + sperm_used;
-				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - sperm_used;
+				if(num_fertilized < max_sperm)
+				{ // if the nesting male hasn't filled up the nest, sneakers can
+					int sperm_used = round(adults[male_ids[k]].pot_rs*gp.sperm_comp_r); // the sperm available after competition
+					// number of available slots is max_sperm - num_fertilized, so can't fill more than that
+					if(sperm_used > (max_sperm - num_fertilized))
+					{	// sneakers compete over available spots instead
+						sperm_used = round( (max_sperm - num_fertilized) * gp.sperm_comp_r ); 
+					}
+					fecundity_share[k] =  double(sperm_used) / double(max_sperm);
+					adults[male_ids[k]].lifetime_rs = adults[male_ids[k]].lifetime_rs + sperm_used;
+					adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - sperm_used;
+					num_fertilized = num_fertilized + sperm_used;
+				} else
+				{
+					fecundity_share[k] = 0;
+				}
+				
 			}				
 			for(k = 0; k < fecundity_share.size(); k++)
+			{
+				if(fecundity_share[k]>1)
+					cout << "\nWarning! fecundity share (a proportion) is greater than one.";
 				this_nest.off_props.push_back(fecundity_share[k]);
+			}
 			for(k = 0; k < male_ids.size(); k++)
 				this_nest.all_dads.push_back(male_ids[k]);
 			if (this_nest.off_props.size() != this_nest.all_dads.size())
