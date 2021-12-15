@@ -84,6 +84,7 @@ summarize_peaks<-function(path, pattern, pop, m=50){
 }
 
 get_summary<-function(filename, path){
+  print(filename)
   pattern <- gsub(paste0(path,"(.*)_(pop_\\d).vcf"),"\\1",filename)
   pop <-gsub(paste0(path,"(.*)_(pop_\\d).vcf"),"\\2",filename)
   summarize_peaks(path, pattern=pattern, pop=pop)
