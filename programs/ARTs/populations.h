@@ -2167,12 +2167,12 @@ public:
 		{//each dad gets babies
 			int fecundity = round(off_to_make*this_nest.off_props[k]);
 			making_babies(gp, fecundity, num_progeny, this_nest.mom, this_nest.all_dads[k]);
-			off_counter = off_counter+ fecundity;
+			off_counter = off_counter+ (num_progeny - start_numprog);
 		}
 		if(off_counter < off_to_make)//make sure the nest was filled -- if it wasn't, the nesting male sires the remainder
 		{
 			making_babies(gp, (off_to_make - off_counter), num_progeny, this_nest.mom, this_nest.nest_dad);
-			off_counter = off_to_make;
+			off_counter = off_counter+ (num_progeny - start_numprog);
 		}	
 		//sanity check
 		if(off_counter != (num_progeny - start_numprog))
