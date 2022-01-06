@@ -134,7 +134,7 @@ public:
 		num_markers = 1000;//1000
 		num_qtl = 50;//default: 50
 		num_env_qtl = 0;//default 0
-		max_fecund = 4;//default 4
+		max_fecund = 8;//default 8
 		max_encounters = 50;//default 50
 		num_alleles = 2; //biallelic to start
 		mutation_rate = 0.0002;//default 0.0002
@@ -160,7 +160,7 @@ public:
 		rs_c = 4;//default 4
 		rs_nc = 8;//default 8
 		rs_p = 4;//default 4
-		rs_np = 4;//default 4
+		rs_np = 8;//default 8
 		max_num_mates = 3;//default 3 - used to cap number of sneakers allowed to fertilize a nest
 		egg_surv_noparent = 0.1;//default 0.1
 		egg_surv_parent = 0.9;//default 0.9
@@ -350,7 +350,11 @@ public:
 			linked_additive = false;
 		if(per_fem_mating && density_dependent)
 			per_fem_mating = false;
-			
+		int max_bebes = 0;
+		if(court_trait)
+			max_fecund = rs_nc;
+		else
+			max_fecund = rs_np;
 	}
 
 	bool parse_parameters(int argc, char*argv[])
