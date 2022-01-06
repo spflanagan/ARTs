@@ -1832,9 +1832,10 @@ public:
 		}
 	}
 	
-	void making_babies(parameters gp, int fecundity, int& num_progeny, int mom_index, int dad_index)
+	int making_babies(parameters gp, int fecundity, int& num_progeny, int mom_index, int dad_index)
 	{
 		int jj, jjj;
+		int prog_count = 0;
 
 		for (jj = 0; jj < fecundity; jj++)
 		{
@@ -1876,12 +1877,14 @@ public:
 						progeny[num_progeny].assign_conditional_traits(gp);//do this before updating traits, but after mutation
 					progeny[num_progeny].update_traits(gp, courter_thresh, parent_thresh, pref_thresh);
 				}
-				if (progeny[num_progeny].alive)
-				{										
-					num_progeny++;
-				}
+			}
+			if (progeny[num_progeny].alive)
+			{										
+				num_progeny++;
+				prog_count++;
 			}
 		}
+		return prog_count;
 	}
 	void per_female_mating(parameters gp, vector<int> & male_index)
 	{
@@ -2160,19 +2163,19 @@ public:
 	}
 	int dd_make_offspring(nest this_nest,int& num_progeny, int off_to_make, parameters gp) //num_progeny tracks the prog index we're on
 	{
-		int k, kk;
+		int k, kk, nb;
 		int off_counter = 0;	
 		int start_numprog = num_progeny;
 		for(k = 0; k < this_nest.off_props.size(); k++)
 		{//each dad gets babies
 			int fecundity = round(off_to_make*this_nest.off_props[k]);
-			making_babies(gp, fecundity, num_progeny, this_nest.mom, this_nest.all_dads[k]);
-			off_counter = off_counter+ (num_progeny - start_numprog);
+			nb = making_babies(gp, fecundity, num_progeny, this_nest.mom, this_nest.all_dads[k]);
+			off_counter = off_counter+ nb;
 		}
 		if(off_counter < off_to_make)//make sure the nest was filled -- if it wasn't, the nesting male sires the remainder
 		{
-			making_babies(gp, (off_to_make - off_counter), num_progeny, this_nest.mom, this_nest.nest_dad);
-			off_counter = off_counter+ (num_progeny - start_numprog);
+			nb = making_babies(gp, (off_to_make - off_counter), num_progeny, this_nest.mom, this_nest.nest_dad);
+			off_counter = off_counter + nb;
 		}	
 		//sanity check - these should be the same
 		if(off_counter != (num_progeny - start_numprog))
@@ -2297,7 +2300,7 @@ public:
 					fecundity = adults[fem_id].pot_rs;
 				else
 					fecundity = adults[male_id].pot_rs;
-				making_babies(gp, fecundity, num_progeny, fem_id, male_id);
+				int nb = making_babies(gp, fecundity, num_progeny, fem_id, male_id);
 				adults[male_id].pot_rs = adults[male_id].pot_rs - fecundity; //reduce male's RS based on how many babies he's already made.
 			}
 		}
@@ -2344,7 +2347,7 @@ public:
 					fecundity = min(adults[male_ids[k]].pot_rs, (adults[fem_id].pot_rs - num_prog));
 				if (fecundity > 0)//make sure you can make this baby
 				{
-					making_babies(gp, fecundity, num_progeny, fem_id, male_ids[k]);
+					int nb = making_babies(gp, fecundity, num_progeny, fem_id, male_ids[k]);
 					adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - fecundity; //reduce male's RS based on how many babies he's already made.
 					num_prog = num_prog + fecundity;
 				}
