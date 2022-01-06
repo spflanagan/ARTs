@@ -2174,9 +2174,9 @@ public:
 			making_babies(gp, (off_to_make - off_counter), num_progeny, this_nest.mom, this_nest.nest_dad);
 			off_counter = off_counter+ (num_progeny - start_numprog);
 		}	
-		//sanity check
+		//sanity check - these should be the same
 		if(off_counter != (num_progeny - start_numprog))
-			cout << "\nNest with female " << this_nest.mom << " had " << off_counter << " babies instead of " << (num_progeny - start_numprog) << std::flush;
+			cout << "\nNest with female " << this_nest.mom << " tracked " << off_counter << " babies but only " << (num_progeny - start_numprog) << " were created." << std::flush;
 		return off_counter;
 	}
 	void dd_assign_sneakers(int fem_id, parameters gp, nest& this_nest)
