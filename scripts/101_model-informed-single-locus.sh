@@ -41,7 +41,7 @@ rm parallel_cmds.sh
 for i in `seq ${NUMREPS}`; do
 
     # expected high diversity
-	echo "./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_highDiversity_monogamy_${i} -crs ${CRS} -ncrs ${NRS} -sperm-r ${C} -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 --viability --same-base -mm 4 -p 4" > "parallel_cmds.sh"
+	echo "./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_highDiversity_monogamy_${i} -crs ${CRS} -ncrs ${NRS} -sperm-r ${C} -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 --viability --same-base -mm 4 -p 4" >> "parallel_cmds.sh"
 	echo "./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_highDiversity_monogamy_nm_${i} -crs ${CRS} -ncrs ${NRS} -sperm-r ${C} -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 --viability --same-base -mm 4 -p 4 --allow-no-mating" >> "parallel_cmds.sh"
 	echo "./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_highDiversity_polygyny_${i} -crs ${CRS} -ncrs ${NRS} -sperm-r ${C} -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 --viability --same-base -mm 4 -p 4 --polygyny" >> "parallel_cmds.sh"
 	echo "./ARTs --courter --no-genetics --parent -b ../../results/single_locus/pcu_1locus_highDiversity_polygyny_nm_${i} -crs ${CRS} -ncrs ${NRS} -sperm-r ${C} -q 1 -x 1 -c 1 -surv-noparent 0 -surv-parent 1 --viability --same-base -mm 4 -p 4 --polygyny --allow-no-mating" >> "parallel_cmds.sh"
