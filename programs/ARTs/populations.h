@@ -2239,16 +2239,27 @@ public:
 			// if there are no sneakers, proceed as above (based on female RS)
 			if (max_sperm == 0) max_sperm = adults[fem_id].pot_rs; 
 			fecundity_share[0] = double(adults[male_id].pot_rs) / double(max_sperm); //it doesn't get weighted if r <= 1
-			adults[male_ids[0]].pot_rs = adults[male_id].pot_rs - int(fecundity_share[0]* double(max_sperm)); // nesting male has used all of his sperm
+			double sperm_count = fecundity_share[0];
 			for (k = 1; k < fecundity_share.size(); k++)
 			{
 				int sperm_used = round(adults[male_ids[k]].pot_rs*gp.sperm_comp_r);
 				fecundity_share[k] =  double(sperm_used) / double(max_sperm);
-				adults[male_ids[k]].lifetime_rs = adults[male_ids[k]].lifetime_rs + sperm_used;
-				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - sperm_used;
+				sperm_count = sperm_count + fecundity_share[k];
 			}				
 			for(k = 0; k < fecundity_share.size(); k++)
+			{	
+				// relativize the fecundity shares to ensure that it's less than 1.
+				fecundity_share[k] = fecundity_share[k] / sperm_count;
+				// double check
+				if (fecundity_share[k] > 1)
+				{
+					cout << "\nWarning! A fecundity share > 1 has been recorded.\n" << std::flush;
+				}
+				// record the males' mating success
+				adults[male_ids[k]].lifetime_rs = adults[male_ids[k]].lifetime_rs + (fecundity_share[k]*adults[fem_id].pot_rs);
+				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - (fecundity_share[k]*adults[fem_id].pot_rs);
 				this_nest.off_props.push_back(fecundity_share[k]);
+			}
 			for(k = 0; k < male_ids.size(); k++)
 				this_nest.all_dads.push_back(male_ids[k]);
 			if (this_nest.off_props.size() != this_nest.all_dads.size())
