@@ -1836,11 +1836,15 @@ public:
 	{
 		int jj, jjj;
 		int prog_count = 0;
+		int n_overwritten = 0;
 
 		for (jj = 0; jj < fecundity; jj++)
 		{
-			if (num_progeny >= progeny.size())
+			if (num_progeny >= progeny.size()){
 				num_progeny = progeny.size() - 1;
+				n_overwritten++;
+			}
+				
 
 			progeny[num_progeny].alive = true;
 			progeny[num_progeny].mom = mom_index;
@@ -1884,6 +1888,8 @@ public:
 				prog_count++;
 			}
 		}
+		if(n_overwritten > 0)
+			cout << n_overwritten << " offspring were overwritten (i.e., " << n_overwritten << " too many offspring were created)\n" << std::flush;
 		return prog_count;
 	}
 	void per_female_mating(parameters gp, vector<int> & male_index)
