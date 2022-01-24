@@ -210,7 +210,7 @@ simSum<-data.frame(
 
 ## Summarizing multiple files
 
-```{r}
+```{r runQTLs, eval=FALSE}
 path <- "/mnt/BigData/fixedART-results/qtls"
 qtl_outliers<-dplyr::bind_rows(lapply(
   list.files(path=path, 
@@ -223,7 +223,7 @@ write.csv(qtl_outliers,"qtl_outliers.csv",quote=FALSE,row.names = FALSE)
 ```
 
 
-```{r}
+```{r runSupergenes,eval=FALSE}
 path <- "/mnt/BigData/fixedART-results/supergene/"
 supergene_outliers<-dplyr::bind_rows(lapply(
   list.files(pattern="*.vcf",
