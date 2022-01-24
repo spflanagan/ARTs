@@ -2034,7 +2034,7 @@ public:
 		{
 			irndnum = randnum(num_mal);
 			male_id = male_index[irndnum];
-			if (adults[male_id].alive)
+			if (adults[male_id].alive && adults[male_id].pot_rs> 0)
 			{
 				if (gp.polygyny || adults[male_id].mate_found == 0)//either polygyny is ok or if monogamy the male hasn't mated yet
 				{
@@ -2087,7 +2087,7 @@ public:
 			{
 				irndnum = randnum(num_mal);
 				male_id = male_index[irndnum];
-				if (adults[male_id].alive)
+				if (adults[male_id].alive && adults[male_id].pot_rs > 0)
 				{
 					if ((gp.polygyny && adults[male_id].mate_found < gp.max_num_mates) || (!gp.polygyny && adults[male_id].mate_found < 1))
 					{
