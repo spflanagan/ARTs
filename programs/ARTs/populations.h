@@ -1944,7 +1944,9 @@ public:
 					//if parent traits don't exist then set them all to false so all males have equal chance.
 					if (!gp.parent_conditional && !gp.parent_trait)
 						adults[j].parent = false;
-				}
+					if(adults[j].pot_rs <=0)
+						cout <<"\nWarning, male " << j <<" has no pot rs!\n" << std::flush;
+ 				}
 			}
 			adults[j].mate_found = 0;
 		}
