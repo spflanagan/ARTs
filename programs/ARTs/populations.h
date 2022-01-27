@@ -2174,17 +2174,61 @@ public:
 		int k, kk, nb;
 		int off_counter = 0;	
 		int start_numprog = num_progeny;
+		vector <int> fecundity;
+		int fecundity_counter = 0;
 		for(k = 0; k < this_nest.off_props.size(); k++)
 		{//each dad gets babies
-			int fecundity = round(off_to_make*this_nest.off_props[k]);
-			nb = making_babies(gp, fecundity, num_progeny, this_nest.mom, this_nest.all_dads[k]);
+			fecundity.push_back(round(off_to_make*this_nest.off_props[k]));
+			fecundity_counter = fecundity_counter + fecundity[k];
+		}
+		// add any extras from the nesting male
+		if(fecundity_counter < off_to_make)//make sure the nest was filled -- if it wasn't, the nesting male sires the remainder
+		{
+			fecundity[0] = fecundity[0] + (off_to_make - off_counter);
+			fecundity_counter = fecundity_counter + (off_to_make - off_counter);
+		}	
+		// if you've made too many
+		if(fecundity_counter > off_to_make)
+		{
+			int min_off = 100;
+			vector <int> which_min;
+			// get the minimum fecundity
+			for(k = 0; k < this_nest.off_props.size(); k++)
+			{
+				if(fecundity[k] < min_off)
+					min_off = fecundity[k];
+			}
+			// figure out which males have the minimum fecundity
+			for(k = 0; k < this_nest.off_props.size(); k++)
+			{
+				if(fecundity[k] == min_off)
+					which_min.push_back(k);
+			}
+			// reallocate ones that are tied for minimum fecundity
+			if(which_min.size() > 0)
+			{
+				int num_to_lose = fecundity_counter - off_to_make;
+				if(num_to_lose > min_off)
+				{
+					int rand_dad = randnum(which_min.size());
+					fecundity[rand_dad] = fecundity[rand_dad] - num_to_lose;
+				}
+				else 
+				{// uh oh
+					cout << "\n Uh oh, have too much excess that cannot be lost from the minimum dad." << std::flush;
+				}
+				
+			}
+		}
+
+		
+		off_counter = 0;
+		for(k = 0; k < this_nest.off_props.size();k++)
+		{
+			nb = making_babies(gp, fecundity[k], num_progeny, this_nest.mom, this_nest.all_dads[k]);
 			off_counter = off_counter+ nb;
 		}
-		if(off_counter < off_to_make)//make sure the nest was filled -- if it wasn't, the nesting male sires the remainder
-		{
-			nb = making_babies(gp, (off_to_make - off_counter), num_progeny, this_nest.mom, this_nest.nest_dad);
-			off_counter = off_counter + nb;
-		}	
+		
 		//sanity check - these should be the same
 		if(off_counter != (num_progeny - start_numprog))
 			cout << "\nNest with female " << this_nest.mom << " tracked " << off_counter << " babies but only " << (num_progeny - start_numprog) << " were created." << std::flush;
