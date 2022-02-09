@@ -2190,34 +2190,57 @@ public:
 		// if you've made too many
 		if(fecundity_counter > off_to_make)
 		{
-			int min_off = 100;
-			vector <int> which_min;
-			// get the minimum fecundity
-			for(k = 0; k < this_nest.off_props.size(); k++)
+			int num_to_lose = fecundity_counter - off_to_make;
+			int min_off = 100; //maybe delete
+			vector <int> dad_matches;
+			// see if any of them match the nest dad
+			for(k = 1; k < fecundity.size(); k++)
 			{
-				if(fecundity[k] < min_off)
-					min_off = fecundity[k];
+				if(fecundity[k] == fecundity[0])
+					dad_matches.push_back(k);
 			}
-			// figure out which males have the minimum fecundity
-			for(k = 0; k < this_nest.off_props.size(); k++)
+			// if any dad matches are found, reduce the sneaker number
+			for(k = 0; k < dad_matches.size(); k++)
 			{
-				if(fecundity[k] == min_off)
-					which_min.push_back(k);
-			}
-			// reallocate ones that are tied for minimum fecundity
-			if(which_min.size() > 0)
-			{
-				int num_to_lose = fecundity_counter - off_to_make;
-				if(num_to_lose > min_off)
+				if(num_to_lose > 0)
 				{
-					int rand_dad = randnum(which_min.size());
-					fecundity[rand_dad] = fecundity[rand_dad] - num_to_lose;
+					fecundity[dad_matches[k]] = fecundity[dad_matches[k]] - 1;
+					num_to_lose--;
 				}
-				else 
-				{// uh oh
-					cout << "\n Uh oh, have too much excess that cannot be lost from the minimum dad." << std::flush;
+			}
+			// if we still have some to lose, we'll first choose among other identical matches
+			std::vector<int> matches;
+			for(k = 0; k < fecundity.size(); k++)
+			{
+				// find matches for fecundity[k]
+				std::vector<int> kmatches;
+				for(int kk = k; kk < fecundity.size(); kk++)
+				{
+					if(fecundity[k] == fecundity[kk])
+					{
+						// add any matches to the match list
+						kmatches.push_back(kk);
+						matches.push_back(kk);
+					}						
 				}
-				
+				if(kmatches.size() > 0) // if we found matches, add k to the list. 
+					matches.push_back(k);
+			}
+			// remove some from matches
+			for(k = 0; k < matches.size(); k++)
+			{
+				if(num_to_lose > 0)
+				{
+					fecundity[matches[k]] = fecundity[matches[k]] - 1;
+					num_to_lose--;
+				}
+			}
+			// if we still have some to lose, randomly select ones to decrement
+			while(num_to_lose > 0)
+			{
+				int rand_dad = randnum(fecundity.size());
+				fecundity[rand_dad] = fecundity[rand_dad] - 1;
+				num_to_lose--;
 			}
 		}
 
