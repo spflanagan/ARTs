@@ -2244,7 +2244,6 @@ public:
 			}
 		}
 
-		
 		off_counter = 0;
 		for(k = 0; k < this_nest.off_props.size();k++)
 		{
