@@ -2253,7 +2253,19 @@ public:
 		
 		//sanity check - these should be the same
 		if(off_counter != (num_progeny - start_numprog))
-			cout << "\nNest with female " << this_nest.mom << " tracked " << off_counter << " babies but only " << (num_progeny - start_numprog) << " were created." << std::flush;
+		{
+			if (gp.log_file)
+            {
+                ofstream log_out;
+				string log_name = gp.base_name + ".warnings";
+                log_out.open(log_name);
+				log_out << "\nNest with female " << this_nest.mom << " tracked " << off_counter << " babies but only " << (num_progeny - start_numprog) << " were created.";
+				log_out.close();
+            } 
+			else
+				cout << "\nNest with female " << this_nest.mom << " tracked " << off_counter << " babies but only " << (num_progeny - start_numprog) << " were created." << std::flush;
+		}
+		
 		return off_counter;
 	}
 	void dd_assign_sneakers(int fem_id, parameters gp, nest& this_nest)
