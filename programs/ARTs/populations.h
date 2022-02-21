@@ -2258,7 +2258,7 @@ public:
             {
                 ofstream log_out;
 				string log_name = gp.base_name + ".warnings";
-                log_out.open(log_name);
+				log_out.open(log_name,  ios::out | ios::app );
 				log_out << "\nNest with female " << this_nest.mom << " tracked " << off_counter << " babies but only " << (num_progeny - start_numprog) << " were created.";
 				log_out.close();
             } 
