@@ -2230,17 +2230,12 @@ public:
 			{
 				if(num_to_lose > 0)
 				{
-					fecundity[matches[k]] = fecundity[matches[k]] - 1;
+					int rand_dad = randnum(fecundity.size());
+					fecundity[rand_dad] = fecundity[rand_dad] - 1;
 					num_to_lose--;
 				}
 			}
-			// if we still have some to lose, randomly select ones to decrement
-			while(num_to_lose > 0)
-			{
-				int rand_dad = randnum(fecundity.size());
-				fecundity[rand_dad] = fecundity[rand_dad] - 1;
-				num_to_lose--;
-			}
+			
 		}
 
 		off_counter = 0;
