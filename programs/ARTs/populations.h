@@ -2209,8 +2209,7 @@ public:
 				}
 			}
 			// if we still have some to lose, we'll first choose among other identical matches
-			std::vector<int> matches;
-			for(k = 0; k < fecundity.size(); k++)
+			if(num_to_lose > 0)
 			{
 				// find matches for fecundity[k]
 				std::vector<int> kmatches;
