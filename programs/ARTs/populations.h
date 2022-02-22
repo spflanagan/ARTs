@@ -2184,8 +2184,8 @@ public:
 		// add any extras from the nesting male
 		if(fecundity_counter < off_to_make)//make sure the nest was filled -- if it wasn't, the nesting male sires the remainder
 		{
-			fecundity[0] = fecundity[0] + (off_to_make - off_counter);
-			fecundity_counter = fecundity_counter + (off_to_make - off_counter);
+			fecundity[0] = fecundity[0] + (off_to_make - fecundity_counter);
+			fecundity_counter = fecundity_counter + (off_to_make - fecundity_counter);
 		}	
 		// if you've made too many
 		if(fecundity_counter > off_to_make)
