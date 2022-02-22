@@ -2211,24 +2211,38 @@ public:
 			// if we still have some to lose, we'll first choose among other identical matches
 			if(num_to_lose > 0)
 			{
-				// find matches for fecundity[k]
-				std::vector<int> kmatches;
-				for(int kk = k; kk < fecundity.size(); kk++)
+				std::vector<int> matches;
+				for(k = 0; k < fecundity.size(); k++)
 				{
-					if(fecundity[k] == fecundity[kk])
+					// find matches for fecundity[k]
+					for(int kk = (k+1); kk < fecundity.size(); kk++)
 					{
-						// add any matches to the match list
-						kmatches.push_back(kk);
-						matches.push_back(kk);
-					}						
+						if(fecundity[k] == fecundity[kk])
+						{
+							// add any matching fecundities to the match list
+							matches.push_back(fecundity[k]);
+						}						
+					}
 				}
-				if(kmatches.size() > 0) // if we found matches, add k to the list. 
-					matches.push_back(k);
-			}
-			// remove some from matches
-			for(k = 0; k < matches.size(); k++)
-			{
-				if(num_to_lose > 0)
+				// sort matches to be in descending order
+				sort(matches.begin(), matches.end(), greater<int>());
+				// start with largest matching values and remove from them first
+				for (int mn = 0; mn < matches.size(); mn++)
+				{
+					// decrement as necessary
+					for(k = 0; k < fecundity.size(); k++)
+					{
+						if(num_to_lose > 0 && fecundity[k] == matches[mn])
+						{
+							fecundity[k] = fecundity[k] - 1;
+							num_to_lose--;
+						}
+					}
+
+				}
+				
+				// if we still have some to lose, randomly select ones to decrement
+				while(num_to_lose > 0)
 				{
 					int rand_dad = randnum(fecundity.size());
 					fecundity[rand_dad] = fecundity[rand_dad] - 1;
