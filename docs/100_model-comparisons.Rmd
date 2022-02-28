@@ -246,6 +246,49 @@ fig1<-plot_ly(
 ```
 
 
+Before selecting precise values, I ran the model with equal initial frequencies for all four morphs with 10,000 generations, to ensure that the diversity identified is not lost over time in the mathematical model. 
+
+```{r multiGenContours, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=4.5, fig.height=7, warning=FALSE,message=FALSE}
+
+results<-readRDS("../morph_predictions/morph_results_10000_equalStart.RDS")
+results$diversity<-vegan::diversity(round(results[,c("CP","CN","NP","NN")],4))
+
+contours<-by(results, results$num_sneak, function(sub_calcs){
+  
+  
+  data_wide<-tidyr::spread(
+    sub_calcs[,c("r","c","diversity")],
+    r,
+    diversity
+  )
+  rownames(data_wide)<-data_wide[,1]
+  data_wide<-data_wide[,-1]
+  
+  fig <- plot_ly(
+    x = as.numeric(colnames(data_wide)), 
+    y = as.numeric(rownames(data_wide)), 
+    z = as.matrix(data_wide), 
+    type = "contour"
+  )
+  # add axis labels
+  x<-list(title="r")
+  y<-list(title="c")
+  fig <- fig %>% layout(xaxis=x,yaxis=y)
+  # add label to contour names
+  fig <- fig %>% colorbar(title = "Diversity")
+  # plot
+  return(fig)
+})
+
+
+multi_fig <- subplot(contours, nrows = 5, shareY = TRUE, shareX = TRUE)
+
+multi_fig
+
+```
+
+
+
 ## Low diversity parameter space
 
 The [results from the mathematical model](https://spflanagan.shinyapps.io/morph_predictions/) were inspected to identify parameter regions where multiple morphs were *not* maintained. I focused on parameter sets when morphs had equal initial frequencies, as the simulation model initiates populations with nearly equal frequencies of the morphs. I selected the low diversity parameters in Table \@ref(tab:lowDivParams) to implement in the simulation model with a single locus underpinning the courter and parent traits. 
