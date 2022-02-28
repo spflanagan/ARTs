@@ -18,14 +18,14 @@ CRS=5
 #-ncrs
 NRS=8
 #-sperm-r
-C=0.5
+C=0.7
 ## for low diversity
 #-crs
 LCRS=8
 #-ncrs
 LNRS=5
 #-sperm-r
-LC=0.7
+LC=0.5
 
 # Things to vary
 SUPERGENE_PROP_VARS='0.05 0.25 0.5'
