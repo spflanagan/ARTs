@@ -321,14 +321,20 @@ kable(highDivParams, "latex",booktab=TRUE,
 Based on the mathematical model, we expected the courter-parent morph to dominate the population (Table \@ref(tab:lowMathResults)), and that it would dominate the population rapidly (Fig. \@ref(fig:mathOverTimeLow)). The same patterns are observed in the simulation model results (Fig. \@ref(fig:lowDivPlot)).
 
 ```{r lowMathResults}
-kable(morph_results[morph_results$initial_CP == 0.25 & 
+expected<-rbind(round(morph_results[morph_results$initial_CP == 0.25 & 
                       morph_results$initial_CN == 0.25 & 
                       morph_results$initial_NP == 0.25 & 
                       morph_results$initial_NN == 0.25 & 
                       morph_results$r==2 &
                       morph_results$c == 0.5 &
                       morph_results$num_sneak == 3,
-                    c("CP","CN","NP","NN")],
+                    c("CP","CN","NP","NN")],2),
+                round(results[results$r==2 & 
+                          results$c == 0.5 & 
+                          results$num_sneak==3,
+                        1:4],2))
+rownames(expected)<-c("100 generations","10,000 generations")
+kable(expected,
       "latex",booktab=TRUE,
       caption="Expected frequencies of the four morphs after 100 generations with the chosen high-diversity parameter settings.")  %>% kableExtra::kable_styling(latex_options = "HOLD_position")
 ```
@@ -419,14 +425,20 @@ kable(highDivParams, "latex",booktab=TRUE,
 Based on the mathematical model, we expected the courter-parent, noncourter-parent, and noncourter-nonparent morphs to be maintained at reasonably high frequencies (Table \@ref(tab:highMathResults)). Interestingly, the polymorphism maintained in the mathematical model seems to be maintained through cyclical shifting of morph frequencies (Fig. \@ref(fig:mathOverTime)).
 
 ```{r highMathResults}
-kable(morph_results[morph_results$initial_CP == 0.25 & 
+expected<-rbind(round(morph_results[morph_results$initial_CP == 0.25 & 
                       morph_results$initial_CN == 0.25 & 
                       morph_results$initial_NP == 0.25 & 
                       morph_results$initial_NN == 0.25 & 
                       morph_results$r==0.5 &
                       morph_results$c == 0.5 &
                       morph_results$num_sneak == 3,
-                    c("CP","CN","NP","NN")],
+                    c("CP","CN","NP","NN")],2),
+                round(results[results$r==0.5 & 
+                          results$c == 0.5 & 
+                          results$num_sneak==3,
+                        1:4],2))
+rownames(expected)<-c("100 generations","10,000 generations")
+kable(expected,
       "latex",booktab=TRUE,
       caption="Expected frequencies of the four morphs after 100 generations with the chosen high-diversity parameter settings.")  %>% kableExtra::kable_styling(latex_options = "HOLD_position")
 ```
