@@ -25,7 +25,7 @@ LCRS=8
 #-ncrs
 LNRS=5
 #-sperm-r
-LC=0.5
+LC=0.7
 
 
 ### --- MOVE TO THE CORRECT DIRECTORIES --- ###

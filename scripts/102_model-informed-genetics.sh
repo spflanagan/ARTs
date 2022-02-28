@@ -25,7 +25,7 @@ LCRS=8
 #-ncrs
 LNRS=5
 #-sperm-r
-LC=0.5
+LC=0.7
 
 # Things to vary
 SUPERGENE_PROP_VARS='0.05 0.25 0.5'
