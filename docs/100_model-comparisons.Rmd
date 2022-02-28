@@ -314,7 +314,7 @@ highDivParams<-data.frame(
              4)
 )
 kable(highDivParams, "latex",booktab=TRUE,
-      caption="Table of parameters selected to create a low-diversity population. All morphs started at equal frequencies.")
+      caption="Table of parameters selected to create a low-diversity population. All morphs started at equal frequencies.") %>% kableExtra::kable_styling(latex_options = "HOLD_position")
 
 ```
 
@@ -330,7 +330,7 @@ kable(morph_results[morph_results$initial_CP == 0.25 &
                       morph_results$num_sneak == 3,
                     c("CP","CN","NP","NN")],
       "latex",booktab=TRUE,
-      caption="Expected frequencies of the four morphs after 100 generations with the chosen high-diversity parameter settings.")
+      caption="Expected frequencies of the four morphs after 100 generations with the chosen high-diversity parameter settings.")  %>% kableExtra::kable_styling(latex_options = "HOLD_position")
 ```
 
 
@@ -412,7 +412,7 @@ highDivParams<-data.frame(
              4)
 )
 kable(highDivParams, "latex",booktab=TRUE,
-      caption="Table of parameters selected to create a high-diversity population. All morphs started at equal frequencies.")
+      caption="Table of parameters selected to create a high-diversity population. All morphs started at equal frequencies.")  %>% kableExtra::kable_styling(latex_options = "HOLD_position")
 
 ```
 
@@ -428,7 +428,7 @@ kable(morph_results[morph_results$initial_CP == 0.25 &
                       morph_results$num_sneak == 3,
                     c("CP","CN","NP","NN")],
       "latex",booktab=TRUE,
-      caption="Expected frequencies of the four morphs after 100 generations with the chosen high-diversity parameter settings.")
+      caption="Expected frequencies of the four morphs after 100 generations with the chosen high-diversity parameter settings.")  %>% kableExtra::kable_styling(latex_options = "HOLD_position")
 ```
 
 ```{r mathOverTime, fig.cap="The frequencies of the morphs cycle over time in the mathematical model, with polymorphism being maintained by the dominant morph shifting every few generations.", fig.height=4, fig.width=6}
