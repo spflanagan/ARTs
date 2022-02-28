@@ -291,7 +291,10 @@ multi_fig
 
 ## Low diversity parameter space
 
-The [results from the mathematical model](https://spflanagan.shinyapps.io/morph_predictions/) were inspected to identify parameter regions where multiple morphs were *not* maintained. I focused on parameter sets when morphs had equal initial frequencies, as the simulation model initiates populations with nearly equal frequencies of the morphs. I selected the low diversity parameters in Table \@ref(tab:lowDivParams) to implement in the simulation model with a single locus underpinning the courter and parent traits. 
+The [results from the mathematical model](https://spflanagan.shinyapps.io/morph_predictions/) were inspected to identify parameter regions where multiple morphs were *not* maintained. I focused on parameter sets when morphs had equal initial frequencies, as the simulation model initiates populations with nearly equal frequencies of the morphs. 
+
+
+Given these results taken together, I selected the low diversity parameters in Table \@ref(tab:lowDivParams) to implement in the simulation model with a single locus underpinning the courter and parent traits. 
 
 ```{r lowDivParams}
 highDivParams<-data.frame(
