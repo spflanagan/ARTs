@@ -2271,6 +2271,7 @@ public:
 		{
 			nb = making_babies(gp, fecundity[k], num_progeny, this_nest.mom, this_nest.all_dads[k]);
 			off_counter = off_counter+ nb;
+			adults[this_nest.all_dads[k]].lifetime_rs = adults[this_nest.all_dads[k]].lifetime_rs + fecundity[k];
 		}
 		
 		//sanity check - these should be the same
@@ -2377,7 +2378,6 @@ public:
 			// // record the males' mating success
 			for(k = 0; k < fecundity_share.size(); k++)
 			{
-				adults[male_ids[k]].lifetime_rs = adults[male_ids[k]].lifetime_rs + (fecundity_share[k]*adults[fem_id].pot_rs);
 				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - (fecundity_share[k]*adults[fem_id].pot_rs);
 				this_nest.off_props.push_back(fecundity_share[k]);
 				if(adults[male_ids[k]].pot_rs < 0)
