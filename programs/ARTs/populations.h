@@ -2352,21 +2352,38 @@ public:
 				int sperm_used = round(adults[male_ids[k]].pot_rs*gp.sperm_comp_r);
 				fecundity_share[k] =  double(sperm_used) / double(max_sperm);
 				sperm_count = sperm_count + fecundity_share[k];
-			}				
+			}
+			// relativize the fecundity shares to ensure that it's less than 1.
 			for(k = 0; k < fecundity_share.size(); k++)
-			{	
-				// relativize the fecundity shares to ensure that it's less than 1.
+			{
 				fecundity_share[k] = fecundity_share[k] / sperm_count;
 				// double check
 				if (fecundity_share[k] > 1)
 				{
 					cout << "\nWarning! A fecundity share > 1 has been recorded.\n" << std::flush;
 				}
-				// record the males' mating success
+			}
+			// check that the males can actually afford to make all the offspring
+			sperm_count = 0;
+			for(k = 0; k < fecundity_share.size(); k++)
+			{	
+				if((fecundity_share[k]*adults[fem_id].pot_rs) > adults[male_ids[k]].pot_rs)
+				{
+					fecundity_share[k] = double(adults[male_ids[k]].pot_rs) / double(adults[fem_id].pot_rs);
+					sperm_count = sperm_count + fecundity_share[k];
+				}
+			}
+			// // record the males' mating success
+			for(k = 0; k < fecundity_share.size(); k++)
+			{
 				adults[male_ids[k]].lifetime_rs = adults[male_ids[k]].lifetime_rs + (fecundity_share[k]*adults[fem_id].pot_rs);
 				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - (fecundity_share[k]*adults[fem_id].pot_rs);
 				this_nest.off_props.push_back(fecundity_share[k]);
-			}
+				if(adults[male_ids[k]].pot_rs < 0)
+				{
+					cout << "\nWarning! Dad has negative RS.\n";
+				}
+			}	
 			for(k = 0; k < male_ids.size(); k++)
 				this_nest.all_dads.push_back(male_ids[k]);
 			if (this_nest.off_props.size() != this_nest.all_dads.size())
