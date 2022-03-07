@@ -2190,7 +2190,7 @@ public:
 				fecundity_counter = fecundity_counter + (off_to_make - fecundity_counter);
 			} else
 			{
-				for(k = 1; k < fecundity.length(); k++)
+				for(k = 1; k < fecundity.size(); k++)
 				{
 					if(fecundity_counter < off_to_make && ((fecundity[k] + (off_to_make - fecundity_counter)) <= adults[this_nest.all_dads[k]].pot_rs))
 					{
