@@ -2184,8 +2184,21 @@ public:
 		// add any extras from the nesting male
 		if(fecundity_counter < off_to_make)//make sure the nest was filled -- if it wasn't, the nesting male sires the remainder
 		{
-			fecundity[0] = fecundity[0] + (off_to_make - fecundity_counter);
-			fecundity_counter = fecundity_counter + (off_to_make - fecundity_counter);
+			if(fecundity[0] + (off_to_make - fecundity_counter) <= adults[this_nest.nest_dad].pot_rs)
+			{
+				fecundity[0] = fecundity[0] + (off_to_make - fecundity_counter);
+				fecundity_counter = fecundity_counter + (off_to_make - fecundity_counter);
+			} else
+			{
+				for(k = 1; k < fecundity.length(); k++)
+				{
+					if(fecundity_counter < off_to_make && ((fecundity[k] + (off_to_make - fecundity_counter)) <= adults[this_nest.all_dads[k]].pot_rs))
+					{
+						fecundity[k] = fecundity[k] + (off_to_make - fecundity_counter);
+						fecundity_counter = fecundity_counter + (off_to_make - fecundity_counter);
+					}
+				}
+			}
 		}	
 		// if you've made too many
 		if(fecundity_counter > off_to_make)
