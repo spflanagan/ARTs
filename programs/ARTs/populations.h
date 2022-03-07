@@ -2364,20 +2364,6 @@ public:
 				{
 					cout << "\nWarning! A fecundity share > 1 has been recorded.\n" << std::flush;
 				}
-			}
-			// check that the males can actually afford to make all the offspring
-			sperm_count = 0;
-			for(k = 0; k < fecundity_share.size(); k++)
-			{	
-				if((fecundity_share[k]*adults[fem_id].pot_rs) > adults[male_ids[k]].pot_rs)
-				{
-					fecundity_share[k] = double(adults[male_ids[k]].pot_rs) / double(adults[fem_id].pot_rs);
-					sperm_count = sperm_count + fecundity_share[k];
-				}
-			}
-			// // record the males' mating success
-			for(k = 0; k < fecundity_share.size(); k++)
-			{
 				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - (fecundity_share[k]*adults[fem_id].pot_rs);
 				this_nest.off_props.push_back(fecundity_share[k]);
 				if(adults[male_ids[k]].pot_rs < 0)
