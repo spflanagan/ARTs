@@ -2364,7 +2364,8 @@ public:
 				{
 					cout << "\nWarning! A fecundity share > 1 has been recorded.\n" << std::flush;
 				}
-				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - (fecundity_share[k]*adults[fem_id].pot_rs);
+				// record the males' expenditure of energy
+				adults[male_ids[k]].pot_rs = max(0,(adults[male_ids[k]].pot_rs - (fecundity_share[k]*adults[fem_id].pot_rs)));
 				this_nest.off_props.push_back(fecundity_share[k]);
 				if(adults[male_ids[k]].pot_rs < 0)
 				{
