@@ -2013,7 +2013,6 @@ public:
 				if (nests[j].alive)
 				{
 					int off_to_make = off_remaining / nests_surviving;
-					//if(off_to_make > adults[nests[j].mom].pot_rs) off_to_make = adults[nests[j].mom].pot_rs;
 					int off_made = dd_make_offspring(nests[j], num_progeny, off_to_make, gp);
 					off_remaining = off_remaining - off_made;
 					nests_surviving = nests_surviving - 1;
