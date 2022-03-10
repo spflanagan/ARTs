@@ -356,7 +356,7 @@ public:
 			max_fecund = rs_nc;
 			rs_np = rs_nc; // we prefer the courter RS settings
 			rs_p = rs_c;
-		}			
+		}
 		else
 			max_fecund = rs_np;
 	}
