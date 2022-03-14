@@ -14,7 +14,7 @@ NUMREPS=5
 #Parameters of interest include 
 ## for high diversity
 #-crs
-CRS=5
+CRS=6
 #-ncrs
 NRS=8
 #-sperm-r
@@ -23,7 +23,7 @@ C=0.7
 #-crs
 LCRS=8
 #-ncrs
-LNRS=5
+LNRS=4
 #-sperm-r
 LC=0.5
 
