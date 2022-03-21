@@ -430,8 +430,8 @@ expected<-rbind(round(morph_results[morph_results$initial_CP == 0.25 &
                       morph_results$initial_CN == 0.25 & 
                       morph_results$initial_NP == 0.25 & 
                       morph_results$initial_NN == 0.25 & 
-                      morph_results$r==0.75 &
-                      morph_results$c == 0.7 &
+                      round(morph_results$r,1)==0.7 &
+                      morph_results$c == 0.75 &
                       morph_results$num_sneak == 3,
                     c("CP","CN","NP","NN")],2),
                 round(results[round(results$r,1)==0.7 & 
