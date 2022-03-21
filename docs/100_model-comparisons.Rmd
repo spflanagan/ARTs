@@ -500,7 +500,7 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
-We can investigate the dynamics driving the simulation model -- and ensure they are aligned with the mathematical model -- by looking at individual-level patterns of mating success and reproductive success in males and females in the initial generation and in the final generation for one of the replicates. These figures show that, as expected, the non-courters do not mate (Fig. \@ref(fig:maleMS0)), and the courter-nonparents do not have any offspring after generation 1 (Fig. \@ref(fig:maleRS0)), whereas females have even mating success (Fig. \@ref(fig:femaleMS0)) and similar lifetime reproductive success Fig. \@ref(fig:femaleRS0)).
+We can understand what is driving these unexpected results from simulation model -- and ensure they are aligned with the mathematical model -- by looking at individual-level patterns of mating success and reproductive success in males and females in the initial generation and in the final generation for one of the replicates with monogamy and polygyny.
 
 ```{r}
 traits<-read.delim("single_locus/pcu_1locus_highDiversity_polygyny_nm_1_traits.txt")
