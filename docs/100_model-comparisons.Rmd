@@ -326,11 +326,11 @@ expected<-rbind(round(morph_results[morph_results$initial_CP == 0.25 &
                       morph_results$initial_CN == 0.25 & 
                       morph_results$initial_NP == 0.25 & 
                       morph_results$initial_NN == 0.25 & 
-                      morph_results$r==1.6 &
+                      morph_results$r==2 &
                       morph_results$c == 0.5 &
                       morph_results$num_sneak == 2,
                     c("CP","CN","NP","NN")],2),
-                round(results[results$r==1.6 & 
+                round(results[results$r==2 & 
                           results$c == 0.5 & 
                           results$num_sneak==2,
                         1:4],2))
@@ -349,7 +349,7 @@ output<-data.frame(matrix(nrow=gens+1,ncol=4))
 colnames(output)<-c("CP","CN","NP","NN")
 output[1,]<-freqs
 for (i in 1:(gens+1)){
-  output[i+1,]<-one_gen(freqs=output[i,],rs=c(8,8,5,5),c=0.5, max_sneakers=2)
+  output[i+1,]<-one_gen(freqs=output[i,],rs=c(8,8,4,4),c=0.5, max_sneakers=2)
   if(all(is.na(output[i+1,]))){
     #then the population has crashed
     output[(i+1):(gens+1),]<-c(0,0,0,0)
