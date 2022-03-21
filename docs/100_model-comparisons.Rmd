@@ -568,7 +568,7 @@ make_trait_hists<-function(traits,which_trait,which_sex,which_gen,which_pop,cols
 ```
 
 
-```{r maleMS0, fig.cap="Male mating success in generation 0 for each morph."}
+```{r maleMS0poly, fig.cap="Male mating success in generation 0 for each morph under polygyny (with no mating allowed)."}
 make_trait_hists(traits,
                  which_trait="MateFound",
                  which_sex="MALE",
