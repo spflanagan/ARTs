@@ -733,6 +733,8 @@ make_trait_hists(traits,
 ```
 
 
+
+What these results suggest is that under polygyny, the density-dependent nature of the model allows males to escape the costs of courtship, because even though they 'use up' all of their sperm, offspring are created in proportion to the surviving offspring, and those males are able to escape the costs and therefore increase their reproductive success beyond what is possible for males in the mathematical model. If we impose stricter costs on the males ($r=0.25$, or $r_{courter}=2$ and $r_{non-courter}=8$), we can see that multiple morphs are maintained under polygyny (with non-random mating, Fig. \@ref(fig:highDiversityStrictPlot)).
 One element of the simulation model is that the frequencies of the morphs do not start of at exactly equal frequencies. If we use the initial conditions from the simulation model to predict the equilibrial frequencies, we can see that the expected outcomes shift, and in some cases have a better qualitative match to the simulated outcomes (Table \@ref(tab:actualInitialFreqCals))
 
 ```{r getPolyHighGens}
