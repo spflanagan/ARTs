@@ -81,7 +81,7 @@ Once a female decides to nest, up to three males can fertilize the nest. Courtin
 
 ### 3. Nest Survival
 
-Before the offspring can survive, the nest has to survive. This step is only relevant when parental traits are in the model - if only the courtship trait is specified, then all progeny in the nest survive at this point. When males have the parental trait, if the female has given eggs to a non-parental male (because she chose based on courtship traits), then the nest has a 0% chance of surviving. If the female has given eggs to a parental male, the nest has a 100% chance of surviving. 
+Before the offspring can survive, the nest has to survive. This step is only relevant when parental traits are in the model -- if only the courtship trait is specified, then all progeny in the nest survive at this point. When males have the parental trait, if the female has given eggs to a non-parental male (because she chose based on courtship traits), then the nest has a 0% chance of surviving. If the female has given eggs to a parental male, the nest has a 100% chance of surviving. 
 
 ### 4. Density-dependent survival
 
