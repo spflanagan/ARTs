@@ -568,6 +568,10 @@ make_trait_hists<-function(traits,which_trait,which_sex,which_gen,which_pop,cols
 ```
 
 
+#### Individual level results: Polygyny
+
+As expected, the non-courters do not mate (Fig. \@ref(fig:maleMS0poly)), and the courter-nonparents do not have any offspring after generation 1 (Fig. \@ref(fig:maleRS0poly)), whereas females have even mating success (Fig. \@ref(fig:femaleMS0poly)) and similar lifetime reproductive success Fig. \@ref(fig:femaleRS0poly)).
+
 ```{r maleMS0poly, fig.cap="Male mating success in generation 0 for each morph under polygyny (with no mating allowed)."}
 make_trait_hists(traits,
                  which_trait="MateFound",
