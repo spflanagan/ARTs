@@ -306,11 +306,11 @@ highDivParams<-data.frame(
                 "r_NN",
                 "c",
                 "number of sneakers"),
-  value = c( 1.6, 
+  value = c( 2, 
              8,
              8,
-             5,
-             5,
+             4,
+             4,
              0.5,
              2)
 )
