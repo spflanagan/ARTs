@@ -504,6 +504,7 @@ We can understand what is driving these unexpected results from simulation model
 
 ```{r}
 traits<-read.delim("single_locus/pcu_1locus_highDiversity_polygyny_nm_1_traits.txt")
+traits_mono<-read.delim("single_locus/pcu_1locus_highDiversity_monogamy_nm_1_traits.txt")
 ```
 
 
