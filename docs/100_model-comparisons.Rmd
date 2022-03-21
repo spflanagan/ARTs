@@ -507,7 +507,6 @@ traits<-read.delim("single_locus/pcu_1locus_highDiversity_polygyny_nm_1_traits.t
 traits_mono<-read.delim("single_locus/pcu_1locus_highDiversity_monogamy_nm_1_traits.txt")
 ```
 
-
 ```{r make_trait_hists}
 make_trait_hists<-function(traits,which_trait,which_sex,which_gen,which_pop,cols){
   these_traits<-traits[traits$Gen==which_gen & 
