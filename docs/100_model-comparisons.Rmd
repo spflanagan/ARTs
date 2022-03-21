@@ -735,6 +735,35 @@ make_trait_hists(traits,
 
 
 What these results suggest is that under polygyny, the density-dependent nature of the model allows males to escape the costs of courtship, because even though they 'use up' all of their sperm, offspring are created in proportion to the surviving offspring, and those males are able to escape the costs and therefore increase their reproductive success beyond what is possible for males in the mathematical model. If we impose stricter costs on the males ($r=0.25$, or $r_{courter}=2$ and $r_{non-courter}=8$), we can see that multiple morphs are maintained under polygyny (with non-random mating, Fig. \@ref(fig:highDiversityStrictPlot)).
+
+```{r highDivStrict}
+highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversityStrict.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+```
+```{r highDivStrictPlot, fig.cap="Final generation frequencies based on the single locus model with parameters that are expected to result in diversity, based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests. Under 'polygyny' males accepted eggs from multiple females but were still constrained by the number of offspring they could fertilize. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available).", fig.height=8,fig.width=8}
+var_patts<-unique(gsub(".*highDiversityStrict_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
+var_patts<-grep("v0",grep("RM", var_patts, invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)
+
+par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=pattern)
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
+```
+
+
 One element of the simulation model is that the frequencies of the morphs do not start of at exactly equal frequencies. If we use the initial conditions from the simulation model to predict the equilibrial frequencies, we can see that the expected outcomes shift, and in some cases have a better qualitative match to the simulated outcomes (Table \@ref(tab:actualInitialFreqCals))
 
 ```{r getPolyHighGens}
