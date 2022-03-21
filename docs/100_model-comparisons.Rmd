@@ -664,7 +664,7 @@ make_trait_hists(traits,
 
 ```
 
-```{r maleRS0, fig.cap="Male lifetime reproductive success in generation 0 for each morph."}
+```{r maleRS0poly, fig.cap="Male lifetime reproductive success in generation 0 for each morph under polygyny (with no mating allowed)."}
 make_trait_hists(traits,
                  which_trait="LifetimeRS",
                  which_sex="MALE",
@@ -673,7 +673,7 @@ make_trait_hists(traits,
                  cols=cols2)
 ```
 
-```{r femaleMS0, fig.cap="Female mating success in generation 0 for each morph."}
+```{r femaleMS0poly, fig.cap="Female mating success in generation 0 for each morph under polygyny (with no mating allowed)."}
 make_trait_hists(traits,
                  which_trait="MateFound",
                  which_sex="FEMALE",
@@ -683,7 +683,7 @@ make_trait_hists(traits,
 
 ```
 
-```{r femaleRS0, fig.cap="Female lifetime reproductive success in generation 0 for each morph."}
+```{r femaleRS0poly, fig.cap="Female lifetime reproductive success in generation 0 for each morph under polygyny (with no mating allowed)."}
 make_trait_hists(traits,
                  which_trait="LifetimeRS",
                  which_sex="FEMALE",
