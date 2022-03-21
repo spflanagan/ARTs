@@ -764,6 +764,8 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 ```
 
 
+#### Identifying and clarifying differences between the two models
+
 One element of the simulation model is that the frequencies of the morphs do not start of at exactly equal frequencies. If we use the initial conditions from the simulation model to predict the equilibrial frequencies, we can see that the expected outcomes shift, and in some cases have a better qualitative match to the simulated outcomes (Table \@ref(tab:actualInitialFreqCals))
 
 ```{r getPolyHighGens}
