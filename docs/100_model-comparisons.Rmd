@@ -470,7 +470,7 @@ legend("top",c("courter-parent","noncourter-parent", "courter-nonparent","noncou
        col=cols2,lty=c(3,2,4,1),lwd=2,ncol=4,bty='n')
 ```
 
-The simulation model with the same parameter settings also resulted in polymorphism, especially when males were permitted to mate with multiple females (Fig. \@ref(fig:highDivPlot)). Surprisingly, few of the simulation runs resulted in the maintenance of all three predicted morphs. 
+The simulation model with the same parameter settings also resulted in polymorphism, but only when males were restricted to accepting eggs from a single female, and when random mating was suppressed (Fig. \@ref(fig:highDivPlot)). Another unexpected result was that few of the simulation runs resulted in the maintenance of all three predicted morphs. 
 
 
 ```{r highDiv}
