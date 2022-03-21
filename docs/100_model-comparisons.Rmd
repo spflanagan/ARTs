@@ -849,6 +849,7 @@ legend("right",c("courter-parent","noncourter-parent", "courter-nonparent","nonc
 Some other important differences between the simulation model and the mathematical model that could be underlying any differences between the two are that the simulation model includes recombination (and inheritance of traits via females) whereas the mathematical model does not. Additionally, the simulation model has a reasonable amount of stochasticity embedded within it, which the mathematical model does not include -- this is especially true for the parameter settings when females randomly mate if they do not find an acceptable male. 
 
 
+
 # Genetic architectures
 
 Out of interest, I also ran some iterations with genetic architectures -- QTLs distributed throughout the genome (labelled 'qtls') and QTLs linked in a supergene with low recombination. The two model runs -- for these parameter settings -- show quite different outcomes. In the low diversity expectation, on some occasions additional unexpected diversity can occur with either case (Fi.g \@ref(fig:lowDivQTLs)). However, supergenes cause a consistent maintenance of two morphs, the courter-parent and noncourter-parent (Fig. \@ref(fig:highDivQTLs)).
