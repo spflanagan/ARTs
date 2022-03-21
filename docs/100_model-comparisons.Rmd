@@ -568,6 +568,88 @@ make_trait_hists<-function(traits,which_trait,which_sex,which_gen,which_pop,cols
 ```
 
 
+#### Individual level results: monogamy
+
+
+```{r maleMS0mono, fig.cap="Male mating success in generation 0 for each morph under monogamy (with no mating allowed)."}
+make_trait_hists(traits_mono,
+                 which_trait="MateFound",
+                 which_sex="MALE",
+                 which_gen=0,
+                 which_pop=0,
+                 cols=cols2)
+
+```
+
+```{r maleRS0mono, fig.cap="Male lifetime reproductive success in generation 0 for each morph under monogamy (with no mating allowed)."}
+make_trait_hists(traits_mono,
+                 which_trait="LifetimeRS",
+                 which_sex="MALE",
+                 which_gen=0,
+                 which_pop=0,
+                 cols=cols2)
+```
+
+```{r femaleMS0mono, fig.cap="Female mating success in generation 0 for each morph under monogamy (with no mating allowed)."}
+make_trait_hists(traits_mono,
+                 which_trait="MateFound",
+                 which_sex="FEMALE",
+                 which_gen=0,
+                 which_pop=0,
+                 cols=cols2)
+
+```
+
+```{r femaleRS0mono, fig.cap="Female lifetime reproductive success in generation 0 for each morph under monogamy (with no mating allowed)."}
+make_trait_hists(traits_mono,
+                 which_trait="LifetimeRS",
+                 which_sex="FEMALE",
+                 which_gen=0,
+                 which_pop=0,
+                 cols=cols2)
+```
+
+By the final generation, only two morphs remain, and as expected courter-parents receive all of the matings and noncourter-nonparents receive no mates (Fig. \@ref(fig:maleMS12000)), but both have net-positive lifetime reproductive success, with noncourter-nonparents having more variable numbers of offspring (Fig. \@ref(fig:maleRS12000)). Females of the two morphs both have similar problems finding mates (Fig. \@ref(fig:femaleMS12000)) but have similar distributions of lifetime reproductive success (Fig. \@ref(fig:femaleRS12000)). Combined, these results suggest that the model is behaving as expected, and in a manner similar to the mathematical model.
+ 
+```{r maleMS12000mono, fig.cap="Male mating success in generation 12000 for each morph under monogamy (with no mating allowed).", fig.height=4}
+make_trait_hists(traits_mono,
+                 which_trait="MateFound",
+                 which_sex="MALE",
+                 which_gen=12000,
+                 which_pop=0,
+                 cols=cols2)
+
+```
+
+```{r maleRS12000mono, fig.cap="Male lifetime reproductive success in generation 12000 for each morph under monogamy (with no mating allowed).", fig.height=4}
+make_trait_hists(traits_mono,
+                 which_trait="LifetimeRS",
+                 which_sex="MALE",
+                 which_gen=12000,
+                 which_pop=0,
+                 cols=cols2)
+```
+
+```{r femaleMS12000mono, fig.cap="Female mating success in generation 12000 for each morph under monogamy (with no mating allowed).", fig.height=4}
+make_trait_hists(traits_mono,
+                 which_trait="MateFound",
+                 which_sex="FEMALE",
+                 which_gen=12000,
+                 which_pop=0,
+                 cols=cols2)
+
+```
+
+```{r femaleRS12000mono, fig.cap="Female lifetime reproductive success in generation 12000 for each morph under monogamy (with no mating allowed).", fig.height=4}
+make_trait_hists(traits_mono,
+                 which_trait="LifetimeRS",
+                 which_sex="FEMALE",
+                 which_gen=12000,
+                 which_pop=0,
+                 cols=cols2)
+```
+
+
 #### Individual level results: Polygyny
 
 As expected, the non-courters do not mate (Fig. \@ref(fig:maleMS0poly)), and the courter-nonparents do not have any offspring after generation 1 (Fig. \@ref(fig:maleRS0poly)), whereas females have even mating success (Fig. \@ref(fig:femaleMS0poly)) and similar lifetime reproductive success Fig. \@ref(fig:femaleRS0poly)).
