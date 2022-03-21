@@ -62,7 +62,7 @@ poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
 
 ## Overview of the simulation model 
 
-Males can be courters or not-courters and parents or not-parents. When the model is run with both traits, this results in four possible morphs: courter/parent, courter/not-parent, not-courter/parent, and not-courter/not-parent. Generations are non-overlapping and there is one reproductive bout per generation. In each generation, the population follows the following timeline: 
+Males have two traits, and can be courters or not-courters and parents or not-parents. When the model is run with both traits, this results in four possible morphs: courter/parent, courter/not-parent, not-courter/parent, and not-courter/not-parent. Generations are non-overlapping and there is one reproductive bout per generation. In each generation, the population follows the following timeline: 
 
 ![Flowchart of simulation](../figs/simulation_flowchart_densitydependent.png)
 
