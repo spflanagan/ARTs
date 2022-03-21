@@ -937,5 +937,24 @@ par(mfrow=c(2,2))
 tapply(poly_male$LifetimeRS, paste(poly_male$Courter,poly_male$Parent), hist)
 
 
+
+# female RS
+mono_fem<-mono_traits[mono_traits$Gen == 0 & mono_traits$Sex=="FEMALE",]
+tapply(mono_fem$LifetimeRS, paste(mono_fem$Courter,mono_fem$Parent), var)
+tapply(mono_fem$LifetimeRS, paste(mono_fem$Courter,mono_fem$Parent), mean)
+
+par(mfrow=c(2,2))
+tapply(mono_fem$LifetimeRS, paste(mono_fem$Courter,mono_fem$Parent), hist)
+
+
+
+poly_fem<-poly_traits[poly_traits$Gen == 0 & poly_traits$Sex=="FEMALE",]
+tapply(poly_fem$LifetimeRS, paste(poly_fem$Courter,poly_fem$Parent), var)
+tapply(poly_fem$LifetimeRS, paste(poly_fem$Courter,poly_fem$Parent), mean)
+
+par(mfrow=c(2,2))
+tapply(poly_fem$LifetimeRS, paste(poly_fem$Courter,poly_fem$Parent), hist)
+
+
 ```
 
