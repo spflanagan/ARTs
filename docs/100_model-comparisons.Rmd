@@ -85,7 +85,7 @@ Before the offspring can survive, the nest has to survive. This step is only rel
 
 ### 4. Density-dependent survival
 
-Once the identities of the surviving nests are known--along with the identities of the parents, including sneaker parents--the offspring are created in the simulation. The offspring are created to fill the full carrying capacity of the population, with the numbers per nest being equally divided among all surviving offspring. This allows the population to maintain a constant population size (prior to viability selection) while maintaining the relative successes of the given genotypes/morphs. 
+Once the identities of the surviving nests are known -- along with the identities of the parents, including sneaker parents -- the offspring are created. The offspring are created to fill the full carrying capacity of the population, with the numbers per nest being equally divided among all surviving offspring. This allows the population to maintain a constant population size (prior to viability selection) while maintaining the relative successes of the given genotypes/morphs. 
 
 ### 5. Viability selection 
 
