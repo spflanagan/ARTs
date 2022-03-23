@@ -474,7 +474,7 @@ The simulation model with the same parameter settings also resulted in polymorph
 
 
 ```{r highDiv}
-highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity_.*summary.txt",path="single_locus",cols,make.plot=FALSE))
 ```
 ```{r highDivPlot, fig.cap="Final generation frequencies based on the single locus model with parameters that are expected to result in diversity, based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests. Under 'polygyny' males accepted eggs from multiple females but were still constrained by the number of offspring they could fertilize. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available).", fig.height=8,fig.width=8}
 var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
