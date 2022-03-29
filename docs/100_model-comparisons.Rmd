@@ -852,15 +852,15 @@ Some other important differences between the simulation model and the mathematic
 
 # Genetic architectures
 
-Out of interest, I also ran some iterations with genetic architectures -- QTLs distributed throughout the genome (labelled 'qtls') and QTLs linked in a supergene with low recombination. The two model runs -- for these parameter settings -- show quite different outcomes. In the low diversity expectation, on some occasions additional unexpected diversity can occur with either case (Fi.g \@ref(fig:lowDivQTLs)). However, supergenes cause a consistent maintenance of two morphs, the courter-parent and noncourter-parent (Fig. \@ref(fig:highDivQTLs)).
+Out of interest, I also ran some iterations with genetic architectures -- QTLs distributed throughout the genome (labelled 'qtls') and QTLs linked in a supergene with low recombination. The two model runs -- for these parameter settings -- show quite different outcomes. In the low diversity expectation, on some occasions additional unexpected diversity can occur with either case (Fi.g \@ref(fig:lowDivQTLs)). However, supergenes cause a consistent maintenance of two morphs, the courter-parent and noncourter-parent (Fig. \@ref(fig:highDivQTLs)). For simplicity, let's consider the case with 8 QTLs distributed across 2 chromosomes. 
 
 ```{r lowDivGenetics}
-lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*summary.txt",path="baseline",cols,make.plot=FALSE))
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm_q8_c2.*summary.txt",path="../fixedART-results/qtls/",cols,make.plot=FALSE))
 ```
 
 ```{r lowDivQTLs, fig.cap="Final generation frequencies based on the model with QTLs and the model with a supergene, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
 
-var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(lowDiv)))
+var_patts<-unique(gsub(".*lowDiversity_qtls_monogamy_nm_q8_c2_(.*)_\\d_summary.txt_\\d","\\1",rownames(lowDiv)))
 
 
 par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
@@ -884,12 +884,12 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 ```
 
 ```{r highDivGenetics}
-highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",path="baseline",cols,make.plot=FALSE))
+highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*monogamy_nm_q8_c2.*summary.txt",path="../fixedART-results/qtls/",cols,make.plot=FALSE))
 ```
 
 ```{r highDivQTLs, fig.cap="Final generation frequencies based on the model with QTLs and the model with a supergene, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
 
-var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
+var_patts<-unique(gsub(".*highDiversity_qtls_monogamy_nm_q8_c2_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
 
 
 par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
