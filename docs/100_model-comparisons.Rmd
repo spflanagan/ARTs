@@ -895,6 +895,9 @@ highDiv <- dplyr::bind_rows(highDivQ, highDivS)
 
 ```{r highDivQTLs, fig.cap="Final generation frequencies based on the model with QTLs (top row) and the model with a supergene (bottom row), with parameters that are expected to result in diversity of morphs based on the mathematical model (with monogamy and no mating when suitable mates were unavailable). The labels show the number of QTLs (q number), the number of chromosomes (c number), and for supergenes the proportion of a chromosome allowed to be encompassed by a supergene (prop number)."}
 
+var_patts<-unique(gsub(".*highDiversity_qtls_monogamy_nm_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDivQ)))
+var_patts<-c(var_patts,
+             unique(gsub(".*highDiversity_.*_monogamy_nm_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDivS))))
 
 par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
