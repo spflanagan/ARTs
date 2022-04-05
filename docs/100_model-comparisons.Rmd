@@ -862,7 +862,9 @@ lowDiv<-dplyr::bind_rows(lowDivQ, lowDivS)
 
 ```{r lowDivQTLs, fig.cap="Final generation frequencies based on the model with QTLs (top row) and the model with a supergene (bottom row), with parameters that are expected to result in no diversity based on the mathematical model (with monogamy and no mating when suitable mates were unavailable). The labels show the number of QTLs (number after q), the number of chromosomes (number after c), and for supergenes the proportion of a chromosome allowed to be encompassed by a supergene (number after prop).", fig.height=6, fig.width=6}
 
-var_patts<-unique(gsub(".*lowDiversity_qtls_monogamy_nm_(.*)_\\d_summary.txt_\\d","\\1",rownames(lowDiv)))
+var_patts<-unique(gsub(".*lowDiversity_qtls_monogamy_nm_(.*)_\\d_summary.txt_\\d","\\1",rownames(lowDivQ)))
+var_patts<-c(var_patts,
+             unique(gsub(".*lowDiversity.*monogamy_nm_(.*)_\\d_summary.txt_\\d","\\1",rownames(lowDivS))))
 
 
 par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
