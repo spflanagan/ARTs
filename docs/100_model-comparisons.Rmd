@@ -860,7 +860,7 @@ lowDivS<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm_prop0.2
 lowDiv<-dplyr::bind_rows(lowDivQ, lowDivS)
 ```
 
-```{r lowDivQTLs, fig.cap="Final generation frequencies based on the model with QTLs and the model with a supergene, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+```{r lowDivQTLs, fig.cap="Final generation frequencies based on the model with QTLs (top row) and the model with a supergene (bottom row), with parameters that are expected to result in no diversity based on the mathematical model (with monogamy and no mating when suitable mates were unavailable). The labels show the number of QTLs (number after q), the number of chromosomes (number after c), and for supergenes the proportion of a chromosome allowed to be encompassed by a supergene (number after prop).", fig.height=6, fig.width=6}
 
 var_patts<-unique(gsub(".*lowDiversity_qtls_monogamy_nm_(.*)_\\d_summary.txt_\\d","\\1",rownames(lowDiv)))
 
