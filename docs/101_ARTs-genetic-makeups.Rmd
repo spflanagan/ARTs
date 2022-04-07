@@ -107,7 +107,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[1]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -133,7 +133,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[2]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -159,7 +159,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[3]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -185,7 +185,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[4]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -226,7 +226,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[1]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -252,7 +252,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[2]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -278,7 +278,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[3]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -304,7 +304,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[4]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -371,7 +371,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[1]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -397,7 +397,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[2]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -423,7 +423,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[3]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -449,7 +449,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[4]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -490,7 +490,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[1]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -516,7 +516,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[2]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -542,7 +542,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[3]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -568,7 +568,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[4]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
