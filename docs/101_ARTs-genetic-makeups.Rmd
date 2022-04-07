@@ -90,7 +90,7 @@ kable(highDivParams, "latex",booktab=TRUE,
 ### QTLs
 
 ```{r lowDivGenetics}
-lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*summary.txt",
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm.*summary.txt",
                                      path="/mnt/BigData/fixedART-results/qtls",
                                      cols,make.plot=FALSE))
 lnames<-rownames(lowDiv)
@@ -115,7 +115,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -141,7 +141,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -167,7 +167,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -193,7 +193,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -209,7 +209,7 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 
 ```{r lowDivGenetics2}
-lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*summary.txt",
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm.*summary.txt",
                                      path="/mnt/BigData/fixedART-results/supergene",
                                      cols,make.plot=FALSE))
 lnames<-rownames(lowDiv)
@@ -234,7 +234,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -260,7 +260,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -286,7 +286,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -312,7 +312,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -355,7 +355,7 @@ kable(highDivParams, "latex",booktab=TRUE,
 ### QTLs
 
 ```{r highDivGenetics}
-lowDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*monogamy_nm.*summary.txt",
                                      path="/mnt/BigData/fixedART-results/qtls",
                                      cols,make.plot=FALSE))
 lnames<-rownames(lowDiv)
@@ -380,7 +380,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -406,7 +406,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -432,7 +432,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -458,7 +458,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -474,7 +474,7 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 
 ```{r highDivGenetics2}
-lowDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*monogamy_nm.*summary.txt",
                                      path="/mnt/BigData/fixedART-results/supergene",
                                      cols,make.plot=FALSE))
 lnames<-rownames(lowDiv)
@@ -499,7 +499,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -525,7 +525,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -551,7 +551,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -577,7 +577,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
