@@ -82,7 +82,8 @@ highDivParams<-data.frame(
              2)
 )
 kable(highDivParams, "latex",booktab=TRUE,
-      caption="Table of parameters selected to create a low-diversity population. All morphs started at equal frequencies.")
+      caption="Table of parameters selected to create a low-diversity population. All morphs started at equal frequencies.") %>%
+  kable_styling(latex_options = "HOLD_position")
 
 ```
 
