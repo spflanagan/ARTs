@@ -338,13 +338,13 @@ highDivParams<-data.frame(
                 "r_NN",
                 "c",
                 "number of sneakers"),
-  value = c( 0.5, 
-             4,
-             4,
+  value = c( 0.75, 
+             6,
+             6,
              8,
              8,
-             0.5,
-             4)
+             0.7,
+             2)
 )
 kable(highDivParams, "latex",booktab=TRUE,
       caption="Table of parameters selected to create a high-diversity population. All morphs started at equal frequencies.") %>%
