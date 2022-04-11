@@ -295,6 +295,7 @@ get_summary<-function(vcfname){
 
 path <- "/mnt/BigData/fixedART-results/qtls"
 
+```{r runQTLs, eval=TRUE}
 qtl_outliers<-dplyr::bind_rows(lapply(
   list.files(path=path, 
              pattern = "*.vcf",
