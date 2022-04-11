@@ -293,15 +293,13 @@ get_summary<-function(vcfname){
 
 
 
-path <- "/mnt/BigData/fixedART-results/qtls"
 
 ```{r runQTLs, eval=TRUE}
 qtl_outliers<-dplyr::bind_rows(lapply(
-  list.files(path=path, 
              pattern = "*.vcf",
+  list.files(path="/mnt/BigData/fixedART-results/qtls", 
              full.names = TRUE),
   get_summary,
-  path = path))
 write.csv(qtl_outliers,"qtl_outliers.csv",quote=FALSE,row.names = FALSE)
 
 ```
