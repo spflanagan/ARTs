@@ -184,29 +184,111 @@ QTLsInPeaks<-sapply(qtl_locs,function(q,peaks){
 ## Summarizing multiple files
 
 ```{r}
-simSum<-data.frame(
-  sim = vcfname,
-  # Heterozygosity
-  gHtMean = mean(mtm_diff$Ht),
-  gHtMedian = median(mtm_diff$Ht),
-  gHtVar = var(mtm_diff$Ht),
-  qHtMean = mean(mtm_diff$Ht[qtl_locs]),
-  qHtMedian = median(mtm_diff$Ht[qtl_locs]),
-  qHtVar = var(mtm_diff$Ht[qtl_locs]),
-  # Gprime
-  gGpMean = mean(mtm_diff$Gprimest),
-  gGpMedian = median(mtm_diff$Gprimest),
-  gGpVar = var(mtm_diff$Gprimest),
-  qGpMean = mean(mtm_diff$Gprimest[qtl_locs]),
-  qGpMedian = median(mtm_diff$Gprimest[qtl_locs]),
-  qGpVar = var(mtm_diff$Gprimest[qtl_locs]),
-  # peaks
-  nPeaks = length(peaks),
-  nSigPeaks = length(sigPeaks),
-  nQTLS = length(qtl_locs),
-  propQTLsInPeaks = length(QTLsInPeaks[QTLsInPeaks > 0])/length(QTLsInPeaks)
-)
+get_summary<-function(vcfname){
+  
+  # get the data
+  vcf1<-read.vcfR(vcfname)
+  qtl_info<-read.delim(gsub("_pop_\\d+\\.vcf","_qtlinfo\\.txt",vcfname))  
+  qtl_locs<-which(vcf1@fix[,"ID"] %in% qtl_info[1,])
+  
+  # defining populations
+  mf_pop<-as.factor(gsub("^(\\w{3}).*$","\\1",colnames(vcf1@gt)[-1]))
+  mt_pop<-as.factor(gsub("^(\\w{3}).*_(\\w+)$","\\2",colnames(vcf1@gt)[-1]))
+  mt_mal<-factor(mt_pop[mf_pop=="MAL"])
+  
+  # Fsts
+  mf_diff<-genetic_diff(vcf1, pops = mf_pop, method = 'nei')
+  #mt_diff<-genetic_diff(vcf1, pops = mt_pop, method = 'nei')
   mal_vcf<-vcf1[,c(1,which(mf_pop=="MAL")+1)]
+  mtm_diff<-genetic_diff(mal_vcf, pops = mt_mal, method = 'nei')
+  mtm_diff$Gprimest[is.na(mtm_diff$Gprimest)]<-0
+
+  # find the peaks - mf
+  mf_peaks<-find_peaks(mf_diff$Gprimest,m = 50)
+  
+  Gcutoff<-qnorm(p = 0.99,
+                 mean=mean(mf_diff$Gprimest, na.rm=TRUE),
+                 sd = sd(mf_diff$Gprimest, na.rm=TRUE))
+  mf_sigPeaks<-mf_peaks[which(mf_diff$Gprimest[mf_peaks] >= Gcutoff)]
+  if(length(mf_sigPeaks) > 0){
+     mf_QTLsInPeaks<-sapply(qtl_locs,function(q,peaks){
+        n<-sapply(peaks, function (p){
+          if(p-50 <= q & p + 50 >= q){
+            return(TRUE)
+          }  else{
+            return(FALSE)
+          }
+      })
+      return(sum(n))
+    }, peaks=mf_sigPeaks)
+  } else{
+    mf_sigPeaks<-0
+    mf_QTLsInPeaks<-0
+  }
+ 
+  
+  # peaks - mm
+  mtm_peaks<-find_peaks(mtm_diff$Gprimest,m = 50)
+  
+  Gcutoff<-qnorm(p = 0.99,
+                 mean=mean(mtm_diff$Gprimest, na.rm=TRUE),
+                 sd = sd(mtm_diff$Gprimest, na.rm=TRUE))
+  mtm_sigPeaks<-mtm_peaks[which(mtm_diff$Gprimest[mtm_peaks] >= Gcutoff)]
+  if(length(mtm_sigPeaks) > 0){
+    mtm_QTLsInPeaks<-sapply(qtl_locs,function(q,peaks){
+      n<-sapply(peaks, function (p){
+        if(p-50 <= q & p + 50 >= q){
+          return(TRUE)
+        }  else{
+          return(FALSE)
+        }
+      })
+      return(sum(n))
+    }, peaks=mtm_sigPeaks)
+  } else{
+    mtm_sigPeaks<-0
+    mtm_QTLsInPeaks<-0
+  }
+
+  
+  # return the relevant data
+  simSum<-data.frame(
+    sim = vcfname,
+    nChrom = as.numeric(gsub("^.*_c(\\d+).*$","\\1",vcfname)),
+    nQTLS = length(qtl_locs),
+    # Heterozygosity genomewide
+    gHtMean = mean(mf_diff$Ht, na.rm=TRUE),
+    gHtMedian = median(mf_diff$Ht, na.rm=TRUE),
+    gHtVar = var(mf_diff$Ht, na.rm=TRUE),
+    qHtMean = mean(mf_diff$Ht[qtl_locs], na.rm=TRUE),
+    qHtMedian = median(mf_diff$Ht[qtl_locs], na.rm=TRUE),
+    qHtVar = var(mf_diff$Ht[qtl_locs], na.rm=TRUE),
+    # Gprime male-male
+    gGpMeanMM = mean(mtm_diff$Gprimest, na.rm=TRUE),
+    gGpMedianMM = median(mtm_diff$Gprimest, na.rm=TRUE),
+    gGpVarMM = var(mtm_diff$Gprimest, na.rm=TRUE),
+    qGpMeanMM = mean(mtm_diff$Gprimest[qtl_locs], na.rm=TRUE),
+    qGpMedianMM = median(mtm_diff$Gprimest[qtl_locs], na.rm=TRUE),
+    qGpVarMM = var(mtm_diff$Gprimest[qtl_locs], na.rm=TRUE),
+    # peaks
+    nPeaksMM = length(mtm_peaks),
+    nSigPeaksMM = length(mtm_sigPeaks),
+    propQTLsInPeaksMM = length(mtm_QTLsInPeaks[mtm_QTLsInPeaks > 0])/length(mtm_QTLsInPeaks),
+    # Gprime female-male
+    gGpMeanMF = mean(mf_diff$Gprimest, na.rm=TRUE),
+    gGpMedianMF = median(mf_diff$Gprimest, na.rm=TRUE),
+    gGpVarMF = var(mf_diff$Gprimest, na.rm=TRUE),
+    qGpMeanMF = mean(mf_diff$Gprimest[qtl_locs], na.rm=TRUE),
+    qGpMedianMF = median(mf_diff$Gprimest[qtl_locs], na.rm=TRUE),
+    qGpVarMF = var(mf_diff$Gprimest[qtl_locs], na.rm=TRUE),
+    # peaks
+    nPeaksMF = length(mf_peaks),
+    nSigPeaksMF = length(mf_sigPeaks),
+    propQTLsInPeaksMF = length(mf_QTLsInPeaks[mf_QTLsInPeaks > 0])/length(mf_QTLsInPeaks)
+  )
+  
+  return(simSum)
+}
 ```
 
 
