@@ -299,7 +299,7 @@ qtl_outliers<-dplyr::bind_rows(lapply(
   list.files(path="/mnt/BigData/fixedART-results/qtls", 
              pattern = ".*highDiversity_qtls_monogamy_nm.*.vcf",
              full.names = TRUE),
-  get_summary,
+  get_summary))
 write.csv(qtl_outliers,"qtl_outliers.csv",quote=FALSE,row.names = FALSE)
 
 ```
