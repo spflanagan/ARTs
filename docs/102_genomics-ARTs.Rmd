@@ -180,7 +180,8 @@ QTLsInPeaks<-sapply(qtl_locs,function(q,peaks){
 }, peaks=sigPeaks)
 ```
 
-Focusing on the Male-Male comparison, without females:
+
+## Summarizing multiple files
 
 ```{r}
 simSum<-data.frame(
@@ -209,7 +210,6 @@ simSum<-data.frame(
 ```
 
 
-## Summarizing multiple files
 
 ```{r runQTLs, eval=FALSE}
 path <- "/mnt/BigData/fixedART-results/qtls"
