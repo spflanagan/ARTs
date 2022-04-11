@@ -256,6 +256,13 @@ get_summary<-function(vcfname){
     sim = vcfname,
     nChrom = as.numeric(gsub("^.*_c(\\d+).*$","\\1",vcfname)),
     nQTLS = length(qtl_locs),
+    # Summaries of the population
+    propMale = length(which(mf_pop=="MAL"))/length(mf_pop),
+    propP = length(which(mt_mal=="P"))/length(mt_mal),
+    propCP = length(which(mt_mal=="CP"))/length(mt_mal),
+    propC = length(which(mt_mal=="C"))/length(mt_mal),
+    propN = length(which(mt_mal=="NON"))/length(mt_mal),
+    propPref0 =  length(which(mt_pop=="pref0"))/length(grep("pref",mt_pop)),
     # Heterozygosity genomewide
     gHtMean = mean(mf_diff$Ht, na.rm=TRUE),
     gHtMedian = median(mf_diff$Ht, na.rm=TRUE),
