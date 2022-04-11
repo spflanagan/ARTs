@@ -110,7 +110,7 @@ points(qtl_locs, mt_diff$Gst[qtl_locs],cex=2,col="red",pch=8)
 ```
 
 ```{r}
-mal_vcf<-vcf1[,c(1,which(mf_pop=="MAL"))]
+mal_vcf<-vcf1[,c(1,which(mf_pop=="MAL")+1)]
 mtm_diff<-genetic_diff(mal_vcf, pops = mt_mal, method = 'nei')
 plot(mtm_diff$Gprimest,pch=19,
      xlab="Locus",
@@ -205,6 +205,7 @@ simSum<-data.frame(
   nQTLS = length(qtl_locs),
   propQTLsInPeaks = length(QTLsInPeaks[QTLsInPeaks > 0])/length(QTLsInPeaks)
 )
+  mal_vcf<-vcf1[,c(1,which(mf_pop=="MAL")+1)]
 ```
 
 
