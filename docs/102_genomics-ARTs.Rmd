@@ -293,8 +293,8 @@ get_summary<-function(vcfname){
 
 
 
-```{r runQTLs, eval=FALSE}
 path <- "/mnt/BigData/fixedART-results/qtls"
+
 qtl_outliers<-dplyr::bind_rows(lapply(
   list.files(path=path, 
              pattern = "*.vcf",
@@ -306,7 +306,8 @@ write.csv(qtl_outliers,"qtl_outliers.csv",quote=FALSE,row.names = FALSE)
 ```
 
 
-```{r runSupergenes,eval=FALSE}
+
+```{r runSupergenes,eval=TRUE}
 path <- "/mnt/BigData/fixedART-results/supergene/"
 supergene_outliers<-dplyr::bind_rows(lapply(
   list.files(pattern="*.vcf",
