@@ -319,7 +319,6 @@ supergene_outliers<-dplyr::bind_rows(lapply(
   list.files(pattern=".*highDiversity.*monogamy_nm.*.vcf",
              path= "/mnt/BigData/fixedART-results/supergene/", 
              full.names = TRUE),
-  path = path))
   get_summary))
 write.csv(supergene_outliers,"supergene_outliers.csv",quote=FALSE,row.names = FALSE)
 
@@ -333,10 +332,205 @@ supergene_outliers<-read.csv("supergene_outliers.csv")
 ```
 
 
+## GWAS
+
+following this one for better or worse: https://jendelman.github.io/GWASpoly/GWASpoly.html
+
+```{r}
+library(GWASpoly)
+genofile <- gsub("\\.vcf","_gt.csv",vcfname)
+trait_name<-gsub("_pop_\\d+\\.vcf","_traits\\.txt",vcfname)
+pop<-as.numeric(gsub("^.*pop_(\\d+).*$","\\1",vcfname))
+phenofile <- gsub("traits\\.txt",paste0("pop",pop,"_pheno.csv"),trait_name)
+
+
+qtlfile<-gsub("_traits.txt","_qtlinfo.txt",trait_name)
+qtls<-read.delim(qtlfile)
+```
+
+```{r eval=FALSE}
+VCF2dosage(vcfname, 
+           dosage.file = gsub("\\.vcf","_gt.csv",vcfname), 
+           geno.code = "GT", 
+           ploidy = 2, 
+           samples=NULL,
+           min.DP=1, 
+           max.missing=0.9, 
+           min.minor=1)
+```
+
+I need to create the phenotype file
+
+TODO: get the individual IDs to match up. Hmm traits file and vcf file have individuals in a different order. 
+
+```{r}
+trait_name<-gsub("_pop_\\d+\\.vcf","_traits\\.txt",vcfname)
+traits<-read.delim(trait_name)
+pop<-as.numeric(gsub("^.*pop_(\\d+).*$","\\1",vcfname))
+traits <- traits[traits$Gen==12000 & traits$Pop == pop,]
+
+phenos<-traits[,c("Individual","CourtTrait","ParentTrait","PrefTrait","Sex")]
+
+# need to adjust the IDs
 
 
 
 
+```
 
+```{r eval=FALSE}
+
+gt<-read.csv(genofile)
+ids<-colnames(gt)[6:length(colnames(gt))]
+phenos<-data.frame(ID=ids,
+                   CourtTrait=NA,
+                   ParentTrait=NA,
+                   Sex=gsub("^(\\w{3}).*$","\\1",ids),
+                   Morph=gsub("^(\\w{3})\\d+_(.*)$","\\2",ids))
+
+
+phenos$CourtTrait[phenos$Sex=="MAL"]<-gsub("^.*_(\\w+)$","\\1",
+                                           phenos$ID[phenos$Sex=="MAL"])
+phenos$ParentTrait[phenos$CourtTrait %in% c("CP","P")] <-"parent"
+phenos$ParentTrait[phenos$CourtTrait %in% c("C","NON")] <-"parent"
+phenos$ParentTrait <- as.numeric(as.factor(phenos$ParentTrait))
+
+phenos$CourtTrait[phenos$CourtTrait %in% c("CP","C")] <-"courter"
+phenos$CourtTrait[phenos$CourtTrait %in% c("P","NON")] <-"noncourter"
+phenos$CourtTrait <- as.numeric(as.factor(phenos$CourtTrait))
+
+write.csv(phenos,
+          phenofile,
+          row.names = FALSE)
+
+```
+
+```{r}
+data <- read.GWASpoly(ploidy=2, 
+                      pheno.file=phenofile, 
+                      geno.file=genofile,
+                      format="numeric", 
+                      n.traits=2, 
+                      delim=",")
+
+# check for population structure
+data.loco <- set.K(data,LOCO=TRUE,n.core=2)
+data.original <- set.K(data,LOCO=FALSE,n.core=2)
+
+# specify some parameter settings
+N<-nrow(data@pheno)
+params <- set.params(geno.freq = 1 - 5/N, fixed = "Sex", fixed.type = "factor")
+
+# test markers for significance
+court_scan <- GWASpoly(data=data.loco,
+                           models=c("additive","1-dom"),
+                           traits=c("CourtTrait"),
+                           params=params
+                       )
+```
+
+
+```{r}
+# check inflation of scores
+qq.plot(court_scan, trait="CourtTrait")
+```
+
+some departures from the null (dashed line) are present 
+
+
+need to choose a -log10(p) threshold to control false positive rate. Bonferroni is overly conservative because LD means that markers are not independent. So we can use LD to estimate effective number of markers using method="M.eff", and can also use a permutation test.
+
+```{r}
+data2 <- set.threshold(court_scan,method="M.eff",level=0.05)
+```
+
+
+```{r}
+p <- manhattan.plot(data2,traits="CourtTrait")
+p + theme(axis.text.x = element_text(angle=90,vjust=0.5))
+```
+
+
+```{r}
+plot(data2@scores$CourtTrait$additive)
+courtQTLs<-qtls[1,grep("CourterQTL",colnames(qtls))]
+qtllocs<-as.numeric(gsub("(\\d)\\.(\\d+)","\\1",courtQTLs))*1000 + 
+  as.numeric(gsub("(\\d)\\.(\\d+)","\\2",courtQTLs))
+points(qtllocs, 
+       data2@scores$CourtTrait$additive[qtllocs],
+       lwd=6,
+       col="red",
+       cex=2)
+```
+
+```{r}
+qtl <- get.QTL(data=data2,traits="CourtTrait",models="additive",bp.window=10)
+fit.ans <- fit.QTL(data=data2,trait="CourtTrait",
+                   qtl=qtl[,c("Marker","Model")])
+```
+
+
+Summarize it with actual qtls nearby
+
+```{r}
+fit.ans$NearQTL<-0
+for(i in 1:nrow(fit.ans)){
+  chromqtl<-courtQTLs[as.numeric(gsub("(\\d)\\.(\\d+)","\\1",courtQTLs)) == fit.ans$Chrom[i]]
+  chromlocs<- as.numeric(gsub("(\\d)\\.(\\d+)","\\2",chromqtl))
+  for(loc in chromlocs){
+    
+    if(fit.ans$Position[i] +10 >= loc & fit.ans$Position[i] -10 <= loc){
+      fit.ans$NearQTL[i] <- fit.ans$NearQTL[i] +1
+    }
+  }
+}
+```
+ 
+ 
+Now for the parent trait
+
+```{r}
+
+
+
+data.original <- set.K(data,LOCO=FALSE,n.core=2) # loco gave me an error in fit.ans
+# test markers for significance
+parent_scan <- GWASpoly(data=data.original,
+                           models=c("additive","1-dom"),
+                           traits=c("ParentTrait"),
+                           params=params
+                       )
+
+
+qq.plot(parent_scan, trait="ParentTrait")
+data2 <- set.threshold(parent_scan,method="M.eff",level=0.05)
+
+qtl <- get.QTL(data=data2,traits="ParentTrait",models="additive",bp.window=10)
+fit.ans <- fit.QTL(data=data2,trait="ParentTrait",
+                   qtl=qtl[,c("Marker","Model")])
+
+plot(data2@scores$ParentTrait$additive)
+parentQTLs<-qtls[1,grep("ParentQTL",colnames(qtls))]
+qtllocs<-as.numeric(gsub("(\\d)\\.(\\d+)","\\1",parentQTLs))*1000 + 
+  as.numeric(gsub("(\\d)\\.(\\d+)","\\2",parentQTLs))
+points(qtllocs, 
+       data2@scores$ParentTrait$additive[qtllocs],
+       lwd=6,
+       col="red",
+       cex=2)
+
+fit.ans$NearQTL<-0
+for(i in 1:nrow(fit.ans)){
+  chromqtl<-courtQTLs[as.numeric(gsub("(\\d)\\.(\\d+)","\\1",courtQTLs)) == fit.ans$Chrom[i]]
+  chromlocs<- as.numeric(gsub("(\\d)\\.(\\d+)","\\2",chromqtl))
+  for(loc in chromlocs){
+    
+    if(fit.ans$Position[i] +10 >= loc & fit.ans$Position[i] -10 <= loc){
+      fit.ans$NearQTL[i] <- fit.ans$NearQTL[i] +1
+    }
+  }
+}
+```
+```
 
 
