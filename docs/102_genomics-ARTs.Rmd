@@ -301,7 +301,7 @@ get_summary<-function(vcfname){
 
 
 
-```{r runQTLs, eval=TRUE}
+```{r runQTLs, eval=FALSE}
 qtl_outliers<-dplyr::bind_rows(lapply(
   list.files(path="/mnt/BigData/fixedART-results/qtls", 
              pattern = ".*highDiversity_qtls_monogamy_nm.*.vcf",
@@ -327,7 +327,7 @@ write.csv(supergene_outliers,"supergene_outliers.csv",quote=FALSE,row.names = FA
 
 
 
-```{r}
+```{r, eval=FALSE}
 qtl_outliers<-read.csv("qtl_outliers.csv")
 supergene_outliers<-read.csv("supergene_outliers.csv")
 ```
