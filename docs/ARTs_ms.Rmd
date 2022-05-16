@@ -80,22 +80,17 @@ poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
 
 ```
 
--   possibly resolves sexual conflict
 
--   Genetic basis of alternative reproductive tactics shows that there
-    is some propensity for these to be grouped together into supergenes.
+# Introduction
 
--   white-collared sparrow
+Both genetic and phenotypic variation are required for evolution to occur, and as such the maintenance of variation in populations has long been of interest to evolutionary biologists and conservation geneticists. Evolution is often expected to remove variation from populations, with specific patterns of selection being predicted to maintain variation at a high frequency -- including overdominance, sexually antagonistic selection [@connallonEvolutionaryConsequencesSexSpecific2018; @connallonResolutionSexualAntagonism2011], and frequency dependent selection [@alonzoMateChoiceGames2001]. Yet, substantial phenotypic variation is observed, with ubiquitous examples such as the prevalence of sexual dimorphism and the unexpectedly frequent existence of alternative reproductive tactics, in which individuals of the same species and sex display different morphs to maximize reproductive fitness in unique ways [@oliveiraAlternativeReproductiveTactics2008]. 
 
--   ruffs [@kupper2016][@lamichhaney2016]
+The genetic basis of traits experiencing selection is also critical to understanding the maintenance of variation. Evolution can be constrained by factors including pleiotropy, genetic correlations, and physical linkage. As such, the relaxation of these constraints can facilitate sequence evolution by relaxing positive selection on genes [@harrisonSexualSelectionDrives2015]. However, the interaction of selection that facilitates variation with the genetic architecture and genetic constraints remains under-explored. In particular, the majority of predictions relating selection to genetic constraints arise from one- or two-locus models, which can be difficult to extrapolate to genome-wide predictions. In the modern genomic era, having predictions for large genome-wide datasets is of critical importance to develop testable hypotheses. [something about genome-wide predictions]. 
 
--   side-blotched lizards (maybe)
+One genetic mechanism that is increasingly shown to play an important role in evolution are structural variants, such as inversion polymorphisms that harbour so-called 'supergenes'. These variants are regions of the genome in which some individuals carry an inversion, in which genes with direct phenotypic effects exist. The mismatched directionality reduces recombination between the different variants, facilitating the maintenance of both genetic and phenotypic variations. These supergenes have been shown to underpin stable polymporhisms including ant morphs, immune response genes (e.g., toll-like receptors), xxx, and alternative reproductive tactics (e.g., in white-collared sparrows [@thomasChromosomalPolymorphismLinked2008] and ruffs [@kupperSupergeneDeterminesHighly2016; @lamichhaneyStructuralGenomicChanges2016]). These polymorphisms are often maintained in populations through frequency dependent selection, and in the case of sexually dimorphic variants, might resolve sexual conflict. **Need to look into the literature for more examples and to add detail**.
 
--   \- ??
+Substantial advances in our understanding of the evolution of these traits have been made with whole-genome sequencing and transcriptome studies. Furthermore, recent mathematical and simulation models have helped clarify the allelic variation that is expected to be maintained under sex-specific selection pressures [@kasimatisLimitsGenomicDivergence2019a], OTHER EXAMPLES. However, providing direct linkages between theoretical predictions of evolutionary mechanisms, genotype-to-phenotype maps, and realistic datasets are currently lacking. Here, we fill this gap using individual-based simulation models of alternative reproductive tactics in males and three types of genetic architectures for the traits of interest.
 
-But, we don't know which came first, and to what extent genetic
-architecture determines the evolution of alternative reproductive
-tactics. Therefore, we used simulation models to understand this.
 
 # Methods
 
