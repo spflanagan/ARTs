@@ -44,18 +44,41 @@ bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",
-                      warning=FALSE,message=FALSE)
-knitr::opts_knit$set(root.dir='../fwsw_results/')
+knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
+knitr::opts_knit$set(root.dir='../results/') #change
+
 ```
+```{r opts, echo = FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+  fig.path = "figs/"
+)
+```
+```{r librarysetup, echo=FALSE,echo=FALSE,message=FALSE}
+library(RColorBrewer)
+library(scales)
+library(sm)
+library(kableExtra)
+library(plotly)
+library(dplyr)
+library(vegan)
+library(tidyr)
+tmp<-sapply(list.files(path="../../spfTools/R/",full.names = TRUE),source)
+source("../R/002_freq_functions.R")
 
-# Introduction
+source("../morph_predictions/check_freqs.R")
+source("../morph_predictions/morph_gens_ns.R")
 
-Maintenance of variation in populations.
+cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
+cols2<-c(CP='#d7191c',NCP='#fdae61',CNP='#abd9e9',NCNP='#2c7bb6')
+```
+```{r baseCols}
+base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                   "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
+poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                    "FreqNcP","FreqCP","Polygyny")
 
-Alternative reproductive tactics as stable polymorphisms,
-
--   often maintained through frequency-dependent selection
+```
 
 -   possibly resolves sexual conflict
 
