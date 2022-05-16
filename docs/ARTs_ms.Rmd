@@ -384,6 +384,41 @@ The regions of the parameter space the have non-zero diversity values correspond
 
 ## Individual-based simulation model
 
+The results from the  mathematical model were used to select parameter settings for the individual-based simulation model, with one set expected to produce low-diversity populations (i.e., those where only one morph were retained) and another set expected to produce high-diversity populations (i.e., where 2 or more morphs were retained). The chosen parameter settings are shown in Table \@ref(tab:SimParamsTable).
+
+```{r SimParamsTable}
+SimParams<-data.frame(
+  parameter = c("r (in shiny app)",
+                "r_CP",
+                "r_CN",
+                "r_NP",
+                "r_NN",
+                "c",
+                "number of sneakers"),
+  LowDiv = c( 2, 
+             8,
+             8,
+             4,
+             4,
+             0.5,
+             2),
+   HighDiv = c( 0.75, 
+             6,
+             6,
+             8,
+             8,
+             0.7,
+             2)
+)
+
+kable(SimParams, "latex",booktab=TRUE,
+      col.names = c("Parameter", "Low Diversity Value","High Diversity Value"),
+      caption="Table of parameters selected to create a high-diversity population. All morphs started at equal frequencies.")  %>% 
+  kableExtra::kable_styling(latex_options = "HOLD_position")
+
+```
+
+
 # Discussion
 
 # Acknowledgments
