@@ -459,6 +459,8 @@ int main(int argc, char*argv[])
 				{
 					//output the trait values for the final generation of each population
 					pops[ii].output_trait_info(global_params,global_params.num_init_gen + global_params.num_exp_gen, ii, trait_output, log_out);
+					if(global_params.output_vcf)
+            			pops[ii].output_genotypes_vcf(global_params, ii);	
 				}
 				//stochastic survival
 				//pops[i].density_regulation(global_params);
@@ -503,6 +505,8 @@ int main(int argc, char*argv[])
 					else
 						std::cout << "\n" << global_params.base_name << ": Population" << ii << " has crashed at experimental generation " << i << '\n' << std::flush;
 					pops[ii].output_trait_info(global_params, i, ii, trait_output, log_out);
+					if(global_params.output_vcf)
+						pops[ii].output_genotypes_vcf(global_params, ii);	
 					crash_counter++;
 				}
 					
@@ -599,8 +603,7 @@ int main(int argc, char*argv[])
 			else
 				std::cout << "\nNo equilibrium could be reached for population " << i << " with population size " << pops[i].population_size << " by generation " << global_params.num_init_gen + global_params.num_exp_gen << std::flush;
 		}
-		if(global_params.output_vcf)
-            pops[i].output_genotypes_vcf(global_params, i);	
+
 	}
 	
 	//close output files
