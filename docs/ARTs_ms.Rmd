@@ -324,6 +324,64 @@ generation's adults were replaced, and the lifecycle began again.
 
 ## Frequency-dependent population dynamics model
 
+The initial frequency of each morph impacted whether multiple morphs were maintained. In no cases was the courter-nonparent morph maintained. This result makes intuitive sense, because if a female chooses to nest with a courter-nonparent, the nest will always die (given our parameter settings).  [What happens if one morph is absent?] 
+
+The parameters controlling sperm competition ($c$), relative reproductive allocation ($r$), and the number of sneakers allowed also impacted the diversity of the population after both 100 generations and 1000 generations.  Some initial starting conditions took more than 100 generations to reach a consistent (i.e., equilibrial) state, but the contributions of these three parameters remained qualitatively consistent across 100 and 1000 generations. Reproductive allocations corresponding to a range of approximately 0.5 to 1 (meaning that courters invest half as much to just as much as non-courters in producing sperm) resulted in the maximum amount of diversity, as long as sperm competition ($c$) was above 0.2 (meaning that, if a non-courting male produced 8 sperm and courting males produce 4, the non-courting male would fertilize `r (8*0.2)/(4+(2*0.2*8))` or more of the offspring). This importance of the sperm competition coefficient was influenced by the number of sneakers allowed, with larger contributions from an individual non-courting male (e.g., larger $c$) being required with fewer sneakers (Fig. \@ref(fig:mathParams)).
+
+```{r mathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=4.5, fig.height=7, warning=FALSE,message=FALSE}
+
+results<-readRDS("../morph_predictions/morph_results_10000_equalStart.RDS")
+results$diversity<-vegan::diversity(round(results[,c("CP","CN","NP","NN")],4))
+
+contours<-by(results, results$num_sneak, function(sub_calcs){
+  
+  
+  data_wide<-tidyr::spread(
+    sub_calcs[,c("r","c","diversity")],
+    r,
+    diversity
+  )
+  rownames(data_wide)<-data_wide[,1]
+  data_wide<-data_wide[,-1]
+  
+  fig <- plot_ly(
+    x = as.numeric(colnames(data_wide)), 
+    y = as.numeric(rownames(data_wide)), 
+    z = as.matrix(data_wide), 
+    type = "contour"
+  )
+  # add axis labels
+  x<-list(title="r")
+  y<-list(title="c")
+  fig <- fig %>% layout(xaxis=x,yaxis=y)
+  # add label to contour names
+  fig <- fig %>% colorbar(title = "Diversity")
+  # plot
+  return(fig)
+})
+
+
+multi_fig <- subplot(contours, nrows = 5, shareY = TRUE, shareX = TRUE)
+
+multi_fig %>% layout(autosize = F, width = 450, height = 650)
+
+
+```
+
+```{r}
+divRes<-results[results$diversity>0,]
+ndiv<-nrow(divRes)
+
+pcourt<-nrow(divRes[divRes$CP>=0.5,])/ndiv
+pnp<-nrow(divRes[divRes$NP>=0.5,])/ndiv
+pnn<-nrow(divRes[divRes$NN>=0.5,])/ndiv
+
+
+```
+
+
+The regions of the parameter space the have non-zero diversity values correspond to scenarios where three of the four morphs were retained (courter-parents, non-courter-parents, and non-courter-non-parents). The dominant morph differed with various parameter combinations. Assuming equal starting frequencies, after 10000 generations, `r pcourt*100`% of parameter combinations that retained polymorphism resulted in the courter-parent morph comprising $\le$ 50% of the population. The remaining `r (1-pcourt)*100`% of parameter combinations resulting in polymorphism had more equal representation of all three morphs, with the average proportion of the population being `r mean(divRes[divRes$CP<=0.5,"CP"])*100`% ($pm$ `r sem(divRes[divRes$CP<=0.5,"CP"])*100`%) courter-parents, `r mean(divRes[divRes$CP<=0.5,"NP"])*100`% ($pm$ `r sem(divRes[divRes$CP<=0.5,"NP"])*100`%) non-courter-parents, and `r mean(divRes[divRes$CP<=0.5,"NN"])*100`% ($pm$ `r sem(divRes[divRes$CP<=0.5,"NN"])*100`%) non-courter-non-parents.    
+
 ## Individual-based simulation model
 
 # Discussion
