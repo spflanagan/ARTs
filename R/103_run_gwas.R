@@ -67,21 +67,32 @@ scan_courter<-function(data, qtls, params){
   
   data2 <- set.threshold(court_scan,method="M.eff",level=0.05)
   qtl <- get.QTL(data=data2,traits="CourtTrait",models="additive",bp.window=10)
-  fit.ans <- fit.QTL(data=data2,trait="CourtTrait",
-                     qtl=qtl[,c("Marker","Model")])
-  
-  fit.ans$NearQTL<-0
-  for(i in 1:nrow(fit.ans)){
-    chromqtl<-courtQTLs[as.numeric(gsub("(\\d)\\.(\\d+)","\\1",courtQTLs)) == fit.ans$Chrom[i]]
-    chromlocs<- as.numeric(gsub("(\\d)\\.(\\d+)","\\2",chromqtl))
-    for(loc in chromlocs){
-      
-      if(fit.ans$Position[i] +10 >= loc & fit.ans$Position[i] -10 <= loc){
-        fit.ans$NearQTL[i] <- fit.ans$NearQTL[i] +1
+  if(nrow(qtl)>0){
+    fit.ans <- fit.QTL(data=data2,trait="CourtTrait",
+                       qtl=qtl[,c("Marker","Model")])
+    
+    fit.ans$NearQTL<-0
+    for(i in 1:nrow(fit.ans)){
+      chromqtl<-courtQTLs[as.numeric(gsub("(\\d)\\.(\\d+)","\\1",courtQTLs)) == fit.ans$Chrom[i]]
+      chromlocs<- as.numeric(gsub("(\\d)\\.(\\d+)","\\2",chromqtl))
+      for(loc in chromlocs){
+        
+        if(fit.ans$Position[i] +10 >= loc & fit.ans$Position[i] -10 <= loc){
+          fit.ans$NearQTL[i] <- fit.ans$NearQTL[i] +1
+        }
       }
     }
+    
+  } else{
+    fit.ans<-data.frame(Marker=NA,
+               Chrom=NA,
+               Position=NA,
+               Model=NA,
+               R2=NA,
+               pval=NA,
+               NearQTL=NA)
   }
-  
+ 
   return(fit.ans)
   
 }
@@ -98,24 +109,35 @@ scan_parent<-function(data, qtls, params){
   data2 <- set.threshold(parent_scan,method="M.eff",level=0.05)
   
   qtl <- get.QTL(data=data2,traits="ParentTrait",models="additive",bp.window=10)
-  fit.ans <- fit.QTL(data=data2,trait="ParentTrait",
-                     qtl=qtl[,c("Marker","Model")])
-  
-  parentQTLs<-qtls[1,grep("ParentQTL",colnames(qtls))]
-  qtllocs<-as.numeric(gsub("(\\d)\\.(\\d+)","\\1",parentQTLs))*1000 + 
-    as.numeric(gsub("(\\d)\\.(\\d+)","\\2",parentQTLs))
-
-  
-  fit.ans$NearQTL<-0
-  for(i in 1:nrow(fit.ans)){
-    chromqtl<-parentQTLs[as.numeric(gsub("(\\d)\\.(\\d+)","\\1",parentQTLs)) == fit.ans$Chrom[i]]
-    chromlocs<- as.numeric(gsub("(\\d)\\.(\\d+)","\\2",chromqtl))
-    for(loc in chromlocs){
-      
-      if(fit.ans$Position[i] +10 >= loc & fit.ans$Position[i] -10 <= loc){
-        fit.ans$NearQTL[i] <- fit.ans$NearQTL[i] +1
+  if(nrow(qtl) > 0){
+    fit.ans <- fit.QTL(data=data2,trait="ParentTrait",
+                       qtl=qtl[,c("Marker","Model")])
+    
+    parentQTLs<-qtls[1,grep("ParentQTL",colnames(qtls))]
+    qtllocs<-as.numeric(gsub("(\\d)\\.(\\d+)","\\1",parentQTLs))*1000 + 
+      as.numeric(gsub("(\\d)\\.(\\d+)","\\2",parentQTLs))
+    
+    
+    fit.ans$NearQTL<-0
+    for(i in 1:nrow(fit.ans)){
+      chromqtl<-parentQTLs[as.numeric(gsub("(\\d)\\.(\\d+)","\\1",parentQTLs)) == fit.ans$Chrom[i]]
+      chromlocs<- as.numeric(gsub("(\\d)\\.(\\d+)","\\2",chromqtl))
+      for(loc in chromlocs){
+        
+        if(fit.ans$Position[i] +10 >= loc & fit.ans$Position[i] -10 <= loc){
+          fit.ans$NearQTL[i] <- fit.ans$NearQTL[i] +1
+        }
       }
     }
+    
+  } else{
+    fit.ans<- data.frame(Marker=NA,
+                         Chrom=NA,
+                         Position=NA,
+                         Model=NA,
+                         R2=NA,
+                         pval=NA,
+                         NearQTL=NA)
   }
   
   return(fit.ans)
