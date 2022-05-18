@@ -496,32 +496,15 @@ colnames(fdr)[3]<-"PropWrongQTL"
 
 gwas_summary<-merge(gwas_summary,fdr,by=c("Traits","File"))
 
-data.original <- set.K(data,LOCO=FALSE,n.core=2) # loco gave me an error in fit.ans
-# test markers for significance
-parent_scan <- GWASpoly(data=data.original,
-                           models=c("additive","1-dom"),
-                           traits=c("ParentTrait"),
-                           params=params
-                       )
 
 ```
 
-qq.plot(parent_scan, trait="ParentTrait")
-data2 <- set.threshold(parent_scan,method="M.eff",level=0.05)
 
 qtl <- get.QTL(data=data2,traits="ParentTrait",models="additive",bp.window=10)
 fit.ans <- fit.QTL(data=data2,trait="ParentTrait",
                    qtl=qtl[,c("Marker","Model")])
 
-plot(data2@scores$ParentTrait$additive)
-parentQTLs<-qtls[1,grep("ParentQTL",colnames(qtls))]
-qtllocs<-as.numeric(gsub("(\\d)\\.(\\d+)","\\1",parentQTLs))*1000 + 
-  as.numeric(gsub("(\\d)\\.(\\d+)","\\2",parentQTLs))
-points(qtllocs, 
-       data2@scores$ParentTrait$additive[qtllocs],
-       lwd=6,
-       col="red",
-       cex=2)
+```{r}
 
 fit.ans$NearQTL<-0
 for(i in 1:nrow(fit.ans)){
