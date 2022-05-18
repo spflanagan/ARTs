@@ -500,22 +500,66 @@ gwas_summary<-merge(gwas_summary,fdr,by=c("Traits","File"))
 ```
 
 
-qtl <- get.QTL(data=data2,traits="ParentTrait",models="additive",bp.window=10)
-fit.ans <- fit.QTL(data=data2,trait="ParentTrait",
-                   qtl=qtl[,c("Marker","Model")])
+```{r}
+plot(gwas_summary$PropQTL~as.factor(paste(gwas_summary$numChrom,gwas_summary$numQTLtotal)))
+```
 
 ```{r}
 
-fit.ans$NearQTL<-0
-for(i in 1:nrow(fit.ans)){
-  chromqtl<-courtQTLs[as.numeric(gsub("(\\d)\\.(\\d+)","\\1",courtQTLs)) == fit.ans$Chrom[i]]
-  chromlocs<- as.numeric(gsub("(\\d)\\.(\\d+)","\\2",chromqtl))
-  for(loc in chromlocs){
-    
-    if(fit.ans$Position[i] +10 >= loc & fit.ans$Position[i] -10 <= loc){
-      fit.ans$NearQTL[i] <- fit.ans$NearQTL[i] +1
-    }
+propQTL_plot<-function(gsummary,propCol,cols,ylabel="Proportion of QTL detected by GWAS",add_legend=FALSE){
+  nchroms<-length(unique(gsummary$numChrom[gsummary$Traits=="Courter"]))
+  nqtls<-length(unique(gsummary$numQTLonChrom[gsummary$Traits=="Courter"]))
+  
+  
+  vioplot::vioplot(gsummary[gsummary$Traits=="Courter",propCol]~gsummary$CQ[gsummary$Traits=="Courter"],
+          xlab="",
+          ylab="",
+          names=rep(unique(gsummary$numQTLonChrom[gsummary$Traits=="Courter"]),
+                    nchroms),
+          side="left",
+          col=scales::alpha(cols["courter"],0.5),
+          ylim=c(0,1),
+          border=cols["courter"],
+          lineCol=cols["courter"],
+          colMed="black",
+          cex.axis=2,
+          cex.lab=2,
+          las=2
+          )
+  
+  vioplot::vioplot(gsummary[gsummary$Traits=="Parent",propCol]~gsummary$CQ[gsummary$Traits=="Parent"],
+          side="right",
+          col=scales::alpha(cols["parent"],0.5),
+          add=TRUE,
+          border=cols["parent"],
+          lineCol=cols["parent"],
+          colMed="black"
+          )
+  
+  mtext(ylabel,2,cex=2,line=3.5)
+  
+  startpos<-0:(nchroms-1)*nqtls+1
+  endpos<-startpos+nqtls-1
+  labpos<-(startpos+endpos)/2
+  
+  text(x=labpos,
+       y=rep(-0.17,nchroms),
+       paste(unique(gsub("(\\d+) \\d+$","\\1",
+                         levels(gsummary$CQ[gsummary$Traits=="Courter"]))),
+             "Chroms"),
+       xpd=TRUE,
+       cex=2)
+  if(isTRUE(add_legend)){
+      legend("top",
+         pch=15,
+         c("Courter","Parent"),
+         col=cols[c("courter","parent")],
+         bty='n',
+         ncol=2,
+         cex=2)
   }
+
+
 }
 ```
 
