@@ -20,9 +20,10 @@ output:
     toc: yes
     toc_depth: '2'
   word_document: null
-zotero: "My Library"
+zotero: 
+  library: "My Library"
+  csl-style: proceedings-of-the-royal-society-b
 capsize: normalsize
-csl: https://github.com/citation-style-language/styles/blob/master/proceedings-of-the-royal-society-b.csl
 documentclass: article
 editor_options:
   chunk_output_type: console
@@ -31,7 +32,7 @@ editor_options:
 fontsize: 11pt
 abstract: |
 header-includes: |
-  \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H} \usepackage{luamplib} \usepackage{unicode-math}
+  \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H} \usepackage{luamplib} \usepackage{unicode-math} \usepackage{luatex} \usepackage{luatexversion}   \usepackage[utf8]{inputenc}
 affiliation:
 - affil: School of Biological Sciences, University of Canterbury, 4800 Private Bag,
     Christchurch 8140 New Zealand
@@ -40,7 +41,6 @@ affiliation:
   affilnum: 2
 preprint: no
 spacing: singlespacing
-bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
