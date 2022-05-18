@@ -460,10 +460,8 @@ for(i in 1:nrow(fit.ans)){
 }
 ```
  
- 
-Now for the parent trait
 
-```{r}
+I've wrapped all of that nicely into a single script (`103_run_gwas.R`) that I can run in the background on my computer. Now we can look at the output csv file to start to make sense of/summarize the results.
 
 
 
