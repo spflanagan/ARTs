@@ -572,5 +572,73 @@ propQTL_plot(gwas_summary[gwas_summary$Architecture=="qtls",],"PropWrongQTL",col
 ```
 
 
+Are parent QTLS more likely to be picked up because CP/CN is the most common polymorphism or is it because selection on parents is stronger than selection on courters? 
+
+We'll want to summarize the final frequencies and compare it to the prop QTL detected.
+
+```{r eval=FALSE}
+pfiles<-list.files(path="../fixedART-results/qtls",pattern="pheno.csv",full.names = TRUE)
+final_freqs<-data.frame(
+  CP=NA,
+  C=NA,
+  P=NA,
+  NON=NA,
+  file=NA
+)
+
+for(i in 1:length(pfiles)){
+  phenos<-read.csv(pfiles[i])
+  frqs<-table(phenos$Morph[phenos$Sex=="MAL"])/sum(table(phenos$Morph[phenos$Sex=="MAL"]))
+  final_freqs[i,names(frqs)]<-frqs
+  final_freqs[i,"file"]<-pfiles[i]
+  
+}
+
+final_freqs[is.na(final_freqs)]<-0
+write.csv(final_freqs,"../results/morph_freqs_summary.csv")
+```
+
+```{r}
+final_freqs<-read.csv("../results/morph_freqs_summary.csv")
+final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
+
+gwas_summary$rep<-gsub("^.*Diversity_(.*)_pop_(\\d+).vcf","\\1_pop\\2",gwas_summary$File)
+
+overall_info<-merge(final_freqs,
+                    gwas_summary,
+                    by="rep")
+```
+
+```{r}
+par(mfrow=c(1,2),mar=c(5,5,2,2))
+plot(overall_info$P[overall_info$Traits=="Parent"],
+     overall_info$PropQTL[overall_info$Traits=="Parent"],
+     col=cols["parent"],
+     pch=19,
+     xlab="Parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     xlim=c(0,1),
+     bty='l'
+     )
+
+plot(overall_info$NON[overall_info$Traits=="Courter"],
+     overall_info$PropQTL[overall_info$Traits=="Courter"],
+     col=cols["courter"],
+     pch=19,
+     xlab="Non-parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     #xlim=c(0,1),
+     bty='l'
+     )
+```
+
 
 
