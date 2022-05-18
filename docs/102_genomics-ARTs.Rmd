@@ -415,13 +415,10 @@ court_scan <- GWASpoly(data=data.loco,
 
 ```{r}
 # check inflation of scores
-qq.plot(court_scan, trait="CourtTrait")
+qq.plot(court_scan, trait="CourtTrait") #some departures from the null (dashed line) are present 
 ```
 
-some departures from the null (dashed line) are present 
-
-
-need to choose a -log10(p) threshold to control false positive rate. Bonferroni is overly conservative because LD means that markers are not independent. So we can use LD to estimate effective number of markers using method="M.eff", and can also use a permutation test.
+We need to choose a -log10(p) threshold to control false positive rate. Bonferroni is overly conservative because LD means that markers are not independent. So we can use LD to estimate effective number of markers using method="M.eff", and can also use a permutation test.
 
 ```{r}
 data2 <- set.threshold(court_scan,method="M.eff",level=0.05)
