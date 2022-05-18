@@ -384,7 +384,8 @@ The regions of the parameter space the have non-zero diversity values correspond
 
 ## Individual-based simulation model
 
-The results from the  mathematical model were used to select parameter settings for the individual-based simulation model, with one set expected to produce low-diversity populations (i.e., those where only one morph were retained) and another set expected to produce high-diversity populations (i.e., where 2 or more morphs were retained). The chosen parameter settings are shown in Table \@ref(tab:SimParamsTable).
+The results from the  mathematical model were used to select parameter settings for the individual-based simulation model, with one set expected to produce low-diversity populations (i.e., those where only one morph were retained) and another set expected to produce high-diversity populations (i.e., where 2 or more morphs were retained). The chosen parameter settings are shown in Table \@ref(tab:SimParamsTable). 
+
 
 ```{r SimParamsTable}
 SimParams<-data.frame(
