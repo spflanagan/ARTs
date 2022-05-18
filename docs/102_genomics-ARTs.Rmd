@@ -361,27 +361,8 @@ VCF2dosage(vcfname,
            min.minor=1)
 ```
 
-I need to create the phenotype file
-
-TODO: get the individual IDs to match up. Hmm traits file and vcf file have individuals in a different order. 
-
-```{r}
-trait_name<-gsub("_pop_\\d+\\.vcf","_traits\\.txt",vcfname)
-traits<-read.delim(trait_name)
-pop<-as.numeric(gsub("^.*pop_(\\d+).*$","\\1",vcfname))
-traits <- traits[traits$Gen==12000 & traits$Pop == pop,]
-
-phenos<-traits[,c("Individual","CourtTrait","ParentTrait","PrefTrait","Sex")]
-
-# need to adjust the IDs
-
-
-
-
-```
-
 ```{r eval=FALSE}
-
+# create phenotype file
 gt<-read.csv(genofile)
 ids<-colnames(gt)[6:length(colnames(gt))]
 phenos<-data.frame(ID=ids,
