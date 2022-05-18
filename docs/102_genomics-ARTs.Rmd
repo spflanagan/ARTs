@@ -334,7 +334,9 @@ supergene_outliers<-read.csv("supergene_outliers.csv")
 
 ## GWAS
 
-following this one for better or worse: https://jendelman.github.io/GWASpoly/GWASpoly.html
+I am using the package GWASpoly to run genome-wide association studies for the courter and parent traits. I'm following the instructions on their package information page (https://jendelman.github.io/GWASpoly/GWASpoly.html). I'm using the vcf file output from the simulations and then creating the phenotype files. Once the GWAS has identified QTLs, I can compare that to the qtl information files from the model. 
+
+As an example of what I could do re: manhattan plots (but am not doing on all of them), here is an example with one rep.
 
 ```{r}
 library(GWASpoly)
