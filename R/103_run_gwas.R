@@ -143,7 +143,7 @@ scan_parent<-function(data, qtls, params){
   return(fit.ans)
 }
 
-sum_out<-lapply(vcf_files, function(vcfname){
+sum_out<-lapply(vcf_files, function(vcfname) try({
   
   # process files
   genofile <- gsub("\\.vcf","_gt.csv",vcfname)
@@ -211,4 +211,4 @@ sum_out<-lapply(vcf_files, function(vcfname){
   return(fit_results)
   
   
-})
+}))
