@@ -5,11 +5,12 @@ library(GWASpoly)
 
 
 vcf_files<-c(
-  list.files(path="./single_locus/",pattern="vcf",full.names = TRUE),
+  #list.files(path="./single_locus/",pattern="vcf",full.names = TRUE),
   list.files(path="../fixedART-results/qtls",pattern="vcf",full.names = TRUE),
   list.files(path="../fixedART-results/supergene",pattern="vcf",full.names = TRUE)
 )
-  
+
+vcf_files<-vcf_files[212:length(vcf_files)]
 
 get_phenos<-function(vcfname){
   
