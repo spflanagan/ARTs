@@ -464,6 +464,37 @@ for(i in 1:nrow(fit.ans)){
 I've wrapped all of that nicely into a single script (`103_run_gwas.R`) that I can run in the background on my computer. Now we can look at the output csv file to start to make sense of/summarize the results.
 
 
+```{r}
+gwas_output<-read.csv("GWAS_summary.csv", header = FALSE)
+colnames(gwas_output)<-c("Marker",
+                          "Chrom",
+                          "Position",
+                          "Model",
+                          "R2",
+                          "pval",
+                          "NearQTL",
+                          "Traits",
+                          "File")
+
+gwas_summary<-aggregate(NearQTL~Traits + File,sum,data=gwas_output)
+
+gwas_summary$numQTLonChrom<-as.numeric(gsub("^.*q(\\d+)_c(\\d+)_\\d.*vcf","\\1",gwas_summary$File))
+gwas_summary$numChrom<-as.numeric(gsub("^.*q(\\d+)_c(\\d+)_\\d.*vcf","\\2",gwas_summary$File))
+gwas_summary$numQTLtotal<-gwas_summary$numQTLonChrom*gwas_summary$numChrom
+gwas_summary$Architecture<-gsub("^.*results\\/(.*)\\/\\w+.*.vcf","\\1",gwas_summary$File)
+gwas_summary$Architecture<-gsub("\\/","",gwas_summary$Architecture) # remove any extra / 
+gwas_summary$CQ<-as.factor(paste(gwas_summary$numChrom,gwas_summary$numQTLtotal))
+
+# calculate the proportion of QTLs identified
+gwas_summary$PropQTL<-gwas_summary$NearQTL/gwas_summary$numQTLtotal
+
+fdr<-aggregate(NearQTL~Traits + File,function(cnts){
+  props<-table(cnts)/sum(table(cnts))
+  return(props[1])
+},data=gwas_output)
+colnames(fdr)[3]<-"PropWrongQTL"
+
+gwas_summary<-merge(gwas_summary,fdr,by=c("Traits","File"))
 
 data.original <- set.K(data,LOCO=FALSE,n.core=2) # loco gave me an error in fit.ans
 # test markers for significance
@@ -473,6 +504,7 @@ parent_scan <- GWASpoly(data=data.original,
                            params=params
                        )
 
+```
 
 qq.plot(parent_scan, trait="ParentTrait")
 data2 <- set.threshold(parent_scan,method="M.eff",level=0.05)
