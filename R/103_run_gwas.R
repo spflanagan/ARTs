@@ -178,13 +178,18 @@ sum_out<-lapply(vcf_files, function(vcfname) try({
   data.loco <- set.K(data,LOCO=TRUE,n.core=2)
   data.original <- set.K(data,LOCO=FALSE,n.core=2)
   
-  
   fit_courter<-tryCatch({
     scan_courter(data.loco, qtls, params)
   },  error = function(e) {
     scan_courter(data.original, qtls, params)
   }, finally = {
-    NA
+    data.frame(Marker=NA,
+               Chrom=NA,
+               Position=NA,
+               Model=NA,
+               R2=NA,
+               pval=NA,
+               NearQTL=NA)
   })
   fit_courter$Trait<-"Courter"
   
@@ -193,7 +198,13 @@ sum_out<-lapply(vcf_files, function(vcfname) try({
   },  error = function(e) {
     scan_parent(data.original, qtls, params)
   }, finally = {
-    NA
+    data.frame(Marker=NA,
+               Chrom=NA,
+               Position=NA,
+               Model=NA,
+               R2=NA,
+               pval=NA,
+               NearQTL=NA)
   })
   fit_parent$Trait<-"Parent"
   
