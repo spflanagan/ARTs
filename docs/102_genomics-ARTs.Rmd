@@ -447,12 +447,6 @@ points(qtllocs,
 qtl <- get.QTL(data=data2,traits="CourtTrait",models="additive",bp.window=10)
 fit.ans <- fit.QTL(data=data2,trait="CourtTrait",
                    qtl=qtl[,c("Marker","Model")])
-```
-
-
-Summarize it with actual qtls nearby
-
-```{r}
 fit.ans$NearQTL<-0
 for(i in 1:nrow(fit.ans)){
   chromqtl<-courtQTLs[as.numeric(gsub("(\\d)\\.(\\d+)","\\1",courtQTLs)) == fit.ans$Chrom[i]]
