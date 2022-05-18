@@ -561,6 +561,14 @@ propQTL_plot<-function(gsummary,propCol,cols,ylabel="Proportion of QTL detected 
 
 
 }
+
+```
+
+```{r QTLplots}
+par(mfrow=c(1,2),mar=c(5,5,2,2))
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="qtls",],"PropQTL",cols)
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="qtls",],"PropWrongQTL",cols,"Falsely detected QTLs")
+#propQTL_plot(gwas_summary[gwas_summary$Architecture=="supergene",],cols)
 ```
 
 
