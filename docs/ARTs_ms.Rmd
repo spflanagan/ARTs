@@ -521,6 +521,11 @@ Should we have any mention of Fsts? Perhaps in the sexual conflict context
 
 # Discussion
 
+Summary of findings 
+- genetic architecture matters
+- maybe counter intuitively it reduces stochasticity, likely through genetic correlations and/or linkage disequilibrium?
+
+
 # Acknowledgments
 
 We acknowledge Ngāi Tūāhuriri, upon whose lands the analyses and writing
