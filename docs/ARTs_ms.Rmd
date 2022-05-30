@@ -178,8 +178,7 @@ in each morph's nests (${p_s}_M$).
 The final stage of the lifecycle is for offspring surviving in the nest
 to undergo viability selection by multiplying the viability selection
 coefficient (${w_v}_M$) by the surviving proportion (${p_s}_M$) and the
-original frequency of the morph in the population (**Note: does pv need
-the frequency multiplication??)**. Finally, the frequency of each morph
+original frequency of the morph in the population. Finally, the frequency of each morph
 in the next generation was calculated by dividing the surviving
 proportion (${p_v}_M$ by the sum of all proportions.
 
