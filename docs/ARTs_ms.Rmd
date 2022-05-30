@@ -487,6 +487,12 @@ One striking result is that stochasticity appears to play a major role in which 
 
 ### The role of polygenic inheritance of traits
 
+```{r}
+final_freqs<-read.csv("../results/morph_freqs_summary.csv")
+final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
+
+```
+
 We incorporated polygenic inheritance of the male traits in two ways, both of which reduced the impacts of stochasticity on the final morph frequencies. 
 In the low diversity parameter space, the outcomes remained consistent with the single-locus model (and the expectations from the mathematical model): courter/parents dominated the populations, with complete fixation of the morph in the majority of runs, and any variation existing in the form of 1-2 individuals (courter/parent frequencies were $\ge$ 99% in all cases). 
 These results were consistent across all genetic architectures, including QTLs distributed across 2, 4, and 8 chromosomes and QTLs clustered in supergenes spanning from 5% to 50% of a single chromosome. 
