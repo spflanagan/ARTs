@@ -183,10 +183,10 @@ in the next generation was calculated by dividing the surviving
 proportion (${p_v}_M$ by the sum of all proportions.
 
 To evaluate the outcomes of this mathematical model, we iterated forward
-in time for 100 generations from XX combinations of initial morph
-frequencies and repeated those iterations across XX values for the sperm
-competition coefficient ($c$ = {0..1}) and XX values for the relative
-reproductive coefficient ($r_M$ = {0...1}). The iterations were
+in time for 100 generations from 1659 combinations of initial morph
+frequencies and repeated those iterations across 5 values for the sperm
+competition coefficient ($c$ = {0..1}) and 21 values for the relative
+reproductive coefficient ($r_M$ = {0...2}). The iterations were
 implemented in R v. 4.1.1 [@rcoreteam2021] using some features of tidyR
 [@wickham2021]. To facilitate visualisation of the results, we
 calculated the Shannon's diversity index for the morphs remaining in the
