@@ -306,6 +306,8 @@ larger than the carrying capacity, offspring were randomly selected to
 become adults. When offspring matured to adulthood, the previous
 generation's adults were replaced, and the lifecycle began again.
 
+
+Each set of genetic architectures and population parameters was also was run with four types of mating systems, all of which required females to lay their eggs with only a single male: males accept eggs from a single female, and females deposit their eggs with a randomly-selected unmated male in the population should they fail to find a preferred mate ('monogamy'); males accept eggs from multiple females, and females deposit their eggs with a randomly-selected unmated male in the population should they fail to find a preferred mate ('polygyny'); males accept eggs from a single female, and females who fail to find a preferred mate do not produce offspring ('monogamy no mating'); males accept eggs from multiple females, and females who fail to find a preferred mate do not produce offspring ('polygyny no mating').
 # Results
 
 ## Frequency-dependent population dynamics model
