@@ -497,6 +497,13 @@ These proportions are remarkably consistent across genetic architectures. Most s
 The size of the supergene did not substantially impact the final morph frequencies, nor did the total number of QTLs underlying each locus. *Do an analysis of this?*
 
 
+Balancing selection and/or maintenance of genetic variation?
+- genetic variation at QTLs vs non QTLs vs detected qtls
+- Tajima's D?
+
+Does linkage disequilibrium evolve?
+
+
 ### Will GWAS detect the actual QTLs?
 
 As expected, the detection of true QTLs in a GWAS was more likely when fewer QTLs underpin the trait, especially if those QTLs are aggregated on fewer chromosomes (Fig. \@ref(fig:GWASoutcomes)). Somewhat unexpectedly, the QTLs for parent traits were much more likely to be detected by GWAS than the courter QTLs. In the majority of simulations, the final population only contained parental males, but both courters and non-courters persisted in the population. The finding the parent QTLs are more likely to be detected is likely because that trait experienced stronger selection on it (i.e., being a non-parent was more costly than being a non-courter).
