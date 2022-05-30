@@ -131,6 +131,7 @@ individual-based simulation model. The purpose of the mathematical model
 was to generate baseline predictions for when multiple morphs are
 maintained.
 
+
 ## Frequency-dependent population dynamics model
 
 In the mathematical model, we model the proportion of the population
