@@ -686,9 +686,7 @@ plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture
 
 
 
-### Sexual conflict over reproduction
 
-Should we have any mention of Fsts? Perhaps in the sexual conflict context
 
 
 # Discussion
