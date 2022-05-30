@@ -230,8 +230,6 @@ mutation during mating. The supergene scenario forced the QTLs to
 cluster into a small proportion of one of the chromosomes. These QTLs
 still experience mutation but experienced reduced recombination.
 
-The lifecycle:
-
 When we ran the model, we initialized four replicate populations with
 the identical starting conditions to evaluate the impact of
 stochasticity on the model. These identical conditions included
