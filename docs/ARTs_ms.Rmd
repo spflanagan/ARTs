@@ -694,6 +694,8 @@ plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture
 Summary of findings 
 - genetic architecture matters
 - maybe counter intuitively it reduces stochasticity, likely through genetic correlations and/or linkage disequilibrium?
+- GWAS is only going to pick up $\le$ 50% of true QTLs, and will provide spurious results
+- a mention of sexual conflict? 
 
 
 # Acknowledgments
