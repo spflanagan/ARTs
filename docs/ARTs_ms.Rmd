@@ -506,7 +506,10 @@ Does linkage disequilibrium evolve?
 
 ### Will GWAS detect the actual QTLs?
 
-As expected, the detection of true QTLs in a GWAS was more likely when fewer QTLs underpin the trait, especially if those QTLs are aggregated on fewer chromosomes (Fig. \@ref(fig:GWASoutcomes)). Somewhat unexpectedly, the QTLs for parent traits were much more likely to be detected by GWAS than the courter QTLs. In the majority of simulations, the final population only contained parental males, but both courters and non-courters persisted in the population. The finding the parent QTLs are more likely to be detected is likely because that trait experienced stronger selection on it (i.e., being a non-parent was more costly than being a non-courter).
+As expected, the detection of true QTLs in a GWAS was more likely when fewer QTLs underpin the trait, especially if those QTLs are aggregated on fewer chromosomes (Fig. \@ref(fig:GWASoutcomes)). Somewhat surprisingly, the QTLs for parent traits were more reliably detected by GWAS than the courter QTLs. In the majority of simulations, the final population only contained parental males, but both courters and non-courters persisted in the population (Fig. \@ref(fig:MatingTypesFig)). The finding the parent QTLs are more likely to be detected is likely because that trait experienced stronger selection on it (i.e., being a non-parent was more costly than being a non-courter).
+
+We expected the supergene scenarios to have a higher detection rate, but this was not the case. The priary difference was that the variance in false positive rates was increased with supergenes, but the true positive rates were unaffected by the localization of QTLs.  
+
 
 What about supergenes?
 
