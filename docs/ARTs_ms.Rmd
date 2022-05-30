@@ -510,8 +510,181 @@ As expected, the detection of true QTLs in a GWAS was more likely when fewer QTL
 
 We expected the supergene scenarios to have a higher detection rate, but this was not the case. The priary difference was that the variance in false positive rates was increased with supergenes, but the true positive rates were unaffected by the localization of QTLs.  
 
+```{r getGWASinfo}
+gwas_output<-read.csv("GWAS_summary.csv", header = FALSE)
+colnames(gwas_output)<-c("Marker",
+                          "Chrom",
+                          "Position",
+                          "Model",
+                          "R2",
+                          "pval",
+                          "NearQTL",
+                          "Traits",
+                          "File")
 
-What about supergenes?
+gwas_summary<-aggregate(NearQTL~Traits + File,sum,data=gwas_output)
+
+gwas_summary$numQTLonChrom<-as.numeric(gsub("^.*q(\\d+)_c(\\d+)_\\d.*vcf","\\1",gwas_summary$File))
+gwas_summary$numChrom<-as.numeric(gsub("^.*q(\\d+)_c(\\d+)_\\d.*vcf","\\2",gwas_summary$File))
+gwas_summary$numQTLtotal<-gwas_summary$numQTLonChrom*gwas_summary$numChrom
+gwas_summary$Architecture<-gsub("^.*results\\/(.*)\\/\\w+.*.vcf","\\1",gwas_summary$File)
+gwas_summary$Architecture<-gsub("\\/","",gwas_summary$Architecture) # remove any extra / 
+gwas_summary$CQ<-as.factor(paste(gwas_summary$numChrom,gwas_summary$numQTLtotal))
+
+# calculate the proportion of QTLs identified
+gwas_summary$PropQTL<-gwas_summary$NearQTL/gwas_summary$numQTLtotal
+
+fdr<-aggregate(NearQTL~Traits + File,function(cnts){
+  props<-table(cnts)/sum(table(cnts))
+  return(props[1])
+},data=gwas_output)
+colnames(fdr)[3]<-"PropWrongQTL"
+
+gwas_summary<-merge(gwas_summary,fdr,by=c("Traits","File"))
+
+final_freqs<-read.csv("../results/morph_freqs_summary.csv")
+final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
+
+gwas_summary$rep<-gsub("^.*Diversity_(.*)_pop_(\\d+).vcf","\\1_pop\\2",gwas_summary$File)
+
+overall_info<-merge(final_freqs,
+                    gwas_summary,
+                    by="rep")
+
+overall_info$diversity<-gsub("^.*\\/(\\w+)Diversity.*$","\\1",overall_info$file)
+```
+```{r propQTLplotFXN}
+
+propQTL_plot<-function(gsummary,propCol,cols,ylabel="Proportion of QTL detected by GWAS",add_legend=FALSE){
+  nchroms<-length(unique(gsummary$numChrom[gsummary$Traits=="Courter"]))
+  nqtls<-length(unique(gsummary$numQTLonChrom[gsummary$Traits=="Courter"]))
+  
+  vioplot::vioplot(gsummary[gsummary$Traits=="Courter",propCol]~gsummary$CQ[gsummary$Traits=="Courter"],
+          xlab="",
+          ylab="",
+          names=rep(unique(gsummary$numQTLonChrom[gsummary$Traits=="Courter"]),
+                    nchroms),
+          side="left",
+          col=scales::alpha(cols["courter"],0.5),
+          ylim=c(0,1),
+          border=cols["courter"],
+          lineCol=cols["courter"],
+          colMed="black",
+          cex.axis=2,
+          cex.lab=2,
+          las=2
+          )
+  
+  vioplot::vioplot(gsummary[gsummary$Traits=="Parent",propCol]~gsummary$CQ[gsummary$Traits=="Parent"],
+          side="right",
+          col=scales::alpha(cols["parent"],0.5),
+          add=TRUE,
+          border=cols["parent"],
+          lineCol=cols["parent"],
+          colMed="black"
+          )
+  
+  mtext(ylabel,2,cex=2,line=3.5)
+  
+  startpos<-0:(nchroms-1)*nqtls+1
+  endpos<-startpos+nqtls-1
+  labpos<-(startpos+endpos)/2
+  
+  text(x=labpos,
+       y=rep(-0.17,nchroms),
+       paste(unique(gsub("(\\d+) \\d+$","\\1",
+                         levels(gsummary$CQ[gsummary$Traits=="Courter"]))),
+             "Chroms"),
+       xpd=TRUE,
+       cex=2)
+  if(isTRUE(add_legend)){
+      legend("top",
+         pch=15,
+         c("Courter","Parent"),
+         col=cols[c("courter","parent")],
+         bty='n',
+         ncol=2,
+         cex=2)
+  }
+
+
+}
+
+```
+
+```{r GWASoutcomes,fig.width=5,fig.height=5, fig.cap="Genome-wide association studies of the simulated genotypes reveals a relatively low detection rate of QTLs and a generally high false positive rate, both influenced by the genetic architecture of the traits. The top row show the results for genome-wide QTLs and the bottom row shows the results for supergenes."}
+par(mfrow=c(2,2),mar=c(5,5,2,2))
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="qtls",],"PropQTL",cols)
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="qtls",],"PropWrongQTL",cols,"Falsely detected QTLs")
+
+
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="supergene",],"PropQTL",cols)
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="supergene",],"PropWrongQTL",cols,"Falsely detected QTLs")
+```
+
+
+```{r}
+par(mfrow=c(2,2),mar=c(5,5,2,2))
+plot(overall_info$P[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
+     overall_info$PropQTL[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
+     col=cols["parent"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"])),
+     xlab="Parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     xlim=c(0,1),
+     bty='l'
+     )
+
+plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"],
+     overall_info$PropQTL[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"],
+     col=cols["courter"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"])),
+     xlab="Non-parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     #xlim=c(0,1),
+     bty='l'
+     )
+
+# supergenes
+plot(overall_info$P[overall_info$Traits=="Parent" & overall_info$Architecture=="supergene"],
+     overall_info$PropQTL[overall_info$Traits=="Parent" & overall_info$Architecture=="supergene"],
+     col=cols["parent"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Parent" & overall_info$Architecture=="supergene"])),
+     xlab="Parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     xlim=c(0,1),
+     bty='l'
+     )
+
+plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture=="supergene"],
+     overall_info$PropQTL[overall_info$Traits=="Courter" & overall_info$Architecture=="supergene"],
+     col=cols["courter"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Courter" & overall_info$Architecture=="supergene"])),
+     xlab="Non-parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     #xlim=c(0,1),
+     bty='l'
+     )
+```
+
+
+
 
 ### Sexual conflict over reproduction
 
