@@ -217,23 +217,7 @@ of all QTLs were summed to determine the trait value). In this model, we
 assume no environmental effects impacted the trait value. These trait
 values were then compared to a threshold to dichotomize each trait. The
 threshold for each trait was the mean trait value during the
-initialization of the model (i.e., at generation 0). *QTLs could impact
-either the courtship trait, the parenting trait, or both -- check this
-statement for veracity.*
-
-Other important components of the individuals:
-
--   female preferences
-
--   sex
-
--   reproductive allocation ($pot_rs$).
-
--   mutation functions
-
--   assign_court_morph -- when is this used? It has ind_cthresh, which
-    is in individuals::determine_thresholds() -- this is called in
-    populations::set_thresholds()
+initialization of the model (i.e., at generation 0). 
 
 We implemented three different genetic architectures: a single gene per
 trait, multiple QTLs randomly placed throughout chromosomes, and
