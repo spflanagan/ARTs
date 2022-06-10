@@ -661,9 +661,9 @@ overall_info$diversity<-gsub("^.*\\/(\\w+)Diversity.*$","\\1",overall_info$file)
 ```
 
 ```{r}
-par(mfrow=c(1,2),mar=c(5,5,2,2))
-plot(overall_info$P[overall_info$Traits=="Parent"],
-     overall_info$PropQTL[overall_info$Traits=="Parent"],
+par(mfrow=c(2,2),mar=c(5,5,2,2))
+plot(overall_info$P[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
+     overall_info$PropQTL[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
      col=cols["parent"],
      pch=19,
      xlab="Parent/Non-courters Proportion",
