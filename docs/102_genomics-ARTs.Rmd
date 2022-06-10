@@ -31,7 +31,7 @@ knitr::opts_knit$set(root.dir='../results/') #change
 ```{r opts, echo = FALSE}
 library(knitr)
 knitr::opts_chunk$set(
-  fig.path = "figs/"
+  fig.path = "../figs/"
 )
 ```
 ```{r librarysetup, echo=FALSE,echo=FALSE,message=FALSE}
