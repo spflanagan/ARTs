@@ -776,6 +776,6 @@ plot(ld_summary$AvgR2,
 # Tajima's D
 
 ```{r td}
-
+qtl_info<-"../fixedART-results/supergene/highDiversity_qtls_monogamy_nm_prop0.05_q16_c2_1_qtlinfo.txt"
 ```
 
