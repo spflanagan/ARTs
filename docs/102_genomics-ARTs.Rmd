@@ -625,6 +625,8 @@ We'll want to summarize the final frequencies and compare it to the prop QTL det
 
 ```{r eval=FALSE}
 pfiles<-list.files(path="../fixedART-results/qtls",pattern="pheno.csv",full.names = TRUE)
+pfiles<-c(pfiles,
+          list.files(path="../fixedART-results/supergene",pattern="pheno.csv",full.names = TRUE))
 final_freqs<-data.frame(
   CP=NA,
   C=NA,
