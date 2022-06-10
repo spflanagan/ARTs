@@ -12,17 +12,15 @@ output:
     fig_caption: yes
     keep_tex: yes
     number_sections: no
-    template: manuscript.latex
-    toc: yes
+    toc: no
     toc_depth: 2
   html_document: null
   pdf_document:
     toc: yes
     toc_depth: '2'
   word_document: null
-zotero: 
-  library: "My Library"
-  csl-style: proceedings-of-the-royal-society-b
+bibliography: references.bib
+csl: proceedings-of-the-royal-society-b.csl
 capsize: normalsize
 documentclass: article
 editor_options:
@@ -32,7 +30,7 @@ editor_options:
 fontsize: 11pt
 abstract: |
 header-includes: |
-  \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H} \usepackage{luamplib} \usepackage{unicode-math} \usepackage{luatex} \usepackage{luatexversion}   \usepackage[utf8]{inputenc}
+  \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H}
 affiliation:
 - affil: School of Biological Sciences, University of Canterbury, 4800 Private Bag,
     Christchurch 8140 New Zealand
