@@ -656,6 +656,8 @@ gwas_summary$rep<-gsub("^.*Diversity_(.*)_pop_(\\d+).vcf","\\1_pop\\2",gwas_summ
 overall_info<-merge(final_freqs,
                     gwas_summary,
                     by="rep")
+
+overall_info$diversity<-gsub("^.*\\/(\\w+)Diversity.*$","\\1",overall_info$file)
 ```
 
 ```{r}
