@@ -252,7 +252,9 @@ dplyr [@wickham2021], and rmarkdown [@allaire2021; @xie2020; @xie2018].
 The interactive app is available at
 <https://spflanagan.shinyapps.io/morph_predictions/>.
 
-**this model has no recombination/females do not pass on a morph**
+Note that this model does not incorporate recombination or inheritance via females.
+Nonetheless, this model provides a baseline predictions for parameter values likely to facilitate morph diversity within a population.
+These limitations are addressed in the individual-based simulation model.
 
 ## Individual-based simulation model
 
