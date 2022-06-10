@@ -867,20 +867,26 @@ plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture
      )
 ```
 
-
-
-
-
-
-
 # Discussion
 
-Summary of findings 
-- genetic architecture matters
-- maybe counter intuitively it reduces stochasticity, likely through genetic correlations and/or linkage disequilibrium?
-- GWAS is only going to pick up $\le$ 50% of true QTLs, and will provide spurious results
-- a mention of sexual conflict? 
+Summary of findings - genetic architecture matters - maybe counter
+intuitively it reduces stochasticity, likely through genetic
+correlations and/or linkage disequilibrium? - GWAS is only going to pick
+up $\le$ 50% of true QTLs, and will provide spurious results - a mention
+of sexual conflict?
 
+Why might cause the deviation from the single-locus expectation? - LD,
+genetic correlations - compare to previous models and speculate on how
+it might impact their results - discuss real-world examples
+
+Detection of QTLs: what's up? - this is consistent with previous models
+like my SCA paper - what does this mean for our ability to study real
+world pops?
+
+Maintenance of variation (esp. morphs) and genetic architectures -
+genetic architecture is critically important - this doesn't include
+other elements of sex-specific or morph-specific architectures such as
+sex-specific dominance of sex-biased gene expression
 
 # Acknowledgments
 
