@@ -386,9 +386,29 @@ were within a 50 basepair window of one of the true QTLs.
 
 ## Frequency-dependent population dynamics model
 
-The initial frequency of each morph impacted whether multiple morphs were maintained. In no cases was the courter-nonparent morph maintained. This result makes intuitive sense, because if a female chooses to nest with a courter-nonparent, the nest will always die (given our parameter settings).  [What happens if one morph is absent?] 
+The initial frequency of each morph impacted whether multiple morphs
+were maintained. In no cases was the courter-nonparent morph maintained.
+This result makes intuitive sense, because if a female chooses to nest
+with a courter-nonparent, the nest will always die (given our parameter
+settings). [What happens if one morph is absent?]
 
-The parameters controlling sperm competition ($c$), relative reproductive allocation ($r$), and the number of sneakers allowed also impacted the diversity of the population after both 100 generations and 1000 generations.  Some initial starting conditions took more than 100 generations to reach a consistent (i.e., equilibrial) state, but the contributions of these three parameters remained qualitatively consistent across 100 and 1000 generations. Reproductive allocations corresponding to a range of approximately 0.5 to 1 (meaning that courters invest half as much to just as much as non-courters in producing sperm) resulted in the maximum amount of diversity, as long as sperm competition ($c$) was above 0.2 (meaning that, if a non-courting male produced 8 sperm and courting males produce 4, the non-courting male would fertilize `r (8*0.2)/(4+(2*0.2*8))` or more of the offspring). This importance of the sperm competition coefficient was influenced by the number of sneakers allowed, with larger contributions from an individual non-courting male (e.g., larger $c$) being required with fewer sneakers (Fig. \@ref(fig:mathParams)).
+The parameters controlling sperm competition ($c$), relative
+reproductive allocation ($r$), and the number of sneakers allowed also
+impacted the diversity of the population after both 100 generations and
+1000 generations. Some initial starting conditions took more than 100
+generations to reach a consistent (i.e., equilibrial) state, but the
+contributions of these three parameters remained qualitatively
+consistent across 100 and 1000 generations. Reproductive allocations
+corresponding to a range of approximately 0.5 to 1 (meaning that
+courters invest half as much to just as much as non-courters in
+producing sperm) resulted in the maximum amount of diversity, as long as
+sperm competition ($c$) was above 0.2 (meaning that, if a non-courting
+male produced 8 sperm and courting males produce 4, the non-courting
+male would fertilize `r (8*0.2)/(4+(2*0.2*8))` or more of the
+offspring). This importance of the sperm competition coefficient was
+influenced by the number of sneakers allowed, with larger contributions
+from an individual non-courting male (e.g., larger $c$) being required
+with fewer sneakers (Fig. \@ref(fig:mathParams)).
 
 ```{r mathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=4.5, fig.height=7, warning=FALSE,message=FALSE}
 
@@ -441,13 +461,32 @@ pnn<-nrow(divRes[divRes$NN>=0.5,])/ndiv
 
 ```
 
-
-The regions of the parameter space the have non-zero diversity values correspond to scenarios where three of the four morphs were retained (courter-parents, non-courter-parents, and non-courter-non-parents). The dominant morph differed with various parameter combinations. Assuming equal starting frequencies, after 10000 generations, `r pcourt*100`% of parameter combinations that retained polymorphism resulted in the courter-parent morph comprising $\le$ 50% of the population. The remaining `r (1-pcourt)*100`% of parameter combinations resulting in polymorphism had more equal representation of all three morphs, with the average proportion of the population being `r mean(divRes[divRes$CP<=0.5,"CP"])*100` % ($pm$ `r sem(divRes[divRes$CP<=0.5,"CP"])*100` %) courter-parents, `r mean(divRes[divRes$CP<=0.5,"NP"])*100` % ($pm$ `r sem(divRes[divRes$CP<=0.5,"NP"])*100` %) non-courter-parents, and `r mean(divRes[divRes$CP<=0.5,"NN"])*100` % ($pm$ `r sem(divRes[divRes$CP<=0.5,"NN"])*100` %) non-courter-non-parents.    
+The regions of the parameter space the have non-zero diversity values
+correspond to scenarios where three of the four morphs were retained
+(courter-parents, non-courter-parents, and non-courter-non-parents). The
+dominant morph differed with various parameter combinations. Assuming
+equal starting frequencies, after 10000 generations, `r pcourt*100`% of
+parameter combinations that retained polymorphism resulted in the
+courter-parent morph comprising $\le$ 50% of the population. The
+remaining `r (1-pcourt)*100`% of parameter combinations resulting in
+polymorphism had more equal representation of all three morphs, with the
+average proportion of the population being
+`r mean(divRes[divRes$CP<=0.5,"CP"])*100` % ($pm$
+`r sem(divRes[divRes$CP<=0.5,"CP"])*100` %) courter-parents,
+`r mean(divRes[divRes$CP<=0.5,"NP"])*100` % ($pm$
+`r sem(divRes[divRes$CP<=0.5,"NP"])*100` %) non-courter-parents, and
+`r mean(divRes[divRes$CP<=0.5,"NN"])*100` % ($pm$
+`r sem(divRes[divRes$CP<=0.5,"NN"])*100` %) non-courter-non-parents.
 
 ## Individual-based simulation model
 
-The results from the  mathematical model were used to select parameter settings for the individual-based simulation model, with one set expected to produce low-diversity populations (i.e., those where only one morph were retained) and another set expected to produce high-diversity populations (i.e., where 2 or more morphs were retained). The chosen parameter settings are shown in Table \@ref(tab:SimParamsTable). 
-
+The results from the mathematical model were used to select parameter
+settings for the individual-based simulation model, with one set
+expected to produce low-diversity populations (i.e., those where only
+one morph were retained) and another set expected to produce
+high-diversity populations (i.e., where 2 or more morphs were retained).
+The chosen parameter settings are shown in Table
+\@ref(tab:SimParamsTable).
 
 ```{r SimParamsTable}
 SimParams<-data.frame(
@@ -481,14 +520,34 @@ kable(SimParams, "latex",booktab=TRUE,
 
 ```
 
-
-
 ### Impacts of mating system on the model
 
-
-
-As expected, in the low diversity parameter space, the majority of simulations resulted in fixation or near-fixation of the courter-parent morph (Fig. \@ref(fig:MatingTypesFig)). A more surprising result was the inconsistency of results from the mating types within the the high diversity parameter space. Polygyny resulted in the fixation of the courter/parent morph regardless of whether females mated at random if a suitable mate was found, and monogamy resulted in the fixation of the non-courter/parent morph in every case. Only monogamy with no mating allowed resulted in polymorphism, with the courter/parent morph coexisting with either the non-courter/parent or the non-courter/non-parent morph (Fig. \@ref(fig:MatingTypesFig)). These results can be explained by the nature of density-dependent survival in the individual-based model that are not consistent with the mathematical model; in the simulation model, offspring are created in proportion to the surviving offspring after mating has occurred, increasing the males' reproductive success above their specified reproductive investments. This allows males to escape the costs and increase their reproductive success beyond what is possible in the mathematical model. Random mating if non-preferred males are unable to be found also enables non-courter/parents to have increased reproductive success compared the the mathematical model predictions, which is why they are fixed in the monogamy case. If stricter costs on courting males are imposed, specifying $r=0.25$, meaning that $r_{courter}=2$ and $r_{non-courter}=8$, the scenarios without random mating do result in the maintenance of 2 or 3 morphs in most cases for both monogamy and polygyny (Fig. \@ref(fig:MatingTypesFig)), as expected.
-
+As expected, in the low diversity parameter space, the majority of
+simulations resulted in fixation or near-fixation of the courter-parent
+morph (Fig. \@ref(fig:MatingTypesFig)). A more surprising result was the
+inconsistency of results from the mating types within the the high
+diversity parameter space. Polygyny resulted in the fixation of the
+courter/parent morph regardless of whether females mated at random if a
+suitable mate was found, and monogamy resulted in the fixation of the
+non-courter/parent morph in every case. Only monogamy with no mating
+allowed resulted in polymorphism, with the courter/parent morph
+coexisting with either the non-courter/parent or the
+non-courter/non-parent morph (Fig. \@ref(fig:MatingTypesFig)). These
+results can be explained by the nature of density-dependent survival in
+the individual-based model that are not consistent with the mathematical
+model; in the simulation model, offspring are created in proportion to
+the surviving offspring after mating has occurred, increasing the males'
+reproductive success above their specified reproductive investments.
+This allows males to escape the costs and increase their reproductive
+success beyond what is possible in the mathematical model. Random mating
+if non-preferred males are unable to be found also enables
+non-courter/parents to have increased reproductive success compared the
+the mathematical model predictions, which is why they are fixed in the
+monogamy case. If stricter costs on courting males are imposed,
+specifying $r=0.25$, meaning that $r_{courter}=2$ and
+$r_{non-courter}=8$, the scenarios without random mating do result in
+the maintenance of 2 or 3 morphs in most cases for both monogamy and
+polygyny (Fig. \@ref(fig:MatingTypesFig)), as expected.
 
 ```{r MatingTypesFig, fig.cap="The frequencies of morphs in the final generation of simulation runs a single gene underlying each trait, with parameters expected to yield low diversity (top row), high diversity (centre row), and high diversity with stronger costs on courter reproductive success (bottom row). The frequency of the courter/parent morph in the final generation is printed on top of each bar. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available). Within each parameter set, the numbers below the bars identify sets of simulation runs that were initiated with identical starting conditions."}
 
@@ -559,7 +618,21 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
-One striking result is that stochasticity appears to play a major role in which morphs co-exist with the courter-parent morph, even when initial starting conditions are identical (Fig. \@ref(fig:MatingTypesFig)). Across independent iterations of the model, variation in the initial starting frequencies of each morph (which centre around 0.25 for each morph, but with some variation) can explain some of the differences in outcomes. Variation in outcomes within replicate runs can be attributed to the many sources of random chance incorporated in the model: stochasticity associated with finite population sizes (i.e., genetic drift), the randomness of recombination, and the finite mate search process (in which females might not find a suitable mate, even if one exists in the population) all contribute to the within-replicate variation observed. Furthermore, these sources of variation differentiate the results of the simulation model from those of the mathematical model. 
+One striking result is that stochasticity appears to play a major role
+in which morphs co-exist with the courter-parent morph, even when
+initial starting conditions are identical (Fig.
+\@ref(fig:MatingTypesFig)). Across independent iterations of the model,
+variation in the initial starting frequencies of each morph (which
+centre around 0.25 for each morph, but with some variation) can explain
+some of the differences in outcomes. Variation in outcomes within
+replicate runs can be attributed to the many sources of random chance
+incorporated in the model: stochasticity associated with finite
+population sizes (i.e., genetic drift), the randomness of recombination,
+and the finite mate search process (in which females might not find a
+suitable mate, even if one exists in the population) all contribute to
+the within-replicate variation observed. Furthermore, these sources of
+variation differentiate the results of the simulation model from those
+of the mathematical model.
 
 ### The role of polygenic inheritance of traits
 
@@ -569,26 +642,57 @@ final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
 
 ```
 
-We incorporated polygenic inheritance of the male traits in two ways, both of which reduced the impacts of stochasticity on the final morph frequencies. 
-In the low diversity parameter space, the outcomes remained consistent with the single-locus model (and the expectations from the mathematical model): courter/parents dominated the populations, with complete fixation of the morph in the majority of runs, and any variation existing in the form of 1-2 individuals (courter/parent frequencies were $\ge$ 99% in all cases). 
-These results were consistent across all genetic architectures, including QTLs distributed across 2, 4, and 8 chromosomes and QTLs clustered in supergenes spanning from 5% to 50% of a single chromosome. 
-In the high diversity parameter space, polygenic loci distributed throughout the genome resulted in the maintenance of the courter/parent trait at a frequency of `r round(mean(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`% ($\pm$ `r round(sem(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%), with the non-courter/parent being the dominant morph. 
-These proportions are remarkably consistent across genetic architectures. Most simulations with supergenes resulted in very similar final morph frequencies (`r round(mean(final_freqs$CP[grep("supergene.*highDiversity",final_freqs$file)])*100,2)`% $\pm$ `r round(sem(final_freqs$CP[grep("supergene.*highDiversity",final_freqs$file)])*100,2)`%), and only occasionally resulted in either three morphs being retained or the non-courter/non-parent morph replacing the non-courter parent. 
-The size of the supergene did not substantially impact the final morph frequencies, nor did the total number of QTLs underlying each locus. *Do an analysis of this?*
+We incorporated polygenic inheritance of the male traits in two ways,
+both of which reduced the impacts of stochasticity on the final morph
+frequencies. In the low diversity parameter space, the outcomes remained
+consistent with the single-locus model (and the expectations from the
+mathematical model): courter/parents dominated the populations, with
+complete fixation of the morph in the majority of runs, and any
+variation existing in the form of 1-2 individuals (courter/parent
+frequencies were $\ge$ 99% in all cases). These results were consistent
+across all genetic architectures, including QTLs distributed across 2,
+4, and 8 chromosomes and QTLs clustered in supergenes spanning from 5%
+to 50% of a single chromosome. In the high diversity parameter space,
+polygenic loci distributed throughout the genome resulted in the
+maintenance of the courter/parent trait at a frequency of
+`r round(mean(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%
+($\pm$
+`r round(sem(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%),
+with the non-courter/parent being the dominant morph. These proportions
+are remarkably consistent across genetic architectures. Most simulations
+with supergenes resulted in very similar final morph frequencies
+(`r round(mean(final_freqs$CP[grep("supergene.*highDiversity",final_freqs$file)])*100,2)`%
+$\pm$
+`r round(sem(final_freqs$CP[grep("supergene.*highDiversity",final_freqs$file)])*100,2)`%),
+and only occasionally resulted in either three morphs being retained or
+the non-courter/non-parent morph replacing the non-courter parent. The
+size of the supergene did not substantially impact the final morph
+frequencies, nor did the total number of QTLs underlying each locus. *Do
+an analysis of this?*
 
-
-Balancing selection and/or maintenance of genetic variation?
-- genetic variation at QTLs vs non QTLs vs detected qtls
-- Tajima's D?
+Balancing selection and/or maintenance of genetic variation? - genetic
+variation at QTLs vs non QTLs vs detected qtls - Tajima's D?
 
 Does linkage disequilibrium evolve?
 
-
 ### Will GWAS detect the actual QTLs?
 
-As expected, the detection of true QTLs in a GWAS was more likely when fewer QTLs underpin the trait, especially if those QTLs are aggregated on fewer chromosomes (Fig. \@ref(fig:GWASoutcomes)). Somewhat surprisingly, the QTLs for parent traits were more reliably detected by GWAS than the courter QTLs. In the majority of simulations, the final population only contained parental males, but both courters and non-courters persisted in the population (Fig. \@ref(fig:MatingTypesFig)). The finding the parent QTLs are more likely to be detected is likely because that trait experienced stronger selection on it (i.e., being a non-parent was more costly than being a non-courter).
+As expected, the detection of true QTLs in a GWAS was more likely when
+fewer QTLs underpin the trait, especially if those QTLs are aggregated
+on fewer chromosomes (Fig. \@ref(fig:GWASoutcomes)). Somewhat
+surprisingly, the QTLs for parent traits were more reliably detected by
+GWAS than the courter QTLs. In the majority of simulations, the final
+population only contained parental males, but both courters and
+non-courters persisted in the population (Fig.
+\@ref(fig:MatingTypesFig)). The finding the parent QTLs are more likely
+to be detected is likely because that trait experienced stronger
+selection on it (i.e., being a non-parent was more costly than being a
+non-courter).
 
-We expected the supergene scenarios to have a higher detection rate, but this was not the case. The priary difference was that the variance in false positive rates was increased with supergenes, but the true positive rates were unaffected by the localization of QTLs.  
+We expected the supergene scenarios to have a higher detection rate, but
+this was not the case. The primary difference was that the variance in
+false positive rates was increased with supergenes, but the true
+positive rates were unaffected by the localization of QTLs.
 
 ```{r getGWASinfo}
 gwas_output<-read.csv("GWAS_summary.csv", header = FALSE)
@@ -633,6 +737,7 @@ overall_info<-merge(final_freqs,
 
 overall_info$diversity<-gsub("^.*\\/(\\w+)Diversity.*$","\\1",overall_info$file)
 ```
+
 ```{r propQTLplotFXN}
 
 propQTL_plot<-function(gsummary,propCol,cols,ylabel="Proportion of QTL detected by GWAS",add_legend=FALSE){
@@ -701,7 +806,6 @@ propQTL_plot(gwas_summary[gwas_summary$Architecture=="qtls",],"PropWrongQTL",col
 propQTL_plot(gwas_summary[gwas_summary$Architecture=="supergene",],"PropQTL",cols)
 propQTL_plot(gwas_summary[gwas_summary$Architecture=="supergene",],"PropWrongQTL",cols,"Falsely detected QTLs")
 ```
-
 
 ```{r}
 par(mfrow=c(2,2),mar=c(5,5,2,2))
