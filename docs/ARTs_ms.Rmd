@@ -394,7 +394,7 @@ The initial frequency of each morph impacted whether multiple morphs
 were maintained. In no cases was the courter-nonparent morph maintained.
 This result makes intuitive sense, because if a female chooses to nest
 with a courter-nonparent, the nest will always die (given our parameter
-settings). [What happens if one morph is absent?]
+settings). 
 
 The parameters controlling sperm competition ($c$), relative
 reproductive allocation ($r$), and the number of sneakers allowed also
