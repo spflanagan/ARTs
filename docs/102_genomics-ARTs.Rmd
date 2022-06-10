@@ -732,7 +732,6 @@ ld_files<-c(list.files(path="../fixedART-results/supergene/", pattern=".LD.geno.
 
 ld_summary<-dplyr::bind_rows(lapply(ld_files, function(ld_file){
   qtl_file<-gsub("_pop_\\d.LD.geno.ld","_qtlinfo.txt", ld_file)
-  qtl_file<-"../fixedART-results/supergene/highDiversity_qtls_monogamy_nm_prop0.05_q16_c2_1_qtlinfo.txt"
   pop<-gsub("^.*pop_(\\d).*$","Pop\\1",ld_file)
   
   ld_info<-read.delim(ld_file)
