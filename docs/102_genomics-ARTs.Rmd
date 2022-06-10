@@ -555,7 +555,6 @@ propQTL_plot<-function(gsummary,propCol,cols,ylabel="Proportion of QTL detected 
   nchroms<-length(unique(gsummary$numChrom[gsummary$Traits=="Courter"]))
   nqtls<-length(unique(gsummary$numQTLonChrom[gsummary$Traits=="Courter"]))
   
-  
   vioplot::vioplot(gsummary[gsummary$Traits=="Courter",propCol]~gsummary$CQ[gsummary$Traits=="Courter"],
           xlab="",
           ylab="",
