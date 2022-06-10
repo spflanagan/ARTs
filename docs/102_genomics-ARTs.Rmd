@@ -665,7 +665,7 @@ par(mfrow=c(2,2),mar=c(5,5,2,2))
 plot(overall_info$P[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
      overall_info$PropQTL[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
      col=cols["parent"],
-     pch=19,
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"])),
      xlab="Parent/Non-courters Proportion",
      ylab="Proportion of QTLs detected by GWAS",
      cex.lab=2,
