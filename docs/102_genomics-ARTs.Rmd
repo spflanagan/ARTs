@@ -313,7 +313,7 @@ write.csv(qtl_outliers,"qtl_outliers.csv",quote=FALSE,row.names = FALSE)
 
 
 
-```{r runSupergenes,eval=TRUE}
+```{r runSupergenes,eval=FALSE}
 
 supergene_outliers<-dplyr::bind_rows(lapply(
   list.files(pattern=".*highDiversity.*monogamy_nm.*.vcf",
