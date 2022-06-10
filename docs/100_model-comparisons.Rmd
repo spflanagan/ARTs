@@ -62,7 +62,7 @@ poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
 
 ## Overview of the simulation model 
 
-Males can be courters or not-courters and parents or not-parents. When the model is run with both traits, this results in four possible morphs: courter/parent, courter/not-parent, not-courter/parent, and not-courter/not-parent. Generations are non-overlapping and there is one reproductive bout per generation. In each generation, the population follows the following timeline: 
+Males have two traits, and can be courters or not-courters and parents or not-parents. When the model is run with both traits, this results in four possible morphs: courter/parent, courter/not-parent, not-courter/parent, and not-courter/not-parent. Generations are non-overlapping and there is one reproductive bout per generation. In each generation, the population follows the following timeline: 
 
 ![Flowchart of simulation](../figs/simulation_flowchart_densitydependent.png)
 
@@ -72,20 +72,20 @@ Each step is explained in further detail below.
 
 ### 1. Choosing a nest
 
-A female samples 50 males and chooses a male to nest with based on his courtship trait. If there are no courtship traits in the model, she chooses based on the male's parental trait. If she does not encounter an acceptable male, she nests with a randomly chosen male. If she encounters multiple equally-acceptable males, she either randomly selects a male from the population or does not mate, depending on the chosen parameter settings.  
+A female samples 50 males and chooses a male to nest with based on his courtship trait. If there are no courtship traits in the model, she chooses based on the male's parental trait. If she does not encounter an acceptable male, she either does not mate or she nests with a randomly chosen male (depending on the settings). If she encounters multiple equally-acceptable males, she randomly selects one male from the set of potential mates.  
 
 ### 2. Fertilization
 
-Once a female decides to nest, up to three males can fertilize the nest. Courting males contribute a different amount of sperm than non-courting. The male with whom the female is nesting gets $r_{courter}/\Sigma{n_{sperm}}$ and additional non-courting males (up to 2) get $(r_{non-courter}*0.5/\Sigma{n_{sperm}})$, where $\Sigma{n_{sperm}}$ is the total number of sperm contributed by all of the males, weighted by the sperm competition factor (0.5 is the default for all males except the chosen male). So, when a female mates with one courter and two non-courters, $\Sigma{n_{sperm}}$ = $r_{courter}$ + 2$*$(0.5$*$$r_{non-courter}$). In these runs, males who are courters cannot sneak fertilizations. Every time a male mates he uses his sperm, so if after one mating a male fertilizes 2 eggs, he only has $n_{sperm}-2$ sperm for his next mating. 
+Once a female decides to nest, up to three males can fertilize the nest. Courting males contribute a different amount of sperm than non-courting males. The male with whom the female is nesting gets $r_{courter}/\Sigma{n_{sperm}}$ and additional non-courting males (up to 2) get $(r_{non-courter}*c/\Sigma{n_{sperm}})$, where $\Sigma{n_{sperm}}$ is the total number of sperm contributed by all of the males, weighted by the sperm competition factor $c$. So, when a female mates with one courter and two non-courters, $\Sigma{n_{sperm}}$ = $r_{courter}$ + 2$*$($c*$$r_{non-courter}$). In these runs, males who are courters cannot sneak fertilizations. Every time a male mates he uses his sperm, so if after one mating a male fertilizes 2 eggs, he only has $n_{sperm}-2$ sperm for his next mating. 
 
 
 ### 3. Nest Survival
 
-Before the offspring can survive, the nest has to survive. This step is only relevant when parental traits are in the model - if only the courtship trait is specified, then all progeny in the nest survive at this point. When males have the parental trait, if the female has given eggs to a non-parental male (because she chose based on courtship traits), then the nest has a 0% chance of surviving. If the female has given eggs to a parental male, the nest has a 100% chance of surviving. 
+Before the offspring can survive, the nest has to survive. This step is only relevant when parental traits are in the model -- if only the courtship trait is specified, then all progeny in the nest survive at this point. When males have the parental trait, if the female has given eggs to a non-parental male (because she chose based on courtship traits), then the nest has a 0% chance of surviving. If the female has given eggs to a parental male, the nest has a 100% chance of surviving. 
 
 ### 4. Density-dependent survival
 
-Once the identities of the surviving nests are known--along with the identities of the parents, including sneaker parents--the offspring are created in the simulation. The offspring are created to fill the full carrying capacity of the population, with the numbers per nest being equally divided among all surviving offspring. This allows the population to maintain a constant population size (prior to viability selection) while maintaining the relative successes of the given genotypes/morphs. 
+Once the identities of the surviving nests are known -- along with the identities of the parents, including sneaker parents -- the offspring are created. The offspring are created to fill the full carrying capacity of the population, with the numbers per nest being equally divided among all surviving offspring. This allows the population to maintain a constant population size (prior to viability selection) while maintaining the relative successes of the given genotypes/morphs. 
 
 ### 5. Viability selection 
 
@@ -97,7 +97,7 @@ After 10000 generations, I begin tracking the change in frequency of the courter
 
 ### Replicates
 
-Using the parameter settings described below, I ran five independent instances of the model, each of which had four replicates spawned from identical starting conditions. This approach was chosen to reduce the effects of stochasticity in this type of model. In the multi-panel figures from the simulation model, each row contains the four replicates that originated with identical starting conditions. 
+Using the parameter settings described below, I ran five independent instances of the model, each of which had four replicates spawned from identical starting conditions. This approach was chosen to reduce, or at least identify, the effects of stochasticity in this type of model. In the multi-panel figures from the simulation model, each row contains the four replicates that originated with identical starting conditions. 
 
 
 \newpage{}
@@ -246,9 +246,56 @@ fig1<-plot_ly(
 ```
 
 
+Before selecting precise values, I ran the model with equal initial frequencies for all four morphs with 10,000 generations, to ensure that the diversity identified is not lost over time in the mathematical model. 
+
+```{r multiGenContours, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=4.5, fig.height=7, warning=FALSE,message=FALSE}
+
+results<-readRDS("../morph_predictions/morph_results_10000_equalStart.RDS")
+results$diversity<-vegan::diversity(round(results[,c("CP","CN","NP","NN")],4))
+
+contours<-by(results, results$num_sneak, function(sub_calcs){
+  
+  
+  data_wide<-tidyr::spread(
+    sub_calcs[,c("r","c","diversity")],
+    r,
+    diversity
+  )
+  rownames(data_wide)<-data_wide[,1]
+  data_wide<-data_wide[,-1]
+  
+  fig <- plot_ly(
+    x = as.numeric(colnames(data_wide)), 
+    y = as.numeric(rownames(data_wide)), 
+    z = as.matrix(data_wide), 
+    type = "contour"
+  )
+  # add axis labels
+  x<-list(title="r")
+  y<-list(title="c")
+  fig <- fig %>% layout(xaxis=x,yaxis=y)
+  # add label to contour names
+  fig <- fig %>% colorbar(title = "Diversity")
+  # plot
+  return(fig)
+})
+
+
+multi_fig <- subplot(contours, nrows = 5, shareY = TRUE, shareX = TRUE)
+
+multi_fig %>% layout(autosize = F, width = 450, height = 650)
+
+
+```
+
+
+
 ## Low diversity parameter space
 
-The [results from the mathematical model](https://spflanagan.shinyapps.io/morph_predictions/) were inspected to identify parameter regions where multiple morphs were *not* maintained. I focused on parameter sets when morphs had equal initial frequencies, as the simulation model initiates populations with nearly equal frequencies of the morphs. I selected the low diversity parameters in Table \@ref(tab:lowDivParams) to implement in the simulation model with a single locus underpinning the courter and parent traits. 
+The [results from the mathematical model](https://spflanagan.shinyapps.io/morph_predictions/) were inspected to identify parameter regions where multiple morphs were *not* maintained. I focused on parameter sets when morphs had equal initial frequencies, as the simulation model initiates populations with nearly equal frequencies of the morphs. 
+
+
+Given these results taken together, I selected the low diversity parameters in Table \@ref(tab:lowDivParams) to implement in the simulation model with a single locus underpinning the courter and parent traits. 
 
 ```{r lowDivParams}
 highDivParams<-data.frame(
@@ -265,26 +312,32 @@ highDivParams<-data.frame(
              4,
              4,
              0.5,
-             4)
+             2)
 )
 kable(highDivParams, "latex",booktab=TRUE,
-      caption="Table of parameters selected to create a low-diversity population. All morphs started at equal frequencies.")
+      caption="Table of parameters selected to create a low-diversity population. All morphs started at equal frequencies.") %>% kableExtra::kable_styling(latex_options = "HOLD_position")
 
 ```
 
 Based on the mathematical model, we expected the courter-parent morph to dominate the population (Table \@ref(tab:lowMathResults)), and that it would dominate the population rapidly (Fig. \@ref(fig:mathOverTimeLow)). The same patterns are observed in the simulation model results (Fig. \@ref(fig:lowDivPlot)).
 
 ```{r lowMathResults}
-kable(morph_results[morph_results$initial_CP == 0.25 & 
+expected<-rbind(round(morph_results[morph_results$initial_CP == 0.25 & 
                       morph_results$initial_CN == 0.25 & 
                       morph_results$initial_NP == 0.25 & 
                       morph_results$initial_NN == 0.25 & 
                       morph_results$r==2 &
                       morph_results$c == 0.5 &
-                      morph_results$num_sneak == 3,
-                    c("CP","CN","NP","NN")],
+                      morph_results$num_sneak == 2,
+                    c("CP","CN","NP","NN")],2),
+                round(results[results$r==2 & 
+                          results$c == 0.5 & 
+                          results$num_sneak==2,
+                        1:4],2))
+rownames(expected)<-c("100 generations","10,000 generations")
+kable(expected,
       "latex",booktab=TRUE,
-      caption="Expected frequencies of the four morphs after 100 generations with the chosen high-diversity parameter settings.")
+      caption="Expected frequencies of the four morphs after 100 generations with the chosen high-diversity parameter settings.")  %>% kableExtra::kable_styling(latex_options = "HOLD_position")
 ```
 
 
@@ -296,7 +349,7 @@ output<-data.frame(matrix(nrow=gens+1,ncol=4))
 colnames(output)<-c("CP","CN","NP","NN")
 output[1,]<-freqs
 for (i in 1:(gens+1)){
-  output[i+1,]<-one_gen(freqs=output[i,],rs=c(8,8,4,4),c=0.5, max_sneakers=3)
+  output[i+1,]<-one_gen(freqs=output[i,],rs=c(8,8,4,4),c=0.5, max_sneakers=2)
   if(all(is.na(output[i+1,]))){
     #then the population has crashed
     output[(i+1):(gens+1),]<-c(0,0,0,0)
@@ -357,32 +410,38 @@ highDivParams<-data.frame(
                 "r_NN",
                 "c",
                 "number of sneakers"),
-  value = c( 0.5, 
-             4,
-             4,
+  value = c( 0.75, 
+             6,
+             6,
              8,
              8,
-             0.5,
-             4)
+             0.7,
+             2)
 )
 kable(highDivParams, "latex",booktab=TRUE,
-      caption="Table of parameters selected to create a high-diversity population. All morphs started at equal frequencies.")
+      caption="Table of parameters selected to create a high-diversity population. All morphs started at equal frequencies.")  %>% kableExtra::kable_styling(latex_options = "HOLD_position")
 
 ```
 
 Based on the mathematical model, we expected the courter-parent, noncourter-parent, and noncourter-nonparent morphs to be maintained at reasonably high frequencies (Table \@ref(tab:highMathResults)). Interestingly, the polymorphism maintained in the mathematical model seems to be maintained through cyclical shifting of morph frequencies (Fig. \@ref(fig:mathOverTime)).
 
 ```{r highMathResults}
-kable(morph_results[morph_results$initial_CP == 0.25 & 
+expected<-rbind(round(morph_results[morph_results$initial_CP == 0.25 & 
                       morph_results$initial_CN == 0.25 & 
                       morph_results$initial_NP == 0.25 & 
                       morph_results$initial_NN == 0.25 & 
-                      morph_results$r==0.5 &
-                      morph_results$c == 0.5 &
+                      round(morph_results$r,1)==0.7 &
+                      morph_results$c == 0.75 &
                       morph_results$num_sneak == 3,
-                    c("CP","CN","NP","NN")],
+                    c("CP","CN","NP","NN")],2),
+                round(results[round(results$r,1)==0.7 & 
+                          results$c == 0.75 & 
+                          results$num_sneak==2,
+                        1:4],2))
+rownames(expected)<-c("100 generations","10,000 generations")
+kable(expected,
       "latex",booktab=TRUE,
-      caption="Expected frequencies of the four morphs after 100 generations with the chosen high-diversity parameter settings.")
+      caption="Expected frequencies of the four morphs after 100 generations with the chosen high-diversity parameter settings.")  %>% kableExtra::kable_styling(latex_options = "HOLD_position")
 ```
 
 ```{r mathOverTime, fig.cap="The frequencies of the morphs cycle over time in the mathematical model, with polymorphism being maintained by the dominant morph shifting every few generations.", fig.height=4, fig.width=6}
@@ -392,7 +451,7 @@ output<-data.frame(matrix(nrow=gens+1,ncol=4))
 colnames(output)<-c("CP","CN","NP","NN")
 output[1,]<-freqs
 for (i in 1:(gens+1)){
-  output[i+1,]<-one_gen(freqs=output[i,],rs=c(0.5*8,0.5*8,8,8),c=0.5, max_sneakers=3)
+  output[i+1,]<-one_gen(freqs=output[i,],rs=c(0.75*8,0.75*8,8,8),c=0.7, max_sneakers=2)
   if(all(is.na(output[i+1,]))){
     #then the population has crashed
     output[(i+1):(gens+1),]<-c(0,0,0,0)
@@ -411,11 +470,11 @@ legend("top",c("courter-parent","noncourter-parent", "courter-nonparent","noncou
        col=cols2,lty=c(3,2,4,1),lwd=2,ncol=4,bty='n')
 ```
 
-The simulation model with the same parameter settings also resulted in polymorphism, especially when males were permitted to mate with multiple females (Fig. \@ref(fig:highDivPlot)). Surprisingly, few of the simulation runs resulted in the maintenance of all three predicted morphs. 
+The simulation model with the same parameter settings also resulted in polymorphism, but only when males were restricted to accepting eggs from a single female, and when random mating was suppressed (Fig. \@ref(fig:highDivPlot)). Another unexpected result was that few of the simulation runs resulted in the maintenance of all three predicted morphs. 
 
 
 ```{r highDiv}
-highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity_.*summary.txt",path="single_locus",cols,make.plot=FALSE))
 ```
 ```{r highDivPlot, fig.cap="Final generation frequencies based on the single locus model with parameters that are expected to result in diversity, based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests. Under 'polygyny' males accepted eggs from multiple females but were still constrained by the number of offspring they could fertilize. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available).", fig.height=8,fig.width=8}
 var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
@@ -441,12 +500,12 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
-We can investigate the dynamics driving the simulation model -- and ensure they are aligned with the mathematical model -- by looking at individual-level patterns of mating success and reproductive success in males and females in the initial generation and in the final generation for one of the replicates. These figures show that, as expected, the non-courters do not mate (Fig. \@ref(fig:maleMS0)), and the courter-nonparents do not have any offspring after generation 1 (Fig. \@ref(fig:maleRS0)), whereas females have even mating success (Fig. \@ref(fig:femaleMS0)) and similar lifetime reproductive success Fig. \@ref(fig:femaleRS0)).
+We can understand what is driving these unexpected results from simulation model -- and ensure they are aligned with the mathematical model -- by looking at individual-level patterns of mating success and reproductive success in males and females in the initial generation and in the final generation for one of the replicates with monogamy and polygyny.
 
 ```{r}
 traits<-read.delim("single_locus/pcu_1locus_highDiversity_polygyny_nm_1_traits.txt")
+traits_mono<-read.delim("single_locus/pcu_1locus_highDiversity_monogamy_nm_1_traits.txt")
 ```
-
 
 ```{r make_trait_hists}
 make_trait_hists<-function(traits,which_trait,which_sex,which_gen,which_pop,cols){
@@ -509,7 +568,93 @@ make_trait_hists<-function(traits,which_trait,which_sex,which_gen,which_pop,cols
 ```
 
 
-```{r maleMS0, fig.cap="Male mating success in generation 0 for each morph."}
+#### Individual level results: monogamy
+
+
+```{r maleMS0mono, fig.cap="Male mating success in generation 0 for each morph under monogamy (with no mating allowed)."}
+make_trait_hists(traits_mono,
+                 which_trait="MateFound",
+                 which_sex="MALE",
+                 which_gen=0,
+                 which_pop=0,
+                 cols=cols2)
+
+```
+
+```{r maleRS0mono, fig.cap="Male lifetime reproductive success in generation 0 for each morph under monogamy (with no mating allowed)."}
+make_trait_hists(traits_mono,
+                 which_trait="LifetimeRS",
+                 which_sex="MALE",
+                 which_gen=0,
+                 which_pop=0,
+                 cols=cols2)
+```
+
+```{r femaleMS0mono, fig.cap="Female mating success in generation 0 for each morph under monogamy (with no mating allowed)."}
+make_trait_hists(traits_mono,
+                 which_trait="MateFound",
+                 which_sex="FEMALE",
+                 which_gen=0,
+                 which_pop=0,
+                 cols=cols2)
+
+```
+
+```{r femaleRS0mono, fig.cap="Female lifetime reproductive success in generation 0 for each morph under monogamy (with no mating allowed)."}
+make_trait_hists(traits_mono,
+                 which_trait="LifetimeRS",
+                 which_sex="FEMALE",
+                 which_gen=0,
+                 which_pop=0,
+                 cols=cols2)
+```
+
+By the final generation, only two morphs remain, and as expected courter-parents receive all of the matings and noncourter-nonparents receive no mates (Fig. \@ref(fig:maleMS12000)), but both have net-positive lifetime reproductive success, with noncourter-nonparents having more variable numbers of offspring (Fig. \@ref(fig:maleRS12000)). Females of the two morphs both have similar problems finding mates (Fig. \@ref(fig:femaleMS12000)) but have similar distributions of lifetime reproductive success (Fig. \@ref(fig:femaleRS12000)). Combined, these results suggest that the model is behaving as expected, and in a manner similar to the mathematical model.
+ 
+```{r maleMS12000mono, fig.cap="Male mating success in generation 12000 for each morph under monogamy (with no mating allowed).", fig.height=4}
+make_trait_hists(traits_mono,
+                 which_trait="MateFound",
+                 which_sex="MALE",
+                 which_gen=12000,
+                 which_pop=0,
+                 cols=cols2)
+
+```
+
+```{r maleRS12000mono, fig.cap="Male lifetime reproductive success in generation 12000 for each morph under monogamy (with no mating allowed).", fig.height=4}
+make_trait_hists(traits_mono,
+                 which_trait="LifetimeRS",
+                 which_sex="MALE",
+                 which_gen=12000,
+                 which_pop=0,
+                 cols=cols2)
+```
+
+```{r femaleMS12000mono, fig.cap="Female mating success in generation 12000 for each morph under monogamy (with no mating allowed).", fig.height=4}
+make_trait_hists(traits_mono,
+                 which_trait="MateFound",
+                 which_sex="FEMALE",
+                 which_gen=12000,
+                 which_pop=0,
+                 cols=cols2)
+
+```
+
+```{r femaleRS12000mono, fig.cap="Female lifetime reproductive success in generation 12000 for each morph under monogamy (with no mating allowed).", fig.height=4}
+make_trait_hists(traits_mono,
+                 which_trait="LifetimeRS",
+                 which_sex="FEMALE",
+                 which_gen=12000,
+                 which_pop=0,
+                 cols=cols2)
+```
+
+
+#### Individual level results: Polygyny
+
+As expected, the non-courters do not mate (Fig. \@ref(fig:maleMS0poly)), and the courter-nonparents do not have any offspring after generation 1 (Fig. \@ref(fig:maleRS0poly)), whereas females have even mating success (Fig. \@ref(fig:femaleMS0poly)) and similar lifetime reproductive success Fig. \@ref(fig:femaleRS0poly)).
+
+```{r maleMS0poly, fig.cap="Male mating success in generation 0 for each morph under polygyny (with no mating allowed)."}
 make_trait_hists(traits,
                  which_trait="MateFound",
                  which_sex="MALE",
@@ -519,7 +664,7 @@ make_trait_hists(traits,
 
 ```
 
-```{r maleRS0, fig.cap="Male lifetime reproductive success in generation 0 for each morph."}
+```{r maleRS0poly, fig.cap="Male lifetime reproductive success in generation 0 for each morph under polygyny (with no mating allowed)."}
 make_trait_hists(traits,
                  which_trait="LifetimeRS",
                  which_sex="MALE",
@@ -528,7 +673,7 @@ make_trait_hists(traits,
                  cols=cols2)
 ```
 
-```{r femaleMS0, fig.cap="Female mating success in generation 0 for each morph."}
+```{r femaleMS0poly, fig.cap="Female mating success in generation 0 for each morph under polygyny (with no mating allowed)."}
 make_trait_hists(traits,
                  which_trait="MateFound",
                  which_sex="FEMALE",
@@ -538,7 +683,7 @@ make_trait_hists(traits,
 
 ```
 
-```{r femaleRS0, fig.cap="Female lifetime reproductive success in generation 0 for each morph."}
+```{r femaleRS0poly, fig.cap="Female lifetime reproductive success in generation 0 for each morph under polygyny (with no mating allowed)."}
 make_trait_hists(traits,
                  which_trait="LifetimeRS",
                  which_sex="FEMALE",
@@ -588,6 +733,39 @@ make_trait_hists(traits,
 ```
 
 
+
+What these results suggest is that under polygyny, the density-dependent nature of the model allows males to escape the costs of courtship, because even though they 'use up' all of their sperm, offspring are created in proportion to the surviving offspring, and those males are able to escape the costs and therefore increase their reproductive success beyond what is possible for males in the mathematical model. If we impose stricter costs on the males ($r=0.25$, or $r_{courter}=2$ and $r_{non-courter}=8$), we can see that multiple morphs are maintained under polygyny (with non-random mating, Fig. \@ref(fig:highDivStrictPlot)).
+
+```{r highDivStrict}
+highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversityStrict.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+```
+```{r highDivStrictPlot, fig.cap="Final generation frequencies based on the single locus model with parameters that are expected to result in diversity, based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests. Under 'polygyny' males accepted eggs from multiple females but were still constrained by the number of offspring they could fertilize. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available).", fig.height=8,fig.width=8}
+var_patts<-unique(gsub(".*highDiversityStrict_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
+var_patts<-grep("v0",grep("RM", var_patts, invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)
+
+par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=pattern)
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
+```
+
+
+#### Identifying and clarifying differences between the two models
+
 One element of the simulation model is that the frequencies of the morphs do not start of at exactly equal frequencies. If we use the initial conditions from the simulation model to predict the equilibrial frequencies, we can see that the expected outcomes shift, and in some cases have a better qualitative match to the simulated outcomes (Table \@ref(tab:actualInitialFreqCals))
 
 ```{r getPolyHighGens}
@@ -605,9 +783,9 @@ freq0<-do.call(rbind,lapply(polyHigh,function(x,morph_results){
                            NP = round(gen0$FreqNcP,2),
                            NN = round(gen0$FreqNcNp,2) 
                          ),
-                         rs=c(0.5*8,0.5*8,8,8),
-                         c=0.5, 
-                         max_sneakers=3
+                         rs=c(0.75*8,0.75*8,8,8),
+                         c=0.7, 
+                         max_sneakers=2
                          )
   output<-cbind(gen0,expected, 
                 x[nrow(x),c("FreqCP","FreqCNp","FreqNcP","FreqNcNp")])
@@ -648,7 +826,7 @@ output<-data.frame(matrix(nrow=gens+1,ncol=4))
 colnames(output)<-c("CP","CN","NP","NN")
 output[1,]<-freqs
 for (i in 1:(gens+1)){
-  output[i+1,]<-one_gen(freqs=output[i,],rs=c(0.5*8,0.5*8,8,8),c=0.5, max_sneakers=3)
+  output[i+1,]<-one_gen(freqs=output[i,],rs=c(0.75*8,0.75*8,8,8),c=0.7, max_sneakers=2)
   if(all(is.na(output[i+1,]))){
     #then the population has crashed
     output[(i+1):(gens+1),]<-c(0,0,0,0)
@@ -671,20 +849,25 @@ legend("right",c("courter-parent","noncourter-parent", "courter-nonparent","nonc
 Some other important differences between the simulation model and the mathematical model that could be underlying any differences between the two are that the simulation model includes recombination (and inheritance of traits via females) whereas the mathematical model does not. Additionally, the simulation model has a reasonable amount of stochasticity embedded within it, which the mathematical model does not include -- this is especially true for the parameter settings when females randomly mate if they do not find an acceptable male. 
 
 
+
 # Genetic architectures
 
-Out of interest, I also ran some iterations with genetic architectures -- QTLs distributed throughout the genome (labelled 'qtls') and QTLs linked in a supergene with low recombination. The two model runs -- for these parameter settings -- show quite different outcomes. In the low diversity expectation, on some occasions additional unexpected diversity can occur with either case (Fi.g \@ref(fig:lowDivQTLs)). However, supergenes cause a consistent maintenance of two morphs, the courter-parent and noncourter-parent (Fig. \@ref(fig:highDivQTLs)).
+Out of interest, I also ran some iterations with genetic architectures -- QTLs distributed throughout the genome (labelled 'qtls') and QTLs linked in a supergene with low recombination. The two model runs -- for these parameter settings -- show quite different outcomes. In the low diversity expectation, on some occasions additional unexpected diversity can occur with either case (Fi.g \@ref(fig:lowDivQTLs)). However, supergenes cause a consistent maintenance of two morphs, the courter-parent and noncourter-parent (Fig. \@ref(fig:highDivQTLs)). For simplicity, let's consider the case with 8 QTLs distributed across 2 chromosomes. 
 
 ```{r lowDivGenetics}
-lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*summary.txt",path="baseline",cols,make.plot=FALSE))
+lowDivQ<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm_q8.*summary.txt",path="../fixedART-results/qtls/",cols,make.plot=FALSE))
+lowDivS<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm_prop0.25_q8.*summary.txt",path="../fixedART-results/supergene/",cols,make.plot=FALSE))
+lowDiv<-dplyr::bind_rows(lowDivQ, lowDivS)
 ```
 
-```{r lowDivQTLs, fig.cap="Final generation frequencies based on the model with QTLs and the model with a supergene, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+```{r lowDivQTLs, fig.cap="Final generation frequencies based on the model with QTLs (top row) and the model with a supergene (bottom row), with parameters that are expected to result in no diversity based on the mathematical model (with monogamy and no mating when suitable mates were unavailable). The labels show the number of QTLs (number after q), the number of chromosomes (number after c), and for supergenes the proportion of a chromosome allowed to be encompassed by a supergene (number after prop).", fig.height=6, fig.width=6}
 
-var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(lowDiv)))
+var_patts<-unique(gsub(".*lowDiversity_qtls_monogamy_nm_(.*)_\\d_summary.txt_\\d","\\1",rownames(lowDivQ)))
+var_patts<-c(var_patts,
+             unique(gsub(".*lowDiversity.*monogamy_nm_(.*)_\\d_summary.txt_\\d","\\1",rownames(lowDivS))))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -705,13 +888,16 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 ```
 
 ```{r highDivGenetics}
-highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",path="baseline",cols,make.plot=FALSE))
+highDivQ<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*monogamy_nm_q8.*summary.txt",path="../fixedART-results/qtls/",cols,make.plot=FALSE))
+highDivS<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*monogamy_nm_prop0.25_q8.*summary.txt",path="../fixedART-results/supergene/",cols,make.plot=FALSE))
+highDiv <- dplyr::bind_rows(highDivQ, highDivS)
 ```
 
-```{r highDivQTLs, fig.cap="Final generation frequencies based on the model with QTLs and the model with a supergene, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+```{r highDivQTLs, fig.cap="Final generation frequencies based on the model with QTLs (top row) and the model with a supergene (bottom row), with parameters that are expected to result in diversity of morphs based on the mathematical model (with monogamy and no mating when suitable mates were unavailable). The labels show the number of QTLs (q number), the number of chromosomes (c number), and for supergenes the proportion of a chromosome allowed to be encompassed by a supergene (prop number)."}
 
-var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
-
+var_patts<-unique(gsub(".*highDiversity_qtls_monogamy_nm_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDivQ)))
+var_patts<-c(var_patts,
+             unique(gsub(".*highDiversity_.*_monogamy_nm_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDivS))))
 
 par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
@@ -729,8 +915,8 @@ varDat<-lapply(var_patts,function(pattern){
 par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
 plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
 legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
-       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,
+       cex=2)
 
 ```
-
 

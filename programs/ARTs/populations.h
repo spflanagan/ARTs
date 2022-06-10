@@ -1836,11 +1836,15 @@ public:
 	{
 		int jj, jjj;
 		int prog_count = 0;
+		int n_overwritten = 0;
 
 		for (jj = 0; jj < fecundity; jj++)
 		{
-			if (num_progeny >= progeny.size())
+			if (num_progeny >= progeny.size()){
 				num_progeny = progeny.size() - 1;
+				n_overwritten++;
+			}
+				
 
 			progeny[num_progeny].alive = true;
 			progeny[num_progeny].mom = mom_index;
@@ -1884,6 +1888,8 @@ public:
 				prog_count++;
 			}
 		}
+		if(n_overwritten > 0)
+			cout << n_overwritten << " offspring were overwritten (i.e., " << n_overwritten << " too many offspring were created)\n" << std::flush;
 		return prog_count;
 	}
 	void per_female_mating(parameters gp, vector<int> & male_index)
@@ -1938,7 +1944,9 @@ public:
 					//if parent traits don't exist then set them all to false so all males have equal chance.
 					if (!gp.parent_conditional && !gp.parent_trait)
 						adults[j].parent = false;
-				}
+					if(adults[j].pot_rs <=0)
+						cout <<"\nWarning, male " << j <<" has no pot rs!\n" << std::flush;
+ 				}
 			}
 			adults[j].mate_found = 0;
 		}
@@ -2026,7 +2034,7 @@ public:
 		{
 			irndnum = randnum(num_mal);
 			male_id = male_index[irndnum];
-			if (adults[male_id].alive)
+			if (adults[male_id].alive && adults[male_id].pot_rs> 0)
 			{
 				if (gp.polygyny || adults[male_id].mate_found == 0)//either polygyny is ok or if monogamy the male hasn't mated yet
 				{
@@ -2079,7 +2087,7 @@ public:
 			{
 				irndnum = randnum(num_mal);
 				male_id = male_index[irndnum];
-				if (adults[male_id].alive)
+				if (adults[male_id].alive && adults[male_id].pot_rs > 0)
 				{
 					if ((gp.polygyny && adults[male_id].mate_found < gp.max_num_mates) || (!gp.polygyny && adults[male_id].mate_found < 1))
 					{
@@ -2166,20 +2174,108 @@ public:
 		int k, kk, nb;
 		int off_counter = 0;	
 		int start_numprog = num_progeny;
+		vector <int> fecundity;
+		int fecundity_counter = 0;
 		for(k = 0; k < this_nest.off_props.size(); k++)
 		{//each dad gets babies
-			int fecundity = round(off_to_make*this_nest.off_props[k]);
-			nb = making_babies(gp, fecundity, num_progeny, this_nest.mom, this_nest.all_dads[k]);
-			off_counter = off_counter+ nb;
+			fecundity.push_back(round(off_to_make*this_nest.off_props[k]));
+			fecundity_counter = fecundity_counter + fecundity[k];
 		}
-		if(off_counter < off_to_make)//make sure the nest was filled -- if it wasn't, the nesting male sires the remainder
+		// add any extras from the nesting male
+		if(fecundity_counter < off_to_make)//make sure the nest was filled -- if it wasn't, the nesting male sires the remainder
 		{
-			nb = making_babies(gp, (off_to_make - off_counter), num_progeny, this_nest.mom, this_nest.nest_dad);
-			off_counter = off_counter + nb;
+			fecundity[0] = fecundity[0] + (off_to_make - fecundity_counter);
+			fecundity_counter = fecundity_counter + (off_to_make - fecundity_counter);
 		}	
+		// if you've made too many
+		if(fecundity_counter > off_to_make)
+		{
+			int num_to_lose = fecundity_counter - off_to_make;
+			int min_off = 100; //maybe delete
+			vector <int> dad_matches;
+			// see if any of them match the nest dad
+			for(k = 1; k < fecundity.size(); k++)
+			{
+				if(fecundity[k] == fecundity[0])
+					dad_matches.push_back(k);
+			}
+			// if any dad matches are found, reduce the sneaker number
+			for(k = 0; k < dad_matches.size(); k++)
+			{
+				if(num_to_lose > 0)
+				{
+					fecundity[dad_matches[k]] = fecundity[dad_matches[k]] - 1;
+					num_to_lose--;
+				}
+			}
+			// if we still have some to lose, we'll first choose among other identical matches
+			if(num_to_lose > 0)
+			{
+				std::vector<int> matches;
+				for(k = 0; k < fecundity.size(); k++)
+				{
+					// find matches for fecundity[k]
+					for(int kk = (k+1); kk < fecundity.size(); kk++)
+					{
+						if(fecundity[k] == fecundity[kk])
+						{
+							// add any matching fecundities to the match list
+							matches.push_back(fecundity[k]);
+						}						
+					}
+				}
+				// sort matches to be in descending order
+				sort(matches.begin(), matches.end(), greater<int>());
+				// start with largest matching values and remove from them first
+				for (int mn = 0; mn < matches.size(); mn++)
+				{
+					// decrement as necessary
+					for(k = 0; k < fecundity.size(); k++)
+					{
+						if(num_to_lose > 0 && fecundity[k] == matches[mn])
+						{
+							fecundity[k] = fecundity[k] - 1;
+							num_to_lose--;
+						}
+					}
+
+				}
+				
+				// if we still have some to lose, randomly select ones to decrement
+				while(num_to_lose > 0)
+				{
+					int rand_dad = randnum(fecundity.size());
+					fecundity[rand_dad] = fecundity[rand_dad] - 1;
+					num_to_lose--;
+				}
+			}
+			
+		}
+
+		off_counter = 0;
+		for(k = 0; k < this_nest.off_props.size();k++)
+		{
+			nb = making_babies(gp, fecundity[k], num_progeny, this_nest.mom, this_nest.all_dads[k]);
+			off_counter = off_counter+ nb;
+			adults[this_nest.all_dads[k]].lifetime_rs = adults[this_nest.all_dads[k]].lifetime_rs + nb;
+
+		}
+		
 		//sanity check - these should be the same
 		if(off_counter != (num_progeny - start_numprog))
-			cout << "\nNest with female " << this_nest.mom << " tracked " << off_counter << " babies but only " << (num_progeny - start_numprog) << " were created." << std::flush;
+		{
+			if (gp.log_file)
+            {
+                ofstream log_out;
+				string log_name = gp.base_name + ".warnings";
+				log_out.open(log_name,  ios::out | ios::app );
+				log_out << "\nNest with female " << this_nest.mom << " tracked " << off_counter << " babies but only " << (num_progeny - start_numprog) << " were created.";
+				log_out.close();
+            } 
+			else
+				cout << "\nNest with female " << this_nest.mom << " tracked " << off_counter << " babies but only " << (num_progeny - start_numprog) << " were created." << std::flush;
+		}
+		
 		return off_counter;
 	}
 	void dd_assign_sneakers(int fem_id, parameters gp, nest& this_nest)
@@ -2238,41 +2334,49 @@ public:
 			}
 			// if there are no sneakers, proceed as above (based on female RS)
 			if (max_sperm == 0) max_sperm = adults[fem_id].pot_rs; 
-
 			fecundity_share[0] = double(adults[male_id].pot_rs) / double(max_sperm); //it doesn't get weighted if r <= 1
-			// force fecundity_share to be a proportion
-			if(fecundity_share[0] > 1) fecundity_share[0] = 1;
-			// track the ones that are fertilized
-			int num_fertilized = 0;
-			num_fertilized = int(fecundity_share[0]* double(max_sperm));
-			adults[male_ids[0]].pot_rs = adults[male_id].pot_rs - num_fertilized; // nesting male has used his sperm
-			// now deal with the sneakers
+			double sperm_count = fecundity_share[0];
 			for (k = 1; k < fecundity_share.size(); k++)
 			{
-				if(num_fertilized < max_sperm)
-				{ // if the nesting male hasn't filled up the nest, sneakers can
-					int sperm_used = round(adults[male_ids[k]].pot_rs*gp.sperm_comp_r); // the sperm available after competition
-					// number of available slots is max_sperm - num_fertilized, so can't fill more than that
-					if(sperm_used > (max_sperm - num_fertilized))
-					{	// sneakers compete over available spots instead
-						sperm_used = round( (max_sperm - num_fertilized) * gp.sperm_comp_r ); 
-					}
-					fecundity_share[k] =  double(sperm_used) / double(max_sperm);
-					adults[male_ids[k]].lifetime_rs = adults[male_ids[k]].lifetime_rs + sperm_used;
-					adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - sperm_used;
-					num_fertilized = num_fertilized + sperm_used;
-				} else
-				{
-					fecundity_share[k] = 0;
-				}
-				
+				int sperm_used = round(adults[male_ids[k]].pot_rs*gp.sperm_comp_r);
+				fecundity_share[k] =  double(sperm_used) / double(max_sperm);
+				sperm_count = sperm_count + fecundity_share[k];
 			}				
 			for(k = 0; k < fecundity_share.size(); k++)
-			{
-				if(fecundity_share[k]>1)
-					cout << "\nWarning! fecundity share (a proportion) is greater than one.";
-				this_nest.off_props.push_back(fecundity_share[k]);
+			{	
+				// relativize the fecundity shares to ensure that it's less than 1.
+				fecundity_share[k] = fecundity_share[k] / sperm_count;
+				// double check
+				if (fecundity_share[k] > 1)
+				{
+					cout << "\nWarning! A fecundity share > 1 has been recorded.\n" << std::flush;
+				}
+
+
 			}
+			// check that the males can actually afford to make all the offspring
+			sperm_count = 0;
+			for(k = 0; k < fecundity_share.size(); k++)
+			{	
+				if((fecundity_share[k]*adults[fem_id].pot_rs) > adults[male_ids[k]].pot_rs)
+				{
+					fecundity_share[k] = double(adults[male_ids[k]].pot_rs) / double(adults[fem_id].pot_rs);
+					sperm_count = sperm_count + fecundity_share[k];
+				}
+			}
+			// // record the males' mating success
+			for(k = 0; k < fecundity_share.size(); k++)
+			{
+				adults[male_ids[k]].pot_rs = adults[male_ids[k]].pot_rs - (fecundity_share[k]*adults[fem_id].pot_rs);
+				if(adults[male_ids[k]].pot_rs < 0) adults[male_ids[k]].pot_rs = 0;
+				this_nest.off_props.push_back(fecundity_share[k]);
+
+				if(this_nest.off_props[k]==0)
+				{
+					cout << "\nWarning! zero offspring will be made.\n";
+				}
+			}	
+
 			for(k = 0; k < male_ids.size(); k++)
 				this_nest.all_dads.push_back(male_ids[k]);
 			if (this_nest.off_props.size() != this_nest.all_dads.size())

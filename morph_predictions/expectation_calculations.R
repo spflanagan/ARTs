@@ -261,3 +261,34 @@ if(isTRUE(plot_generations)){
   lines(output$CP,type='l',col=3)
   
 }
+
+
+if(isTRUE(create_outputs_Ns_equalStart)){
+  # create a HUGE data.frame with the different outputs, 
+  # so that they can be loaded into the shiny app.
+  rs<-seq(0,2,0.1)
+  cs<-seq(0,1,0.25)
+  num_sneak<-1:5
+  
+  morph_results<-as.data.frame(matrix(ncol=7,nrow=0))
+  colnames(morph_results)<-c("CP","CN","NP","NN","r","c", "num_sneak")
+  
+  for(ns in num_sneak){
+    for(r in rs){
+      for(cv in cs){
+        
+        outputs<-morph_gens_ns(gens=10000,
+                               freqs = c(0.25,0.25,0.25,0.25),
+                               rs=c(r*8,r*8,8,8),
+                               cv=cv,
+                               max_sneakers=ns)
+        print(paste("r=",r,"c=",cv))
+        outputs$r<-r
+        outputs$c<-cv
+        outputs$num_sneak<-ns
+        morph_results<-dplyr::bind_rows(morph_results,outputs)
+      }
+    }
+  }
+  saveRDS(morph_results,"morph_results_10000_equalStart.RDS")
+}

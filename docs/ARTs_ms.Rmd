@@ -12,17 +12,16 @@ output:
     fig_caption: yes
     keep_tex: yes
     number_sections: no
-    template: manuscript.latex
-    toc: yes
+    toc: no
     toc_depth: 2
   html_document: null
   pdf_document:
     toc: yes
     toc_depth: '2'
   word_document: null
-zotero: "My Library"
+bibliography: references.bib
+csl: proceedings-of-the-royal-society-b.csl
 capsize: normalsize
-csl: https://github.com/citation-style-language/styles/blob/master/proceedings-of-the-royal-society-b.csl
 documentclass: article
 editor_options:
   chunk_output_type: console
@@ -31,7 +30,7 @@ editor_options:
 fontsize: 11pt
 abstract: |
 header-includes: |
-  \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H} \usepackage{luamplib} \usepackage{unicode-math}
+  \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H}
 affiliation:
 - affil: School of Biological Sciences, University of Canterbury, 4800 Private Bag,
     Christchurch 8140 New Zealand
@@ -40,39 +39,110 @@ affiliation:
   affilnum: 2
 preprint: no
 spacing: singlespacing
-bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",
-                      warning=FALSE,message=FALSE)
-knitr::opts_knit$set(root.dir='../fwsw_results/')
+knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
+knitr::opts_knit$set(root.dir='../results/') #change
+
+```
+
+```{r opts, echo = FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+  fig.path = "../figs/"
+)
+```
+
+```{r librarysetup, echo=FALSE,echo=FALSE,message=FALSE}
+library(RColorBrewer)
+library(scales)
+library(sm)
+library(kableExtra)
+library(plotly)
+library(dplyr)
+library(vegan)
+library(tidyr)
+tmp<-sapply(list.files(path="../../spfTools/R/",full.names = TRUE),source)
+source("../R/002_freq_functions.R")
+
+source("../morph_predictions/check_freqs.R")
+source("../morph_predictions/morph_gens_ns.R")
+
+cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
+cols2<-c(CP='#d7191c',NCP='#fdae61',CNP='#abd9e9',NCNP='#2c7bb6')
+```
+
+```{r baseCols}
+base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                   "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
+poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                    "FreqNcP","FreqCP","Polygyny")
+
 ```
 
 # Introduction
 
-Maintenance of variation in populations.
+Both genetic and phenotypic variation are required for evolution to
+occur, and as such the maintenance of variation in populations has long
+been of interest to evolutionary biologists and conservation
+geneticists. Evolution is often expected to remove variation from
+populations, with specific patterns of selection being predicted to
+maintain variation at a high frequency -- including overdominance,
+sexually antagonistic selection
+[@connallonEvolutionaryConsequencesSexSpecific2018;
+@connallonResolutionSexualAntagonism2011], and frequency dependent
+selection [@alonzoMateChoiceGames2001]. Yet, substantial phenotypic
+variation is observed, with ubiquitous examples such as the prevalence
+of sexual dimorphism and the unexpectedly frequent existence of
+alternative reproductive tactics, in which individuals of the same
+species and sex display different morphs to maximize reproductive
+fitness in unique ways [@oliveiraAlternativeReproductiveTactics2008].
 
-Alternative reproductive tactics as stable polymorphisms,
+The genetic basis of traits experiencing selection is also critical to
+understanding the maintenance of variation. Evolution can be constrained
+by factors including pleiotropy, genetic correlations, and physical
+linkage. As such, the relaxation of these constraints can facilitate
+sequence evolution by relaxing positive selection on genes
+[@harrisonSexualSelectionDrives2015]. However, the interaction of
+selection that facilitates variation with the genetic architecture and
+genetic constraints remains under-explored. In particular, the majority
+of predictions relating selection to genetic constraints arise from one-
+or two-locus models, which can be difficult to extrapolate to
+genome-wide predictions. In the modern genomic era, having predictions
+for large genome-wide datasets is of critical importance to develop
+testable hypotheses. [something about genome-wide predictions].
 
--   often maintained through frequency-dependent selection
+One genetic mechanism that is increasingly shown to play an important
+role in evolution are structural variants, such as inversion
+polymorphisms that harbour so-called 'supergenes'. These variants are
+regions of the genome in which some individuals carry an inversion, in
+which genes with direct phenotypic effects exist. The mismatched
+directionality reduces recombination between the different variants,
+facilitating the maintenance of both genetic and phenotypic variations.
+These supergenes have been shown to underpin stable polymporhisms
+including ant morphs, immune response genes (e.g., toll-like receptors),
+xxx, and alternative reproductive tactics (e.g., in white-collared
+sparrows [@thomasChromosomalPolymorphismLinked2008] and ruffs
+[@kupperSupergeneDeterminesHighly2016;
+@lamichhaneyStructuralGenomicChanges2016]). These polymorphisms are
+often maintained in populations through frequency dependent selection,
+and in the case of sexually dimorphic variants, might resolve sexual
+conflict. **Need to look into the literature for more examples and to
+add detail**.
 
--   possibly resolves sexual conflict
-
--   Genetic basis of alternative reproductive tactics shows that there
-    is some propensity for these to be grouped together into supergenes.
-
--   white-collared sparrow
-
--   ruffs [@kupper2016][@lamichhaney2016]
-
--   side-blotched lizards (maybe)
-
--   \- ??
-
-But, we don't know which came first, and to what extent genetic
-architecture determines the evolution of alternative reproductive
-tactics. Therefore, we used simulation models to understand this.
+Substantial advances in our understanding of the evolution of these
+traits have been made with whole-genome sequencing and transcriptome
+studies. Furthermore, recent mathematical and simulation models have
+helped clarify the allelic variation that is expected to be maintained
+under sex-specific selection pressures
+[@kasimatisLimitsGenomicDivergence2019a], OTHER EXAMPLES. However,
+providing direct linkages between theoretical predictions of
+evolutionary mechanisms, genotype-to-phenotype maps, and realistic
+datasets are currently lacking. Here, we fill this gap using
+individual-based simulation models of alternative reproductive tactics
+in males and three types of genetic architectures for the traits of
+interest.
 
 # Methods
 
@@ -129,8 +199,8 @@ of nests laid in the population becomes $$
 \frac{N_f}{N_mf_{CP}+N_m f_{CNp}}
 $$ because we have constrained females to only mate with courting males.
 
-```{r mathModel, fig.cap="Diagram of the mathematical model describing the inheritance of alternative male reproductive morphs given courtship and parenting traits."}
-knitr::include_graphics("../figs/frequency_dependence.png")
+```{r mathModel, fig.cap="Diagram of the mathematical model describing the inheritance of alternative male reproductive morphs given courtship and parenting traits.", out.width='100%'}
+knitr::include_graphics("frequencyDependence.png", dpi=150)
 ```
 
 Likewise, the proportion of nests each type of male receives (${p_n}_M$)
@@ -159,16 +229,16 @@ in each morph's nests (${p_s}_M$).
 The final stage of the lifecycle is for offspring surviving in the nest
 to undergo viability selection by multiplying the viability selection
 coefficient (${w_v}_M$) by the surviving proportion (${p_s}_M$) and the
-original frequency of the morph in the population (**Note: does pv need
-the frequency multiplication??)**. Finally, the frequency of each morph
-in the next generation was calculated by dividing the surviving
-proportion (${p_v}_M$ by the sum of all proportions.
+original frequency of the morph in the population. Finally, the
+frequency of each morph in the next generation was calculated by
+dividing the surviving proportion (${p_v}_M$ by the sum of all
+proportions.
 
 To evaluate the outcomes of this mathematical model, we iterated forward
-in time for 100 generations from XX combinations of initial morph
-frequencies and repeated those iterations across XX values for the sperm
-competition coefficient ($c$ = {0..1}) and XX values for the relative
-reproductive coefficient ($r_M$ = {0...1}). The iterations were
+in time for 100 generations from 1659 combinations of initial morph
+frequencies and repeated those iterations across 5 values for the sperm
+competition coefficient ($c$ = {0..1}) and 21 values for the relative
+reproductive coefficient ($r_M$ = {0...2}). The iterations were
 implemented in R v. 4.1.1 [@rcoreteam2021] using some features of tidyR
 [@wickham2021]. To facilitate visualisation of the results, we
 calculated the Shannon's diversity index for the morphs remaining in the
@@ -199,23 +269,7 @@ of all QTLs were summed to determine the trait value). In this model, we
 assume no environmental effects impacted the trait value. These trait
 values were then compared to a threshold to dichotomize each trait. The
 threshold for each trait was the mean trait value during the
-initialization of the model (i.e., at generation 0). *QTLs could impact
-either the courtship trait, the parenting trait, or both -- check this
-statement for veracity.*
-
-Other important components of the individuals:
-
--   female preferences
-
--   sex
-
--   reproductive allocation ($pot_rs$).
-
--   mutation functions
-
--   assign_court_morph -- when is this used? It has ind_cthresh, which
-    is in individuals::determine_thresholds() -- this is called in
-    populations::set_thresholds()
+initialization of the model (i.e., at generation 0).
 
 We implemented three different genetic architectures: a single gene per
 trait, multiple QTLs randomly placed throughout chromosomes, and
@@ -227,8 +281,6 @@ nucleotide polymorphism (SNP). These SNPs undergo recombination and
 mutation during mating. The supergene scenario forced the QTLs to
 cluster into a small proportion of one of the chromosomes. These QTLs
 still experience mutation but experienced reduced recombination.
-
-The lifecycle:
 
 When we ran the model, we initialized four replicate populations with
 the identical starting conditions to evaluate the impact of
@@ -251,8 +303,10 @@ choice and the introduction of recombination and mutation during
 reproduction. During the mate choice phase, females searched through a
 set number of males and chose the first attractive male (i.e., the first
 courter male she encountered). If a female did not find an acceptable
-mate, she chose a male at random with from the population and allocated
-all of her offspring to him.
+mate, she either did not mate ('no mating' or 'nm' scenarios) or she
+chose a male at random with from the population and allocated all of her
+offspring to him, depending on the parameter settings. Females always
+preferred courting males.
 
 Once a female chose a male, fertilization of the eggs occurred, in which
 the chosen male had first male priority (i.e., the chosen male allocated
@@ -297,18 +351,542 @@ multiplicatively on courter-parents (their survival probability was
 $e^{\frac{-morph2}{2\omega_v}}*e^{\frac{-morph2}{2\omega_v}}$). A random
 value between 0 and 1 was drawn, and if the number was larger than the
 survival probability for an individual, that individual did not survive
-to adulthood. If, at this point, the number of surviving offpsring was
+to adulthood. If, at this point, the number of surviving offspring was
 larger than the carrying capacity, offspring were randomly selected to
 become adults. When offspring matured to adulthood, the previous
 generation's adults were replaced, and the lifecycle began again.
+
+Each set of genetic architectures and population parameters was also was
+run with four types of mating systems, all of which required females to
+lay their eggs with only a single male: males accept eggs from a single
+female, and females deposit their eggs with a randomly-selected unmated
+male in the population should they fail to find a preferred mate
+('monogamy'); males accept eggs from multiple females, and females
+deposit their eggs with a randomly-selected unmated male in the
+population should they fail to find a preferred mate ('polygyny'); males
+accept eggs from a single female, and females who fail to find a
+preferred mate do not produce offspring ('monogamy no mating'); males
+accept eggs from multiple females, and females who fail to find a
+preferred mate do not produce offspring ('polygyny no mating').
+
+### Analysing multilocus genotypes
+
+To provide a link between our theoretical models and the realities of
+empirical data, we analyzed the genetic diversity of the populations at
+the final generation of the individual based simulations. First we used
+vcfR to estimate observed heterozygosity for all markers in the genome
+and separately for the QTLs. Allele frequencies between morphs were also
+compared using the Gst estimator in vcfR.
+Additionally, an association between male phenotypes and genetic markers
+was tested for using GWASpoly . For both the Gst estimates and the GWAS
+p-values, any major peaks identified were scanned to identify if they
+were within a 50 basepair window of one of the true QTLs.
 
 # Results
 
 ## Frequency-dependent population dynamics model
 
+The initial frequency of each morph impacted whether multiple morphs
+were maintained. In no cases was the courter-nonparent morph maintained.
+This result makes intuitive sense, because if a female chooses to nest
+with a courter-nonparent, the nest will always die (given our parameter
+settings). [What happens if one morph is absent?]
+
+The parameters controlling sperm competition ($c$), relative
+reproductive allocation ($r$), and the number of sneakers allowed also
+impacted the diversity of the population after both 100 generations and
+1000 generations. Some initial starting conditions took more than 100
+generations to reach a consistent (i.e., equilibrial) state, but the
+contributions of these three parameters remained qualitatively
+consistent across 100 and 1000 generations. Reproductive allocations
+corresponding to a range of approximately 0.5 to 1 (meaning that
+courters invest half as much to just as much as non-courters in
+producing sperm) resulted in the maximum amount of diversity, as long as
+sperm competition ($c$) was above 0.2 (meaning that, if a non-courting
+male produced 8 sperm and courting males produce 4, the non-courting
+male would fertilize `r (8*0.2)/(4+(2*0.2*8))` or more of the
+offspring). This importance of the sperm competition coefficient was
+influenced by the number of sneakers allowed, with larger contributions
+from an individual non-courting male (e.g., larger $c$) being required
+with fewer sneakers (Fig. \@ref(fig:mathParams)).
+
+```{r mathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=4.5, fig.height=7, warning=FALSE,message=FALSE}
+
+results<-readRDS("../morph_predictions/morph_results_10000_equalStart.RDS")
+results$diversity<-vegan::diversity(round(results[,c("CP","CN","NP","NN")],4))
+
+contours<-by(results, results$num_sneak, function(sub_calcs){
+  
+  
+  data_wide<-tidyr::spread(
+    sub_calcs[,c("r","c","diversity")],
+    r,
+    diversity
+  )
+  rownames(data_wide)<-data_wide[,1]
+  data_wide<-data_wide[,-1]
+  
+  fig <- plot_ly(
+    x = as.numeric(colnames(data_wide)), 
+    y = as.numeric(rownames(data_wide)), 
+    z = as.matrix(data_wide), 
+    type = "contour"
+  )
+  # add axis labels
+  x<-list(title="r")
+  y<-list(title="c")
+  fig <- fig %>% layout(xaxis=x,yaxis=y)
+  # add label to contour names
+  fig <- fig %>% colorbar(title = "Diversity")
+  # plot
+  return(fig)
+})
+
+
+multi_fig <- subplot(contours, nrows = 5, shareY = TRUE, shareX = TRUE)
+
+multi_fig %>% layout(autosize = F, width = 450, height = 650)
+
+
+```
+
+```{r}
+divRes<-results[results$diversity>0,]
+ndiv<-nrow(divRes)
+
+pcourt<-nrow(divRes[divRes$CP>=0.5,])/ndiv
+pnp<-nrow(divRes[divRes$NP>=0.5,])/ndiv
+pnn<-nrow(divRes[divRes$NN>=0.5,])/ndiv
+
+
+```
+
+The regions of the parameter space the have non-zero diversity values
+correspond to scenarios where three of the four morphs were retained
+(courter-parents, non-courter-parents, and non-courter-non-parents). The
+dominant morph differed with various parameter combinations. Assuming
+equal starting frequencies, after 10000 generations, `r pcourt*100`% of
+parameter combinations that retained polymorphism resulted in the
+courter-parent morph comprising $\le$ 50% of the population. The
+remaining `r (1-pcourt)*100`% of parameter combinations resulting in
+polymorphism had more equal representation of all three morphs, with the
+average proportion of the population being
+`r mean(divRes[divRes$CP<=0.5,"CP"])*100` % ($pm$
+`r sem(divRes[divRes$CP<=0.5,"CP"])*100` %) courter-parents,
+`r mean(divRes[divRes$CP<=0.5,"NP"])*100` % ($pm$
+`r sem(divRes[divRes$CP<=0.5,"NP"])*100` %) non-courter-parents, and
+`r mean(divRes[divRes$CP<=0.5,"NN"])*100` % ($pm$
+`r sem(divRes[divRes$CP<=0.5,"NN"])*100` %) non-courter-non-parents.
+
 ## Individual-based simulation model
 
+The results from the mathematical model were used to select parameter
+settings for the individual-based simulation model, with one set
+expected to produce low-diversity populations (i.e., those where only
+one morph were retained) and another set expected to produce
+high-diversity populations (i.e., where 2 or more morphs were retained).
+The chosen parameter settings are shown in Table
+\@ref(tab:SimParamsTable).
+
+```{r SimParamsTable}
+SimParams<-data.frame(
+  parameter = c("r (in shiny app)",
+                "r_CP",
+                "r_CN",
+                "r_NP",
+                "r_NN",
+                "c",
+                "number of sneakers"),
+  LowDiv = c( 2, 
+             8,
+             8,
+             4,
+             4,
+             0.5,
+             2),
+   HighDiv = c( 0.75, 
+             6,
+             6,
+             8,
+             8,
+             0.7,
+             2)
+)
+
+kable(SimParams, "latex",booktab=TRUE,
+      col.names = c("Parameter", "Low Diversity Value","High Diversity Value"),
+      caption="Table of parameters selected to create a high-diversity population. All morphs started at equal frequencies.")  %>% 
+  kableExtra::kable_styling(latex_options = "HOLD_position")
+
+```
+
+### Impacts of mating system on the model
+
+As expected, in the low diversity parameter space, the majority of
+simulations resulted in fixation or near-fixation of the courter-parent
+morph (Fig. \@ref(fig:MatingTypesFig)). A more surprising result was the
+inconsistency of results from the mating types within the the high
+diversity parameter space. Polygyny resulted in the fixation of the
+courter/parent morph regardless of whether females mated at random if a
+suitable mate was found, and monogamy resulted in the fixation of the
+non-courter/parent morph in every case. Only monogamy with no mating
+allowed resulted in polymorphism, with the courter/parent morph
+coexisting with either the non-courter/parent or the
+non-courter/non-parent morph (Fig. \@ref(fig:MatingTypesFig)). These
+results can be explained by the nature of density-dependent survival in
+the individual-based model that are not consistent with the mathematical
+model; in the simulation model, offspring are created in proportion to
+the surviving offspring after mating has occurred, increasing the males'
+reproductive success above their specified reproductive investments.
+This allows males to escape the costs and increase their reproductive
+success beyond what is possible in the mathematical model. Random mating
+if non-preferred males are unable to be found also enables
+non-courter/parents to have increased reproductive success compared the
+the mathematical model predictions, which is why they are fixed in the
+monogamy case. If stricter costs on courting males are imposed,
+specifying $r=0.25$, meaning that $r_{courter}=2$ and
+$r_{non-courter}=8$, the scenarios without random mating do result in
+the maintenance of 2 or 3 morphs in most cases for both monogamy and
+polygyny (Fig. \@ref(fig:MatingTypesFig)), as expected.
+
+```{r MatingTypesFig, fig.cap="The frequencies of morphs in the final generation of simulation runs a single gene underlying each trait, with parameters expected to yield low diversity (top row), high diversity (centre row), and high diversity with stronger costs on courter reproductive success (bottom row). The frequency of the courter/parent morph in the final generation is printed on top of each bar. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available). Within each parameter set, the numbers below the bars identify sets of simulation runs that were initiated with identical starting conditions."}
+
+
+
+par(mfrow=c(3,4),oma=c(3,3,4,1),mar=c(3,1,4,1),xpd=TRUE)
+
+# Low diversity
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(lowDiv)))
+var_patts<-grep("v0",grep("RM", var_patts, invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=pattern)
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+
+# High diversity
+highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity_.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
+var_patts<-grep("v0",grep("RM", var_patts, invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)
+
+varDat<-lapply(var_patts,function(pattern){
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main="")
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+
+# Strict High Diversity
+highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversityStrict.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+var_patts<-unique(gsub(".*highDiversityStrict_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
+var_patts<-grep("v0",grep("RM", var_patts, invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)
+
+
+varDat<-lapply(var_patts,function(pattern){
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main="")
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+
+# outer legend
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
+
+```
+
+One striking result is that stochasticity appears to play a major role
+in which morphs co-exist with the courter-parent morph, even when
+initial starting conditions are identical (Fig.
+\@ref(fig:MatingTypesFig)). Across independent iterations of the model,
+variation in the initial starting frequencies of each morph (which
+centre around 0.25 for each morph, but with some variation) can explain
+some of the differences in outcomes. Variation in outcomes within
+replicate runs can be attributed to the many sources of random chance
+incorporated in the model: stochasticity associated with finite
+population sizes (i.e., genetic drift), the randomness of recombination,
+and the finite mate search process (in which females might not find a
+suitable mate, even if one exists in the population) all contribute to
+the within-replicate variation observed. Furthermore, these sources of
+variation differentiate the results of the simulation model from those
+of the mathematical model.
+
+### The role of polygenic inheritance of traits
+
+```{r}
+final_freqs<-read.csv("../results/morph_freqs_summary.csv")
+final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
+
+```
+
+We incorporated polygenic inheritance of the male traits in two ways,
+both of which reduced the impacts of stochasticity on the final morph
+frequencies. In the low diversity parameter space, the outcomes remained
+consistent with the single-locus model (and the expectations from the
+mathematical model): courter/parents dominated the populations, with
+complete fixation of the morph in the majority of runs, and any
+variation existing in the form of 1-2 individuals (courter/parent
+frequencies were $\ge$ 99% in all cases). These results were consistent
+across all genetic architectures, including QTLs distributed across 2,
+4, and 8 chromosomes and QTLs clustered in supergenes spanning from 5%
+to 50% of a single chromosome. In the high diversity parameter space,
+polygenic loci distributed throughout the genome resulted in the
+maintenance of the courter/parent trait at a frequency of
+`r round(mean(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%
+($\pm$
+`r round(sem(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%),
+with the non-courter/parent being the dominant morph. These proportions
+are remarkably consistent across genetic architectures. Most simulations
+with supergenes resulted in very similar final morph frequencies
+(`r round(mean(final_freqs$CP[grep("supergene.*highDiversity",final_freqs$file)])*100,2)`%
+$\pm$
+`r round(sem(final_freqs$CP[grep("supergene.*highDiversity",final_freqs$file)])*100,2)`%),
+and only occasionally resulted in either three morphs being retained or
+the non-courter/non-parent morph replacing the non-courter parent. The
+size of the supergene did not substantially impact the final morph
+frequencies, nor did the total number of QTLs underlying each locus. *Do
+an analysis of this?*
+
+Balancing selection and/or maintenance of genetic variation? - genetic
+variation at QTLs vs non QTLs vs detected qtls - Tajima's D?
+
+Does linkage disequilibrium evolve?
+
+### Will GWAS detect the actual QTLs?
+
+As expected, the detection of true QTLs in a GWAS was more likely when
+fewer QTLs underpin the trait, especially if those QTLs are aggregated
+on fewer chromosomes (Fig. \@ref(fig:GWASoutcomes)). Somewhat
+surprisingly, the QTLs for parent traits were more reliably detected by
+GWAS than the courter QTLs. In the majority of simulations, the final
+population only contained parental males, but both courters and
+non-courters persisted in the population (Fig.
+\@ref(fig:MatingTypesFig)). The finding the parent QTLs are more likely
+to be detected is likely because that trait experienced stronger
+selection on it (i.e., being a non-parent was more costly than being a
+non-courter).
+
+We expected the supergene scenarios to have a higher detection rate, but
+this was not the case. The primary difference was that the variance in
+false positive rates was increased with supergenes, but the true
+positive rates were unaffected by the localization of QTLs.
+
+```{r getGWASinfo}
+gwas_output<-read.csv("GWAS_summary.csv", header = FALSE)
+colnames(gwas_output)<-c("Marker",
+                          "Chrom",
+                          "Position",
+                          "Model",
+                          "R2",
+                          "pval",
+                          "NearQTL",
+                          "Traits",
+                          "File")
+
+gwas_summary<-aggregate(NearQTL~Traits + File,sum,data=gwas_output)
+
+gwas_summary$numQTLonChrom<-as.numeric(gsub("^.*q(\\d+)_c(\\d+)_\\d.*vcf","\\1",gwas_summary$File))
+gwas_summary$numChrom<-as.numeric(gsub("^.*q(\\d+)_c(\\d+)_\\d.*vcf","\\2",gwas_summary$File))
+gwas_summary$numQTLtotal<-gwas_summary$numQTLonChrom*gwas_summary$numChrom
+gwas_summary$Architecture<-gsub("^.*results\\/(.*)\\/\\w+.*.vcf","\\1",gwas_summary$File)
+gwas_summary$Architecture<-gsub("\\/","",gwas_summary$Architecture) # remove any extra / 
+gwas_summary$CQ<-as.factor(paste(gwas_summary$numChrom,gwas_summary$numQTLtotal))
+
+# calculate the proportion of QTLs identified
+gwas_summary$PropQTL<-gwas_summary$NearQTL/gwas_summary$numQTLtotal
+
+fdr<-aggregate(NearQTL~Traits + File,function(cnts){
+  props<-table(cnts)/sum(table(cnts))
+  return(props[1])
+},data=gwas_output)
+colnames(fdr)[3]<-"PropWrongQTL"
+
+gwas_summary<-merge(gwas_summary,fdr,by=c("Traits","File"))
+
+final_freqs<-read.csv("../results/morph_freqs_summary.csv")
+final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
+
+gwas_summary$rep<-gsub("^.*Diversity_(.*)_pop_(\\d+).vcf","\\1_pop\\2",gwas_summary$File)
+
+overall_info<-merge(final_freqs,
+                    gwas_summary,
+                    by="rep")
+
+overall_info$diversity<-gsub("^.*\\/(\\w+)Diversity.*$","\\1",overall_info$file)
+```
+
+```{r propQTLplotFXN}
+
+propQTL_plot<-function(gsummary,propCol,cols,ylabel="Proportion of QTL detected by GWAS",add_legend=FALSE){
+  nchroms<-length(unique(gsummary$numChrom[gsummary$Traits=="Courter"]))
+  nqtls<-length(unique(gsummary$numQTLonChrom[gsummary$Traits=="Courter"]))
+  
+  vioplot::vioplot(gsummary[gsummary$Traits=="Courter",propCol]~gsummary$CQ[gsummary$Traits=="Courter"],
+          xlab="",
+          ylab="",
+          names=rep(unique(gsummary$numQTLonChrom[gsummary$Traits=="Courter"]),
+                    nchroms),
+          side="left",
+          col=scales::alpha(cols["courter"],0.5),
+          ylim=c(0,1),
+          border=cols["courter"],
+          lineCol=cols["courter"],
+          colMed="black",
+          cex.axis=2,
+          cex.lab=2,
+          las=2
+          )
+  
+  vioplot::vioplot(gsummary[gsummary$Traits=="Parent",propCol]~gsummary$CQ[gsummary$Traits=="Parent"],
+          side="right",
+          col=scales::alpha(cols["parent"],0.5),
+          add=TRUE,
+          border=cols["parent"],
+          lineCol=cols["parent"],
+          colMed="black"
+          )
+  
+  mtext(ylabel,2,cex=2,line=3.5)
+  
+  startpos<-0:(nchroms-1)*nqtls+1
+  endpos<-startpos+nqtls-1
+  labpos<-(startpos+endpos)/2
+  
+  text(x=labpos,
+       y=rep(-0.17,nchroms),
+       paste(unique(gsub("(\\d+) \\d+$","\\1",
+                         levels(gsummary$CQ[gsummary$Traits=="Courter"]))),
+             "Chroms"),
+       xpd=TRUE,
+       cex=2)
+  if(isTRUE(add_legend)){
+      legend("top",
+         pch=15,
+         c("Courter","Parent"),
+         col=cols[c("courter","parent")],
+         bty='n',
+         ncol=2,
+         cex=2)
+  }
+
+
+}
+
+```
+
+```{r GWASoutcomes,fig.width=5,fig.height=5, fig.cap="Genome-wide association studies of the simulated genotypes reveals a relatively low detection rate of QTLs and a generally high false positive rate, both influenced by the genetic architecture of the traits. The top row show the results for genome-wide QTLs and the bottom row shows the results for supergenes."}
+par(mfrow=c(2,2),mar=c(5,5,2,2))
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="qtls",],"PropQTL",cols)
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="qtls",],"PropWrongQTL",cols,"Falsely detected QTLs")
+
+
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="supergene",],"PropQTL",cols)
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="supergene",],"PropWrongQTL",cols,"Falsely detected QTLs")
+```
+
+```{r}
+par(mfrow=c(2,2),mar=c(5,5,2,2))
+plot(overall_info$P[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
+     overall_info$PropQTL[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
+     col=cols["parent"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"])),
+     xlab="Parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     xlim=c(0,1),
+     bty='l'
+     )
+
+plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"],
+     overall_info$PropQTL[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"],
+     col=cols["courter"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"])),
+     xlab="Non-parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     #xlim=c(0,1),
+     bty='l'
+     )
+
+# supergenes
+plot(overall_info$P[overall_info$Traits=="Parent" & overall_info$Architecture=="supergene"],
+     overall_info$PropQTL[overall_info$Traits=="Parent" & overall_info$Architecture=="supergene"],
+     col=cols["parent"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Parent" & overall_info$Architecture=="supergene"])),
+     xlab="Parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     xlim=c(0,1),
+     bty='l'
+     )
+
+plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture=="supergene"],
+     overall_info$PropQTL[overall_info$Traits=="Courter" & overall_info$Architecture=="supergene"],
+     col=cols["courter"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Courter" & overall_info$Architecture=="supergene"])),
+     xlab="Non-parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     #xlim=c(0,1),
+     bty='l'
+     )
+```
+
 # Discussion
+
+Summary of findings - genetic architecture matters - maybe counter
+intuitively it reduces stochasticity, likely through genetic
+correlations and/or linkage disequilibrium? - GWAS is only going to pick
+up $\le$ 50% of true QTLs, and will provide spurious results - a mention
+of sexual conflict?
+
+Why might cause the deviation from the single-locus expectation? - LD,
+genetic correlations - compare to previous models and speculate on how
+it might impact their results - discuss real-world examples
+
+Detection of QTLs: what's up? - this is consistent with previous models
+like my SCA paper - what does this mean for our ability to study real
+world pops?
+
+Maintenance of variation (esp. morphs) and genetic architectures -
+genetic architecture is critically important - this doesn't include
+other elements of sex-specific or morph-specific architectures such as
+sex-specific dominance of sex-biased gene expression
 
 # Acknowledgments
 
@@ -316,8 +894,9 @@ We acknowledge Ngāi Tūāhuriri, upon whose lands the analyses and writing
 was conducted. This work was conducted in part while SPF was a
 postdoctoral fellowship at the National Institute for Mathematical and
 Biological Synthesis, sponsored by the National Science Foundation
-through NSF Award \#DBI-1300426, with additional support from The
-University of Tennessee, Knoxville.
+through NSF Award #DBI-1300426, with additional support from The
+University of Tennessee, Knoxville. SPF was partially funded by the
+Marsden fund grant number UOC1904 while working on this research.
 
 # Data Accessibility
 

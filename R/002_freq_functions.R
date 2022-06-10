@@ -155,7 +155,7 @@ plot.pc.reps<-function(pattern,path="./",cols,x.lim=c(0,12000),make.plot=TRUE){
     sp<-by(summ,summ$Pop,function(pop){ #break it into each population in the file
       pop<-pop[,which(!colnames(pop)%in%grep("Marker",colnames(pop),value = TRUE))] #only keep the frequency data
       pop<-pop[!is.na(pop$ParentFreq),]
-      n<-as.numeric(gsub("\\w+.*_(\\d+)_\\w+.*","\\1",file))
+      n<-as.numeric(gsub(".*_(\\d+)_summary.txt","\\1",file))
       
       if(isTRUE(make.plot)){
         

@@ -42,10 +42,10 @@ library(plotly)
 library(dplyr)
 library(vegan)
 library(tidyr)
-source("~/Dropbox (UC Enterprise)/Research/ARTs/R/002_freq_functions.R")
+source("../R/002_freq_functions.R")
 
-source("~/Dropbox (UC Enterprise)/Research/ARTs/morph_predictions/check_freqs.R")
-source("~/Dropbox (UC Enterprise)/Research/ARTs/morph_predictions/morph_gens_ns.R")
+source("../morph_predictions/check_freqs.R")
+source("../morph_predictions/morph_gens_ns.R")
 
 cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
 cols2<-c(CP='#d7191c',NCP='#fdae61',CNP='#abd9e9',NCNP='#2c7bb6')
@@ -79,17 +79,18 @@ highDivParams<-data.frame(
              4,
              4,
              0.5,
-             4)
+             2)
 )
 kable(highDivParams, "latex",booktab=TRUE,
-      caption="Table of parameters selected to create a low-diversity population. All morphs started at equal frequencies.")
+      caption="Table of parameters selected to create a low-diversity population. All morphs started at equal frequencies.") %>%
+  kable_styling(latex_options = "HOLD_position")
 
 ```
 
 ### QTLs
 
 ```{r lowDivGenetics}
-lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*summary.txt",
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm.*summary.txt",
                                      path="/mnt/BigData/fixedART-results/qtls",
                                      cols,make.plot=FALSE))
 lnames<-rownames(lowDiv)
@@ -106,7 +107,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[1]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -114,7 +115,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -132,7 +133,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[2]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -140,7 +141,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -158,7 +159,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[3]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -166,7 +167,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -184,7 +185,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[4]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -192,7 +193,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -208,7 +209,7 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 
 ```{r lowDivGenetics2}
-lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*summary.txt",
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm.*summary.txt",
                                      path="/mnt/BigData/fixedART-results/supergene",
                                      cols,make.plot=FALSE))
 lnames<-rownames(lowDiv)
@@ -225,7 +226,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[1]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -233,7 +234,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -251,7 +252,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[2]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -259,7 +260,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -277,7 +278,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[3]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -285,7 +286,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -303,7 +304,7 @@ var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[4]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -311,7 +312,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -337,23 +338,24 @@ highDivParams<-data.frame(
                 "r_NN",
                 "c",
                 "number of sneakers"),
-  value = c( 0.5, 
-             4,
-             4,
+  value = c( 0.75, 
+             6,
+             6,
              8,
              8,
-             0.5,
-             4)
+             0.7,
+             2)
 )
 kable(highDivParams, "latex",booktab=TRUE,
-      caption="Table of parameters selected to create a high-diversity population. All morphs started at equal frequencies.")
+      caption="Table of parameters selected to create a high-diversity population. All morphs started at equal frequencies.") %>%
+  kable_styling(latex_options = "HOLD_position")
 
 ```
 
 ### QTLs
 
 ```{r highDivGenetics}
-lowDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*monogamy_nm.*summary.txt",
                                      path="/mnt/BigData/fixedART-results/qtls",
                                      cols,make.plot=FALSE))
 lnames<-rownames(lowDiv)
@@ -370,7 +372,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[1]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -378,7 +380,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -396,7 +398,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[2]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -404,7 +406,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -422,7 +424,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[3]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -430,7 +432,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -448,7 +450,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[4]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -456,7 +458,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -472,7 +474,7 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 
 ```{r highDivGenetics2}
-lowDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*summary.txt",
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*monogamy_nm.*summary.txt",
                                      path="/mnt/BigData/fixedART-results/supergene",
                                      cols,make.plot=FALSE))
 lnames<-rownames(lowDiv)
@@ -489,7 +491,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[1]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -497,7 +499,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -515,7 +517,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[2]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -523,7 +525,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -541,7 +543,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[3]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -549,7 +551,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)
@@ -567,7 +569,7 @@ var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[4]),lnames)]))
 
 
-par(mfrow=c(2,length(var_patts)/2),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
   dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
@@ -575,7 +577,7 @@ varDat<-lapply(var_patts,function(pattern){
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
         las=2,
         border=NA,
-        main=pattern)
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
   text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
 
   return(dat)

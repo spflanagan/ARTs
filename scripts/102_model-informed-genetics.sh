@@ -14,16 +14,16 @@ NUMREPS=5
 #Parameters of interest include 
 ## for high diversity
 #-crs
-CRS=4
+CRS=5
 #-ncrs
 NRS=8
 #-sperm-r
-C=0.5
+C=0.7
 ## for low diversity
 #-crs
 LCRS=8
 #-ncrs
-LNRS=4
+LNRS=5
 #-sperm-r
 LC=0.5
 
@@ -88,7 +88,7 @@ for i in `seq ${NUMREPS}`; do
 					--same-base -mm 4 -p 4 --polygyny --output-vcf \
 					-q ${q} -c ${c} -sprop ${p}" >> "parallel_cmds.sh"
 				echo "./ARTs --courter --parent --supergene \
-					-b ../../results/supergene/highDiversity_qtls_nm_prop${p}_q${q}_c${c}_${i} \
+					-b ../../results/supergene/highDiversity_supergene_nm_prop${p}_q${q}_c${c}_${i} \
 					-crs ${CRS} -ncrs ${NRS} -sperm-r ${C} \
 					-surv-noparent 0 -surv-parent 1 --viability \
 					--same-base -mm 4 -p 4 --polygyny --allow-no-mating --output-vcf \
@@ -96,13 +96,13 @@ for i in `seq ${NUMREPS}`; do
 				
 				# expected low diversity
 				echo "./ARTs --courter --parent --supergene \
-					-b ../../results/supergene/lowDiversity_polygyny_qtls_prop${p}_q${q}_c${c}_${i} \
+					-b ../../results/supergene/lowDiversity_supergene_polygyny_prop${p}_q${q}_c${c}_${i} \
 					-crs ${LCRS} -ncrs ${LNRS} -sperm-r ${LC} \
 					-surv-noparent 0 -surv-parent 1 --viability \
 					-mm 4 --same-base -p 4 --polygyny --output-vcf \
 					-q ${q} -c ${c} -sprop ${p}" >> "parallel_cmds.sh"
 				echo "./ARTs --courter --parent --supergene \
-					-b ../../results/supergene/lowDiversity_qtls_nm_prop${p}_q${q}_c${c}_${i} \
+					-b ../../results/supergene/lowDiversity_supergene_nm_prop${p}_q${q}_c${c}_${i} \
 					-crs ${LCRS} -ncrs ${LNRS} -sperm-r ${LC} \
 					-surv-noparent 0 -surv-parent 1 --viability \
 					-mm 4 --same-base -p 4 --polygyny --allow-no-mating --output-vcf \

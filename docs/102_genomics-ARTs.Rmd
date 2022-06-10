@@ -46,9 +46,9 @@ library(tidyr)
 library(vcfR)
 source("../R/003_genomic_summaries.R")
 source("../R/002_freq_functions.R")
-
 source("../morph_predictions/check_freqs.R")
 source("../morph_predictions/morph_gens_ns.R")
+tmp<-sapply(list.files(path="../../spfTools/R/",full.names = TRUE),source)
 
 cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
 cols2<-c(CP='#d7191c',NCP='#fdae61',CNP='#abd9e9',NCNP='#2c7bb6')
@@ -110,7 +110,7 @@ points(qtl_locs, mt_diff$Gst[qtl_locs],cex=2,col="red",pch=8)
 ```
 
 ```{r}
-mal_vcf<-vcf1[,c(1,which(mf_pop=="MAL"))]
+mal_vcf<-vcf1[,c(1,which(mf_pop=="MAL")+1)]
 mtm_diff<-genetic_diff(mal_vcf, pops = mt_mal, method = 'nei')
 plot(mtm_diff$Gprimest,pch=19,
      xlab="Locus",
@@ -180,70 +180,594 @@ QTLsInPeaks<-sapply(qtl_locs,function(q,peaks){
 }, peaks=sigPeaks)
 ```
 
-Focusing on the Male-Male comparison, without females:
-
-```{r}
-simSum<-data.frame(
-  sim = vcfname,
-  # Heterozygosity
-  gHtMean = mean(mtm_diff$Ht),
-  gHtMedian = median(mtm_diff$Ht),
-  gHtVar = var(mtm_diff$Ht),
-  qHtMean = mean(mtm_diff$Ht[qtl_locs]),
-  qHtMedian = median(mtm_diff$Ht[qtl_locs]),
-  qHtVar = var(mtm_diff$Ht[qtl_locs]),
-  # Gprime
-  gGpMean = mean(mtm_diff$Gprimest),
-  gGpMedian = median(mtm_diff$Gprimest),
-  gGpVar = var(mtm_diff$Gprimest),
-  qGpMean = mean(mtm_diff$Gprimest[qtl_locs]),
-  qGpMedian = median(mtm_diff$Gprimest[qtl_locs]),
-  qGpVar = var(mtm_diff$Gprimest[qtl_locs]),
-  # peaks
-  nPeaks = length(peaks),
-  nSigPeaks = length(sigPeaks),
-  nQTLS = length(qtl_locs),
-  propQTLsInPeaks = length(QTLsInPeaks[QTLsInPeaks > 0])/length(QTLsInPeaks)
-)
-```
-
 
 ## Summarizing multiple files
 
 ```{r}
-path <- "/mnt/BigData/fixedART-results/qtls"
+get_summary<-function(vcfname){
+  
+  # get the data
+  vcf1<-read.vcfR(vcfname)
+  qtl_info<-read.delim(gsub("_pop_\\d+\\.vcf","_qtlinfo\\.txt",vcfname))  
+  qtl_locs<-which(vcf1@fix[,"ID"] %in% qtl_info[1,])
+  
+  # defining populations
+  mf_pop<-as.factor(gsub("^(\\w{3}).*$","\\1",colnames(vcf1@gt)[-1]))
+  mt_pop<-as.factor(gsub("^(\\w{3}).*_(\\w+)$","\\2",colnames(vcf1@gt)[-1]))
+  mt_mal<-factor(mt_pop[mf_pop=="MAL"])
+  
+  # Fsts
+  mf_diff<-genetic_diff(vcf1, pops = mf_pop, method = 'nei')
+  #mt_diff<-genetic_diff(vcf1, pops = mt_pop, method = 'nei')
+  mal_vcf<-vcf1[,c(1,which(mf_pop=="MAL")+1)]
+  mtm_diff<-genetic_diff(mal_vcf, pops = mt_mal, method = 'nei')
+  mtm_diff$Gprimest[is.na(mtm_diff$Gprimest)]<-0
+
+  # find the peaks - mf
+  mf_peaks<-find_peaks(mf_diff$Gprimest,m = 50)
+  
+  Gcutoff<-qnorm(p = 0.99,
+                 mean=mean(mf_diff$Gprimest, na.rm=TRUE),
+                 sd = sd(mf_diff$Gprimest, na.rm=TRUE))
+  mf_sigPeaks<-mf_peaks[which(mf_diff$Gprimest[mf_peaks] >= Gcutoff)]
+  if(length(mf_sigPeaks) > 0){
+     mf_QTLsInPeaks<-sapply(qtl_locs,function(q,peaks){
+        n<-sapply(peaks, function (p){
+          if(p-50 <= q & p + 50 >= q){
+            return(TRUE)
+          }  else{
+            return(FALSE)
+          }
+      })
+      return(sum(n))
+    }, peaks=mf_sigPeaks)
+  } else{
+    mf_sigPeaks<-0
+    mf_QTLsInPeaks<-0
+  }
+ 
+  
+  # peaks - mm
+  mtm_peaks<-find_peaks(mtm_diff$Gprimest,m = 50)
+  
+  Gcutoff<-qnorm(p = 0.99,
+                 mean=mean(mtm_diff$Gprimest, na.rm=TRUE),
+                 sd = sd(mtm_diff$Gprimest, na.rm=TRUE))
+  mtm_sigPeaks<-mtm_peaks[which(mtm_diff$Gprimest[mtm_peaks] >= Gcutoff)]
+  if(length(mtm_sigPeaks) > 0){
+    mtm_QTLsInPeaks<-sapply(qtl_locs,function(q,peaks){
+      n<-sapply(peaks, function (p){
+        if(p-50 <= q & p + 50 >= q){
+          return(TRUE)
+        }  else{
+          return(FALSE)
+        }
+      })
+      return(sum(n))
+    }, peaks=mtm_sigPeaks)
+  } else{
+    mtm_sigPeaks<-0
+    mtm_QTLsInPeaks<-0
+  }
+
+  
+  # return the relevant data
+  simSum<-data.frame(
+    sim = vcfname,
+    nChrom = as.numeric(gsub("^.*_c(\\d+).*$","\\1",vcfname)),
+    nQTLS = length(qtl_locs),
+    # Summaries of the population
+    propMale = length(which(mf_pop=="MAL"))/length(mf_pop),
+    propP = length(which(mt_mal=="P"))/length(mt_mal),
+    propCP = length(which(mt_mal=="CP"))/length(mt_mal),
+    propC = length(which(mt_mal=="C"))/length(mt_mal),
+    propN = length(which(mt_mal=="NON"))/length(mt_mal),
+    propPref0 =  length(which(mt_pop=="pref0"))/length(grep("pref",mt_pop)),
+    # Heterozygosity genomewide
+    gHtMean = mean(mf_diff$Ht, na.rm=TRUE),
+    gHtMedian = median(mf_diff$Ht, na.rm=TRUE),
+    gHtVar = var(mf_diff$Ht, na.rm=TRUE),
+    qHtMean = mean(mf_diff$Ht[qtl_locs], na.rm=TRUE),
+    qHtMedian = median(mf_diff$Ht[qtl_locs], na.rm=TRUE),
+    qHtVar = var(mf_diff$Ht[qtl_locs], na.rm=TRUE),
+    # Gprime male-male
+    gGpMeanMM = mean(mtm_diff$Gprimest, na.rm=TRUE),
+    gGpMedianMM = median(mtm_diff$Gprimest, na.rm=TRUE),
+    gGpVarMM = var(mtm_diff$Gprimest, na.rm=TRUE),
+    qGpMeanMM = mean(mtm_diff$Gprimest[qtl_locs], na.rm=TRUE),
+    qGpMedianMM = median(mtm_diff$Gprimest[qtl_locs], na.rm=TRUE),
+    qGpVarMM = var(mtm_diff$Gprimest[qtl_locs], na.rm=TRUE),
+    # peaks
+    nPeaksMM = length(mtm_peaks),
+    nSigPeaksMM = length(mtm_sigPeaks),
+    propQTLsInPeaksMM = length(mtm_QTLsInPeaks[mtm_QTLsInPeaks > 0])/length(mtm_QTLsInPeaks),
+    # Gprime female-male
+    gGpMeanMF = mean(mf_diff$Gprimest, na.rm=TRUE),
+    gGpMedianMF = median(mf_diff$Gprimest, na.rm=TRUE),
+    gGpVarMF = var(mf_diff$Gprimest, na.rm=TRUE),
+    qGpMeanMF = mean(mf_diff$Gprimest[qtl_locs], na.rm=TRUE),
+    qGpMedianMF = median(mf_diff$Gprimest[qtl_locs], na.rm=TRUE),
+    qGpVarMF = var(mf_diff$Gprimest[qtl_locs], na.rm=TRUE),
+    # peaks
+    nPeaksMF = length(mf_peaks),
+    nSigPeaksMF = length(mf_sigPeaks),
+    propQTLsInPeaksMF = length(mf_QTLsInPeaks[mf_QTLsInPeaks > 0])/length(mf_QTLsInPeaks)
+  )
+  
+  return(simSum)
+}
+```
+
+
+
+
+```{r runQTLs, eval=FALSE}
 qtl_outliers<-dplyr::bind_rows(lapply(
-  list.files(path=path, 
-             pattern = "*.vcf",
+  list.files(path="/mnt/BigData/fixedART-results/qtls", 
+             pattern = ".*highDiversity_qtls_monogamy_nm.*.vcf",
              full.names = TRUE),
-  get_summary,
-  path = path))
+  get_summary))
 write.csv(qtl_outliers,"qtl_outliers.csv",quote=FALSE,row.names = FALSE)
 
 ```
 
 
-```{r}
-path <- "/mnt/BigData/fixedART-results/supergene/"
+
+```{r runSupergenes,eval=FALSE}
+
 supergene_outliers<-dplyr::bind_rows(lapply(
-  list.files(pattern="*.vcf",
-             path= path, 
+  list.files(pattern=".*highDiversity.*monogamy_nm.*.vcf",
+             path= "/mnt/BigData/fixedART-results/supergene/", 
              full.names = TRUE),
-  get_summary,
-  path = path))
+  get_summary))
 write.csv(supergene_outliers,"supergene_outliers.csv",quote=FALSE,row.names = FALSE)
 
 ```
 
 
 
+```{r, eval=TRUE}
+qtl_outliers<-read.csv("qtl_outliers.csv")
+qtl_outliers$Architecture<-"qtls"
+supergene_outliers<-read.csv("supergene_outliers.csv")
+supergene_outliers$Architecture<-"supergene"
+popgen_data<-dplyr::bind_rows(qtl_outliers,supergene_outliers)
+```
+
+Let's see if heterozygosity differs significantly -- I can do a t-test with the Welch-Satterthwaite correction using the data I have here. 
+
+```{r welchCorrectFXN}
+welch_correctDF<-function(var1,var2,n1,n2){
+  num<-((var1/n1)+(var2/n2))^2
+  den<-(((var1/n1)^2)/(n1-1))+(((var2/n2)^2)/(n2-1))
+  df<-num/den
+  return(df)
+}
+```
+
+```{r}
+sediff<-sqrt((popgen_data$gHtVar/(popgen_data$nChrom*1000)) + 
+               (popgen_data$qHtVar/(popgen_data$nQTLS)))
+HetT<-(popgen_data$gHtMean - popgen_data$qHtMean)/sediff
+HetP<-pt(HetT,
+         df = welch_correctDF(popgen_data$gHtVar,
+                              popgen_data$qHtVar,
+                              (popgen_data$nChrom*1000),
+                              popgen_data$nQTLS), 
+         lower.tail = (HetT >=0))
+
+popgen_data$HetP<-HetP
+```
+
+No pattern related to number of QTLs is apparent, nor is there an effect of architecture or the proportion of individuals that are CP.
+
+```{r}
+par(mfrow=c(1,2))
+plot(popgen_data$nQTLS, 
+     popgen_data$HetP,
+     pch=as.numeric(as.factor(popgen_data$Architecture)),
+     col=as.numeric(as.factor(popgen_data$Architecture)))
+
+plot(popgen_data$propCP, 
+     popgen_data$HetP,
+     pch=as.numeric(as.factor(popgen_data$Architecture)),
+     col=as.numeric(as.factor(popgen_data$Architecture)))
+```
 
 
 
 
+## GWAS
+
+I am using the package GWASpoly to run genome-wide association studies for the courter and parent traits. I'm following the instructions on their package information page (https://jendelman.github.io/GWASpoly/GWASpoly.html). I'm using the vcf file output from the simulations and then creating the phenotype files. Once the GWAS has identified QTLs, I can compare that to the qtl information files from the model. 
+
+As an example of what I could do re: manhattan plots (but am not doing on all of them), here is an example with one rep.
+
+```{r}
+library(GWASpoly)
+genofile <- gsub("\\.vcf","_gt.csv",vcfname)
+trait_name<-gsub("_pop_\\d+\\.vcf","_traits\\.txt",vcfname)
+pop<-as.numeric(gsub("^.*pop_(\\d+).*$","\\1",vcfname))
+phenofile <- gsub("traits\\.txt",paste0("pop",pop,"_pheno.csv"),trait_name)
+
+
+qtlfile<-gsub("_traits.txt","_qtlinfo.txt",trait_name)
+qtls<-read.delim(qtlfile)
+```
+
+```{r eval=FALSE}
+VCF2dosage(vcfname, 
+           dosage.file = gsub("\\.vcf","_gt.csv",vcfname), 
+           geno.code = "GT", 
+           ploidy = 2, 
+           samples=NULL,
+           min.DP=1, 
+           max.missing=0.9, 
+           min.minor=1)
+```
+
+```{r eval=FALSE}
+# create phenotype file
+gt<-read.csv(genofile)
+ids<-colnames(gt)[6:length(colnames(gt))]
+phenos<-data.frame(ID=ids,
+                   CourtTrait=NA,
+                   ParentTrait=NA,
+                   Sex=gsub("^(\\w{3}).*$","\\1",ids),
+                   Morph=gsub("^(\\w{3})\\d+_(.*)$","\\2",ids))
+
+
+phenos$CourtTrait[phenos$Sex=="MAL"]<-gsub("^.*_(\\w+)$","\\1",
+                                           phenos$ID[phenos$Sex=="MAL"])
+phenos$ParentTrait[phenos$CourtTrait %in% c("CP","P")] <-"parent"
+phenos$ParentTrait[phenos$CourtTrait %in% c("C","NON")] <-"parent"
+phenos$ParentTrait <- as.numeric(as.factor(phenos$ParentTrait))
+
+phenos$CourtTrait[phenos$CourtTrait %in% c("CP","C")] <-"courter"
+phenos$CourtTrait[phenos$CourtTrait %in% c("P","NON")] <-"noncourter"
+phenos$CourtTrait <- as.numeric(as.factor(phenos$CourtTrait))
+
+write.csv(phenos,
+          phenofile,
+          row.names = FALSE)
+
+```
+
+```{r}
+data <- read.GWASpoly(ploidy=2, 
+                      pheno.file=phenofile, 
+                      geno.file=genofile,
+                      format="numeric", 
+                      n.traits=2, 
+                      delim=",")
+
+# check for population structure
+data.loco <- set.K(data,LOCO=TRUE,n.core=2)
+data.original <- set.K(data,LOCO=FALSE,n.core=2)
+
+# specify some parameter settings
+N<-nrow(data@pheno)
+params <- set.params(geno.freq = 1 - 5/N, fixed = "Sex", fixed.type = "factor")
+
+# test markers for significance
+court_scan <- GWASpoly(data=data.loco,
+                           models=c("additive","1-dom"),
+                           traits=c("CourtTrait"),
+                           params=params
+                       )
+```
+
+
+```{r}
+# check inflation of scores
+qq.plot(court_scan, trait="CourtTrait") #some departures from the null (dashed line) are present 
+```
+
+We need to choose a -log10(p) threshold to control false positive rate. Bonferroni is overly conservative because LD means that markers are not independent. So we can use LD to estimate effective number of markers using method="M.eff", and can also use a permutation test.
+
+```{r}
+data2 <- set.threshold(court_scan,method="M.eff",level=0.05)
+```
+
+
+```{r}
+p <- manhattan.plot(data2,traits="CourtTrait")
+p + theme(axis.text.x = element_text(angle=90,vjust=0.5))
+```
+
+
+```{r}
+plot(data2@scores$CourtTrait$additive)
+courtQTLs<-qtls[1,grep("CourterQTL",colnames(qtls))]
+qtllocs<-as.numeric(gsub("(\\d)\\.(\\d+)","\\1",courtQTLs))*1000 + 
+  as.numeric(gsub("(\\d)\\.(\\d+)","\\2",courtQTLs))
+points(qtllocs, 
+       data2@scores$CourtTrait$additive[qtllocs],
+       lwd=6,
+       col="red",
+       cex=2)
+```
+
+```{r}
+qtl <- get.QTL(data=data2,traits="CourtTrait",models="additive",bp.window=10)
+fit.ans <- fit.QTL(data=data2,trait="CourtTrait",
+                   qtl=qtl[,c("Marker","Model")])
+fit.ans$NearQTL<-0
+for(i in 1:nrow(fit.ans)){
+  chromqtl<-courtQTLs[as.numeric(gsub("(\\d)\\.(\\d+)","\\1",courtQTLs)) == fit.ans$Chrom[i]]
+  chromlocs<- as.numeric(gsub("(\\d)\\.(\\d+)","\\2",chromqtl))
+  for(loc in chromlocs){
+    
+    if(fit.ans$Position[i] +10 >= loc & fit.ans$Position[i] -10 <= loc){
+      fit.ans$NearQTL[i] <- fit.ans$NearQTL[i] +1
+    }
+  }
+}
+```
+ 
+
+I've wrapped all of that nicely into a single script (`103_run_gwas.R`) that I can run in the background on my computer. Now we can look at the output csv file to start to make sense of/summarize the results.
+
+
+```{r}
+gwas_output<-read.csv("GWAS_summary.csv", header = FALSE)
+colnames(gwas_output)<-c("Marker",
+                          "Chrom",
+                          "Position",
+                          "Model",
+                          "R2",
+                          "pval",
+                          "NearQTL",
+                          "Traits",
+                          "File")
+
+gwas_summary<-aggregate(NearQTL~Traits + File,sum,data=gwas_output)
+
+gwas_summary$numQTLonChrom<-as.numeric(gsub("^.*q(\\d+)_c(\\d+)_\\d.*vcf","\\1",gwas_summary$File))
+gwas_summary$numChrom<-as.numeric(gsub("^.*q(\\d+)_c(\\d+)_\\d.*vcf","\\2",gwas_summary$File))
+gwas_summary$numQTLtotal<-gwas_summary$numQTLonChrom*gwas_summary$numChrom
+gwas_summary$Architecture<-gsub("^.*results\\/(.*)\\/\\w+.*.vcf","\\1",gwas_summary$File)
+gwas_summary$Architecture<-gsub("\\/","",gwas_summary$Architecture) # remove any extra / 
+gwas_summary$CQ<-as.factor(paste(gwas_summary$numChrom,gwas_summary$numQTLtotal))
+
+# calculate the proportion of QTLs identified
+gwas_summary$PropQTL<-gwas_summary$NearQTL/gwas_summary$numQTLtotal
+
+fdr<-aggregate(NearQTL~Traits + File,function(cnts){
+  props<-table(cnts)/sum(table(cnts))
+  return(props[1])
+},data=gwas_output)
+colnames(fdr)[3]<-"PropWrongQTL"
+
+gwas_summary<-merge(gwas_summary,fdr,by=c("Traits","File"))
+
+
+```
+
+
+```{r}
+plot(gwas_summary$PropQTL~as.factor(paste(gwas_summary$numChrom,gwas_summary$numQTLtotal)))
+```
+
+```{r}
+
+propQTL_plot<-function(gsummary,propCol,cols,ylabel="Proportion of QTL detected by GWAS",add_legend=FALSE){
+  nchroms<-length(unique(gsummary$numChrom[gsummary$Traits=="Courter"]))
+  nqtls<-length(unique(gsummary$numQTLonChrom[gsummary$Traits=="Courter"]))
+  
+  vioplot::vioplot(gsummary[gsummary$Traits=="Courter",propCol]~gsummary$CQ[gsummary$Traits=="Courter"],
+          xlab="",
+          ylab="",
+          names=rep(unique(gsummary$numQTLonChrom[gsummary$Traits=="Courter"]),
+                    nchroms),
+          side="left",
+          col=scales::alpha(cols["courter"],0.5),
+          ylim=c(0,1),
+          border=cols["courter"],
+          lineCol=cols["courter"],
+          colMed="black",
+          cex.axis=2,
+          cex.lab=2,
+          las=2
+          )
+  
+  vioplot::vioplot(gsummary[gsummary$Traits=="Parent",propCol]~gsummary$CQ[gsummary$Traits=="Parent"],
+          side="right",
+          col=scales::alpha(cols["parent"],0.5),
+          add=TRUE,
+          border=cols["parent"],
+          lineCol=cols["parent"],
+          colMed="black"
+          )
+  
+  mtext(ylabel,2,cex=2,line=3.5)
+  
+  startpos<-0:(nchroms-1)*nqtls+1
+  endpos<-startpos+nqtls-1
+  labpos<-(startpos+endpos)/2
+  
+  text(x=labpos,
+       y=rep(-0.17,nchroms),
+       paste(unique(gsub("(\\d+) \\d+$","\\1",
+                         levels(gsummary$CQ[gsummary$Traits=="Courter"]))),
+             "Chroms"),
+       xpd=TRUE,
+       cex=2)
+  if(isTRUE(add_legend)){
+      legend("top",
+         pch=15,
+         c("Courter","Parent"),
+         col=cols[c("courter","parent")],
+         bty='n',
+         ncol=2,
+         cex=2)
+  }
+
+
+}
+
+```
+
+```{r QTLplots}
+par(mfrow=c(2,2),mar=c(5,5,2,2))
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="qtls",],"PropQTL",cols)
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="qtls",],"PropWrongQTL",cols,"Falsely detected QTLs")
+
+
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="supergene",],"PropQTL",cols)
+propQTL_plot(gwas_summary[gwas_summary$Architecture=="supergene",],"PropWrongQTL",cols,"Falsely detected QTLs")
+```
+
+
+Are parent QTLS more likely to be picked up because CP/CN is the most common polymorphism or is it because selection on parents is stronger than selection on courters? 
+
+We'll want to summarize the final frequencies and compare it to the prop QTL detected.
+
+```{r eval=FALSE}
+pfiles<-list.files(path="../fixedART-results/qtls",pattern="pheno.csv",full.names = TRUE)
+pfiles<-c(pfiles,
+          list.files(path="../fixedART-results/supergene",pattern="pheno.csv",full.names = TRUE))
+final_freqs<-data.frame(
+  CP=NA,
+  C=NA,
+  P=NA,
+  NON=NA,
+  file=NA
+)
+
+for(i in 1:length(pfiles)){
+  phenos<-read.csv(pfiles[i])
+  frqs<-table(phenos$Morph[phenos$Sex=="MAL"])/sum(table(phenos$Morph[phenos$Sex=="MAL"]))
+  final_freqs[i,names(frqs)]<-frqs
+  final_freqs[i,"file"]<-pfiles[i]
+  
+}
+
+final_freqs[is.na(final_freqs)]<-0
+write.csv(final_freqs,"../results/morph_freqs_summary.csv",row.names = FALSE)
+```
+
+```{r}
+final_freqs<-read.csv("../results/morph_freqs_summary.csv")
+final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
+
+gwas_summary$rep<-gsub("^.*Diversity_(.*)_pop_(\\d+).vcf","\\1_pop\\2",gwas_summary$File)
+
+overall_info<-merge(final_freqs,
+                    gwas_summary,
+                    by="rep")
+
+overall_info$diversity<-gsub("^.*\\/(\\w+)Diversity.*$","\\1",overall_info$file)
+```
+
+```{r}
+par(mfrow=c(2,2),mar=c(5,5,2,2))
+plot(overall_info$P[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
+     overall_info$PropQTL[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
+     col=cols["parent"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"])),
+     xlab="Parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     xlim=c(0,1),
+     bty='l'
+     )
+
+plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"],
+     overall_info$PropQTL[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"],
+     col=cols["courter"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"])),
+     xlab="Non-parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     #xlim=c(0,1),
+     bty='l'
+     )
+
+# supergenes
+plot(overall_info$P[overall_info$Traits=="Parent" & overall_info$Architecture=="supergene"],
+     overall_info$PropQTL[overall_info$Traits=="Parent" & overall_info$Architecture=="supergene"],
+     col=cols["parent"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Parent" & overall_info$Architecture=="supergene"])),
+     xlab="Parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     xlim=c(0,1),
+     bty='l'
+     )
+
+plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture=="supergene"],
+     overall_info$PropQTL[overall_info$Traits=="Courter" & overall_info$Architecture=="supergene"],
+     col=cols["courter"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Courter" & overall_info$Architecture=="supergene"])),
+     xlab="Non-parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     #xlim=c(0,1),
+     bty='l'
+     )
+```
+
+
+# Linkage disequilibrium
+
+Let's look into LD. I've estimated LD using vcftools
+
+```{r ld}
+ld_file<-"../fixedART-results/supergene/highDiversity_qtls_monogamy_nm_prop0.05_q16_c2_1_pop_0.LD.geno.ld"
+qtl_file<-"../fixedART-results/supergene/highDiversity_qtls_monogamy_nm_prop0.05_q16_c2_1_qtlinfo.txt"
+pop<-gsub("^.*pop_(\\d).*$","Pop\\1",ld_file)
+
+ld_info<-read.delim(ld_file)
+qtl_info<-read.delim(qtl_file)
+qtl_info<-qtl_info[qtl_info$Pop==pop,-1]
+qtls<-data.frame(
+  Chrom=gsub("(\\d)\\.(\\d+)","\\1",qtl_info[!is.na(qtl_info)]),
+  Locus=gsub("(\\d)\\.(\\d+)","\\2",qtl_info[!is.na(qtl_info)])
+)
+
+ld_summary<-data.frame(CHR=NA,POS=NA,AvgR2=NA, AvgR2Q=NA, AvgR2NQ=NA)
+counter<-1
+for(chrom in unique(ld_info$CHR)){
+  chld<-ld_info[ld_info$CHR==chrom,]
+  locs<-qtls[qtls$Chrom ==chrom,"Locus"]
+  for(pos in unique(chld$POS1)){
+    ld_summary[counter,"CHR"]<-chrom
+    ld_summary[counter,"POS"]<-pos
+    ld_summary[counter,"AvgR2"]<-mean(chld[chld$POS1==pos,"R.2"], na.rm=TRUE)
+    ld_summary[counter,"AvgR2Q"]<-mean(chld[chld$POS1==pos & chld$POS2 %in% locs,"R.2"], na.rm=TRUE)
+    ld_summary[counter,"AvgR2NQ"]<-mean(chld[chld$POS1==pos & !(chld$POS2 %in% locs),"R.2"], na.rm=TRUE)
+    counter<-counter + 1
+  }
+}
+ld_summary$file<-ld_file
+```
+
+```{r}
+plot(ld_summary$AvgR2,
+     type='l')
+```
+```{r}
+
+```
 
 
 
+# Tajima's D
 
+```{r td}
 
+```
 
