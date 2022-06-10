@@ -131,6 +131,8 @@ and in the case of sexually dimorphic variants, might resolve sexual
 conflict. **Need to look into the literature for more examples and to
 add detail**.
 
+In dwarf spiders, *Oedothorax gibbosus*, males have two morphs: one with a flat head and one with a hunched head. The two morphs appear to be maintained at equilibrium because flat-headed males can mate earlier in the season whereas hunched males are able to solicit matings with already-mated females through the presentation of a nuptial gift using the hunched head. The hunched trait is encoded by a contiguous 3Mb region of the genome that is found only in hunched males, and appears to have arisen as a novel duplicate of the *doublesex* gene (which is involved in sexual differentiation) [@hendrickxMasculinizingSupergene2022]. This 3Mb supergene is missing from flat-headed males, and contains an aggregation of genes that presumably have experienced positive selection only in hunched males, and which have male-specific expression patterns (i.e., females carrying this hunched locus do not express these genes) [@hendrickxMasculinizingSupergene2022].
+
 Substantial advances in our understanding of the evolution of these
 traits have been made with whole-genome sequencing and transcriptome
 studies. Furthermore, recent mathematical and simulation models have
