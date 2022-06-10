@@ -328,7 +328,10 @@ write.csv(supergene_outliers,"supergene_outliers.csv",quote=FALSE,row.names = FA
 
 ```{r, eval=TRUE}
 qtl_outliers<-read.csv("qtl_outliers.csv")
+qtl_outliers$Architecture<-"qtls"
 supergene_outliers<-read.csv("supergene_outliers.csv")
+supergene_outliers$Architecture<-"supergene"
+popgen_data<-dplyr::bind_rows(qtl_outliers,supergene_outliers)
 ```
 
 
