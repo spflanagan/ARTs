@@ -679,7 +679,36 @@ plot(overall_info$P[overall_info$Traits=="Parent" & overall_info$Architecture=="
 plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"],
      overall_info$PropQTL[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"],
      col=cols["courter"],
-     pch=19,
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"])),
+     xlab="Non-parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     #xlim=c(0,1),
+     bty='l'
+     )
+
+# supergenes
+plot(overall_info$P[overall_info$Traits=="Parent" & overall_info$Architecture=="supergene"],
+     overall_info$PropQTL[overall_info$Traits=="Parent" & overall_info$Architecture=="supergene"],
+     col=cols["parent"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Parent" & overall_info$Architecture=="supergene"])),
+     xlab="Parent/Non-courters Proportion",
+     ylab="Proportion of QTLs detected by GWAS",
+     cex.lab=2,
+     cex=1.5,
+     cex.axis=2,
+     ylim=c(0,1),
+     xlim=c(0,1),
+     bty='l'
+     )
+
+plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture=="supergene"],
+     overall_info$PropQTL[overall_info$Traits=="Courter" & overall_info$Architecture=="supergene"],
+     col=cols["courter"],
+     pch=as.numeric(as.factor(overall_info$diversity[overall_info$Traits=="Courter" & overall_info$Architecture=="supergene"])),
      xlab="Non-parent/Non-courters Proportion",
      ylab="Proportion of QTLs detected by GWAS",
      cex.lab=2,
