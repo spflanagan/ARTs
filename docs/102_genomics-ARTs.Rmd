@@ -676,8 +676,8 @@ plot(overall_info$P[overall_info$Traits=="Parent" & overall_info$Architecture=="
      bty='l'
      )
 
-plot(overall_info$NON[overall_info$Traits=="Courter"],
-     overall_info$PropQTL[overall_info$Traits=="Courter"],
+plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"],
+     overall_info$PropQTL[overall_info$Traits=="Courter" & overall_info$Architecture=="qtls"],
      col=cols["courter"],
      pch=19,
      xlab="Non-parent/Non-courters Proportion",
