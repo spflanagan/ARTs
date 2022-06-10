@@ -894,9 +894,9 @@ We acknowledge Ngāi Tūāhuriri, upon whose lands the analyses and writing
 was conducted. This work was conducted in part while SPF was a
 postdoctoral fellowship at the National Institute for Mathematical and
 Biological Synthesis, sponsored by the National Science Foundation
-through NSF Award \#DBI-1300426, with additional support from The
-University of Tennessee, Knoxville. 
-SPF was partially funded by the Marsden fund grant number UOC1904. 
+through NSF Award #DBI-1300426, with additional support from The
+University of Tennessee, Knoxville. SPF was partially funded by the
+Marsden fund grant number UOC1904 while working on this research.
 
 # Data Accessibility
 
@@ -906,5 +906,3 @@ All code has been archived on Zenodo (DOI: ) and is maintained on github
 # Author Contributions
 
 # References
-
-
