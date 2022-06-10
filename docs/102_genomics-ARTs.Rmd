@@ -334,6 +334,48 @@ supergene_outliers$Architecture<-"supergene"
 popgen_data<-dplyr::bind_rows(qtl_outliers,supergene_outliers)
 ```
 
+Let's see if heterozygosity differs significantly -- I can do a t-test with the Welch-Satterthwaite correction using the data I have here. 
+
+```{r welchCorrectFXN}
+welch_correctDF<-function(var1,var2,n1,n2){
+  num<-((var1/n1)+(var2/n2))^2
+  den<-(((var1/n1)^2)/(n1-1))+(((var2/n2)^2)/(n2-1))
+  df<-num/den
+  return(df)
+}
+```
+
+```{r}
+sediff<-sqrt((popgen_data$gHtVar/(popgen_data$nChrom*1000)) + 
+               (popgen_data$qHtVar/(popgen_data$nQTLS)))
+HetT<-(popgen_data$gHtMean - popgen_data$qHtMean)/sediff
+HetP<-pt(HetT,
+         df = welch_correctDF(popgen_data$gHtVar,
+                              popgen_data$qHtVar,
+                              (popgen_data$nChrom*1000),
+                              popgen_data$nQTLS), 
+         lower.tail = (HetT >=0))
+
+popgen_data$HetP<-HetP
+```
+
+No pattern related to number of QTLs is apparent, nor is there an effect of architecture or the proportion of individuals that are CP.
+
+```{r}
+par(mfrow=c(1,2))
+plot(popgen_data$nQTLS, 
+     popgen_data$HetP,
+     pch=as.numeric(as.factor(popgen_data$Architecture)),
+     col=as.numeric(as.factor(popgen_data$Architecture)))
+
+plot(popgen_data$propCP, 
+     popgen_data$HetP,
+     pch=as.numeric(as.factor(popgen_data$Architecture)),
+     col=as.numeric(as.factor(popgen_data$Architecture)))
+```
+
+
+
 
 ## GWAS
 
