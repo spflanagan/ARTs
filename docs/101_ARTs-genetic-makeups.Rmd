@@ -589,3 +589,10 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
+# Selection on traits
+
+```{r}
+
+```
+
+
