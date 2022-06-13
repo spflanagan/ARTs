@@ -282,9 +282,11 @@ dplyr [@wickham2021], and rmarkdown [@allaire2021; @xie2020; @xie2018].
 The interactive app is available at
 <https://spflanagan.shinyapps.io/morph_predictions/>.
 
-Note that this model does not incorporate recombination or inheritance via females.
-Nonetheless, this model provides a baseline predictions for parameter values likely to facilitate morph diversity within a population.
-These limitations are addressed in the individual-based simulation model.
+Note that this model does not incorporate recombination or inheritance
+via females. Nonetheless, this model provides a baseline predictions for
+parameter values likely to facilitate morph diversity within a
+population. These limitations are addressed in the individual-based
+simulation model.
 
 ## Individual-based simulation model
 
@@ -410,11 +412,11 @@ empirical data, we analyzed the genetic diversity of the populations at
 the final generation of the individual based simulations. First we used
 vcfR to estimate observed heterozygosity for all markers in the genome
 and separately for the QTLs. Allele frequencies between morphs were also
-compared using the Gst estimator in vcfR.
-Additionally, an association between male phenotypes and genetic markers
-was tested for using GWASpoly . For both the Gst estimates and the GWAS
-p-values, any major peaks identified were scanned to identify if they
-were within a 50 basepair window of one of the true QTLs.
+compared using the Gst estimator in vcfR. Additionally, an association
+between male phenotypes and genetic markers was tested for using
+GWASpoly . For both the Gst estimates and the GWAS p-values, any major
+peaks identified were scanned to identify if they were within a 50
+basepair window of one of the true QTLs.
 
 # Results
 
@@ -424,7 +426,7 @@ The initial frequency of each morph impacted whether multiple morphs
 were maintained. In no cases was the courter-nonparent morph maintained.
 This result makes intuitive sense, because if a female chooses to nest
 with a courter-nonparent, the nest will always die (given our parameter
-settings). 
+settings).
 
 The parameters controlling sperm competition ($c$), relative
 reproductive allocation ($r$), and the number of sneakers allowed also
