@@ -804,6 +804,17 @@ lds<-as.matrix(do.call(rbind,by(ld_summary,ld_summary$file, function(dat){
 })))
 ```
 
+```{r LDplots}
+plot(lds[,"avgQ"]~lds[,"nqtl_actual"])
+
+plot(lds[,"avgResampled"]~lds[,"nqtl_actual"])
+
+plot(lds[,"avgQ"]~lds[,"nchrom"])
+
+plot(lds[,"avgResampled"]~lds[,"nchrom"])
+```
+
+
 
 
 # Tajima's D
