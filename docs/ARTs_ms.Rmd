@@ -102,16 +102,17 @@ fitness in unique ways [@oliveiraAlternativeReproductiveTactics2008].
 The genetic basis of traits experiencing selection is also critical to
 understanding the maintenance of variation. Evolution can be constrained
 by factors including pleiotropy, genetic correlations, and physical
-linkage. As such, the relaxation of these constraints can facilitate
-sequence evolution by relaxing positive selection on genes
-[@harrisonSexualSelectionDrives2015]. However, the interaction of
-selection that facilitates variation with the genetic architecture and
-genetic constraints remains under-explored. In particular, the majority
-of predictions relating selection to genetic constraints arise from one-
-or two-locus models, which can be difficult to extrapolate to
-genome-wide predictions. In the modern genomic era, having predictions
-for large genome-wide datasets is of critical importance to develop
-testable hypotheses. [something about genome-wide predictions].
+linkage. As such, the reduction or removal of these constraints can
+facilitate sequence evolution by relaxing positive selection on genes
+[@harrisonSexualSelectionDrives2015; @dapperRelaxedSelectionRapid2020].
+However, the interaction of selection that facilitates variation with
+the genetic architecture and genetic constraints remains under-explored.
+In particular, the majority of predictions relating selection to genetic
+constraints arise from one- or two-locus models (EXAMPLES), which can be
+difficult to extrapolate to genome-wide predictions. In the modern
+genomic era, having predictions for large genome-wide datasets is of
+critical importance to develop testable hypotheses. [something about
+genome-wide predictions].
 
 One genetic mechanism that is increasingly shown to play an important
 role in evolution are structural variants, such as inversion
