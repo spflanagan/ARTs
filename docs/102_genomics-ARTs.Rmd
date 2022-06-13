@@ -768,7 +768,40 @@ plot(ld_summary$AvgR2,
      type='l')
 ```
 ```{r}
+ld_summary<-read.csv("../R/ld_summary_all.csv", header=FALSE)
+colnames(ld_summary)<-c("CHR","POS","AvgR2","AvgR2Q","AvgR2NQ","file")
 
+lds<-as.matrix(do.call(rbind,by(ld_summary,ld_summary$file, function(dat){
+  qtl_info<-read.delim(gsub("_pop.*$","_qtlinfo.txt",dat[1,"file"]))
+  qtl_info<-qtl_info[qtl_info$Pop==gsub("^.*pop_(\\d).*$","Pop\\1",ld_file),-1]
+  qtls<-data.frame(
+    Chrom=gsub("(\\d)\\.(\\d+)","\\1",qtl_info[!is.na(qtl_info)]),
+    Locus=gsub("(\\d)\\.(\\d+)","\\2",qtl_info[!is.na(qtl_info)])
+  )
+  dat$QTL<-FALSE
+  for(i in 1:nrow(qtls)){
+    dat$QTL[dat$CHR == qtls$Chrom[i] & dat$POS == qtls$Locus[i]]<-TRUE
+  }
+  nqtl_actual <- length(dat$QTL[dat$QTL==TRUE])
+  resampled<-unlist(lapply(1:999, function(i, dat, n){
+    subdat<-dat[sample(1:length(dat), n,replace = FALSE)]
+    return(mean(subdat, na.rm=TRUE))
+  }, dat = dat$AvgR2NQ[dat$QTL==FALSE], n=nqtl_actual))
+  
+  return(c(
+    nqtl = as.numeric(gsub("^.*q(\\d+)_.*$","\\1", dat[1,"file"])),
+    nqtl_actual = as.numeric(nqtl_actual),
+    nchrom = as.numeric(gsub("^.*c(\\d)_.*$","\\1", dat[1,"file"])),
+    prop = as.numeric(gsub("^.*prop(\\d+\\.\\d+)_.*$","\\1", dat[1,"file"])),
+  #  architecture = gsub("../fixedART-results/(\\w+)/.*$","\\1", dat[1,"file"]),
+    avgQ = mean(dat$AvgR2Q[dat$QTL==TRUE], na.rm=TRUE),
+    semQ = sem(dat$AvgR2Q[dat$QTL==TRUE]),
+    avgNQ = mean(dat$AvgR2NQ[dat$QTL==FALSE], na.rm=TRUE),
+    semNQ = sem(dat$AvgR2NQ[dat$QTL==FALSE]),
+    avgResampled = mean(resampled),
+    semResampled = sem(resampled)
+  ))
+})))
 ```
 
 
