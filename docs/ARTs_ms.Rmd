@@ -122,17 +122,46 @@ which genes with direct phenotypic effects exist. The mismatched
 directionality reduces recombination between the different variants,
 facilitating the maintenance of both genetic and phenotypic variations.
 These supergenes have been shown to underpin stable polymporhisms
-including ant morphs, immune response genes (e.g., toll-like receptors),
-xxx, and alternative reproductive tactics (e.g., in white-collared
-sparrows [@thomasChromosomalPolymorphismLinked2008] and ruffs
-[@kupperSupergeneDeterminesHighly2016;
-@lamichhaneyStructuralGenomicChanges2016]). These polymorphisms are
-often maintained in populations through frequency dependent selection,
-and in the case of sexually dimorphic variants, might resolve sexual
-conflict. **Need to look into the literature for more examples and to
-add detail**.
+including multiple social morphs in fire ants [@yanEvolutionSupergeneThat2020], immune response genes
+(e.g., toll-like receptors), venom composition in rattlesnakes [@zancolliWhenOnePhenotype2019], and sexually dimorphic alternative reproductive tactics [@thomasChromosomalPolymorphismLinked2008;@kupperSupergeneDeterminesHighly2016;
+@lamichhaneyStructuralGenomicChanges2016;@hendrickxMasculinizingSupergene2022].
 
-In dwarf spiders, *Oedothorax gibbosus*, males have two morphs: one with a flat head and one with a hunched head. The two morphs appear to be maintained at equilibrium because flat-headed males can mate earlier in the season whereas hunched males are able to solicit matings with already-mated females through the presentation of a nuptial gift using the hunched head. The hunched trait is encoded by a contiguous 3Mb region of the genome that is found only in hunched males, and appears to have arisen as a novel duplicate of the *doublesex* gene (which is involved in sexual differentiation) [@hendrickxMasculinizingSupergene2022]. This 3Mb supergene is missing from flat-headed males, and contains an aggregation of genes that presumably have experienced positive selection only in hunched males, and which have male-specific expression patterns (i.e., females carrying this hunched locus do not express these genes) [@hendrickxMasculinizingSupergene2022].
+The potential for structural variants to underpin sexually dimorphic polymorphisms is intriguing, as most research to date has focused on the role of differential gene expression in underlying sexual dimorphism [citations]. 
+For example, in canaries, sexual dichromatism appears to be  mediated by differential expression of a single gene involved in carotenoid breakdown [@gazdaGeneticMechanismSexual2020]. 
+Androgens are a likely mechanism for modulating these gene expression differences, for example in primates male-biased genes are more likely to be proximal to androgen response elements [@andersonRelationshipSexualDimorphism].
+Unlike the canaries, though, examples where supergenes apparently underpin sexually dimorphic phenotypes tend to involve multiple morphs of one sex, usually males.
+Nearly all examples include a female-mimic morph, including ruffs [@kupperSupergeneDeterminesHighly2016;
+@lamichhaneyStructuralGenomicChanges2016], dwarf spiders [@hendrickxMasculinizingSupergene2022], and white-throated sparrows [@thomasChromosomalPolymorphismLinked2008].
+In the ruffs, a third male morph exists, with an intermediate phenotype between the dominant or 'classic' male morph and the female-mimic [@kupperSupergeneDeterminesHighly2016;
+@lamichhaneyStructuralGenomicChanges2016].
+At least in some cases, these structural variants are successful in coding for these variable phenotypes because they include androgen receptors -- the white-throated sparrow supergene contains the estrogen receptor gene which directly influences the aggressive aspects of the dominant male phenotype [@merrittSupergenelinkedEstrogenReceptor2020].
+These polymorphisms are
+often maintained in populations through frequency dependent selection (e.g., dwarf spiders [@hendrickxMasculinizingSupergene2022] - maybe?), 
+mortality of hybrids (e.g., ruffs).
+**These sexually dimorphic variants might resolve sexual
+conflict??**
+
+In dwarf spiders, *Oedothorax gibbosus*, males have two morphs: one with
+a flat head and one with a hunched head. The two morphs appear to be
+maintained at equilibrium because flat-headed males can mate earlier in
+the season whereas hunched males are able to solicit matings with
+already-mated females through the presentation of a nuptial gift using
+the hunched head. The hunched trait is encoded by a contiguous 3Mb
+region of the genome that is found only in hunched males, and appears to
+have arisen as a novel duplicate of the *doublesex* gene (which is
+involved in sexual differentiation)
+[@hendrickxMasculinizingSupergene2022]. This 3Mb supergene is missing
+from flat-headed males, and contains an aggregation of genes that
+presumably have experienced positive selection only in hunched males,
+and which have male-specific expression patterns (i.e., females carrying
+this hunched locus do not express these genes)
+[@hendrickxMasculinizingSupergene2022].
+
+Here's another example, in white-throated sparrow:
+<https://www.pnas.org/doi/epdf/10.1073/pnas.2011347117>
+
+Venom composition in rattlesnakes (still to read):
+<https://royalsocietypublishing.org/doi/full/10.1098/rspb.2018.2735>
 
 Substantial advances in our understanding of the evolution of these
 traits have been made with whole-genome sequencing and transcriptome
