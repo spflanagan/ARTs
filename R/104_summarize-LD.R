@@ -30,6 +30,6 @@ ld_summary<-dplyr::bind_rows(lapply(ld_files, function(ld_file){
     }
   }
   ld_summary$file<-ld_file
-  write.table(ld_summary, "ld_summary_all.csv", appent=TRUE, quote=FALSE, sep=",", row.names=FALSE, col.names = FALSE)
+  write.table(ld_summary, "ld_summary_all.csv", append=TRUE, quote=FALSE, sep=",", row.names=FALSE, col.names = FALSE)
   return(ld_summary)
 }))
