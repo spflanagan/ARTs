@@ -431,7 +431,12 @@ compared using the Gst estimator in vcfR. Additionally, an association
 between male phenotypes and genetic markers was tested for using
 GWASpoly . For both the Gst estimates and the GWAS p-values, any major
 peaks identified were scanned to identify if they were within a 50
-basepair window of one of the true QTLs.
+basepair window of one of the true QTLs. 
+Finally, we used vcftools [\@danecekVariantCallFormat2011] to test for signals of balancing selection at the QTL loci compared to non-QTL loci.
+
+To investigate whether linkage disequilibrium persisted over time within our various genetic architectures, we used vcftools [\@danecekVariantCallFormat2011] to estimate linkage disequilibrium between all loci. We then estimated summary statistics for each locus and compared linkage disequilibrium between QTLs and compared it to linkage disequilibrium among non-QTLs. Because we had far fewer QTLs than non-QTL loci in all of the iterations, we also used re-sampling of the non-QTLs to estimate the average linkage disequilibrium, using 999 resampled estimates with the actual number of QTLs in each replicate.
+
+
 
 # Results
 
