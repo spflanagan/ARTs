@@ -591,8 +591,97 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 # Selection on traits
 
-```{r}
+```{r traitsSelection, warning=FALSE}
+traits_files<-c(
+  list.files(path="../fixedART-results/qtls/", pattern="_traits.txt", full.names = TRUE),
+  list.files(path="../fixedART-results/supergene/", pattern="_traits.txt", full.names = TRUE))
+
+seldat<-lapply(traits_files, function(filename){
+  traits<-read.delim(filename)
+  seldat<-do.call(rbind,by(traits, traits$Pop, function(popdat){
+    
+    gens<-as.matrix(do.call(rbind,by(popdat, popdat$Gen, function(dat){
+      
+      # selection on males
+      maldat<-dat[dat$Sex=="MALE",]
+      courterLM<-summary(lm(maldat$Courter ~ maldat$LifetimeRS))
+      courterNumLM<-summary(lm(maldat$CourtTrait ~ maldat$LifetimeRS))
+      parentLM<-summary(lm(maldat$Parent ~ maldat$LifetimeRS))
+      parentNumLM<-summary(lm(maldat$ParentTrait ~ maldat$LifetimeRS))
+      
+      return(c(
+        court_cat_b0 = courterLM$coefficients[1,1],
+        court_cat_b0_se = courterLM$coefficients[1,2],
+        court_cat_b0_p = courterLM$coefficients[1,4],
+        court_cat_b1 = courterLM$coefficients[2,1],
+        court_cat_b1_se = courterLM$coefficients[2,2],
+        court_cat_b1_p = courterLM$coefficients[2,4],
+        
+        parent_cat_b0 = parentLM$coefficients[1,1],
+        parent_cat_b0_se = parentLM$coefficients[1,2],
+        parent_cat_b0_p = parentLM$coefficients[1,4],
+        parent_cat_b1 = parentLM$coefficients[2,1],
+        parent_cat_b1_se = parentLM$coefficients[2,2],
+        parent_cat_b1_p = parentLM$coefficients[2,4]
+      ))
+    })))
+    
+    gens<-cbind(gens, 
+                gen=as.numeric(rownames(gens)),
+                pop= as.numeric(popdat$Pop[1]))
+    return(gens)
+  }))
+  
+  return(seldat)
+})
+
 
 ```
+
+```{r selectionGradients}
+plot(-0.25:0.25, -0.25:0.25, 
+     type='n',
+     xlim=c(-.25,0.25),
+     ylim=c(-.25,0.25),
+     xlab="Selection gradient on courter trait",
+     ylab="Selection gradient on parent trait",
+     bty='n', 
+     axes=FALSE)
+abline(a=0,b=1,col="grey",lwd=2,lty=2)
+abline(a=0,b=-1,col="grey",lwd=2,lty=2)
+tmp<-lapply(seldat, function(dat){
+  
+  points(dat[,"court_cat_b1"],
+         dat[,"parent_cat_b1"],
+         pch=c(15,16)[as.factor(dat[,"gen"])],
+         col=scales::alpha(c("forest green","cornflower blue")[as.factor(dat[,"gen"])],0.5)
+  )
+  arrows(
+    x0 = dat[,"court_cat_b1"] - dat[,"court_cat_b1_se"],
+    x1 = dat[,"court_cat_b1"] + dat[,"court_cat_b1_se"],
+    y0 = dat[,"parent_cat_b1"],
+    y1 = dat[,"parent_cat_b1"],
+    code = 0,
+    col=scales::alpha(c("forest green","cornflower blue")[as.factor(dat[,"gen"])],0.5)
+      )
+    arrows(
+    x0 = dat[,"court_cat_b1"] ,
+    x1 = dat[,"court_cat_b1"] ,
+    y0 = dat[,"parent_cat_b1"] - dat[,"parent_cat_b1_se"],
+    y1 = dat[,"parent_cat_b1"] + dat[,"parent_cat_b1_se"],
+    code = 0,
+    col=c("forest green","cornflower blue")[as.factor(dat[,"gen"])]
+      )
+  
+})
+legend("top",
+       bty='n',
+       pch=c(15,16),
+       col=c("forest green","cornflower blue"),
+       legend=c("Generation 0", "Generation 1200"),
+       ncol=2)
+```
+
+What's driving these different sets of selection patterns?
 
 
