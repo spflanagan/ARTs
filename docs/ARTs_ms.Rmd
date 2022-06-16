@@ -704,6 +704,10 @@ the within-replicate variation observed. Furthermore, these sources of
 variation differentiate the results of the simulation model from those
 of the mathematical model.
 
+### Selection on courter and parent traits
+
+Selection consistently favoured parent traits, whereas courter traits could experience negative selection in high diversity parameter scenarios (Fig. \@ref(fig:selectionOverTime)). Selection was strong in the first generation, but by generation 12000 selection was substantially relaxed on one or the other trait, in most cases. 
+
 ### The role of polygenic inheritance of traits
 
 ```{r}
