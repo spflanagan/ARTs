@@ -640,6 +640,7 @@ seldat<-lapply(traits_files, function(filename){
     gens<-cbind(gens, 
                 gen=as.numeric(rownames(gens)),
                 pop= as.numeric(popdat$Pop[1]))
+    
     return(gens)
   }))
   
