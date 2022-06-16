@@ -657,9 +657,15 @@ seldat<-lapply(traits_files, function(filename){
   
   return(seldat)
 })
-
+names(seldat)<-traits_files
+saveRDS(seldat,"selection_gradients.RDS")
 
 ```
+```{r seldat}
+seldat<-readRDS("selection_gradients.RDS")
+seldat<-seldat[grep("monogamy_nm",names(seldat))]
+```
+
 
 ```{r selectionGradients}
 plot(-0.25:0.25, -0.25:0.25, 
