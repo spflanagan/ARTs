@@ -610,6 +610,11 @@ seldat<-lapply(traits_files, function(filename){
       parentLM<-summary(lm(maldat$Parent ~ maldat$LifetimeRS))
       parentNumLM<-summary(lm(maldat$ParentTrait ~ maldat$LifetimeRS))
       
+      cp_freq<-nrow(maldat[maldat$Courter==1 & maldat$Parent == 1,])/nrow(maldat)
+      np_freq<-nrow(maldat[maldat$Courter==0 & maldat$Parent == 1,])/nrow(maldat)
+      cn_freq<-nrow(maldat[maldat$Courter==1 & maldat$Parent == 0,])/nrow(maldat)
+      nn_freq<-nrow(maldat[maldat$Courter==0 & maldat$Parent == 0,])/nrow(maldat)
+      
       return(c(
         court_cat_b0 = courterLM$coefficients[1,1],
         court_cat_b0_se = courterLM$coefficients[1,2],
