@@ -628,7 +628,12 @@ seldat<-lapply(traits_files, function(filename){
         parent_cat_b0_p = parentLM$coefficients[1,4],
         parent_cat_b1 = parentLM$coefficients[2,1],
         parent_cat_b1_se = parentLM$coefficients[2,2],
-        parent_cat_b1_p = parentLM$coefficients[2,4]
+        parent_cat_b1_p = parentLM$coefficients[2,4], 
+        
+        cp_freq = cp_freq,
+        np_freq = np_freq,
+        cn_freq = cn_freq,
+        nn_freq = nn_freq
       ))
     })))
     
