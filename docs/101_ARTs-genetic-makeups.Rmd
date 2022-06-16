@@ -667,7 +667,9 @@ seldat<-seldat[grep("monogamy_nm",names(seldat))]
 ```
 
 
-```{r selectionGradients}
+
+```{r selectionGradients, fig.height=5, fig.width=7, fig.cap="Selection gradients on parent and courter traits differ across the scenarios of our simulation model. In the first generation, selection always favours the parent trait, but selection gradients on the courter trait can be negative under parameter settings that favoured high diversity. By the end of the simulations (generation 12000), selection has been relaxed, so that selection on the parent trait is often near zero, as is selection on the courter trait. In some cases, the selection gradients on courter and parent triats are correlated at this final generation, especially in low diversity scenarios with QTLs as the genetic architecture. Solid grey lines show the x- and y-axes, with dotted grey lines showing the one-to-one correlation lines."}
+par(mfrow=c(1,2))
 plot(-0.25:0.25, -0.25:0.25, 
      type='n',
      xlim=c(-.25,0.25),
