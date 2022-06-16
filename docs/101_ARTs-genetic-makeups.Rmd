@@ -714,6 +714,94 @@ tmp<-lapply(seldat, function(dat){
     code = 0,
     col=scales::alpha(color,0.5)
       )
+
+})
+
+plot(-0.25:0.25, -0.25:0.25, 
+     type='n',
+     xlim=c(-.25,0.25),
+     ylim=c(-0.01,0.25),
+     xlab="Final Generation",
+     ylab="",
+     main="",
+     bty='n', 
+     axes=FALSE)
+abline(h=0, col="grey")
+abline(v=0, col="grey")
+abline(a=0,b=1,col="grey",lwd=2,lty=2)
+abline(a=0,b=-1,col="grey",lwd=2,lty=2)
+tmp<-lapply(seldat, function(dat){
+  dat<-dat[dat[,"gen"]==12000,]
+  if(nrow(dat)>0){
+    
+    if(dat[1,"highDiv"]==0){
+      color <- "forest green"
+    } else{
+      color <- "cornflower blue"
+    }
+    points(dat[,"court_cat_b1"],
+           dat[,"parent_cat_b1"],
+           pch=dat[,"supergene"]+15,
+           col=scales::alpha(color,0.5),
+           cex=1.5
+    )
+    arrows(
+      x0 = dat[,"court_cat_b1"] - dat[,"court_cat_b1_se"],
+      x1 = dat[,"court_cat_b1"] + dat[,"court_cat_b1_se"],
+      y0 = dat[,"parent_cat_b1"],
+      y1 = dat[,"parent_cat_b1"],
+      code = 0,
+      col=scales::alpha(color,0.5)
+        )
+      arrows(
+      x0 = dat[,"court_cat_b1"] ,
+      x1 = dat[,"court_cat_b1"] ,
+      y0 = dat[,"parent_cat_b1"] - dat[,"parent_cat_b1_se"],
+      y1 = dat[,"parent_cat_b1"] + dat[,"parent_cat_b1_se"],
+      code = 0,
+      col=scales::alpha(color,0.5)
+        )
+  }
+})
+outer_legend("top",
+       bty='n',
+       pch=c(15, 16, 0,0),
+       lty=c(0, 0, 1,1),
+       lwd=c(2,2,1,1),
+       col=c("grey", "grey","cornflower blue", "forest green"),
+       legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
+       ncol=4)
+```
+
+What's driving these different sets of selection patterns?
+
+```{r}
+neg_sel<-unlist(lapply(seldat,function(dat){
+  if(nrow(dat[dat[,"court_cat_b1"] < 0 & dat[,"gen"] == 0,])>0){
+    return(TRUE)
+  } else{
+    return(FALSE)  
+  }
+}))
+```
+
+
+Do negative selection gradients on courters persist over time? 
+
+```{r selectionOverTime, fig.height=4, fig.width=4, fig.cap="Selection gradients on courters do not persist over time. By generation 12000, the selection gradient is unlikely to be the same value or same direction as it was in generation 0. This pattern is true regardless of whether the parameters favoured high diversity vs low diversity or whether the genetic mechanism was QTLs or supergenes."}
+plot(-0.25:0.25, -0.25:0.25, 
+     type='n',
+     xlim=c(-.25,0.25),
+     ylim=c(-0.25,0.25),
+     xlab="Selection gradient on courter trait in gen 0",
+     ylab="Selection gradient on courter trait in gen 12000",
+     bty='n', 
+     axes=FALSE)
+abline(h=0, col="grey")
+abline(v=0, col="grey")
+abline(a=0,b=1,col="grey",lwd=2,lty=2)
+abline(a=0,b=-1,col="grey",lwd=2,lty=2)
+cors<-lapply(seldat, function(dat){
   
 })
 legend("top",
