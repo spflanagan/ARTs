@@ -422,6 +422,18 @@ preferred mate do not produce offspring ('monogamy no mating'); males
 accept eggs from multiple females, and females who fail to find a
 preferred mate do not produce offspring ('polygyny no mating').
 
+### Model analysis
+
+The outcomes of simulation model were first assessed by visualising the proportions of each morph that persisted to the final generation of the model.
+The first priority was to compare the outcomes of the simulation model with a single locus for each trait to the results from the mathematical model. 
+Next, the four mating systems were compared in the single-locus model. 
+From this comparison, we were then able to narrow the parameter space for the comparisons of the two different multilocus genetic architectures.
+The many different formats for these two genetic architectures were then compared in terms of the morph composition in the final generation, and the amount of variation among replicate runs.
+
+
+To identify how selection acts on the two male traits, selection gradients on the courter trait and parent trait (both the binary variable of courter/non-courter and parent/non-parent) were estimated as the slope of a linear regression of lifetime reproductive success on each trait values. The patterns of selection were compared across genetic architectures and parameter settings.
+
+
 ### Analysing multilocus genotypes
 
 To provide a link between our theoretical models and the realities of
