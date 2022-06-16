@@ -673,11 +673,15 @@ par(mfrow=c(1,2))
 plot(-0.25:0.25, -0.25:0.25, 
      type='n',
      xlim=c(-.25,0.25),
-     ylim=c(-.25,0.25),
-     xlab="Selection gradient on courter trait",
+     ylim=c(-0.01,0.25),
+     xlab="Initial generation",
      ylab="Selection gradient on parent trait",
+     main="",
      bty='n', 
      axes=FALSE)
+mtext("Selection gradient on courter trait", side=1,outer=TRUE, line=-3)
+abline(h=0, col="grey")
+abline(v=0, col="grey")
 abline(a=0,b=1,col="grey",lwd=2,lty=2)
 abline(a=0,b=-1,col="grey",lwd=2,lty=2)
 tmp<-lapply(seldat, function(dat){
