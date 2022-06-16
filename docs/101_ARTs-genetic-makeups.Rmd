@@ -852,6 +852,85 @@ legend("top",
        ncol=2)
 ```
 
-What's driving these different sets of selection patterns?
+The relationship between selection gradients at generation 0 and generation 12000 follow a roughly uniform distribution (Fig. \@ref(fig:gensSelectionCorHist)) -- there is no pattern.
+
+```{r gensSelectionCorHist, fig.height=4, fig.width=4, fig.cap="Distribution of correlation coefficients between generation 0 and generation 12000 selection gradients on the courter trait."}
+hist(unlist(cors),
+     xlab="Correlation coefficient", 
+     ylab="Number of replicates",
+     main="")
+```
+
+Does selection at generation 0 predict diversity at generation 12000?
+
+```{r selFreq, fig.height=6, fig.width=6, fig.cap="The direction of selection on the courter trait in generation zero predicts whether diversity of morphs will be maintained."}
+plot(
+  seq(-0.15,0.15,length.out=2),
+  0:1,
+  type='n',
+  bty='l',
+  xlab="Selection gradient on courters in generation 0",
+  ylab="Final Courter/Parent frequency")
+divSel<-lapply(seldat, function(dat){
+  # put the two gens next to each other
+  mixdat<-cbind(
+    selgrad=dat[dat[,"gen"]==0,"court_cat_b1"],
+    cpfreq=dat[dat[,"gen"]==12000,"cp_freq"],
+    highDiv=dat[dat[,"gen"]==0,"highDiv"],
+    supergene=dat[dat[,"gen"]==0,"supergene"]
+    )
+  
+  
+  if(mixdat[1,"highDiv"]==0){
+    color <- "forest green"
+  } else{
+    color <- "cornflower blue"
+  }
+  points(mixdat[,1],
+     mixdat[,2],
+     pch=mixdat[,"supergene"]+15,
+     col=scales::alpha(color,0.5),
+     cex=1.5,
+     xpd=TRUE
+  )
+  
+  return(mixdat)
+})
+legend("topleft",
+       bty='n',
+       pch=c(15, 16, 0,0),
+       lty=c(0, 0, 1,1),
+       lwd=c(2,2,1,1),
+       col=c("grey", "grey","cornflower blue", "forest green"),
+       legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
+       ncol=2)
+```
+
+Which of these ones have cp_freq close to 1 and 0?? They haven't shown up in the plots of high diversity parameters.
+
+```{r}
+for(i in 1:length(seldat)){
+  if(mean(seldat[[i]][seldat[[i]][,"gen"]==12000,"cp_freq"])>0.9){
+    browser()
+    dat<-get.morph.freqs(
+      plot.pc.reps(pattern=gsub("../fixedART-results/.*//(.*)_traits.txt","\\1_summary.txt",traits_files[i]),
+                   path=gsub("(../fixedART-results/.*/).*$","\\1",traits_files[i]),
+                   cols=cols,make.plot=FALSE))
+    
+    bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=traits_files[i])
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+    
+  } 
+}
+
+```
+
+
 
 
