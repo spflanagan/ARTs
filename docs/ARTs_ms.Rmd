@@ -100,23 +100,21 @@ alternative reproductive tactics, in which individuals of the same
 species and sex display different morphs to maximize reproductive
 fitness in unique ways [@oliveiraAlternativeReproductiveTactics2008].
 
-The genetic basis of traits experiencing selection is also critical to
+The genetic basis of polymorphic traits is also critical to
 understanding the maintenance of variation. Evolution can be constrained
 by factors including pleiotropy, genetic correlations, and physical
 linkage. As such, the reduction or removal of these constraints can
 facilitate sequence evolution by relaxing positive selection on genes
 [@harrisonSexualSelectionDrives2015; @dapperRelaxedSelectionRapid2020].
-However, the interaction of selection that facilitates variation with
-the genetic architecture and genetic constraints remains under-explored.
-In particular, the majority of predictions relating selection to genetic
+However, how genome-wide patterns of constraining factors and patterns of sex- or morph-specific selection remains under-explored in evolutionary theory, in particular as it relates to creating baseline predictions for interpreting empirical datasets.
+Specifically, the majority of predictions relating selection to genetic
 constraints arise from one- or two-locus models (EXAMPLES), which can be
 difficult to extrapolate to genome-wide predictions. In the modern
 genomic era, having predictions for large genome-wide datasets is of
-critical importance to develop testable hypotheses. [something about
-genome-wide predictions].
+critical importance to develop testable hypotheses (citations). 
 
-One genetic mechanism that is increasingly shown to play an important
-role in evolution are structural variants, such as inversion
+One genetic mechanism that is increasingly being considered as an important 
+mechanism in evolution are structural variants, such as inversion
 polymorphisms that harbour so-called 'supergenes'. These variants are
 regions of the genome in which some individuals carry an inversion, in
 which genes with direct phenotypic effects exist. The mismatched
@@ -125,8 +123,7 @@ facilitating the maintenance of both genetic and phenotypic variations.
 These supergenes have been shown to underpin stable polymporhisms
 including multiple social morphs in fire ants
 [\@yanEvolutionSupergeneThat2020], colony sex ratio skew in ants
-[\@lagunas-roblesLinkedSupergenesUnderlie2021], immune response genes
-(e.g., toll-like receptors), venom composition in rattlesnakes
+[\@lagunas-roblesLinkedSupergenesUnderlie2021], sex-specific migratory behaviours [\@pearseSexdependentDominanceMaintains2019], sperm length and swim speed [\@kimSexlinkedSupergeneControls2017; \@kniefSexchromosomeInversionCauses2017], venom composition in rattlesnakes
 [\@zancolliWhenOnePhenotype2019], and sexually dimorphic alternative
 reproductive tactics [\@thomasChromosomalPolymorphismLinked2008;
 \@kupperSupergeneDeterminesHighly2016;
@@ -156,7 +153,9 @@ these structural variants are successful in coding for these variable
 phenotypes because they include androgen receptors -- the white-throated
 sparrow supergene contains the estrogen receptor gene which directly
 influences the aggressive aspects of the dominant male phenotype
-[\@merrittSupergenelinkedEstrogenReceptor2020]. These polymorphisms are
+[\@merrittSupergenelinkedEstrogenReceptor2020]. 
+
+These stable polymorphisms -- underpinned by supergenes -- are
 often maintained in populations through partitioning of reproductive
 success over time (e.g., the feminized dwarf spider morph mates earlier,
 whereas the alternative morph is able to mate with previously-mated
@@ -166,31 +165,33 @@ genotype is lethal (e.g., ruffs [\@kupperSupergeneDeterminesHighly2016;
 \@lamichhaneyStructuralGenomicChanges2016]), but not in others (e.g.,
 dwarf spiders [\@hendrickxMasculinizingSupergene2022]). 
 
-Here's another example, in white-throated sparrow:
-<https://www.pnas.org/doi/epdf/10.1073/pnas.2011347117>
-
-Venom composition in rattlesnakes (still to read):
-<https://royalsocietypublishing.org/doi/full/10.1098/rspb.2018.2735>
-
-Supergenes and other structural variants might resolve interlocus conflict, but they might also exacerbate it. 
 
 
-One way that researchers have observed a role for supergenes is through genomic analysis. Putative regions are usually first identified through estimating allele frequency differences between morphs, testing for associations with the traits of interest (e.g., [\@lagunas-roblesLinkedSupergenesUnderlie2021]). 
+Supergenes and other structural variants might resolve interlocus? conflict, but they might also exacerbate it. 
 
-An open question is to what extent do supergenes facilitate the maintenance of multiple morphs, versus whether the evolution of multiple morphs might facilitate the evolution of supergenes. 
+What about conflict between morphs? 
 
-Substantial advances in our understanding of the evolution of these
-traits have been made with whole-genome sequencing and transcriptome
-studies. Furthermore, recent mathematical and simulation models have
-helped clarify the allelic variation that is expected to be maintained
-under sex-specific selection pressures
-[@kasimatisLimitsGenomicDivergence2019a], OTHER EXAMPLES. However,
-providing direct linkages between theoretical predictions of
+
+One way that researchers have observed a role for supergenes is through genomic analysis. Putative regions are usually first identified through estimating allele frequency differences between morphs, testing for associations with the traits of interest (e.g., [\@lagunas-roblesLinkedSupergenesUnderlie2021]). Recent mathematical and simulation models have helped clarify the allelic variation that is expected to be maintained
+under sex-specific selection pressures, 
+and importantly have suggested that sex-specific selection must be incredibly strong
+[@kasimatisLimitsGenomicDivergence2019a]. 
+However, providing direct linkages between theoretical predictions of
 evolutionary mechanisms, genotype-to-phenotype maps, and realistic
 datasets are currently lacking. Here, we fill this gap using
 individual-based simulation models of alternative reproductive tactics
 in males and three types of genetic architectures for the traits of
-interest.
+interest. **Not sure if this is useful**
+
+
+An open question is to what extent do supergenes facilitate the maintenance of multiple morphs, versus whether the evolution of multiple morphs might facilitate the evolution of supergenes. 
+This question is difficult to address empirically, and is likely to have consequences for the maintenance of genetic variation at loci contributing to traits. For example, if a supergene exists and a mutation or arises within it that impacts the morph traits, the genetic variation within the supergene itself could have eroded due to relaxation of selection and reduced recombination. As such, only the mutation would be likely to show significant genetic variation -- this could make a supergene with functional effects difficult to detect empirically. This is especially true in cases such as the white-throated sparrow, in which the gene with a major effect is an estrogen receptor [\@merrittSupergenelinkedEstrogenReceptor2020], which likely impacts the expression of many genes.
+To tackle this problem, we have developed a simulation  model incorporating explicit genetic architectures. 
+We first identify regions of the frequency-dependent parameter space that should result in the maintenance of multiple morphs in a single-locus context using a mathematical model, and subsequently compare the outcomes of multilocus genetic architectures to those baselines.
+Our results suggest that morphs encoded by many genes are more robust to stochastic elements that impact the morph frequencies over time, and that the number of morphs that are predicted to persist changes when multilocus genotypes are involved.
+When the morphs have arrived at equilibrial frequencies, selection on male traits is generally relaxed, and this corresponds with a decreased ability to reliably detect causative variants using typical genomic analysis approaches (i.e., genome-wide associations).
+
+
 
 # Methods
 
