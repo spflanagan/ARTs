@@ -41,20 +41,20 @@ preprint: no
 spacing: singlespacing
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
 knitr::opts_knit$set(root.dir='../results/') #change
 
 ```
 
-```{r opts, echo = FALSE}
+```{r opts, echo = FALSE, warning=FALSE}
 library(knitr)
 knitr::opts_chunk$set(
   fig.path = "../figs/"
 )
 ```
 
-```{r librarysetup, echo=FALSE,echo=FALSE,message=FALSE}
+```{r librarysetup, echo=FALSE,echo=FALSE,message=FALSE, warning=FALSE}
 library(RColorBrewer)
 library(scales)
 library(sm)
