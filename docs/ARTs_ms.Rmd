@@ -225,7 +225,7 @@ they mature to adulthood, such that males carrying the courtship trait
 and/or the parental care trait have a lower probability of survival than
 females and males without either courtship or parenting. Males who are
 both courters and parents have a multiplicative effect of viability
-selection. **Who is allowed to sneak?**
+selection. 
 
 We implemented our model first as a mathematical model and then as an
 individual-based simulation model. The purpose of the mathematical model
