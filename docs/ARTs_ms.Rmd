@@ -78,6 +78,7 @@ base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
                    "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
 poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
                     "FreqNcP","FreqCP","Polygyny")
+divcols<-c("#e78ac3","#ffd92f")
 
 ```
 
