@@ -685,11 +685,18 @@ abline(v=0, col="grey")
 abline(a=0,b=1,col="grey",lwd=2,lty=2)
 abline(a=0,b=-1,col="grey",lwd=2,lty=2)
 tmp<-lapply(seldat, function(dat){
+  dat<-dat[dat[,"gen"]==0,]
   
+  if(dat[1,"highDiv"]==0){
+    color <- "forest green"
+  } else{
+    color <- "cornflower blue"
+  }
   points(dat[,"court_cat_b1"],
          dat[,"parent_cat_b1"],
-         pch=c(15,16)[as.factor(dat[,"gen"])],
-         col=scales::alpha(c("forest green","cornflower blue")[as.factor(dat[,"gen"])],0.5)
+         pch=dat[,"supergene"]+15,
+         col=scales::alpha(color,0.5),
+           cex=1.5
   )
   arrows(
     x0 = dat[,"court_cat_b1"] - dat[,"court_cat_b1_se"],
@@ -697,7 +704,7 @@ tmp<-lapply(seldat, function(dat){
     y0 = dat[,"parent_cat_b1"],
     y1 = dat[,"parent_cat_b1"],
     code = 0,
-    col=scales::alpha(c("forest green","cornflower blue")[as.factor(dat[,"gen"])],0.5)
+    col=scales::alpha(color,0.5)
       )
     arrows(
     x0 = dat[,"court_cat_b1"] ,
@@ -705,7 +712,7 @@ tmp<-lapply(seldat, function(dat){
     y0 = dat[,"parent_cat_b1"] - dat[,"parent_cat_b1_se"],
     y1 = dat[,"parent_cat_b1"] + dat[,"parent_cat_b1_se"],
     code = 0,
-    col=c("forest green","cornflower blue")[as.factor(dat[,"gen"])]
+    col=scales::alpha(color,0.5)
       )
   
 })
