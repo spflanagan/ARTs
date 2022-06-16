@@ -43,7 +43,7 @@ library(dplyr)
 library(vegan)
 library(tidyr)
 source("../R/002_freq_functions.R")
-
+tmp<-sapply(list.files(path="../../spfTools/R/",full.names = TRUE),source)
 source("../morph_predictions/check_freqs.R")
 source("../morph_predictions/morph_gens_ns.R")
 
