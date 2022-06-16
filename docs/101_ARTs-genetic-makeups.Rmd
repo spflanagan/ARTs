@@ -803,12 +803,52 @@ abline(a=0,b=1,col="grey",lwd=2,lty=2)
 abline(a=0,b=-1,col="grey",lwd=2,lty=2)
 cors<-lapply(seldat, function(dat){
   
+ if(dat[1,"highDiv"]==0){
+    color <- "forest green"
+  } else{
+    color <- "cornflower blue"
+  }
+  if(nrow(dat[dat[,"gen"]==12000,])>0){
+     points(dat[dat[,"gen"]==0,"court_cat_b1"],
+       dat[dat[,"gen"]==12000,"court_cat_b1"],
+       pch=dat[,"supergene"]+15,
+       col=scales::alpha(color,0.5),
+       cex=1.5
+  )
+ 
+  
+  arrows(
+    x0 = dat[dat[,"gen"]==0,"court_cat_b1"] - dat[dat[,"gen"]==0,"court_cat_b1_se"],
+    x1 = dat[dat[,"gen"]==0,"court_cat_b1"] + dat[dat[,"gen"]==0,"court_cat_b1_se"],
+    y0 = dat[dat[,"gen"]==12000,"court_cat_b1"],
+    y1 = dat[dat[,"gen"]==12000,"court_cat_b1"],
+    code = 0,
+    col=scales::alpha(color,0.5)
+      )
+    arrows(
+    x0 = dat[dat[,"gen"]==0,"court_cat_b1"] ,
+    x1 = dat[dat[,"gen"]==0,"court_cat_b1"] ,
+    y0 = dat[dat[,"gen"]==12000,"court_cat_b1"] - dat[dat[,"gen"]==12000,"court_cat_b1_se"],
+    y1 = dat[dat[,"gen"]==12000,"court_cat_b1"] + dat[dat[,"gen"]==12000,"court_cat_b1_se"],
+    code = 0,
+    col=scales::alpha(color,0.5)
+      )
+    
+    rxy<-cor(dat[dat[,"gen"]==0,"court_cat_b1"],dat[dat[,"gen"]==12000,"court_cat_b1"])
+    return(rxy)
+  } else{
+    return(NA)
+  }
+  
+ 
 })
 legend("top",
        bty='n',
-       pch=c(15,16),
-       col=c("forest green","cornflower blue"),
-       legend=c("Generation 0", "Generation 1200"),
+       pch=c(15, 16, 0,0),
+       lty=c(0, 0, 1,1),
+       lwd=c(2,2,1,1),
+       col=c("grey", "grey","cornflower blue", "forest green"),
+       legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
        ncol=2)
 ```
 
