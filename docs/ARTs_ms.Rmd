@@ -741,8 +741,166 @@ $\pm$
 and only occasionally resulted in either three morphs being retained or
 the non-courter/non-parent morph replacing the non-courter parent. The
 size of the supergene did not substantially impact the final morph
-frequencies, nor did the total number of QTLs underlying each locus. *Do
-an analysis of this?*
+frequencies, nor did the total number of QTLs underlying each locus. 
+
+```{r ArchitecturesProps, fig.cap=""}
+
+plot_dat<-final_freqs[grep("highDiversity.*monogamy_nm.*q8", final_freqs$file),]
+plot_dat$params<-gsub("../fixedART-results/(\\w+).*(_c\\d+).*$","\\1",plot_dat$file)
+plot_dat$params[grep("supergene",plot_dat$params)]<-paste0(plot_dat$params[grep("supergene",plot_dat$params)],
+                                                           "_", 
+                                                           gsub("../fixedART-results/(\\w+).*(prop0\\.\\d).*(_c\\d+).*$","\\2",
+                                                                plot_dat$file[grep("supergene",plot_dat$params)]))
+plot_dat$params<-paste0(plot_dat$params, 
+                        gsub("../fixedART-results/(\\w+).*(_c\\d+).*$","\\2",plot_dat$file))
+
+par(mfrow=c(4,3),oma=c(3,5,4,1),mar=c(3,1,1,1),xpd=TRUE)
+varDat<-by(plot_dat,plot_dat$params,function(dat){
+
+  
+  bp<-barplot(t(as.matrix(dat[,c("NON", "C", "P", "CP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_pop.*$","\\1",dat[,"rep"]),
+        las=2,
+        border=NA,
+      #  main=paste(gsub("^.*c(\\d+).*$","\\1",dat[1,"params"]), "chroms"),
+        beside = FALSE
+       )
+  #text(x=bp,y=0.5,srt=90,labels = dat["CP"])
+  if(length(grep("qtl",dat[,"params"]))>0){
+    mtext(paste(gsub("^.*c(\\d+).*$","\\1",dat[1,"params"]), "chroms"),3)
+    if(length(grep("c2",dat[,"params"]))>0){
+      mtext("QTLs",2, line=3)
+    }
+  } else {
+    if(length(grep("c2",dat[,"params"]))>0){
+      mtext(paste0("Supergene\nProp ",gsub("^.*prop(\\d\\.\\d).*$","\\1",dat[1,"params"])),2,line=3)
+    }
+  }
+  return(dat)
+})
+
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+```
+
+
+
+```{r seldat}
+seldat<-readRDS("selection_gradients.RDS")
+seldat<-seldat[grep("monogamy_nm",names(seldat))]
+```
+
+
+An important predictor of final morph frequencies was the direction of selection on the courter traits in the initial generation, which different under high diversity and low diversity parameter settings.
+Selection gradients were strongly positive on the parent trait in generation zero, whereas selection gradients were negative on a subset of the high diversity parameter runs (Fig. \@ref(fig:selectionGradients)). 
+By the time that 12000 generations had passed, and the morphs had reached their equilibrial frequencies, selection was generally relaxed on the parental trait. 
+Selection on the courter trait was also relaxed in many cases (some points overlap 0). 
+A number of the low diversity replicates resulted in highly correlated selection on courters and parents, with a number of points falling on the positive 1:1 line (Fig. \@ref(fig:selectionGradients)).
+
+
+```{r selectionGradients, fig.height=4.5, fig.width=7, fig.cap="Selection gradients on parent and courter traits differ across the scenarios of our simulation model. In the first generation, selection always favours the parent trait, but selection gradients on the courter trait can be negative under parameter settings that favoured high diversity. By the end of the simulations (generation 12000), selection has been relaxed, so that selection on the parent trait is often near zero, as is selection on the courter trait. In some cases, the selection gradients on courter and parent triats are correlated at this final generation, especially in low diversity scenarios with QTLs as the genetic architecture. Solid grey lines show the x- and y-axes, with dotted grey lines showing the one-to-one correlation lines."}
+par(mfrow=c(1,2))
+plot(-0.25:0.25, -0.25:0.25, 
+     type='n',
+     xlim=c(-.25,0.25),
+     ylim=c(-0.01,0.25),
+     xlab="Initial generation",
+     ylab="Selection gradient on parent trait",
+     main="",
+     bty='n', 
+     axes=FALSE)
+abline(v=0, col="grey")
+abline(a=0,b=1,col="grey",lwd=2,lty=2)
+abline(a=0,b=-1,col="grey",lwd=2,lty=2)
+mtext("Selection gradient on courter trait", side=1,outer=TRUE, line=-3)
+axis(1, col="grey",pos=0,col.axis="grey",at = seq(-0.25,0.25,by=0.25))
+axis(2, col="grey", pos=-0.25,col.axis="grey",lwd=0,at = seq(0,0.25,by=0.125))
+
+tmp<-lapply(seldat, function(dat){
+  dat<-dat[dat[,"gen"]==0,]
+  
+
+  points(dat[,"court_cat_b1"],
+         dat[,"parent_cat_b1"],
+         pch=dat[,"supergene"]+15,
+         col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5),
+           cex=1.5
+  )
+  arrows(
+    x0 = dat[,"court_cat_b1"] - dat[,"court_cat_b1_se"],
+    x1 = dat[,"court_cat_b1"] + dat[,"court_cat_b1_se"],
+    y0 = dat[,"parent_cat_b1"],
+    y1 = dat[,"parent_cat_b1"],
+    code = 0,
+    col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5)
+      )
+    arrows(
+    x0 = dat[,"court_cat_b1"] ,
+    x1 = dat[,"court_cat_b1"] ,
+    y0 = dat[,"parent_cat_b1"] - dat[,"parent_cat_b1_se"],
+    y1 = dat[,"parent_cat_b1"] + dat[,"parent_cat_b1_se"],
+    code = 0,
+    col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5)
+      )
+
+})
+
+plot(-0.25:0.25, -0.25:0.25, 
+     type='n',
+     xlim=c(-.25,0.25),
+     ylim=c(-0.01,0.25),
+     xlab="Final Generation",
+     ylab="",
+     main="",
+     bty='n', 
+     axes=FALSE)
+abline(v=0, col="grey")
+abline(a=0,b=1,col="grey",lwd=2,lty=2)
+abline(a=0,b=-1,col="grey",lwd=2,lty=2)
+axis(1, col="grey",pos=0,col.axis="grey",at = seq(-0.25,0.25,by=0.25))
+axis(2, col="grey", pos=-0.25,col.axis="grey",lwd=0,at = seq(0,0.25,by=0.125))
+
+tmp<-lapply(seldat, function(dat){
+  dat<-dat[dat[,"gen"]==12000,]
+  if(nrow(dat)>0){
+    
+    
+    points(dat[,"court_cat_b1"],
+           dat[,"parent_cat_b1"],
+           pch=dat[,"supergene"]+15,
+           col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5),
+           cex=1.5
+    )
+    arrows(
+      x0 = dat[,"court_cat_b1"] - dat[,"court_cat_b1_se"],
+      x1 = dat[,"court_cat_b1"] + dat[,"court_cat_b1_se"],
+      y0 = dat[,"parent_cat_b1"],
+      y1 = dat[,"parent_cat_b1"],
+      code = 0,
+      col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5)
+        )
+      arrows(
+      x0 = dat[,"court_cat_b1"] ,
+      x1 = dat[,"court_cat_b1"] ,
+      y0 = dat[,"parent_cat_b1"] - dat[,"parent_cat_b1_se"],
+      y1 = dat[,"parent_cat_b1"] + dat[,"parent_cat_b1_se"],
+      code = 0,
+      col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5)
+        )
+  }
+})
+outer_legend("top",
+       bty='n',
+       pch=c(15, 16, 0,0),
+       lty=c(0, 0, 1,1),
+       lwd=c(2,2,1,1),
+       col=c("grey", "grey",divcols[2],divcols[1]),
+       legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
+       ncol=4)
+```
 
 Balancing selection and/or maintenance of genetic variation? - genetic
 variation at QTLs vs non QTLs vs detected qtls - Tajima's D?
