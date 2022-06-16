@@ -972,7 +972,7 @@ overall_info$diversity<-gsub("^.*\\/(\\w+)Diversity.*$","\\1",overall_info$file)
 
 ```{r propQTLplotFXN}
 
-propQTL_plot<-function(gsummary,propCol,cols,ylabel="Proportion of QTL detected by GWAS",add_legend=FALSE){
+propQTL_plot<-function(gsummary,propCol,cols,ylabel="Prop. QTL detected",add_legend=FALSE){
   nchroms<-length(unique(gsummary$numChrom[gsummary$Traits=="Courter"]))
   nqtls<-length(unique(gsummary$numQTLonChrom[gsummary$Traits=="Courter"]))
   
@@ -1001,17 +1001,17 @@ propQTL_plot<-function(gsummary,propCol,cols,ylabel="Proportion of QTL detected 
           colMed="black"
           )
   
-  mtext(ylabel,2,cex=2,line=3.5)
+  mtext(ylabel,2,cex=2,line=4)
   
   startpos<-0:(nchroms-1)*nqtls+1
   endpos<-startpos+nqtls-1
   labpos<-(startpos+endpos)/2
   
   text(x=labpos,
-       y=rep(-0.17,nchroms),
+       y=rep(-0.25,nchroms),
        paste(unique(gsub("(\\d+) \\d+$","\\1",
                          levels(gsummary$CQ[gsummary$Traits=="Courter"]))),
-             "Chroms"),
+             "Chr."),
        xpd=TRUE,
        cex=2)
   if(isTRUE(add_legend)){
