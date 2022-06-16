@@ -832,10 +832,16 @@ hist(td_summary$p,
      ylab="Number of replicates",
      main="")
 ```
-```{r}
 
-td_files<-c(list.files(path="../fixedART-results/supergene/", pattern=".Tajima.D", full.names = TRUE),
-            list.files(path="../fixedART-results/qtls/", pattern=".Tajima.D", full.names = TRUE))
-td_summary<-dplyr::bind_rows(lapply(td_files, summarize_tajimaD_vcftools))
+So I have two suggestions: 
+
+- dig into the ones with small p-values, see what's going on
+- compare these to the runs with negative selection on courters/that maintained diversity
+
+```{r}
+td_summary[td_summary$p <= 0.05,]
 ```
+
+
+
 
