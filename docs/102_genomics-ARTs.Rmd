@@ -826,6 +826,11 @@ td_summary<-read.csv("../results/tajimaD_summary.csv", row.names = 1)
 ```
 
 
+```{r tdPhist, fig.cap="Histogram of p-values from t-tests comparing Tajima's D at neutral loci v QTLs within a single replicate."}
+hist(td_summary$p,
+     xlab="P-value of t-test",
+     ylab="Number of replicates",
+     main="")
 ```
 ```{r}
 
