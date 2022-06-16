@@ -643,6 +643,17 @@ seldat<-lapply(traits_files, function(filename){
     
     return(gens)
   }))
+  if(length(grep("supergene", filename)>0)){
+    seldat<-cbind(seldat,supergene=1)  
+  } else {
+    seldat<-cbind(seldat,supergene=0)
+  }
+  
+   if(length(grep("high", filename)>0)){
+    seldat<-cbind(seldat,highDiv=1)  
+  } else {
+    seldat<-cbind(seldat,highDiv=0)
+  }
   
   return(seldat)
 })
