@@ -1039,7 +1039,7 @@ propQTL_plot(gwas_summary[gwas_summary$Architecture=="supergene",],"PropQTL",col
 propQTL_plot(gwas_summary[gwas_summary$Architecture=="supergene",],"PropWrongQTL",cols,"Falsely detected QTLs")
 ```
 
-```{r}
+```{r freqsDetection, fig.height=9, fig.width=9, fig.cap="The proportion of non-dominant morphs in the population did not impact the ability to detect QTLs through genome-wide associations. The top row shows multilocus QTL genetic architectures and the ability to detect traits considering either the parent/non-courters proportion or the non-courters/non-parent proportions. The bottom row shows the same results for supergenes."}
 par(mfrow=c(2,2),mar=c(5,5,2,2))
 plot(overall_info$P[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
      overall_info$PropQTL[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
