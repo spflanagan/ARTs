@@ -1111,7 +1111,9 @@ Why might cause the deviation from the single-locus expectation? - LD,
 genetic correlations - compare to previous models and speculate on how
 it might impact their results - discuss real-world examples
 
-Detection of QTLs: what's up? - this is consistent with previous models
+Detection of QTLs: what's up? 
+extreme LD within supergenes makes associations difficult to identify (e.g., Kim et al zebrafinch paper)
+this is consistent with previous models
 like my SCA paper - what does this mean for our ability to study real
 world pops?
 
