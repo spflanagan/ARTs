@@ -765,12 +765,9 @@ ld_summary<-dplyr::bind_rows(lapply(ld_files, function(ld_file){
 
 ```
 
-```{r}
-plot(ld_summary$AvgR2,
-     type='l')
-```
-```{r}
-ld_summary<-read.csv("../R/ld_summary_all.csv", header=FALSE)
+
+```{r readLDsummary, eval=FALSE}
+ld_summary<-read.csv("ld_summary_all.csv", header=FALSE)
 colnames(ld_summary)<-c("CHR","POS","AvgR2","AvgR2Q","AvgR2NQ","file")
 
 lds<-as.matrix(do.call(rbind,by(ld_summary,ld_summary$file, function(dat){
