@@ -861,6 +861,8 @@ I used a script, `105_summarize-TajimaD.R`, to loop over all the Tajima's D outp
 
 ```{r tdsummary}
 td_summary<-read.csv("../results/tajimaD_summary.csv", row.names = 1)
+td_summary<-td_summary[grep("monogamy_nm",rownames(td_summary)),]
+td_summary$rep<-gsub("../fixedART-results/.*\\/(.*\\w+_monogamy_nm_.*pop)_(\\d).*","\\1\\2",rownames(td_summary))
 ```
 
 
