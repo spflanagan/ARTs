@@ -884,5 +884,24 @@ td_freqs<-merge(td_summary, final_freqs,by="rep")
 ```
 
 
+```{r}
+sigTD<-rownames(td_summary[td_summary$p <= 0.05,])
+sigTD<-gsub("\\/\\/","\\/",sigTD)
+```
+
+```{r}
+sig_freqs<-final_freqs[gsub("pop_(.*)\\.Tajima.D","pop\\1_pheno.csv",sigTD) %in% final_freqs$file,]
+```
+
+
+
+
+```{r, eval=FALSE}
+# Looking into supergene haplotypes
+vcf1<-read.vcfR("../fixedART-results/supergene/highDiversity_qtls_monogamy_nm_prop0.05_q8_c2_1_pop_0.vcf")
+qtls<-read.delim("../fixedART-results/supergene/highDiversity_qtls_monogamy_nm_prop0.05_q8_c2_1_qtlinfo.txt")
+qtls<-qtls[1,]
+qtls<-data.frame(chrom=gsub("(\\d)\\.(\\d+)","\\1",qtls[!is.na(qtls)][-1]),
+                 qtl=gsub("(\\d)\\.(\\d+)","\\2",qtls[!is.na(qtls)][-1]))
 
 
