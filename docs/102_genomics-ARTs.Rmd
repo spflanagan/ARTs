@@ -795,10 +795,10 @@ lds<-data.frame(do.call("rbind",by(ld_summary,ld_summary$file, function(dat){
     prop = as.numeric(gsub("^.*prop(\\d+\\.\\d+)_.*$","\\1", dat[1,"file"])),
   #  architecture = gsub("../fixedART-results/(\\w+)/.*$","\\1", dat[1,"file"]),
     avgQ = mean(dat$AvgR2Q[dat$QTL==TRUE], na.rm=TRUE),
-    semQ = sem(dat$AvgR2Q[dat$QTL==TRUE]),
+    semQ = unique(sem(dat$AvgR2Q[dat$QTL==TRUE])),
     avgNQ = mean(dat$AvgR2NQ[dat$QTL==FALSE], na.rm=TRUE),
     semNQ = sem(dat$AvgR2NQ[dat$QTL==FALSE]),
-    avgResampled = mean(resampled),
+    avgResampled = mean(resampled, na.rm=TRUE),
     semResampled = sem(resampled)
   ))
 })))
