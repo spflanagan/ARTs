@@ -801,7 +801,13 @@ lds<-data.frame(do.call("rbind",by(ld_summary,ld_summary$file, function(dat){
     avgResampled = mean(resampled, na.rm=TRUE),
     semResampled = sem(resampled)
   ))
-})))
+}, simplify=FALSE)))
+write.csv(lds,"ld_summary_resampled.csv", row.names = FALSE,quote=FALSE)
+```
+```{r readLDresampled}
+lds<-read.csv("ld_summary_resampled.csv")
+lds$architecture<-gsub("../fixedART-results/(\\w+)/.*$","\\1", rownames(lds))
+lds$diversity<-gsub("../fixedART-results/(\\w+)//(\\w+Diversity).*$","\\2", rownames(lds))
 ```
 
 ```{r LDplots}
