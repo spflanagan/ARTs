@@ -770,7 +770,8 @@ ld_summary<-dplyr::bind_rows(lapply(ld_files, function(ld_file){
 ld_summary<-read.csv("ld_summary_all.csv", header=FALSE)
 colnames(ld_summary)<-c("CHR","POS","AvgR2","AvgR2Q","AvgR2NQ","file")
 
-lds<-as.matrix(do.call(rbind,by(ld_summary,ld_summary$file, function(dat){
+lds<-data.frame(do.call("rbind",by(ld_summary,ld_summary$file, function(dat){
+  ld_file<-dat[1,"file"]
   qtl_info<-read.delim(gsub("_pop.*$","_qtlinfo.txt",dat[1,"file"]))
   qtl_info<-qtl_info[qtl_info$Pop==gsub("^.*pop_(\\d).*$","Pop\\1",ld_file),-1]
   qtls<-data.frame(
