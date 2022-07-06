@@ -879,7 +879,8 @@ So I have two suggestions:
 - compare these to the runs with negative selection on courters/that maintained diversity
 
 ```{r}
-td_summary[td_summary$p <= 0.05,]
+final_freqs$rep  <-gsub("../fixedART-results/.*\\/(.*\\w+_monogamy_nm_.*pop\\d).*","\\1",final_freqs$file)
+td_freqs<-merge(td_summary, final_freqs,by="rep")
 ```
 
 
