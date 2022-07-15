@@ -128,7 +128,6 @@ hist(mtm_diff$Gprimest)
 lapply(mtm_diff$Gprimest[qtl_locs],function(d){ abline( v = d) })
 ```
 
-
 ## Summarizing multiple files
 
 So this works well for visualising, but in this particular example the QTLs aren't outliers. I would like to find a way to summarize this across runs. 
@@ -929,4 +928,8 @@ image(cp_num,col=gt_cols,axes=FALSE,ylab="Courter/Parents",cex.lab=2)
 image(p_num,col=gt_cols,axes=FALSE,ylab="Non-courter/Parents",cex.lab=2)
 
 ```
+
+## A representative set of examples
+
+
 
