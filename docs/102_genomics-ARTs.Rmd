@@ -922,10 +922,7 @@ p_gts[p_gts=="1/1"]<-"2"
 p_num<-matrix(as.numeric(p_gts),    # Convert to numeric matrix
                   ncol = ncol(p_gts))
 
-```
-
-
-```{r}
+# plot
 gt_cols<-c("#f2f0f7","#bcbddc","#54278f")
 par(mfrow=c(2,1),mar=c(1,5,1,1))
 image(cp_num,col=gt_cols,axes=FALSE,ylab="Courter/Parents",cex.lab=2)
