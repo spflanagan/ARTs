@@ -479,13 +479,15 @@ empirical data, we analyzed the genetic diversity of the populations at
 the final generation of the individual based simulations. First we used
 vcfR to estimate observed heterozygosity for all markers in the genome
 and separately for the QTLs. Allele frequencies between morphs were also
-compared using the Gst estimator in vcfR. Additionally, an association
-between male phenotypes and genetic markers was tested for using
-GWASpoly . For both the Gst estimates and the GWAS p-values, any major
-peaks identified were scanned to identify if they were within a 50
-basepair window of one of the true QTLs. Finally, we used vcftools
-[\@danecekVariantCallFormat2011] to test for signals of balancing
-selection at the QTL loci compared to non-QTL loci.
+compared using the Gst estimator in vcfR
+[@knausVcfrPackageManipulate2017]. Additionally, an association between
+male phenotypes and genetic markers was tested for using GWASpoly
+[@rosyaraSoftwareGenomeWideAssociation2016]. For both the Gst estimates
+and the GWAS p-values, any major peaks identified were scanned to
+identify if they were within a 50 basepair window of one of the true
+QTLs. Finally, we used vcftools [@danecekVariantCallFormat2011] to test
+for signals of balancing selection at the QTL loci compared to non-QTL
+loci.
 
 To investigate whether linkage disequilibrium persisted over time within
 our various genetic architectures, we used vcftools
@@ -749,14 +751,6 @@ the within-replicate variation observed. Furthermore, these sources of
 variation differentiate the results of the simulation model from those
 of the mathematical model.
 
-### Selection on courter and parent traits
-
-Selection consistently favoured parent traits, whereas courter traits
-could experience negative selection in high diversity parameter
-scenarios (Fig. \@ref(fig:selectionOverTime)). Selection was strong in
-the first generation, but by generation 12000 selection was
-substantially relaxed on one or the other trait, in most cases.
-
 ### The role of polygenic inheritance of traits
 
 ```{r}
@@ -840,19 +834,29 @@ seldat<-readRDS("selection_gradients.RDS")
 seldat<-seldat[grep("monogamy_nm",names(seldat))]
 ```
 
-An important predictor of final morph frequencies was the direction of
-selection on the courter traits in the initial generation, which
-different under high diversity and low diversity parameter settings.
-Selection gradients were strongly positive on the parent trait in
-generation zero, whereas selection gradients were negative on a subset
-of the high diversity parameter runs (Fig.
-\@ref(fig:selectionGradients)). By the time that 12000 generations had
-passed, and the morphs had reached their equilibrial frequencies,
-selection was generally relaxed on the parental trait. Selection on the
-courter trait was also relaxed in many cases (some points overlap 0). A
-number of the low diversity replicates resulted in highly correlated
-selection on courters and parents, with a number of points falling on
-the positive 1:1 line (Fig. \@ref(fig:selectionGradients)).
+Our initial expectation was that supergenes would follow a pattern more
+similar to the single locus results, because empirical examples have
+demonstrated Mendelian inheritance patterns approximating single-locus
+models (e.g., [@hendrickxMasculinizingSupergeneUnderlies2022,
+@kupperSupergeneDeterminesHighly2016,,@lamichhaneyStructuralGenomicChanges2016]).
+To better understand the reasons for the similarity between the the
+genome-wide QTLs simulations versus the supergene simulations, we
+visualised the QTL haplotypes in supergenes (see Fig. \@ref(fig:example)
+for a representative image). These visualisations suggest that because
+of the additive, polygenic nature of our traits, individuals have
+multiple pathways to creating the morphs in terms of genotypes at each
+QTL, even when QTLs are segregating together in a supergene.
+
+### Selection on courter and parent traits
+
+Selection consistently favoured parent traits, whereas courter traits
+could experience negative selection in high diversity parameter
+scenarios (Fig. \@ref(fig:selectionOverTime)). Selection was strong in
+the first generation, but by generation 12000 selection was
+substantially relaxed on one or the other trait, in most cases. A number
+of the low diversity replkicates resulted in highly correlated selection
+on courters and parents, with a number of points falling on the positive
+1:1 line (Fig. \@ref(fig:selectionOverTime)).
 
 ```{r selectionGradients, fig.height=4.5, fig.width=7, fig.cap="Selection gradients on parent and courter traits differ across the scenarios of our simulation model. In the first generation, selection always favours the parent trait, but selection gradients on the courter trait can be negative under parameter settings that favoured high diversity. By the end of the simulations (generation 12000), selection has been relaxed, so that selection on the parent trait is often near zero, as is selection on the courter trait. In some cases, the selection gradients on courter and parent triats are correlated at this final generation, especially in low diversity scenarios with QTLs as the genetic architecture. Solid grey lines show the x- and y-axes, with dotted grey lines showing the one-to-one correlation lines."}
 par(mfrow=c(1,2))
@@ -955,10 +959,32 @@ outer_legend("top",
        ncol=4)
 ```
 
-Balancing selection and/or maintenance of genetic variation? - genetic
-variation at QTLs vs non QTLs vs detected qtls - Tajima's D?
+### Genome-wide genetic diversity
 
-Does linkage disequilibrium evolve?
+In the final generation of the simulations, the average genome-wide
+heterozygosity was not substantially different in simulations with
+genome-wide QTLs versus QTLs in supergenes (t = -0.31, df = 326.75, p =
+-0.31; genome-wide mean = 0.15, supergene mean = 0.16; Fig.
+\@ref(fig:genomewideDiv) A, B). In most runs, the heterozygosity at QTLs
+was did not significantly differ from heterozygosity at neutral markers
+(mean p-value from t-tests is 0.5 ± 0.01). Similarly, Tajima's D did not
+deviate substantially between genetic architectures and did not relate
+to final morph frequencies (Fig. \@ref(fig:genomewideDiv) C, D). Gst
+calculated between male morphs was also not predicted by the frequency
+of Courter/Parent morphs (Fig. \@ref(fig:genomewideDiv) E). Significant
+peaks in genome-wide Gst estimates were identified, and we evaluated
+whether QTLs were located near to those Gst peaks (i.e., we identified
+if Gst outliers were associated with true QTLs). From this, we then
+calculated the proportion of true QTLs that were located in these
+significant Gst peaks, and found that on average 0.71 (± 0), and this
+proportion was not related to the Courter/Parent frequency (Fig.
+\@ref(fig:genomewideDiv) F).
+
+```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the simulation results. Genome-wide observed heterozygosity (A), Tajima’s D (C), and male-male Fst (E) were not influenced by the frequency of the morphs in the final generation, nor by the genetic architecture. The final morph frequencies also did not impact the significance of comparisons of QTLs versus neutral loci for heterozygosity (B) or Tajima’s D (D), or the proportion of QTLs found in the Fst peaks (F). Note that heterozygosity and Gst results are only shown for the runs with high diversity parameter sets"}
+
+
+
+```
 
 ### Will GWAS detect the actual QTLs?
 
@@ -1154,30 +1180,72 @@ plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture
 
 # Discussion
 
-Summary of findings - genetic architecture matters - maybe counter
-intuitively it reduces stochasticity, likely through genetic
-correlations and/or linkage disequilibrium? - GWAS is only going to pick
-up $\le$ 50% of true QTLs, and will provide spurious results - a mention
-of sexual conflict?
+Summary of findings
 
-Why might cause the deviation from the single-locus expectation? - LD,
-genetic correlations - compare to previous models and speculate on how
-it might impact their results - discuss real-world examples
+-    genetic architecture matters20
 
-Detection of QTLs: what's up? extreme LD within supergenes makes
-associations difficult to identify (e.g., Kim et al zebrafinch paper)
-this is consistent with previous models like my SCA paper - what does
-this mean for our ability to study real world pops?
+-   maybe counter intuitively, architecture reduces stochasticity,
+    likely through genetic correlationsand/or linkage disequilibrium?
 
-Maintenance of variation (esp. morphs) and genetic architectures -
-genetic architecture is critically important - this doesn't include
-other elements of sex-specific or morph-specific architectures such as
-sex-specific dominance of sex-biased gene expression
+-   do supergenes not differ from QTLs because they are still multilocus
+    (not quite operating asdiscrete haplotypes?)
+
+-   GWAS is only going to pick up ≤ 50% of true QTLs, and will provide
+    spurious results
+
+-   a mention of intralocus conflict?
+
+Why might cause the deviation from the single-locus expectation?
+
+-    LD,
+
+-   genetic correlations - compare to previous models and speculate on
+    how it might impact theirresults - discuss real-world examples
+
+-   QTLs vs supergenes don't make much of a difference, it seems:
+    multilocus additive architecturesare still additive and multivariate
+
+-   other patterns of inheritance (e.g., dominance) might be important
+    (and would match patternsin empirical examples)
+
+Inability to detect QTLs -- why would that happen?
+
+-   Relaxed selection
+
+-    extreme LD within supergenes makes associations difficult to
+    identify (e.g., Kim et al zebrafinchpaper)
+
+-   this is consistent with my SCA paper - what does this mean for our
+    ability to study real worldpops?
+
+-   One way that researchers have observed a role for supergenes is
+    through genomic analysis. Putative regions are usually first
+    identified through estimating allele frequency differencesbetween
+    morphs, testing for associations with the traits of interest (e.g.,
+    [22]).
+
+-   Recent mathematical and simulation models have helped clarify the
+    allelic variation that isexpected to be maintained under
+    sex-specific selection pressures, and importantly have suggestedthat
+    sex-specific selection must be incredibly strong [50].
+
+Maintenance of variation (esp. morphs) and genetic architectures
+
+-   genetic architecture is critically important
+
+-   this doesn't include other elements of sex-specific or
+    morph-specific architectures such assex-specific dominance of
+    sex-biased gene expression
+
+Overall conclusions
+
+-   importance of supergenes? are they important?
 
 # Acknowledgments
 
-We acknowledge Ngāi Tūāhuriri, upon whose lands the analyses and writing
-was conducted. This work was conducted in part while SPF was a
+Thanks to the Flanagan lab for their feedback on early drafts of this
+work. We acknowledge Ngāi Tūāhuriri, upon whose lands the analyses and
+writing was conducted. This work was conducted in part while SPF was a
 postdoctoral fellowship at the National Institute for Mathematical and
 Biological Synthesis, sponsored by the National Science Foundation
 through NSF Award #DBI-1300426, with additional support from The
