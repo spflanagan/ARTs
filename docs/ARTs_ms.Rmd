@@ -106,26 +106,33 @@ by factors including pleiotropy, genetic correlations, and physical
 linkage. As such, the reduction or removal of these constraints can
 facilitate sequence evolution by relaxing positive selection on genes
 [@harrisonSexualSelectionDrives2015; @dapperRelaxedSelectionRapid2020].
-However, how genome-wide patterns of constraining factors and patterns of sex- or morph-specific selection remains under-explored in evolutionary theory, in particular as it relates to creating baseline predictions for interpreting empirical datasets.
-Specifically, the majority of predictions relating selection to genetic
-constraints arise from one- or two-locus models (EXAMPLES), which can be
-difficult to extrapolate to genome-wide predictions. In the modern
-genomic era, having predictions for large genome-wide datasets is of
-critical importance to develop testable hypotheses (citations). 
+However, how genome-wide patterns of constraining factors and patterns
+of sex- or morph-specific selection remains under-explored in
+evolutionary theory, in particular as it relates to creating baseline
+predictions for interpreting empirical datasets. Specifically, the
+majority of predictions relating selection to genetic constraints arise
+from one- or two-locus models (EXAMPLES), which can be difficult to
+extrapolate to genome-wide predictions. In the modern genomic era,
+having predictions for large genome-wide datasets is of critical
+importance to develop testable hypotheses (citations).
 
-One genetic mechanism that is increasingly being considered as an important 
-mechanism in evolution are structural variants, such as inversion
-polymorphisms that harbour so-called 'supergenes'. These variants are
-regions of the genome in which some individuals carry an inversion, in
-which genes with direct phenotypic effects exist. The mismatched
-directionality reduces recombination between the different variants,
-facilitating the maintenance of both genetic and phenotypic variations.
-These supergenes have been shown to underpin stable polymporhisms
-including multiple social morphs in fire ants
+One genetic mechanism that is increasingly being considered as an
+important mechanism in evolution are structural variants, such as
+inversion polymorphisms that harbour so-called 'supergenes'. These
+variants are regions of the genome in which some individuals carry an
+inversion, in which genes with direct phenotypic effects exist. The
+mismatched directionality reduces recombination between the different
+variants, facilitating the maintenance of both genetic and phenotypic
+variations. These supergenes have been shown to underpin stable
+polymporhisms including multiple social morphs in fire ants
 [\@yanEvolutionSupergeneThat2020], colony sex ratio skew in ants
-[\@lagunas-roblesLinkedSupergenesUnderlie2021], sex-specific migratory behaviours [\@pearseSexdependentDominanceMaintains2019], sperm length and swim speed [\@kimSexlinkedSupergeneControls2017; \@kniefSexchromosomeInversionCauses2017], venom composition in rattlesnakes
-[\@zancolliWhenOnePhenotype2019], and sexually dimorphic alternative
-reproductive tactics [\@thomasChromosomalPolymorphismLinked2008;
+[\@lagunas-roblesLinkedSupergenesUnderlie2021], sex-specific migratory
+behaviours [\@pearseSexdependentDominanceMaintains2019], sperm length
+and swim speed [\@kimSexlinkedSupergeneControls2017;
+\@kniefSexchromosomeInversionCauses2017], venom composition in
+rattlesnakes [\@zancolliWhenOnePhenotype2019], and sexually dimorphic
+alternative reproductive tactics
+[\@thomasChromosomalPolymorphismLinked2008;
 \@kupperSupergeneDeterminesHighly2016;
 \@lamichhaneyStructuralGenomicChanges2016;
 \@hendrickxMasculinizingSupergene2022].The potential for structural
@@ -153,45 +160,66 @@ these structural variants are successful in coding for these variable
 phenotypes because they include androgen receptors -- the white-throated
 sparrow supergene contains the estrogen receptor gene which directly
 influences the aggressive aspects of the dominant male phenotype
-[\@merrittSupergenelinkedEstrogenReceptor2020]. 
+[\@merrittSupergenelinkedEstrogenReceptor2020].
 
-These stable polymorphisms -- underpinned by supergenes -- are
-often maintained in populations through partitioning of reproductive
-success over time (e.g., the feminized dwarf spider morph mates earlier,
-whereas the alternative morph is able to mate with previously-mated
-females later in the season [\@hendrickxMasculinizingSupergene2022]),
-frequency dependent selection (examples?). In some cases, a heterozgyous
-genotype is lethal (e.g., ruffs [\@kupperSupergeneDeterminesHighly2016;
+These stable polymorphisms -- underpinned by supergenes -- are often
+maintained in populations through partitioning of reproductive success
+over time (e.g., the feminized dwarf spider morph mates earlier, whereas
+the alternative morph is able to mate with previously-mated females
+later in the season [\@hendrickxMasculinizingSupergene2022]), frequency
+dependent selection (examples?). In some cases, a heterozgyous genotype
+is lethal (e.g., ruffs [\@kupperSupergeneDeterminesHighly2016;
 \@lamichhaneyStructuralGenomicChanges2016]), but not in others (e.g.,
-dwarf spiders [\@hendrickxMasculinizingSupergene2022]). 
+dwarf spiders [\@hendrickxMasculinizingSupergene2022]).
 
+Supergenes and other structural variants might resolve interlocus?
+conflict, but they might also exacerbate it.
 
+What about conflict between morphs?
 
-Supergenes and other structural variants might resolve interlocus? conflict, but they might also exacerbate it. 
-
-What about conflict between morphs? 
-
-
-One way that researchers have observed a role for supergenes is through genomic analysis. Putative regions are usually first identified through estimating allele frequency differences between morphs, testing for associations with the traits of interest (e.g., [\@lagunas-roblesLinkedSupergenesUnderlie2021]). Recent mathematical and simulation models have helped clarify the allelic variation that is expected to be maintained
-under sex-specific selection pressures, 
-and importantly have suggested that sex-specific selection must be incredibly strong
-[@kasimatisLimitsGenomicDivergence2019a]. 
-However, providing direct linkages between theoretical predictions of
+One way that researchers have observed a role for supergenes is through
+genomic analysis. Putative regions are usually first identified through
+estimating allele frequency differences between morphs, testing for
+associations with the traits of interest (e.g.,
+[\@lagunas-roblesLinkedSupergenesUnderlie2021]). Recent mathematical and
+simulation models have helped clarify the allelic variation that is
+expected to be maintained under sex-specific selection pressures, and
+importantly have suggested that sex-specific selection must be
+incredibly strong [@kasimatisLimitsGenomicDivergence2019a]. However,
+providing direct linkages between theoretical predictions of
 evolutionary mechanisms, genotype-to-phenotype maps, and realistic
 datasets are currently lacking. Here, we fill this gap using
 individual-based simulation models of alternative reproductive tactics
 in males and three types of genetic architectures for the traits of
 interest. **Not sure if this is useful**
 
-
-An open question is to what extent do supergenes facilitate the maintenance of multiple morphs, versus whether the evolution of multiple morphs might facilitate the evolution of supergenes. 
-This question is difficult to address empirically, and is likely to have consequences for the maintenance of genetic variation at loci contributing to traits. For example, if a supergene exists and a mutation or arises within it that impacts the morph traits, the genetic variation within the supergene itself could have eroded due to relaxation of selection and reduced recombination. As such, only the mutation would be likely to show significant genetic variation -- this could make a supergene with functional effects difficult to detect empirically. This is especially true in cases such as the white-throated sparrow, in which the gene with a major effect is an estrogen receptor [\@merrittSupergenelinkedEstrogenReceptor2020], which likely impacts the expression of many genes.
-To tackle this problem, we have developed a simulation  model incorporating explicit genetic architectures. 
-We first identify regions of the frequency-dependent parameter space that should result in the maintenance of multiple morphs in a single-locus context using a mathematical model, and subsequently compare the outcomes of multilocus genetic architectures to those baselines.
-Our results suggest that morphs encoded by many genes are more robust to stochastic elements that impact the morph frequencies over time, and that the number of morphs that are predicted to persist changes when multilocus genotypes are involved.
-When the morphs have arrived at equilibrial frequencies, selection on male traits is generally relaxed, and this corresponds with a decreased ability to reliably detect causative variants using typical genomic analysis approaches (i.e., genome-wide associations).
-
-
+An open question is to what extent do supergenes facilitate the
+maintenance of multiple morphs, versus whether the evolution of multiple
+morphs might facilitate the evolution of supergenes. This question is
+difficult to address empirically, and is likely to have consequences for
+the maintenance of genetic variation at loci contributing to traits. For
+example, if a supergene exists and a mutation or arises within it that
+impacts the morph traits, the genetic variation within the supergene
+itself could have eroded due to relaxation of selection and reduced
+recombination. As such, only the mutation would be likely to show
+significant genetic variation -- this could make a supergene with
+functional effects difficult to detect empirically. This is especially
+true in cases such as the white-throated sparrow, in which the gene with
+a major effect is an estrogen receptor
+[\@merrittSupergenelinkedEstrogenReceptor2020], which likely impacts the
+expression of many genes. To tackle this problem, we have developed a
+simulation model incorporating explicit genetic architectures. We first
+identify regions of the frequency-dependent parameter space that should
+result in the maintenance of multiple morphs in a single-locus context
+using a mathematical model, and subsequently compare the outcomes of
+multilocus genetic architectures to those baselines. Our results suggest
+that morphs encoded by many genes are more robust to stochastic elements
+that impact the morph frequencies over time, and that the number of
+morphs that are predicted to persist changes when multilocus genotypes
+are involved. When the morphs have arrived at equilibrial frequencies,
+selection on male traits is generally relaxed, and this corresponds with
+a decreased ability to reliably detect causative variants using typical
+genomic analysis approaches (i.e., genome-wide associations).
 
 # Methods
 
@@ -225,7 +253,7 @@ they mature to adulthood, such that males carrying the courtship trait
 and/or the parental care trait have a lower probability of survival than
 females and males without either courtship or parenting. Males who are
 both courters and parents have a multiplicative effect of viability
-selection. 
+selection.
 
 We implemented our model first as a mathematical model and then as an
 individual-based simulation model. The purpose of the mathematical model
@@ -424,15 +452,23 @@ preferred mate do not produce offspring ('polygyny no mating').
 
 ### Model analysis
 
-The outcomes of simulation model were first assessed by visualising the proportions of each morph that persisted to the final generation of the model.
-The first priority was to compare the outcomes of the simulation model with a single locus for each trait to the results from the mathematical model. 
-Next, the four mating systems were compared in the single-locus model. 
-From this comparison, we were then able to narrow the parameter space for the comparisons of the two different multilocus genetic architectures.
-The many different formats for these two genetic architectures were then compared in terms of the morph composition in the final generation, and the amount of variation among replicate runs.
+The outcomes of simulation model were first assessed by visualising the
+proportions of each morph that persisted to the final generation of the
+model. The first priority was to compare the outcomes of the simulation
+model with a single locus for each trait to the results from the
+mathematical model. Next, the four mating systems were compared in the
+single-locus model. From this comparison, we were then able to narrow
+the parameter space for the comparisons of the two different multilocus
+genetic architectures. The many different formats for these two genetic
+architectures were then compared in terms of the morph composition in
+the final generation, and the amount of variation among replicate runs.
 
-
-To identify how selection acts on the two male traits, selection gradients on the courter trait and parent trait (both the binary variable of courter/non-courter and parent/non-parent) were estimated as the slope of a linear regression of lifetime reproductive success on each trait values. The patterns of selection were compared across genetic architectures and parameter settings.
-
+To identify how selection acts on the two male traits, selection
+gradients on the courter trait and parent trait (both the binary
+variable of courter/non-courter and parent/non-parent) were estimated as
+the slope of a linear regression of lifetime reproductive success on
+each trait values. The patterns of selection were compared across
+genetic architectures and parameter settings.
 
 ### Analysing multilocus genotypes
 
@@ -445,12 +481,19 @@ compared using the Gst estimator in vcfR. Additionally, an association
 between male phenotypes and genetic markers was tested for using
 GWASpoly . For both the Gst estimates and the GWAS p-values, any major
 peaks identified were scanned to identify if they were within a 50
-basepair window of one of the true QTLs. 
-Finally, we used vcftools [\@danecekVariantCallFormat2011] to test for signals of balancing selection at the QTL loci compared to non-QTL loci.
+basepair window of one of the true QTLs. Finally, we used vcftools
+[\@danecekVariantCallFormat2011] to test for signals of balancing
+selection at the QTL loci compared to non-QTL loci.
 
-To investigate whether linkage disequilibrium persisted over time within our various genetic architectures, we used vcftools [\@danecekVariantCallFormat2011] to estimate linkage disequilibrium between all loci. We then estimated summary statistics for each locus and compared linkage disequilibrium between QTLs and compared it to linkage disequilibrium among non-QTLs. Because we had far fewer QTLs than non-QTL loci in all of the iterations, we also used re-sampling of the non-QTLs to estimate the average linkage disequilibrium, using 999 resampled estimates with the actual number of QTLs in each replicate.
-
-
+To investigate whether linkage disequilibrium persisted over time within
+our various genetic architectures, we used vcftools
+[\@danecekVariantCallFormat2011] to estimate linkage disequilibrium
+between all loci. We then estimated summary statistics for each locus
+and compared linkage disequilibrium between QTLs and compared it to
+linkage disequilibrium among non-QTLs. Because we had far fewer QTLs
+than non-QTL loci in all of the iterations, we also used re-sampling of
+the non-QTLs to estimate the average linkage disequilibrium, using 999
+resampled estimates with the actual number of QTLs in each replicate.
 
 # Results
 
@@ -706,7 +749,11 @@ of the mathematical model.
 
 ### Selection on courter and parent traits
 
-Selection consistently favoured parent traits, whereas courter traits could experience negative selection in high diversity parameter scenarios (Fig. \@ref(fig:selectionOverTime)). Selection was strong in the first generation, but by generation 12000 selection was substantially relaxed on one or the other trait, in most cases. 
+Selection consistently favoured parent traits, whereas courter traits
+could experience negative selection in high diversity parameter
+scenarios (Fig. \@ref(fig:selectionOverTime)). Selection was strong in
+the first generation, but by generation 12000 selection was
+substantially relaxed on one or the other trait, in most cases.
 
 ### The role of polygenic inheritance of traits
 
@@ -741,7 +788,7 @@ $\pm$
 and only occasionally resulted in either three morphs being retained or
 the non-courter/non-parent morph replacing the non-courter parent. The
 size of the supergene did not substantially impact the final morph
-frequencies, nor did the total number of QTLs underlying each locus. 
+frequencies, nor did the total number of QTLs underlying each locus.
 
 ```{r ArchitecturesProps, fig.cap=""}
 
@@ -786,20 +833,24 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
        col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
 ```
 
-
-
 ```{r seldat}
 seldat<-readRDS("selection_gradients.RDS")
 seldat<-seldat[grep("monogamy_nm",names(seldat))]
 ```
 
-
-An important predictor of final morph frequencies was the direction of selection on the courter traits in the initial generation, which different under high diversity and low diversity parameter settings.
-Selection gradients were strongly positive on the parent trait in generation zero, whereas selection gradients were negative on a subset of the high diversity parameter runs (Fig. \@ref(fig:selectionGradients)). 
-By the time that 12000 generations had passed, and the morphs had reached their equilibrial frequencies, selection was generally relaxed on the parental trait. 
-Selection on the courter trait was also relaxed in many cases (some points overlap 0). 
-A number of the low diversity replicates resulted in highly correlated selection on courters and parents, with a number of points falling on the positive 1:1 line (Fig. \@ref(fig:selectionGradients)).
-
+An important predictor of final morph frequencies was the direction of
+selection on the courter traits in the initial generation, which
+different under high diversity and low diversity parameter settings.
+Selection gradients were strongly positive on the parent trait in
+generation zero, whereas selection gradients were negative on a subset
+of the high diversity parameter runs (Fig.
+\@ref(fig:selectionGradients)). By the time that 12000 generations had
+passed, and the morphs had reached their equilibrial frequencies,
+selection was generally relaxed on the parental trait. Selection on the
+courter trait was also relaxed in many cases (some points overlap 0). A
+number of the low diversity replicates resulted in highly correlated
+selection on courters and parents, with a number of points falling on
+the positive 1:1 line (Fig. \@ref(fig:selectionGradients)).
 
 ```{r selectionGradients, fig.height=4.5, fig.width=7, fig.cap="Selection gradients on parent and courter traits differ across the scenarios of our simulation model. In the first generation, selection always favours the parent trait, but selection gradients on the courter trait can be negative under parameter settings that favoured high diversity. By the end of the simulations (generation 12000), selection has been relaxed, so that selection on the parent trait is often near zero, as is selection on the courter trait. In some cases, the selection gradients on courter and parent triats are correlated at this final generation, especially in low diversity scenarios with QTLs as the genetic architecture. Solid grey lines show the x- and y-axes, with dotted grey lines showing the one-to-one correlation lines."}
 par(mfrow=c(1,2))
@@ -1111,11 +1162,10 @@ Why might cause the deviation from the single-locus expectation? - LD,
 genetic correlations - compare to previous models and speculate on how
 it might impact their results - discuss real-world examples
 
-Detection of QTLs: what's up? 
-extreme LD within supergenes makes associations difficult to identify (e.g., Kim et al zebrafinch paper)
-this is consistent with previous models
-like my SCA paper - what does this mean for our ability to study real
-world pops?
+Detection of QTLs: what's up? extreme LD within supergenes makes
+associations difficult to identify (e.g., Kim et al zebrafinch paper)
+this is consistent with previous models like my SCA paper - what does
+this mean for our ability to study real world pops?
 
 Maintenance of variation (esp. morphs) and genetic architectures -
 genetic architecture is critically important - this doesn't include
