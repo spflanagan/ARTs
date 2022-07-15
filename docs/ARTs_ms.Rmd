@@ -980,10 +980,140 @@ significant Gst peaks, and found that on average 0.71 (± 0), and this
 proportion was not related to the Courter/Parent frequency (Fig.
 \@ref(fig:genomewideDiv) F).
 
+```{r}
+welch_correctDF<-function(var1,var2,n1,n2){
+  num<-((var1/n1)+(var2/n2))^2
+  den<-(((var1/n1)^2)/(n1-1))+(((var2/n2)^2)/(n2-1))
+  df<-num/den
+  return(df)
+}
+
+```
+
+```{r readGenomewide}
+
+qtl_outliers<-read.csv("qtl_outliers.csv")
+qtl_outliers$Architecture<-"qtls"
+supergene_outliers<-read.csv("supergene_outliers.csv")
+supergene_outliers$Architecture<-"supergene"
+popgen_data<-dplyr::bind_rows(qtl_outliers,supergene_outliers)
+
+sediff<-sqrt((popgen_data$gHtVar/(popgen_data$nChrom*1000)) + 
+               (popgen_data$qHtVar/(popgen_data$nQTLS)))
+HetT<-(popgen_data$gHtMean - popgen_data$qHtMean)/sediff
+HetP<-pt(HetT,
+         df = welch_correctDF(popgen_data$gHtVar,
+                              popgen_data$qHtVar,
+                              (popgen_data$nChrom*1000),
+                              popgen_data$nQTLS), 
+         lower.tail = (HetT >=0))
+
+popgen_data$HetP<-HetP
+popgen_data$Diversity<-gsub("^.*/(\\w+)Diversity.*$","\\1",popgen_data$sim)
+
+
+
+final_freqs<-read.csv("../results/morph_freqs_summary.csv")
+final_freqs$rep  <-gsub("../fixedART-results/.*\\/(.*\\w+_monogamy_nm_.*pop\\d).*","\\1",final_freqs$file)
+
+td_summary<-read.csv("../results/tajimaD_summary.csv", row.names = 1)
+td_summary<-td_summary[grep("monogamy_nm",rownames(td_summary)),]
+td_summary$rep<-gsub("../fixedART-results/.*\\/(.*\\w+_monogamy_nm_.*pop)_(\\d).*","\\1\\2",rownames(td_summary))
+
+td_freqs<-merge(td_summary, final_freqs,by="rep")
+
+td_freqs$architecture<-gsub("../fixedART-results/(.*)\\/\\/(\\w+)Diversity_.*_monogamy_nm_.*pop_(\\d).*","\\1",rownames(td_summary))
+td_freqs$diversity<-gsub("../fixedART-results/(.*)\\/\\/(\\w+)Diversity_.*_monogamy_nm_.*pop_(\\d).*","\\2",rownames(td_summary))
+
+```
+
 ```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the simulation results. Genome-wide observed heterozygosity (A), Tajima’s D (C), and male-male Fst (E) were not influenced by the frequency of the morphs in the final generation, nor by the genetic architecture. The final morph frequencies also did not impact the significance of comparisons of QTLs versus neutral loci for heterozygosity (B) or Tajima’s D (D), or the proportion of QTLs found in the Fst peaks (F). Note that heterozygosity and Gst results are only shown for the runs with high diversity parameter sets"}
 
+par(mfrow=c(3,2))
+
+plot(popgen_data$propCP,
+     popgen_data$gHtMean,
+     pch=as.numeric(as.factor(popgen_data$Architecture))+15,
+     col=scales::alpha(
+       divcols[as.numeric(as.factor(popgen_data[,"Diversity"]))+1],
+       0.5),
+     cex=1.5,
+     xlab="Courter/Parent Frequency",
+     ylab="Average Obs. Het.",
+     bty='l')
+text(0.3,0.25,"A",cex=3)
+
+plot(popgen_data$propCP,
+     popgen_data$HetP,
+     pch=as.numeric(as.factor(popgen_data$Architecture))+15,
+     col=scales::alpha(
+       divcols[as.numeric(as.factor(popgen_data[,"Diversity"]))+1],
+       0.5),
+     cex=1.5,
+     xlab="Courter/Parent Frequency",
+     ylab="Obs. Het P-values",
+     bty='l')
+text(0.3,0.85,"B",cex=3)
+
+# Tajima's D
+plot(td_freqs$CP,
+     td_freqs$avgTD,
+     pch=as.numeric(as.factor(td_freqs$architecture))+15,
+     col=scales::alpha(
+       divcols[as.numeric(as.factor(td_freqs$diversity))],
+       0.5),
+     cex=1.5,
+     xlab="Courter/Parent Frequency",
+     ylab="Average Tajima's D",
+     bty='l')
+text(0.3,0.25,"C",cex=3)
+
+plot(td_freqs$CP,
+     td_freqs$p,
+     pch=as.numeric(as.factor(td_freqs$architecture))+15,
+     col=scales::alpha(
+       divcols[as.numeric(as.factor(td_freqs$diversity))],
+       0.5),
+     cex=1.5,
+     xlab="Courter/Parent Frequency",
+     ylab="Tajima's D P-values",
+     bty='l')
+text(0.3,0.25,"A",cex=3)
 
 
+# Fst
+plot(popgen_data$propCP,
+     popgen_data$gGpMeanMM,
+     pch=as.numeric(as.factor(popgen_data$Architecture))+15,
+     col=scales::alpha(
+       divcols[as.numeric(as.factor(popgen_data[,"Diversity"]))+1],
+       0.5),
+     cex=1.5,
+     xlab="Courter/Parent Frequency",
+     ylab="Mean male-male Gst",
+     bty='l')
+text(0.02,0.8,"E",cex=3)
+
+plot(popgen_data$propCP,
+     popgen_data$propQTLsInPeaksMM,
+     pch=as.numeric(as.factor(popgen_data$Architecture))+15,
+     col=scales::alpha(
+       divcols[as.numeric(as.factor(popgen_data[,"Diversity"]))+1],
+       0.5),
+     cex=1.5,
+     xlab="Courter/Parent Frequency",
+     ylab="Prop. QTL in Gst peak",
+     bty='l')
+text(0.3,0.8,"F",cex=3)
+
+outer_legend("top",
+       bty='n',
+       pch=c(15, 16, 0,0),
+       lty=c(0, 0, 1,1),
+       lwd=c(2,2,1,1),
+       col=c("grey", "grey",divcols[2],divcols[1]),
+       legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
+       ncol=4)
 ```
 
 ### Will GWAS detect the actual QTLs?
