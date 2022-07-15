@@ -129,6 +129,7 @@ lapply(mtm_diff$Gprimest[qtl_locs],function(d){ abline( v = d) })
 ```
 
 
+## Summarizing multiple files
 
 So this works well for visualising, but in this particular example the QTLs aren't outliers. I would like to find a way to summarize this across runs. 
 
@@ -183,7 +184,6 @@ QTLsInPeaks<-sapply(qtl_locs,function(q,peaks){
 ```
 
 
-## Summarizing multiple files
 
 ```{r}
 get_summary<-function(vcfname){
