@@ -95,10 +95,21 @@ sexually antagonistic selection
 @connallonResolutionSexualAntagonism2011], and frequency dependent
 selection [@alonzoMateChoiceGames2001]. Yet, substantial phenotypic
 variation is observed, with ubiquitous examples such as the prevalence
-of sexual dimorphism and the unexpectedly frequent existence of
-alternative reproductive tactics, in which individuals of the same
-species and sex display different morphs to maximize reproductive
-fitness in unique ways [@oliveiraAlternativeReproductiveTactics2008].
+of sexual dimorphism. Across a wide range of taxa, multiple discrete
+alternative reproductive tactics are frequently maintained, in which
+individuals of the same species and sex display different morphs to
+maximize reproductive fitness in unique ways
+[@oliveiraAlternativeReproductiveTactics2008]. These stable
+polymorphisms are typically maintained in populations through negative
+frequency dependent selection (e.g., female morphs in damselflies
+[@iserbytNegativeFrequencydependentSelection2013]; Gouldian finches
+[@prykeFrequencydependentPhysiologicalTradeoffs2007]), the interaction
+of frequency-dependent and density-dependent factors (e.g.,
+side-blotched lizards [@alonzoMateChoiceGames2001]), and partitioning of
+reproductive success over time (e.g., the feminized dwarf spider morph
+mates earlier, whereas the alternative morph is able to mate with
+previously-mated females later in the season
+[@hendrickxMasculinizingSupergeneUnderlies2022]).
 
 The genetic basis of polymorphic traits is also critical to
 understanding the maintenance of variation. Evolution can be constrained
@@ -106,15 +117,28 @@ by factors including pleiotropy, genetic correlations, and physical
 linkage. As such, the reduction or removal of these constraints can
 facilitate sequence evolution by relaxing positive selection on genes
 [@harrisonSexualSelectionDrives2015; @dapperRelaxedSelectionRapid2020].
-However, how genome-wide patterns of constraining factors and patterns
-of sex- or morph-specific selection remains under-explored in
-evolutionary theory, in particular as it relates to creating baseline
-predictions for interpreting empirical datasets. Specifically, the
-majority of predictions relating selection to genetic constraints arise
-from one- or two-locus models (EXAMPLES), which can be difficult to
-extrapolate to genome-wide predictions. In the modern genomic era,
-having predictions for large genome-wide datasets is of critical
-importance to develop testable hypotheses (citations).
+When polymorphic traits create conflict between sexes or morphs, these
+genetic constraints can prevent the resolution of conflict and therefore
+result in the maintenance of diversity
+([@pennellContrastingEffectsIntralocus2016]). Often, these constraints
+are overcome through mechanisms such as gene duplications (e.g.,
+[@desmaraisEscapeAdaptiveConflict2008]), differential gene expression
+[@mankPopulationGeneticsSexual2017], or even the evolution of asexuality
+[@brownSocialDilemmasSupergenes2011]. Most work on such intralocus
+conflict is related to sexual antagonism and sexual conflict, but
+intralocus conflict can emerge among morphs of the same sex, as they
+also share the majority of their genome
+[@morrisIntralocusTacticalConflict2013]. Intriguingly, in ruffs, which
+have three male alternative tactics, the evolution of the inversion
+polymorphism encoding the male morphs appears to have resolved conflict
+among the male morphs, while simultaneously exacerbating intralocus
+sexual conflict [@giraldo-deckIntralocusConflictsAssociated2022].
+Despite the fact that alternative reproductive tactics are by definition
+complex, multivariate phenotypes, population genetic predictions based
+on intralocus conflict tend to be based on one- or two-locus models. As
+such, generating predictions for expected evolutionary outcomes -- and
+expected patterns to identify in genome-wide datasets -- is not
+necessarily straightforward.
 
 One genetic mechanism that is increasingly being considered as an
 important mechanism in evolution are structural variants, such as
@@ -125,7 +149,7 @@ mismatched directionality reduces recombination between the different
 variants, facilitating the maintenance of both genetic and phenotypic
 variations. These supergenes have been shown to underpin stable
 polymporhisms including multiple social morphs in fire ants
-[\@yanEvolutionSupergeneThat2020], colony sex ratio skew in ants
+[@yanEvolutionSupergeneThat2020], colony sex ratio skew in ants
 [\@lagunas-roblesLinkedSupergenesUnderlie2021], sex-specific migratory
 behaviours [\@pearseSexdependentDominanceMaintains2019], sperm length
 and swim speed [\@kimSexlinkedSupergeneControls2017;
@@ -135,12 +159,13 @@ alternative reproductive tactics
 [\@thomasChromosomalPolymorphismLinked2008;
 \@kupperSupergeneDeterminesHighly2016;
 \@lamichhaneyStructuralGenomicChanges2016;
-\@hendrickxMasculinizingSupergene2022].The potential for structural
+\@hendrickxMasculinizingSupergene2022]. The potential for structural
 variants to underpin sexually dimorphic polymorphisms is intriguing, as
 most research to date has focused on the role of differential gene
-expression in underlying sexual dimorphism [citations]. For example, in
-canaries, sexual dichromatism appears to be mediated by differential
-expression of a single gene involved in carotenoid breakdown
+expression in underlying sexual dimorphism (e.g.,
+[@harrisonSexualSelectionDrives2015]). For example, in canaries, sexual
+dichromatism appears to be mediated by differential expression of a
+single gene involved in carotenoid breakdown
 [\@gazdaGeneticMechanismSexual2020]. Androgens are a likely mechanism
 for modulating these gene expression differences, for example in
 primates male-biased genes are more likely to be proximal to androgen
@@ -155,43 +180,17 @@ males. Nearly all examples include a female-mimic morph, including ruffs
 morph exists, with an intermediate phenotype between the dominant or
 'classic' male morph and the female-mimic
 [\@kupperSupergeneDeterminesHighly2016;
-\@lamichhaneyStructuralGenomicChanges2016]. At least in some cases,
-these structural variants are successful in coding for these variable
-phenotypes because they include androgen receptors -- the white-throated
+\@lamichhaneyStructuralGenomicChanges2016]. In some cases, a
+heterozygous genotype is lethal (e.g., ruffs
+[\@kupperSupergeneDeterminesHighly2016;
+\@lamichhaneyStructuralGenomicChanges2016]), but not in others (e.g.,
+dwarf spiders [\@hendrickxMasculinizingSupergene2022]). In the
+white-throated sparrow and the ruff, these structural variants are
+successful in coding for these variable phenotypes because they include
+androgen receptors [@maneySupergenesSteroids2022]-- the white-throated
 sparrow supergene contains the estrogen receptor gene which directly
 influences the aggressive aspects of the dominant male phenotype
 [\@merrittSupergenelinkedEstrogenReceptor2020].
-
-These stable polymorphisms -- underpinned by supergenes -- are often
-maintained in populations through partitioning of reproductive success
-over time (e.g., the feminized dwarf spider morph mates earlier, whereas
-the alternative morph is able to mate with previously-mated females
-later in the season [\@hendrickxMasculinizingSupergene2022]), frequency
-dependent selection (examples?). In some cases, a heterozgyous genotype
-is lethal (e.g., ruffs [\@kupperSupergeneDeterminesHighly2016;
-\@lamichhaneyStructuralGenomicChanges2016]), but not in others (e.g.,
-dwarf spiders [\@hendrickxMasculinizingSupergene2022]).
-
-Supergenes and other structural variants might resolve interlocus?
-conflict, but they might also exacerbate it.
-
-What about conflict between morphs?
-
-One way that researchers have observed a role for supergenes is through
-genomic analysis. Putative regions are usually first identified through
-estimating allele frequency differences between morphs, testing for
-associations with the traits of interest (e.g.,
-[\@lagunas-roblesLinkedSupergenesUnderlie2021]). Recent mathematical and
-simulation models have helped clarify the allelic variation that is
-expected to be maintained under sex-specific selection pressures, and
-importantly have suggested that sex-specific selection must be
-incredibly strong [@kasimatisLimitsGenomicDivergence2019a]. However,
-providing direct linkages between theoretical predictions of
-evolutionary mechanisms, genotype-to-phenotype maps, and realistic
-datasets are currently lacking. Here, we fill this gap using
-individual-based simulation models of alternative reproductive tactics
-in males and three types of genetic architectures for the traits of
-interest. **Not sure if this is useful**
 
 An open question is to what extent do supergenes facilitate the
 maintenance of multiple morphs, versus whether the evolution of multiple
@@ -207,16 +206,21 @@ functional effects difficult to detect empirically. This is especially
 true in cases such as the white-throated sparrow, in which the gene with
 a major effect is an estrogen receptor
 [\@merrittSupergenelinkedEstrogenReceptor2020], which likely impacts the
-expression of many genes. To tackle this problem, we have developed a
-simulation model incorporating explicit genetic architectures. We first
-identify regions of the frequency-dependent parameter space that should
-result in the maintenance of multiple morphs in a single-locus context
-using a mathematical model, and subsequently compare the outcomes of
-multilocus genetic architectures to those baselines. Our results suggest
-that morphs encoded by many genes are more robust to stochastic elements
-that impact the morph frequencies over time, and that the number of
-morphs that are predicted to persist changes when multilocus genotypes
-are involved. When the morphs have arrived at equilibrial frequencies,
+expression of many genes. Furthermore, it is currently unknown to what
+extent genetic architectures interact with the frequency- and
+density-dependent mechanisms that maintain multiple morphs in
+populations.
+
+To tackle these problems, we have developed a simulation model
+incorporating explicit genetic architectures. We first identify regions
+of the frequency-dependent parameter space that should result in the
+maintenance of multiple morphs in a single-locus context using a
+mathematical model, and subsequently compare the outcomes of multilocus
+genetic architectures to those baselines. Our results suggest that
+morphs encoded by many genes are more robust to stochastic elements that
+impact the morph frequencies over time, and that the number of morphs
+that are predicted to persist changes when multilocus genotypes are
+involved. When the morphs have arrived at equilibrial frequencies,
 selection on male traits is generally relaxed, and this corresponds with
 a decreased ability to reliably detect causative variants using typical
 genomic analysis approaches (i.e., genome-wide associations).
@@ -228,11 +232,9 @@ with non-overlapping generations. We model two independent traits,
 courtship and parental care, both of which are expressed only in males,
 but are also inherited by females. As such, males are one of four
 morphs: courter/parents; courter/non-parents; non-courters/parents; or
-non-courters/non-parents. The model is inspired by fish species like the
-ocellated wrasse, *Symphodus ocellatus*, and as such we will use
-terminology appropriate to that species. Nonetheless, our model can be
-generalized to any species in which one sex (but not the other) has two
-traits that impact mating success and the survival of their offspring.
+non-courters/non-parents. Our model can be generalized to any species in
+which one sex (but not the other) has two traits that impact mating
+success and the survival of their offspring.
 
 Each generation has three distinct phases: (1) mate choice and
 fertilization; (2) parental care; and (3) viability selection. In the
