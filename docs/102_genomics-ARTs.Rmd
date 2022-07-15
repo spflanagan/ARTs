@@ -852,7 +852,7 @@ outer_legend("top",
        ncol=4)
 ```
 
-
+LD is highest in low diversity scenarios and with QTLs -- this is surprising to me! I'd have thought supergenes would have the highest LD.
 
 
 # Tajima's D
