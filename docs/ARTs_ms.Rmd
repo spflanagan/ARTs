@@ -345,11 +345,17 @@ frequencies and repeated those iterations across 5 values for the sperm
 competition coefficient ($c$ = {0..1}) and 21 values for the relative
 reproductive coefficient ($r_M$ = {0...2}). The iterations were
 implemented in R v. 4.1.1 [@rcoreteam2021] using some features of tidyR
-[@wickham2021]. To facilitate visualisation of the results, we
-calculated the Shannon's diversity index for the morphs remaining in the
-100th generation using the R package vegan [@oksanen2015]. We then
-visualised the diversity of the population using contour plots produced
-by plotly [@sievert2020] in a shiny app that relies on R packages shiny
+[@wickham2021].
+
+We were interested in identifying the regions of parameter space that
+resulted in the largest diversity of male morphs. To ameliorate the
+difficulty of visualising and summarizing four frequencies, we leveraged
+existing ecological mathematical tools to summarize diversity of a
+system into a single metric. Specifically, we calculated the Shannon's
+diversity index. We calculated this index in the 100th generation using
+the R package vegan [@oksanen2015] and subsequently visualised the
+diversity of the population using contour plots produced by plotly
+[@sievert2020] in a shiny app that relies on R packages shiny
 [@chang2021], shinydashboard [@chang2018], rsconnect [@mcpherson2021],
 dplyr [@wickham2021], and rmarkdown [@allaire2021; @xie2020; @xie2018].
 The interactive app is available at
@@ -365,20 +371,26 @@ simulation model.
 
 To evaluate the role of genetic architecture in the maintenance of
 alternative reproductive tactics, we wrote an individual-based
-simulation model in C++. The simulation model follows the same lifecycle
-as described above, but rather than tracking proportions of the
+simulation model in C++. The simulation model follows a lifecycle that
+is largely the same as the mathematical model (Fig.
+\@ref(fig:mathModel)), but rather than tracking proportions of the
 population belonging to particular morphs, we tracked individuals within
-the population. Each individual contained diploid genotypes, which
-included both non-coding loci and quantitative trait loci (QTLs). We
-included two types of QTLs: ones that impacted the individual's courting
-trait and ones that impacted the individual's parenting trait. The QTLs
-were each assigned a randomly-drawn effect on the trait, and the QTLs
-additively determined the trait value for each trait (i.e., the effects
-of all QTLs were summed to determine the trait value). In this model, we
-assume no environmental effects impacted the trait value. These trait
-values were then compared to a threshold to dichotomize each trait. The
-threshold for each trait was the mean trait value during the
-initialization of the model (i.e., at generation 0).
+the population (Fig. \@ref(Fig:simModel)). Each individual contained
+diploid genotypes, which included both non-coding loci and quantitative
+trait loci (QTLs). We included two types of QTLs: ones that determined
+the individual's courting trait and ones that determined the
+individual's parenting trait. The QTLs were each assigned a
+randomly-drawn effect on the trait, and the QTLs additively determined
+the trait value for each trait (i.e., the effects of all QTLs were
+summed to determine the trait value). In this model, we assume no
+environmental effects impacted the trait value. These trait values were
+then compared to a threshold to dichotomize each trait. The threshold
+for each trait was the mean trait value during the initialization of the
+model (i.e., at generation 0).
+
+```{r simModel, fig.cap="Overview of the individual-based simulation model."}
+knitr::include_graphics("density-dependent-flowchart.jpg", dpi=150)
+```
 
 We implemented three different genetic architectures: a single gene per
 trait, multiple QTLs randomly placed throughout chromosomes, and
