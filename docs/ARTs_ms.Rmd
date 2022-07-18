@@ -1027,6 +1027,9 @@ td_freqs$diversity<-gsub("../fixedART-results/(.*)\\/\\/(\\w+)Diversity_.*_monog
 
 ```
 
+**Note to self: something seems off about this graph, compared to what
+it was previously**
+
 ```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the simulation results. Genome-wide observed heterozygosity (A), Tajima’s D (C), and male-male Fst (E) were not influenced by the frequency of the morphs in the final generation, nor by the genetic architecture. The final morph frequencies also did not impact the significance of comparisons of QTLs versus neutral loci for heterozygosity (B) or Tajima’s D (D), or the proportion of QTLs found in the Fst peaks (F). Note that heterozygosity and Gst results are only shown for the runs with high diversity parameter sets"}
 
 par(mfrow=c(3,2))
