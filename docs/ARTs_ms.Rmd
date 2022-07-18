@@ -138,7 +138,11 @@ complex, multivariate phenotypes, population genetic predictions based
 on intralocus conflict tend to be based on one- or two-locus models. As
 such, generating predictions for expected evolutionary outcomes -- and
 expected patterns to identify in genome-wide datasets -- is not
-necessarily straightforward.
+necessarily straightforward. *Expand this a bit more to transition to
+supergenes : touch on the fact that simple pop gen models using the same
+genetic controls that are different between alternatives, while
+multilocus models predict... and then supergenes is one hypothesized
+solution to this evolutionary puzzle*
 
 One genetic mechanism that is increasingly being considered as an
 important mechanism in evolution are structural variants, such as
@@ -209,7 +213,10 @@ a major effect is an estrogen receptor
 expression of many genes. Furthermore, it is currently unknown to what
 extent genetic architectures interact with the frequency- and
 density-dependent mechanisms that maintain multiple morphs in
-populations.
+populations. *Expand: the questions/problems our theory aims to
+answer/address are laid out a bit more explicitly and fully* *possibly
+this is a good way to describe how folks have looked into supergenes,
+and set up our genome-wide analyses*
 
 To tackle these problems, we have developed a simulation model
 incorporating explicit genetic architectures. We first identify regions
@@ -223,7 +230,9 @@ that are predicted to persist changes when multilocus genotypes are
 involved. When the morphs have arrived at equilibrial frequencies,
 selection on male traits is generally relaxed, and this corresponds with
 a decreased ability to reliably detect causative variants using typical
-genomic analysis approaches (i.e., genome-wide associations).
+genomic analysis approaches (i.e., genome-wide associations). *Possibly
+less focus on our results and instead lay out our questions and analyses
+a bit more*
 
 # Methods
 
