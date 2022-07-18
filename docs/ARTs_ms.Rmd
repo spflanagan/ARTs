@@ -105,11 +105,12 @@ frequency-dependent selection (e.g., female morphs in damselflies
 [@iserbytNegativeFrequencydependentSelection2013]; Gouldian finches
 [@prykeFrequencydependentPhysiologicalTradeoffs2007]), the interaction
 of frequency-dependent and density-dependent factors (e.g.,
-side-blotched lizards [@alonzoMateChoiceGames2001]), and partitioning of
-reproductive success over time (e.g., the feminized dwarf spider morph
-mates earlier, whereas the alternative morph is able to mate with
-previously-mated females later in the season
-[@hendrickxMasculinizingSupergeneUnderlies2022]).
+side-blotched lizards [@alonzoMateChoiceGames2001]), and variable
+selection such as partitioning of reproductive success over time (e.g.,
+the feminized dwarf spider morph mates earlier, whereas the alternative
+morph is able to mate with previously-mated females later in the season
+[@hendrickxMasculinizingSupergeneUnderlies2022]). *Add a sentence to
+link alternatives with genetic basis more explicitly*
 
 The genetic basis of polymorphic traits is also critical to
 understanding the maintenance of variation. Evolution can be constrained
