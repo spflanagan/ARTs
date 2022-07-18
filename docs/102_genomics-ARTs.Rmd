@@ -60,6 +60,7 @@ poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
                     "FreqNcP","FreqCP","Polygyny")
 divcols<-c("#e78ac3","#ffd92f")
 
+gt_cols<-c("#f2f0f7","#bcbddc","#54278f")
 
 ```
 
