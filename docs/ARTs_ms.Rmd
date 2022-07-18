@@ -84,24 +84,24 @@ divcols<-c("#e78ac3","#ffd92f")
 
 # Introduction
 
-Both genetic and phenotypic variation are required for evolution to
+Both genetic and phenotypic variation are required for selection to
 occur, and as such the maintenance of variation in populations has long
 been of interest to evolutionary biologists and conservation
-geneticists. Evolution is often expected to remove variation from
-populations, with specific patterns of selection being predicted to
-maintain variation at a high frequency -- including overdominance,
+geneticists. In general, evolution by natural selection is predicted to
+decrease variation in populations, while only a few specific forms of
+selection can maintain variation in populations, such as overdominance,
 sexually antagonistic selection
 [@connallonEvolutionaryConsequencesSexSpecific2018;
 @connallonResolutionSexualAntagonism2011], and frequency dependent
 selection [@alonzoMateChoiceGames2001]. Yet, substantial phenotypic
 variation is observed, with ubiquitous examples such as the prevalence
-of sexual dimorphism. Across a wide range of taxa, multiple discrete
-alternative reproductive tactics are frequently maintained, in which
-individuals of the same species and sex display different morphs to
-maximize reproductive fitness in unique ways
+of sexual dimorphism. Across a wide range of taxa, discrete alternative
+reproductive tactics are frequently maintained, in which individuals of
+the same species and sex display different morphs to maximize
+reproductive fitness in unique ways
 [@oliveiraAlternativeReproductiveTactics2008]. These stable
 polymorphisms are typically maintained in populations through negative
-frequency dependent selection (e.g., female morphs in damselflies
+frequency-dependent selection (e.g., female morphs in damselflies
 [@iserbytNegativeFrequencydependentSelection2013]; Gouldian finches
 [@prykeFrequencydependentPhysiologicalTradeoffs2007]), the interaction
 of frequency-dependent and density-dependent factors (e.g.,
