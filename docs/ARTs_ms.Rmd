@@ -285,6 +285,9 @@ maintained.
 
 ## Mathematical model
 
+*Need to adjust the terms/explanations, and adjust the terminology to
+avoid 'nests laid', which is confusing*
+
 In the mathematical model, we model the proportion of the population
 that belong to morphs at each stage of the lifecycle (Fig.
 \@ref(fig:mathModel)). In the first stage, we consider the proportion of
@@ -302,6 +305,8 @@ $$ because we have constrained females to only mate with courting males.
 ```{r mathModel, fig.cap="Diagram of the mathematical model describing the inheritance of alternative male reproductive morphs given courtship and parenting traits.", out.width='100%'}
 knitr::include_graphics("frequencyDependence.png", dpi=150)
 ```
+
+*make sure fig. 1 equations are complete and also in the main text*
 
 Likewise, the proportion of nests each type of male receives (${p_n}_M$)
 is determined by the number of morphs in the population ($N_mf_M$ for
@@ -384,7 +389,9 @@ chromosome and the QTL's effect on the trait is associated with a single
 nucleotide polymorphism (SNP). These SNPs undergo recombination and
 mutation during mating. The supergene scenario forced the QTLs to
 cluster into a small proportion of one of the chromosomes. These QTLs
-still experience mutation but experienced reduced recombination.
+still experience mutation but experienced reduced recombination. *Add
+something that explains how we go from continuous genetic trait to
+probability of being each male type*
 
 When we ran the model, we initialized four replicate populations with
 the identical starting conditions to evaluate the impact of
