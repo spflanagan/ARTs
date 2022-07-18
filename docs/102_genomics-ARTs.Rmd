@@ -896,14 +896,88 @@ sig_freqs<-final_freqs[gsub("pop_(.*)\\.Tajima.D","pop\\1_pheno.csv",sigTD) %in%
 
 
 
-```{r, eval=FALSE}
-# Looking into supergene haplotypes
-vcf1<-read.vcfR("../fixedART-results/supergene/highDiversity_qtls_monogamy_nm_prop0.05_q8_c2_1_pop_0.vcf")
-qtls<-read.delim("../fixedART-results/supergene/highDiversity_qtls_monogamy_nm_prop0.05_q8_c2_1_qtlinfo.txt")
-qtls<-qtls[1,]
-qtls<-data.frame(chrom=gsub("(\\d)\\.(\\d+)","\\1",qtls[!is.na(qtls)][-1]),
-                 qtl=gsub("(\\d)\\.(\\d+)","\\2",qtls[!is.na(qtls)][-1]))
 
+
+## A representative set of examples
+
+### supergene
+
+
+```{r supergeneExampleData, warning=FALSE}
+# Looking into supergene haplotypes
+vcfname<-"highDiversity_qtls_monogamy_nm_prop0.05_q8_c2_1_pop_0.vcf"
+vcf1<-read.vcfR(vcfname)
+qtl_dat<-read.delim(gsub("_pop_\\d\\.vcf","_qtlinfo.txt",vcfname))
+qtl_dat<-qtl_dat[1,]
+qtl_locs<-which(vcf1@fix[,"ID"] %in% qtl_dat)
+qtls<-data.frame(chrom=gsub("(\\d)\\.(\\d+)","\\1",qtl_dat[!is.na(qtl_dat)][-1]),
+                 qtl=gsub("(\\d)\\.(\\d+)","\\2",qtl_dat[!is.na(qtl_dat)][-1]),
+                 trait=gsub("^(\\w).*$","\\1",colnames(qtl_dat[which(!is.na(qtl_dat))[-1]])))
+
+# taj d
+td<-read.delim(gsub("vcf","Tajima\\.D",vcfname))
+td$QTL<-FALSE
+for(chrom in unique(td$CHROM)){
+  chtd<-td[td$CHROM==chrom,]
+  
+  locs<-qtls[qtls$chrom ==chrom,"qtl"]
+  for(i in 1:nrow(chtd)){
+    for(loc in locs){
+      if(loc >= chtd[i,"BIN_START"] & loc <= chtd[i,"BIN_START"]+chtd[i,"N_SNPS"]){
+        # then there's a qtl there
+        chtd$QTL[i] <- TRUE
+      }
+    }
+  }
+  # Save it back to the overall df
+  td[td$CHROM==chrom,"QTL"]<-chtd$QTL
+}
+
+# pops for Gst
+mf_pop<-as.factor(gsub("^(\\w{3}).*$","\\1",colnames(vcf1@gt)[-1]))
+mt_pop<-as.factor(gsub("^(\\w{3}).*_(\\w+)$","\\2",colnames(vcf1@gt)[-1]))
+mt_mal<-factor(mt_pop[mf_pop=="MAL"])
+mf_diff<-genetic_diff(vcf1, pops = mf_pop, method = 'nei')
+mal_vcf<-vcf1[,c(1,which(mf_pop=="MAL")+1)]
+mtm_diff<-genetic_diff(mal_vcf, pops = mt_mal, method = 'nei')
+
+# files for GWAS
+genofile <- gsub("\\.vcf","_gt.csv",vcfname)
+trait_name<-gsub("_pop_\\d+\\.vcf","_traits\\.txt",vcfname)
+pop<-as.numeric(gsub("^.*pop_(\\d+).*$","\\1",vcfname))
+phenofile <- gsub("traits\\.txt",paste0("pop",pop,"_pheno.csv"),trait_name)
+
+
+```
+
+```{r supergeneGWAS}
+data <- read.GWASpoly(ploidy=2, 
+                      pheno.file=phenofile, 
+                      geno.file=genofile,
+                      format="numeric", 
+                      n.traits=2, 
+                      delim=",")
+
+# check for population structure
+data.loco <- set.K(data,LOCO=TRUE,n.core=2)
+data.original <- set.K(data,LOCO=FALSE,n.core=2)
+
+# specify some parameter settings
+N<-nrow(data@pheno)
+params <- set.params(geno.freq = 1 - 5/N, fixed = "Sex", fixed.type = "factor")
+
+# test markers for significance
+court_scan <- GWASpoly(data=data.loco,
+                           models=c("additive","1-dom"),
+                           traits=c("CourtTrait","ParentTrait"),
+                           params=params
+                       )
+data2 <- set.threshold(court_scan,method="M.eff",level=0.05)
+
+```
+
+
+```{r supergeneGenos}
 vcf_cp<- vcf1[vcf1@fix[,"CHROM"] %in% qtls$chrom & vcf1@fix[,"POS"] %in% qtls$qtl, grep("_CP",colnames(vcf1@gt))]
 cp_gts<-vcf_cp@gt
 cp_gts[cp_gts=="0/0"]<-"0"
@@ -922,15 +996,321 @@ p_gts[p_gts=="1/1"]<-"2"
 p_num<-matrix(as.numeric(p_gts),    # Convert to numeric matrix
                   ncol = ncol(p_gts))
 
-# plot
-gt_cols<-c("#f2f0f7","#bcbddc","#54278f")
-par(mfrow=c(2,1),mar=c(1,5,1,1))
-image(cp_num,col=gt_cols,axes=FALSE,ylab="Courter/Parents",cex.lab=2)
-image(p_num,col=gt_cols,axes=FALSE,ylab="Non-courter/Parents",cex.lab=2)
+```
+
+
+```{r supergeneFig}
+
+par(mfrow=c(6,1),mar=c(1,4,2,2),oma=c(2,2,1,1))
+
+chrIndex<-factor(gsub("(\\d)_\\d+","\\1",colnames(data2@geno)))
+# GWAS courter
+plot(data2@scores$CourtTrait$additive,
+     ylab=expression(Courter~-log[10](p)),
+     xlab="",
+     xaxt='n',
+     pch=19,
+     col=c("grey73","grey44")[chrIndex],
+     bty='l')
+courtQTLs<-qtl_dat[1,grep("CourterQTL",colnames(qtl_dat))]
+qtllocs<-as.numeric(gsub("(\\d)\\.(\\d+)","\\1",courtQTLs))*1000 + 
+  as.numeric(gsub("(\\d)\\.(\\d+)","\\2",courtQTLs))
+points(qtllocs, 
+       data2@scores$CourtTrait$additive[qtllocs],
+       lwd=6,
+       col=cols["courter"],
+       cex=2)
+
+# GWAS parent
+plot(data2@scores$ParentTrait$additive,
+     ylab=expression(Parent~-log[10](p)),
+     xlab="",
+     xaxt='n',
+     pch=19,
+     col=c("grey73","grey44")[chrIndex],
+     bty='l')
+parentQTLs<-qtl_dat[1,grep("ParentQTL",colnames(qtl_dat))]
+qtllocs<-as.numeric(gsub("(\\d)\\.(\\d+)","\\1",parentQTLs))*1000 + 
+  as.numeric(gsub("(\\d)\\.(\\d+)","\\2",parentQTLs))
+points(qtllocs, 
+       data2@scores$ParentTrait$additive[qtllocs],
+       lwd=6,
+       col=cols["parent"],
+       cex=2)
+
+# Gst
+plot(mtm_diff$Gprimest,pch=19,
+     xlab="",
+     ylab=expression(G[ST]*"'"),
+     xaxt='n',
+     bty='l',
+     col=c("grey73","grey44")[factor(mtm_diff$CHROM)])
+points(qtl_locs, mtm_diff$Gprimest[qtl_locs],cex=2,col="red",lwd=2)
+#abline(h=mean(mtm_diff$Gprimest, na.rm = TRUE),col="grey",lty=2,lwd=2)
+#abline(h=median(mtm_diff$Gprimest, na.rm = TRUE),col="grey",lty=3,lwd=2)
+
+# Tajima's D
+plot(td$TajimaD,
+     ylab="Tajima's D",
+     xlab="",
+     xaxt='n',
+     pch=19,
+     col=c("grey73","grey44")[factor(td$CHROM)],
+     bty='l',
+     lwd=2
+)
+lines(1:nrow(td),
+       td$TajimaD,
+      col="grey73",
+      lwd=2)
+lines(which(td$CHROM==1),
+       td$TajimaD[td$CHROM==1],
+      col="grey44",
+      lwd=2)
+points(which(td$QTL==TRUE),
+       td$TajimaD[td$QTL==TRUE],
+       cex=2,
+       col="red",
+       lwd=2)
+
+# Heterozygosity
+plot(mf_diff$Ht,
+     pch=19,
+     bty='l',
+     lwd=2,
+     col=c("grey73","grey44")[factor(mf_diff$CHROM)],
+     xlab="",
+     ylab="Heterozygosity",
+     xaxt='n')
+points(qtl_locs, mf_diff$Ht[qtl_locs],cex=2,col="red",lwd=2)
+
+# QTL genotypes
+tmp<-cbind(p_num,
+            rep(NA,nrow(qtls)),
+            cp_num)
+image(tmp,
+      col=gt_cols,
+      axes=FALSE,
+      #ylab="Courter/Parents",
+      cex.lab=2)
+abline(h=(ncol(p_num)+1)/ncol(tmp),lwd=2)
+axis(1,at=seq(0,1,length.out=nrow(qtls)),
+     labels = qtls$trait,lwd=0)
+
+mtext("CP",2,line=2,adj =0.9,cex=0.75)
+
+mtext("NP",2,line=2,adj =0.2,cex=0.75)
+
+
 
 ```
 
-## A representative set of examples
+
+
+### qtls
+
+
+```{r qtlExampleData, warning=FALSE}
+# Looking into supergene haplotypes
+vcfname<-"highDiversity_qtls_monogamy_nm_q8_c2_1_pop_0.vcf"
+vcf1<-read.vcfR(vcfname)
+qtl_dat<-read.delim(gsub("_pop_\\d\\.vcf","_qtlinfo.txt",vcfname))
+qtl_dat<-qtl_dat[1,]
+qtl_locs<-which(vcf1@fix[,"ID"] %in% qtl_dat)
+qtls<-data.frame(chrom=gsub("(\\d)\\.(\\d+)","\\1",qtl_dat[!is.na(qtl_dat)][-1]),
+                 qtl=gsub("(\\d)\\.(\\d+)","\\2",qtl_dat[!is.na(qtl_dat)][-1]),
+                 trait=gsub("^(\\w).*$","\\1",colnames(qtl_dat[which(!is.na(qtl_dat))[-1]])))
+
+# taj d
+td<-read.delim(gsub("vcf","Tajima\\.D",vcfname))
+td$QTL<-FALSE
+for(chrom in unique(td$CHROM)){
+  chtd<-td[td$CHROM==chrom,]
+  
+  locs<-qtls[qtls$chrom ==chrom,"qtl"]
+  for(i in 1:nrow(chtd)){
+    for(loc in locs){
+      if(loc >= chtd[i,"BIN_START"] & loc <= chtd[i,"BIN_START"]+chtd[i,"N_SNPS"]){
+        # then there's a qtl there
+        chtd$QTL[i] <- TRUE
+      }
+    }
+  }
+  # Save it back to the overall df
+  td[td$CHROM==chrom,"QTL"]<-chtd$QTL
+}
+
+# pops for Gst
+mf_pop<-as.factor(gsub("^(\\w{3}).*$","\\1",colnames(vcf1@gt)[-1]))
+mt_pop<-as.factor(gsub("^(\\w{3}).*_(\\w+)$","\\2",colnames(vcf1@gt)[-1]))
+mt_mal<-factor(mt_pop[mf_pop=="MAL"])
+mf_diff<-genetic_diff(vcf1, pops = mf_pop, method = 'nei')
+mal_vcf<-vcf1[,c(1,which(mf_pop=="MAL")+1)]
+mtm_diff<-genetic_diff(mal_vcf, pops = mt_mal, method = 'nei')
+
+# files for GWAS
+genofile <- gsub("\\.vcf","_gt.csv",vcfname)
+trait_name<-gsub("_pop_\\d+\\.vcf","_traits\\.txt",vcfname)
+pop<-as.numeric(gsub("^.*pop_(\\d+).*$","\\1",vcfname))
+phenofile <- gsub("traits\\.txt",paste0("pop",pop,"_pheno.csv"),trait_name)
+
+
+```
+
+```{r qtlGWAS}
+data <- read.GWASpoly(ploidy=2, 
+                      pheno.file=phenofile, 
+                      geno.file=genofile,
+                      format="numeric", 
+                      n.traits=2, 
+                      delim=",")
+
+# check for population structure
+data.loco <- set.K(data,LOCO=TRUE,n.core=2)
+data.original <- set.K(data,LOCO=FALSE,n.core=2)
+
+# specify some parameter settings
+N<-nrow(data@pheno)
+params <- set.params(geno.freq = 1 - 5/N, fixed = "Sex", fixed.type = "factor")
+
+# test markers for significance
+court_scan <- GWASpoly(data=data.loco,
+                           models=c("additive","1-dom"),
+                           traits=c("CourtTrait","ParentTrait"),
+                           params=params
+                       )
+data2 <- set.threshold(court_scan,method="M.eff",level=0.05)
+
+```
+
+
+```{r qtlGenos}
+vcf_cp<- vcf1[vcf1@fix[,"CHROM"] %in% qtls$chrom & vcf1@fix[,"POS"] %in% qtls$qtl, grep("_CP",colnames(vcf1@gt))]
+cp_gts<-vcf_cp@gt
+cp_gts[cp_gts=="0/0"]<-"0"
+cp_gts[cp_gts=="1/0"]<-"1"
+cp_gts[cp_gts=="0/1"]<-"1"
+cp_gts[cp_gts=="1/1"]<-"2"
+cp_num<-matrix(as.numeric(cp_gts),    # Convert to numeric matrix
+                  ncol = ncol(cp_gts))
+
+vcf_p<- vcf1[vcf1@fix[,"CHROM"] %in% qtls$chrom & vcf1@fix[,"POS"] %in% qtls$qtl, grep("_P",colnames(vcf1@gt))]
+p_gts<-vcf_p@gt
+p_gts[p_gts=="0/0"]<-"0"
+p_gts[p_gts=="1/0"]<-"1"
+p_gts[p_gts=="0/1"]<-"1"
+p_gts[p_gts=="1/1"]<-"2"
+p_num<-matrix(as.numeric(p_gts),    # Convert to numeric matrix
+                  ncol = ncol(p_gts))
+
+```
+
+
+```{r QTLFig}
+
+par(mfrow=c(6,1),mar=c(1,4,2,2),oma=c(2,2,1,1))
+
+chrIndex<-factor(gsub("(\\d)_\\d+","\\1",colnames(data2@geno)))
+# GWAS courter
+plot(data2@scores$CourtTrait$additive,
+     ylab=expression(Courter~-log[10](p)),
+     xlab="",
+     xaxt='n',
+     pch=19,
+     col=c("grey73","grey44")[chrIndex],
+     bty='l')
+courtQTLs<-qtl_dat[1,grep("CourterQTL",colnames(qtl_dat))]
+qtllocs<-as.numeric(gsub("(\\d)\\.(\\d+)","\\1",courtQTLs))*1000 + 
+  as.numeric(gsub("(\\d)\\.(\\d+)","\\2",courtQTLs))
+points(qtllocs, 
+       data2@scores$CourtTrait$additive[qtllocs],
+       lwd=6,
+       col=cols["courter"],
+       cex=2)
+
+# GWAS parent
+plot(data2@scores$ParentTrait$additive,
+     ylab=expression(Parent~-log[10](p)),
+     xlab="",
+     xaxt='n',
+     pch=19,
+     col=c("grey73","grey44")[chrIndex],
+     bty='l')
+parentQTLs<-qtl_dat[1,grep("ParentQTL",colnames(qtl_dat))]
+qtllocs<-as.numeric(gsub("(\\d)\\.(\\d+)","\\1",parentQTLs))*1000 + 
+  as.numeric(gsub("(\\d)\\.(\\d+)","\\2",parentQTLs))
+points(qtllocs, 
+       data2@scores$ParentTrait$additive[qtllocs],
+       lwd=6,
+       col=cols["parent"],
+       cex=2)
+
+# Gst
+plot(mtm_diff$Gprimest,pch=19,
+     xlab="",
+     ylab=expression(G[ST]*"'"),
+     xaxt='n',
+     bty='l',
+     col=c("grey73","grey44")[factor(mtm_diff$CHROM)])
+points(qtl_locs, mtm_diff$Gprimest[qtl_locs],cex=2,col="red",lwd=2)
+#abline(h=mean(mtm_diff$Gprimest, na.rm = TRUE),col="grey",lty=2,lwd=2)
+#abline(h=median(mtm_diff$Gprimest, na.rm = TRUE),col="grey",lty=3,lwd=2)
+
+# Tajima's D
+plot(td$TajimaD,
+     ylab="Tajima's D",
+     xlab="",
+     xaxt='n',
+     pch=19,
+     col=c("grey73","grey44")[factor(td$CHROM)],
+     bty='l',
+     lwd=2
+)
+lines(1:nrow(td),
+       td$TajimaD,
+      col="grey73",
+      lwd=2)
+lines(which(td$CHROM==1),
+       td$TajimaD[td$CHROM==1],
+      col="grey44",
+      lwd=2)
+points(which(td$QTL==TRUE),
+       td$TajimaD[td$QTL==TRUE],
+       cex=2,
+       col="red",
+       lwd=2)
+
+# Heterozygosity
+plot(mf_diff$Ht,
+     pch=19,
+     bty='l',
+     lwd=2,
+     col=c("grey73","grey44")[factor(mf_diff$CHROM)],
+     xlab="",
+     ylab="Heterozygosity",
+     xaxt='n')
+points(qtl_locs, mf_diff$Ht[qtl_locs],cex=2,col="red",lwd=2)
+
+# QTL genotypes
+tmp<-cbind(p_num,
+            rep(NA,nrow(qtls)),
+            cp_num)
+image(tmp,
+      col=gt_cols,
+      axes=FALSE,
+      #ylab="Courter/Parents",
+      cex.lab=2)
+abline(h=(ncol(p_num)+1)/ncol(tmp),lwd=2)
+axis(1,at=seq(0,1,length.out=nrow(qtls)),
+     labels = qtls$trait,lwd=0)
+
+mtext("CP",2,line=2,adj =0.9,cex=0.75)
+
+mtext("NP",2,line=2,adj =0.2,cex=0.75)
+
+
+
+```
 
 
 
