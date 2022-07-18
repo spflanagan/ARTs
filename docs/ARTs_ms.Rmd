@@ -134,6 +134,7 @@ have three male alternative tactics, the evolution of the inversion
 polymorphism encoding the male morphs appears to have resolved conflict
 among the male morphs, while simultaneously exacerbating intralocus
 sexual conflict [@giraldo-deckIntralocusConflictsAssociated2022].
+
 Despite the fact that alternative reproductive tactics are by definition
 complex, multivariate phenotypes, population genetic predictions based
 on intralocus conflict tend to be based on one- or two-locus models. As
