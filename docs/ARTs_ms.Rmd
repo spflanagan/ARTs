@@ -241,20 +241,24 @@ a bit more*
 Our model considers a biological scenario in which males display to
 attract females, and with obligate male parental care. In our model,
 males possess two independent traits, courtship and parental care, both
-of which are expressed only in males (but are inherited by females). We
-assume that all females in the population always prefer males with the
-courting trait. Males who do not court can only reproduce by sneaking,
-and males who display but do not provide any parental care will not
-produce viable offspring. Thus, our model has four morphs:
-courter/parents (CP); courter/non-parents (CN); non-courters/parents
-(NP); or non-courters/non-parents (NN), although the courter/non-parent
-morph will never produce offspring. Our model is diploid, and assumes
-non-overlapping generations. While this model might not directly apply
-to all examples of alternative reproductive tactics, it is biologically
-reasonable and common even if not universally true. We expect that this
-model can be generalized to any species in which one sex (but not the
-other) has two fixed traits that impact mating success and the survival
-of their offspring.
+of which are expressed only in males (but are inherited by females).
+Courting males display within a territory, and females choose a male to
+mate with based on these displays. Once a female chooses a male, the
+survival of the clutch is dependent on whether the chosen male is also a
+parenting male. We assume that all females in the population always
+prefer males with the courting trait, but females do not know when
+choosing whether males will be parents. Males who do not court can only
+reproduce by sneaking, and males who display but do not provide any
+parental care will not produce viable offspring. Thus, our model has
+four morphs: courter/parents (CP); courter/non-parents (CN);
+non-courters/parents (NP); or non-courters/non-parents (NN), although
+the courter/non-parent morph will never produce offspring. Our model is
+diploid, and assumes non-overlapping generations. While this model might
+not directly apply to all examples of alternative reproductive tactics,
+it is biologically reasonable and common even if not universally true.
+We expect that this model can be generalized to species in which one sex
+(but not the other) has two fixed traits that impact mating success and
+the survival of their offspring.
 
 Each generation has three distinct phases: (1) mate choice and
 fertilization; (2) parental care; and (3) viability selection. In the
