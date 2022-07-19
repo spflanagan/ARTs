@@ -109,14 +109,18 @@ side-blotched lizards [@alonzoMateChoiceGames2001]), and variable
 selection such as partitioning of reproductive success over time (e.g.,
 the feminized dwarf spider morph mates earlier, whereas the alternative
 morph is able to mate with previously-mated females later in the season
-[@hendrickxMasculinizingSupergeneUnderlies2022]). *Add a sentence to
-link alternatives with genetic basis more explicitly*
+[@hendrickxMasculinizingSupergeneUnderlies2022]). While some of these
+alternative reproductive tactics are likely determined by external cues
+and are therefore plastic (e.g., examples), others are known to be fixed
+at birth, and therefore are primarily genetically determined (e.g.,
+examples).
 
-The genetic basis of polymorphic traits is also critical to
-understanding the maintenance of variation. Evolution can be constrained
-by factors including pleiotropy, genetic correlations, and physical
-linkage. As such, the reduction or removal of these constraints can
-facilitate sequence evolution by relaxing positive selection on genes
+For these fixed alternative tactics, understanding the genetic basis of
+polymorphic traits is critical to a complete picture of how variation is
+maintenance. Evolution can be constrained by factors including
+pleiotropy, genetic correlations, and physical linkage. As such, the
+reduction or removal of these constraints can facilitate sequence
+evolution by relaxing positive selection on genes
 [@harrisonSexualSelectionDrives2015; @dapperRelaxedSelectionRapid2020].
 When polymorphic traits create conflict between sexes or morphs, these
 genetic constraints can prevent the resolution of conflict and therefore
