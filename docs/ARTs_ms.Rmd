@@ -392,18 +392,17 @@ model (i.e., at generation 0).
 knitr::include_graphics("density-dependent-flowchart.jpg", dpi=150)
 ```
 
-We implemented three different genetic architectures: a single gene per
-trait, multiple QTLs randomly placed throughout chromosomes, and
-supergenes. The single gene scenario is most analogous to the
-mathematical model described above. When the traits have multiple QTLs
-determining their trait values, each QTL is assigned a location on a
-chromosome and the QTL's effect on the trait is associated with a single
-nucleotide polymorphism (SNP). These SNPs undergo recombination and
-mutation during mating. The supergene scenario forced the QTLs to
-cluster into a small proportion of one of the chromosomes. These QTLs
-still experience mutation but experienced reduced recombination. *Add
-something that explains how we go from continuous genetic trait to
-probability of being each male type*
+We implemented three different genetic architectures for these QTLs: a
+single gene per trait, multiple QTLs randomly placed throughout
+chromosomes, and supergenes. The single gene scenario is most analogous
+to the mathematical model described above. When the traits have multiple
+QTLs determining their trait values, each QTL is assigned a location on
+a chromosome and the QTL's effect on the trait is associated with a
+single nucleotide polymorphism (SNP). These SNPs undergo recombination
+and mutation during mating. The supergene scenario forced the QTLs to
+cluster into a small proportion of one of the chromosomes. In all cases,
+we assume all QTLs are autosomal, and we do not model sex chromosomes at
+all.
 
 When we ran the model, we initialized four replicate populations with
 the identical starting conditions to evaluate the impact of
