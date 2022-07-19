@@ -315,13 +315,13 @@ selection parameter $w_s$. The general calculation for the number of
 clutches is:
 
 $$
-n=\frac{N_f}{w_s(N_mf_{CP}+N_Mf_{CS})+(1-w_s)(N_mf_{NP}N_mf_{NS})}
+n=\frac{N_f}{\Sigma{w_{s_M}N_mf_{M}}},
 $$
 
 In the case of our model, because we have constrained females to only
 mate with courting males, the total number of clutches in the population
 simplifies to $$
-\frac{N_f}{N_mf_{CP}+N_m f_{CNp}}.
+\frac{N_f}{N_mf_{CP}+N_m f_{CN}}.
 $$
 
 ```{r mathModel, fig.cap="Diagram of the mathematical model describing the inheritance of alternative male reproductive morphs given courtship and parenting traits.", out.width='100%'}
