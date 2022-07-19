@@ -320,10 +320,10 @@ knitr::include_graphics("frequencyDependence.png", dpi=150)
 
 *make sure fig. 1 equations are complete and also in the main text*
 
-Likewise, the proportion of nests each type of male receives (${p_n}_M$)
-is determined by the number of morphs in the population ($N_mf_M$ for
-the $M$ morph), the probability of a female choosing that morph
-(${w_s}_M$), and the ratio of the number of nests to the number of
+Likewise, the proportion of clutches each type of male receives to care
+for (${p_n}_M$) is determined by the number of morphs in the population
+($N_mf_M$ for the $M$ morph), the probability of a female choosing that
+morph (${w_s}_M$), and the ratio of the number of nests to the number of
 females ($n/N_f$).
 
 Within a given nest, the offspring could either be fertilized by the
