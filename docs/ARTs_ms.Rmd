@@ -351,6 +351,15 @@ total number of sneaker males allowed to fertilize a given males'
 clutch. As this is a population-level model, rather than an
 individual-based model, these variables combined to determine the
 expected frequency of offpspring per morph as follows:
+
+$$
+m=c \times n_{sneak} \times r_f \\
+NnM = m\Sigma{f_MN_mw_{s_M}} \\
+sperm_M=f_MN_mr_M
+$$
+
+*Come back to this as it's not yet correct/good math*
+
 Analogously, the proportion of offspring in a nest surviving due to
 parental care investment can be split into the proportion surviving in a
 male's own nest (${p_{sn}}_M$) or in another male's nest (${p_{ss}}_M$),
