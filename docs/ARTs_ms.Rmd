@@ -1368,7 +1368,7 @@ Summary of findings
 
 Why might cause the deviation from the single-locus expectation?
 
--    LD,
+-   LD,
 
 -   genetic correlations - compare to previous models and speculate on
     how it might impact theirresults - discuss real-world examples
@@ -1383,7 +1383,7 @@ Inability to detect QTLs -- why would that happen?
 
 -   Relaxed selection
 
--    extreme LD within supergenes makes associations difficult to
+-   extreme LD within supergenes makes associations difficult to
     identify (e.g., Kim et al zebrafinchpaper)
 
 -   this is consistent with my SCA paper - what does this mean for our
