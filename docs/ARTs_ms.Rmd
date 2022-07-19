@@ -333,16 +333,24 @@ knitr::include_graphics("frequencyDependence.png", dpi=150)
 Likewise, the proportion of clutches each type of male receives to care
 for (${p_n}_M$) is determined by the number of morphs in the population
 ($N_mf_M$ for the $M$ morph), the probability of a female choosing that
-morph (${w_s}_M$), and the ratio of the number of nests to the number of
-females ($n/N_f$).
+morph (${w_s}_M$), and the ratio of the number of clutches to the number
+of females ($n/N_f$):
 
-Within a given nest, the offspring could either be fertilized by the
-nest-holding male or non-courting males 'sneaking' fertilizations.
+$$
+p_{n_M} = w_{s_M}N_mf_M\frac{n}{N_f}.
+$$
+
+Within a given clutch, the offspring could either be fertilized by the
+nest-holding male or by non-courting males 'sneaking' fertilizations.
 Therefore, each morph has a proportion of eggs fertilized within their
-own nests (${p_{fn}}_M$) and a proportion of eggs fertilized in other
-males' nests (${p_{fs}}_M$). These proportions were determined by the
+own clutches (${p_{fn}}_M$) and a proportion of eggs fertilized in other
+males' clutches (${p_{fs}}_M$). These proportions were determined by the
 sperm competition coefficient, $c$, which penalized non-courting males,
-and the relative reproductive investment for that morph ($r_M$).
+the relative reproductive investment for that morph ($r_M$), and the
+total number of sneaker males allowed to fertilize a given males'
+clutch. As this is a population-level model, rather than an
+individual-based model, these variables combined to determine the
+expected frequency of offpspring per morph as follows:
 Analogously, the proportion of offspring in a nest surviving due to
 parental care investment can be split into the proportion surviving in a
 male's own nest (${p_{sn}}_M$) or in another male's nest (${p_{ss}}_M$),
