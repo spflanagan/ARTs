@@ -279,21 +279,22 @@ non-courting males are able to fertilize a proportion of the eggs. The
 chosen parent does receive first-male priority. The consequences of this
 setup are that the only mechanism by which non-courters can produce
 offspring is through these sneak fertilizations. In the parental care
-phase of the model, males with the parental care trait have 100% nest
-survival while males without the parental care trait have 0% nest
+phase of the model, males with the parental care trait have 100%
+offspring survival while males without the parental care trait have 0%
 survival, independent of the male's courtship trait. Consequently,
 non-parents will only be sustained in the population by sneaking
-fertilizations in the parental males' nests. Finally, viability
-selection is imposed on offspring as they mature to adulthood, such that
-males carrying the courtship trait and/or the parental care trait have a
-lower probability of survival than females and males without either
-courtship or parenting. Males who are both courters and parents have a
-multiplicative effect of viability selection.
+fertilizations in clutches cared for by parental males. Finally,
+viability selection is imposed on offspring as they mature to adulthood,
+such that males carrying the courtship trait and/or the parental care
+trait have a lower probability of survival than females and males
+without either courtship or parenting. Males who are both courters and
+parents have a multiplicative effect of viability selection.
 
 We implemented our model first as a mathematical model and then as an
-individual-based simulation model. The purpose of the mathematical model
-was to generate baseline predictions for when multiple morphs are
-maintained.
+individual-based simulation model, which for simplicity we will refer to
+as the 'simulation model' throughout the text. The purpose of the
+mathematical model was to generate baseline predictions for when
+multiple morphs are maintained.
 
 ## Mathematical model
 
