@@ -294,16 +294,25 @@ avoid 'nests laid', which is confusing*
 In the mathematical model, we model the proportion of the population
 that belong to morphs at each stage of the lifecycle (Fig.
 \@ref(fig:mathModel)). In the first stage, we consider the proportion of
-the population's nests that will be allocated to each morph. The maximum
-number of nests that could be laid is proportional to the number of
-males in the population ($N_m$), if each male has the same likelihood of
-attracting a female to deposit eggs with him. However, in our model,
-males are not equally likely to be chosen by females, and therefore the
-maximum number of nests is scaled by the probability of females mating
-with each type of male morph. In the case of our model, the total number
-of nests laid in the population becomes $$
-\frac{N_f}{N_mf_{CP}+N_m f_{CNp}}
-$$ because we have constrained females to only mate with courting males.
+the population's clutches that will be allocated to each morph. The
+maximum number of clutches that could exist is proportional to the
+number of males in the population (\$N_m\$), if each male has the same
+likelihood of attracting a female to deposit eggs with him. However, in
+our model, males are not equally likely to be chosen by females, and
+therefore the maximum number of nests is scaled by the probability of
+females mating with each type of male morph, denoted by a sexual
+selection parameter $w_s$. The general calculation for the number of
+clutches is:
+
+$$
+n=\frac{N_f}{w_s(N_mf_{CP}+N_Mf_{CS})+(1-w_s)(N_mf_{NP}N_mf_{NS})}
+$$
+
+In the case of our model, because we have constrained females to only
+mate with courting males, the total number of clutches in the population
+simplifies to $$
+\frac{N_f}{N_mf_{CP}+N_m f_{CNp}}.
+$$
 
 ```{r mathModel, fig.cap="Diagram of the mathematical model describing the inheritance of alternative male reproductive morphs given courtship and parenting traits.", out.width='100%'}
 knitr::include_graphics("frequencyDependence.png", dpi=150)
