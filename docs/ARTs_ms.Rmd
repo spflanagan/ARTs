@@ -251,11 +251,6 @@ courter/parents (CP); courter/non-parents (CN); non-courters/parents
 morph will never produce offspring. Our model is diploid, and assumes
 non-overlapping generations. While this model might not directly apply
 to all examples of alternative reproductive tactics, it is biologically
-reasonable and common
-even if not universally true. We expect that this model can be
-generalized to any species in which one sex (but not the other) has two
-fixed traits that impact mating success and the survival of their
-offspring.
 
 Each generation has three distinct phases: (1) mate choice and
 fertilization; (2) parental care; and (3) viability selection. In the
