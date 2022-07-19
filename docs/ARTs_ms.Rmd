@@ -362,21 +362,21 @@ $$
 
 Analogously, the proportion of offspring in a nest surviving due to
 parental care investment can be split into the proportion surviving in a
-male's own nest (${p_{sn}}_M$) or in another male's nest (${p_{ss}}_M$),
-which is simply the proportions from the fertilization step weighted by
-the probability of the nest surviving if the morph is a parent ($w_n=1$)
-or of the morph is a non-parent ($w_n=0$). These proportions
-(${p_{sn}}_M$ and ${p_{ss}}_M$) are summed to determine the the overall
-proportion of embryos in the population that survive the parenting phase
-in each morph's nests (${p_s}_M$).
+male's own clutch (${p_{sn}}_M$) or in another male's clutch
+(${p_{ss}}_M$), which is simply the proportions from the fertilization
+step weighted by the probability of the clutch surviving if the morph is
+a parent ($w_n=1$) or of the morph is a non-parent ($w_n=0$). These
+proportions (${p_{sn}}_M$ and ${p_{ss}}_M$) are summed to determine the
+the overall proportion of embryos in the population that survive the
+parenting phase (${p_s}_M$).
 
-The final stage of the lifecycle is for offspring surviving in the nest
-to undergo viability selection by multiplying the viability selection
-coefficient (${w_v}_M$) by the surviving proportion (${p_s}_M$) and the
-original frequency of the morph in the population. Finally, the
-frequency of each morph in the next generation was calculated by
-dividing the surviving proportion (${p_v}_M$ by the sum of all
-proportions.
+The final stage of the lifecycle is for offspring surviving in the
+clutch to undergo viability selection by multiplying the viability
+selection coefficient (${w_v}_M$) by the surviving proportion
+(${p_s}_M$) and the original frequency of the morph in the population.
+Finally, the frequency of each morph in the next generation was
+calculated by dividing the surviving proportion (${p_v}_M$) by the sum
+of all proportions.
 
 To evaluate the outcomes of this mathematical model, we iterated forward
 in time for 100 generations from 1659 combinations of initial morph
