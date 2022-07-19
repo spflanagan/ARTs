@@ -262,7 +262,7 @@ parental care will not produce viable offspring. Thus, our model has
 four morphs: courter/parents (CP); courter/non-parents (CN);
 non-courters/parents (NP); or non-courters/non-parents (NN), although
 the courter/non-parent morph will never produce offspring. Our model is
-diploid, and assumes non-overlapping generations. While this model might
+diploid, and assumes non-overlapping generations. While this model does
 not directly apply to all examples of alternative reproductive tactics,
 it is biologically reasonable and common even if not universally true.
 We expect that this model can be generalized to species in which one sex
