@@ -502,14 +502,13 @@ Once a female chose a male, fertilization of the eggs occurred, in which
 the chosen male had first male priority (i.e., the chosen male allocated
 all of his reproductive effort to his own nest) and up to $n_{sneak}$
 non-courting males could 'sneak' fertilizations, with their
-contributions discounted by a factor of
-$c$. For all models analysed here, $n_{sneak}=3$ and $c=0.5$. After the
-males were assigned their paternity shares, the nests survived if the
-chosen male was also a parent. Subsequently, the total number of
-offspring in the population were created based on the proportion of
-population reproductive success achieved by each individual male and
-female (i.e., each generation, the number of offspring created was equal
-to the carrying capacity).
+contributions discounted by a factor of $c$. For all models analysed
+here, $n_{sneak}=3$ and $c=0.5$. After the males were assigned their
+paternity shares, the nests survived if the chosen male was also a
+parent. Subsequently, the total number of offspring in the population
+were created based on the proportion of population reproductive success
+achieved by each individual male and female (i.e., each generation, the
+number of offspring created was equal to the carrying capacity).
 
 When fertilization occurred, the parents' genotypes (both neutral
 markers and QTLs) had the opportunity to recombine. Recombination
