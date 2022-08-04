@@ -364,21 +364,21 @@ number of males in the population ($N_m$), if each male has the same
 likelihood of attracting a female to deposit eggs with him. However, in
 our model, males are not equally likely to be chosen by females, and
 therefore the maximum number of nests is scaled by the probability of
-females mating with each type of male morph, denoted by a sexual
-selection parameter $w_s$. The general calculation for the number of
-clutches is:
+females mating with each type of male morph 
+(denoted in a generic sense with the subscript $M$), denoted by a sexual
+selection parameter $w_s$. In general for this model, 
+the probability of NP and NN males being chosen should equal $1-w_s$, 
+where $w_s$ is the probability of courting males (CP and CN) being chosen.
+The general calculation for the number of clutches is:
 
 $$
-n=\frac{N_f}{\Sigma{w_{s_M}N_mf_{M}}},
+n=w_s(N_m f_{CP} + N_m f_{CN}) + (1-w_s)(N_m f_{NP} + N_m f_{NN}).
 $$
 
-where $w_{s_M}$ represents the probability of a female choosing a male
-of morph $M$, and is equal to 1 for CP and CN males and 0 for NP and NN
-males because we have constrained females to only mate with courting
-males. As such, the total number of clutches in the population
-simplifies to $$
-\frac{N_f}{N_mf_{CP}+N_m f_{CN}}.
-$$
+We have constrained females to only mate with courting males, so 
+$w_{s_M}$ is equal to 1 for CP and CN males and 0 for NP and NN
+males. 
+
 
 ```{r mathModel, fig.cap="Diagram of the mathematical model describing the inheritance of alternative male reproductive morphs given courtship and parenting traits.", out.width='100%'}
 knitr::include_graphics("frequencyDependence.png", dpi=150)
