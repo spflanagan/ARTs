@@ -617,16 +617,17 @@ preferred mate do not produce offspring ('polygyny no mating').
 
 ### Model analysis
 
-The outcomes of simulation model were first assessed by visualising the
-proportions of each morph that persisted to the final generation of the
-model. The first priority was to compare the outcomes of the simulation
-model with a single locus for each trait to the results from the
-mathematical model. Next, the four mating systems were compared in the
-single-locus model. From this comparison, we were then able to narrow
-the parameter space for the comparisons of the two different multilocus
-genetic architectures. The many different formats for these two genetic
-architectures were then compared in terms of the morph composition in
-the final generation, and the amount of variation among replicate runs.
+The model results were first assessed visually by graphing the
+proportion of each morph that persisted to the final generation of the
+model. Our first priority was to compare the outcomes of the simulation
+model with a single locus for each trait to the results of our
+mathematical model (from Section \@ref(mathematical-model)). Next, the
+four mating systems were compared in the single-locus model. From this
+comparison, we were then able to narrow the parameter space for the
+comparisons of the two different multilocus genetic architectures. The
+many different formats for these two genetic architectures were then
+compared in terms of the morph composition in the final generation, and
+the amount of variation among replicate runs.
 
 To identify how selection acts on the two male traits over the course of
 the simulations (10,000 generations), selection gradients on the courter
@@ -638,7 +639,7 @@ parameter settings.
 
 ### Analysing multilocus genotypes
 
-To provide a link between our theoretical models and the realities of
+To provide a link between the predictions of our theoretical models and
 empirical data, we analyzed the genetic diversity of the populations at
 the final generation of the individual based simulations. This is an
 equivalent analysis to that of the re-sequencing that was conducted by
