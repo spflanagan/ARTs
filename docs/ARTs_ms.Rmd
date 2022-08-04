@@ -382,8 +382,6 @@ $w_{s_M}$ is equal to 1 for CP and CN males and 0 for NP and NN males.
 knitr::include_graphics("../figs/mathModel_diagram.png", dpi=150)
 ```
 
-*make sure fig. 1 equations are complete and also in the main text*
-
 The total reproductive effort in the population per morph is determined
 by the number of males belonging to that morph and the morph's specified
 reproductive allocation, which determines the maximum number of eggs an
@@ -391,69 +389,50 @@ individual male can fertilize:
 
 $$
 s_M = f_M N_m r_M.
-$$ Chosen males have the first priority to fertilize the eggs in their
+$$
+
+Chosen males have the first priority to fertilize the eggs in their
 clutch, so the number of eggs fertilized within a single clutch per
 morph is determined by the reproductive effort and the probability of
 being chosen: $e_{o_M} = s_M w_{s_M}$. However, non-courting males also
 sneak fertilizations, which impacts the overall proportion of
 fertilizations per morph. The maximum number of possible fertilizations
-arising from sneaking is
+arising from sneaking for a given non-parental male is
 $N_s = n \times c \times n_{sneakers} \times r_{NN}$. This value
 reflects that for every clutch ($n$), each sneaker can contribute up to
 their individual reproductive allocation (where $r_{NN} = r_{NP}$)
-offset by the sperm competition coefficient ($c$). The overall number of
-eggs that are fertilized through sneaking per morph is then determined
-as the minimum of either their own reproductive effort ($(1-w_s)s_M$) or
-the difference between current and future reproduction... **this is not
-correct**
+offset by the sperm competition coefficient ($c$), but that this
+potential allocation is proportional to the number of sneakers
+(\$n\_{sneakers}\$) that are allowed to fertilize each clutch. If the
+number of fertilizations arising from sneaking is smaller than the
+morph's potential reproductive effort (i.e, if \$N_s \\lt s_M\$), the
+number of eggs fertilized through sneaking for that morph is the
+difference between $N_s$ and \$s_M\$, truncated at zero. Otherwise, the
+number of eggs fertilized through sneaking is $s_M$.
 
-Likewise, the proportion of clutches each type of male receives to care
-for (${p_n}_M$) is determined by the number of morphs in the population
-($N_mf_M$ for the $M$ morph), the probability of a female choosing that
-morph (${w_s}_M$), and the ratio of the number of clutches to the number
-of females ($n/N_f$):
-
-$$
-p_{n_M} = w_{s_M}N_mf_M\frac{n}{N_f}.
-$$
-
-Within a given clutch, the offspring could either be fertilized by the
-nest-holding male or by non-courting males 'sneaking' fertilizations.
-Therefore, each morph has a proportion of eggs fertilized within their
-own clutches (${p_{fn}}_M$) and a proportion of eggs fertilized in other
-males' clutches (${p_{fs}}_M$). These proportions were determined by the
-sperm competition coefficient, $c$, which penalized non-courting males,
-the relative reproductive investment for that morph ($r_M$), and the
-total number of sneaker males allowed to fertilize a given males'
-clutch. As this is a population-level model, rather than an
-individual-based model, these variables combined to determine the
-expected frequency of offspring per morph as follows:
+The survival of offspring can similarly be divided into offspring within
+a male's own clutch versus in others' clutches. The offspring surviving
+in any male's clutch is dependent on whether he is a parent or not,
+which determines the selection coefficient arising from clutch survival
+(\$w\_{n_M}\$), which for our purposes equals 1 for CP and NP males and
+equals 0 for CN and NN males: $o_{o_M} = e_{o_M} w_{n_M}$. Offspring in
+other males' clutches (i.e., those arising from sneaking) also depend on
+whether the other males' clutch survives. Thus, we calculate the number
+of offspring from sneaking that survive as:
 
 $$
-m=c \times n_{sneak} \times r_f \\
-NnM = m\Sigma{f_MN_mw_{s_M}} \\
-sperm_M=f_MN_mr_M
+o_{s_M} = e_{s_M} \frac{\Sigma{o_{o_M}}}{\Sigma{e_{o_M}}}.
 $$
 
-*Come back to this as it's not yet correct/good math*
-
-Analogously, the proportion of offspring in a nest surviving due to
-parental care investment can be split into the proportion surviving in a
-male's own clutch (${p_{sn}}_M$) or in another male's clutch
-(${p_{ss}}_M$), which is simply the proportions from the fertilization
-step weighted by the probability of the clutch surviving if the morph is
-a parent ($w_n=1$) or of the morph is a non-parent ($w_n=0$). These
-proportions (${p_{sn}}_M$ and ${p_{ss}}_M$) are summed to determine the
-the overall proportion of embryos in the population that survive the
-parenting phase (${p_s}_M$).
-
-The final stage of the lifecycle is for offspring surviving in the
-clutch to undergo viability selection by multiplying the viability
-selection coefficient (${w_v}_M$) by the surviving proportion
-(${p_s}_M$) and the original frequency of the morph in the population.
-Finally, the frequency of each morph in the next generation was
-calculated by dividing the surviving proportion (${p_v}_M$) by the sum
-of all proportions.
+Because we have entirely obligate parental care, the fraction will
+either be 1 or 0, depending on whether the morph holding the clutch has
+the parental care trait. Following the determination of clutch survival,
+we then impose viability selection on surviving juveniles by multiplying
+the viability selection coefficient (${w_v}_M$) by the surviving number
+of offspring per morph (\$o_M\$): $j_M = o_M w_{v_M}$. Finally, the
+frequency of each morph in the next generation was calculated by
+dividing the surviving number of juveniles (\$j_M\$) by the sum of all
+surviving juveniles: $f_M = \frac{j_M}{\Sigma_{i=1}^4{j_i}}$.
 
 To evaluate the outcomes of this mathematical model, we iterated forward
 in time for 100 generations from 1659 combinations of initial morph
