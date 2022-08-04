@@ -364,21 +364,19 @@ number of males in the population ($N_m$), if each male has the same
 likelihood of attracting a female to deposit eggs with him. However, in
 our model, males are not equally likely to be chosen by females, and
 therefore the maximum number of nests is scaled by the probability of
-females mating with each type of male morph 
-(denoted in a generic sense with the subscript $M$), denoted by a sexual
-selection parameter $w_s$. In general for this model, 
-the probability of NP and NN males being chosen should equal $1-w_s$, 
-where $w_s$ is the probability of courting males (CP and CN) being chosen.
-The general calculation for the number of clutches is:
+females mating with each type of male morph (denoted in a generic sense
+with the subscript $M$), denoted by a sexual selection parameter $w_s$.
+In general for this model, the probability of NP and NN males being
+chosen should equal $1-w_s$, where $w_s$ is the probability of courting
+males (CP and CN) being chosen. The general calculation for the number
+of clutches is:
 
 $$
 n=w_s(N_m f_{CP} + N_m f_{CN}) + (1-w_s)(N_m f_{NP} + N_m f_{NN}).
 $$
 
-We have constrained females to only mate with courting males, so 
-$w_{s_M}$ is equal to 1 for CP and CN males and 0 for NP and NN
-males. 
-
+We have constrained females to only mate with courting males, so
+$w_{s_M}$ is equal to 1 for CP and CN males and 0 for NP and NN males.
 
 ```{r mathModel, fig.cap="Diagram of the mathematical model describing the inheritance of alternative male reproductive morphs given courtship and parenting traits.", out.width='100%'}
 knitr::include_graphics("../figs/mathModel_diagram.png", dpi=150)
@@ -386,29 +384,28 @@ knitr::include_graphics("../figs/mathModel_diagram.png", dpi=150)
 
 *make sure fig. 1 equations are complete and also in the main text*
 
-The total reproductive effort in the population per morph is determined by 
-the number of males belonging to that morph and the morph's specified 
-reproductive allocation, which determines the maximum number of eggs an 
+The total reproductive effort in the population per morph is determined
+by the number of males belonging to that morph and the morph's specified
+reproductive allocation, which determines the maximum number of eggs an
 individual male can fertilize:
 
 $$
 s_M = f_M N_m r_M.
-$$
-Chosen males have the first priority to fertilize the eggs in their clutch, 
-so the number of eggs fertilized within a single clutch per morph is determined by 
-the reproductive effort and the probability of being chosen: $e_{o_M} = s_M w_{s_M}$. 
-However, non-courting males also sneak fertilizations, which impacts the 
-overall proportion of fertilizations per morph. The maximum number of possible 
-fertilizations arising from sneaking is 
-$N_s = n \times c \times n_{sneakers} \times r_{NN}$. 
-This value reflects that for every clutch ($n$), each sneaker can 
-contribute up to their individual reproductive allocation (where $r_{NN} = r_{NP}$) 
-offset by the sperm competition coefficient ($c$). The overall number of 
-eggs that are fertilized through sneaking per morph is then determined as 
-the minimum of either their own reproductive effort ($(1-w_s)s_M$)
-or the difference between current and future reproduction... **this is not correct**
-
-
+$$ Chosen males have the first priority to fertilize the eggs in their
+clutch, so the number of eggs fertilized within a single clutch per
+morph is determined by the reproductive effort and the probability of
+being chosen: $e_{o_M} = s_M w_{s_M}$. However, non-courting males also
+sneak fertilizations, which impacts the overall proportion of
+fertilizations per morph. The maximum number of possible fertilizations
+arising from sneaking is
+$N_s = n \times c \times n_{sneakers} \times r_{NN}$. This value
+reflects that for every clutch ($n$), each sneaker can contribute up to
+their individual reproductive allocation (where $r_{NN} = r_{NP}$)
+offset by the sperm competition coefficient ($c$). The overall number of
+eggs that are fertilized through sneaking per morph is then determined
+as the minimum of either their own reproductive effort ($(1-w_s)s_M$) or
+the difference between current and future reproduction... **this is not
+correct**
 
 Likewise, the proportion of clutches each type of male receives to care
 for (${p_n}_M$) is determined by the number of morphs in the population
@@ -767,23 +764,23 @@ c affects...*
 
 Overall, the parameters impacting whether diversity was maintained after
 both 100 and 1000 generations were the initial frequencies of the
-morphs, sperm competition ($c$), relative reproductive allocation
-($r$), and the number of sneakers allowed ($n_{sneak}$, which
-impacted the proportion of offspring a courting male could sire in his
-own clutch). Some initial starting conditions took more than 100
-generations to reach a consistent (i.e., equilibrial) state, but the
-contributions of the initial frequencies and these three parameters
-remained qualitatively consistent across 100 and 1000 generations.
-Reproductive allocations corresponding to a range of approximately 0.5
-to 1 (meaning that courters invest half as much to just as much as
-non-courters in producing sperm) resulted in the maximum amount of
-diversity, as long as sperm competition ($c$) was above 0.2 (meaning
-that, if a non-courting male produced 8 sperm and courting males produce
-4, the non-courting male would fertilize `r (8*0.2)/(4+(2*0.2*8))` or
-more of the offspring). This importance of the sperm competition
-coefficient was influenced by $n_{sneak}$, with larger contributions
-from an individual non-courting male (e.g., larger $c$) being required
-with fewer sneakers (Fig. \@ref(fig:mathParams)).
+morphs, sperm competition ($c$), relative reproductive allocation ($r$),
+and the number of sneakers allowed ($n_{sneak}$, which impacted the
+proportion of offspring a courting male could sire in his own clutch).
+Some initial starting conditions took more than 100 generations to reach
+a consistent (i.e., equilibrial) state, but the contributions of the
+initial frequencies and these three parameters remained qualitatively
+consistent across 100 and 1000 generations. Reproductive allocations
+corresponding to a range of approximately 0.5 to 1 (meaning that
+courters invest half as much to just as much as non-courters in
+producing sperm) resulted in the maximum amount of diversity, as long as
+sperm competition ($c$) was above 0.2 (meaning that, if a non-courting
+male produced 8 sperm and courting males produce 4, the non-courting
+male would fertilize `r (8*0.2)/(4+(2*0.2*8))` or more of the
+offspring). This importance of the sperm competition coefficient was
+influenced by $n_{sneak}$, with larger contributions from an individual
+non-courting male (e.g., larger $c$) being required with fewer sneakers
+(Fig. \@ref(fig:mathParams)).
 
 ## Individual-based simulation model
 
