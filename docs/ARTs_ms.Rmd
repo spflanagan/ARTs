@@ -797,11 +797,11 @@ The chosen parameter settings are shown in Table
 
 ```{r SimParamsTable}
 SimParams<-data.frame(
-  parameter = c("r (in shiny app)",
-                "r_CP",
-                "r_CN",
-                "r_NP",
-                "r_NN",
+  parameter = c("r",
+                "Max number of offspring CP males can produce",
+                "Max number of offspring CN males can produce",
+                "Max number of offspring NP males can produce",
+                "Max number of offspring NN males can produce",
                 "c",
                 "number of sneakers"),
   LowDiv = c( 2, 
