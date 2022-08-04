@@ -510,7 +510,7 @@ for each trait was the mean trait value during the initialization of the
 model (i.e., at generation 0).
 
 ```{r simModel, fig.cap="Overview of the individual-based simulation model."}
-knitr::include_graphics("density-dependent-flowchart.jpg", dpi=150)
+knitr::include_graphics("../figs/simulation_flowchart_densitydependent.png", dpi=150)
 ```
 
 We implemented three different genetic architectures for these QTLs: a
