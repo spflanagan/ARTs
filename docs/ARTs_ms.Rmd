@@ -360,7 +360,7 @@ that belong to morphs at each stage of the lifecycle (Fig.
 \@ref(fig:mathModel)). In the first stage, we consider the proportion of
 the population's clutches that will be allocated to each morph. The
 maximum number of clutches that could exist is proportional to the
-number of males in the population (\$N_m\$), if each male has the same
+number of males in the population ($N_m$), if each male has the same
 likelihood of attracting a female to deposit eggs with him. However, in
 our model, males are not equally likely to be chosen by females, and
 therefore the maximum number of nests is scaled by the probability of
