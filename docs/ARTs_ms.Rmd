@@ -117,12 +117,43 @@ and are therefore plastic (e.g., examples), others are known to be fixed
 at birth, and therefore are likely to be underpinned by genetic variants
 (e.g., examples).
 
-For these fixed alternative tactics, understanding the genetic basis of
-polymorphic traits is critical to a complete picture of how variation is
-maintained. Evolution can be constrained by factors including
-pleiotropy, genetic correlations, and physical linkage. As such, the
-reduction or removal of these constraints can facilitate sequence
-evolution by relaxing positive selection on genes
+Several authors have elegantly combined empirical data on fitness and
+morph frequencies with theoretical models to uncover the primary
+mechanisms driving the observed evolutionary dynamics in natural
+populations [@sinervoRunawaySocialGames2001;
+@sinervoRockPaperScissors1996;
+@takahashiNegativeFrequencyDependentSelection2010;
+@svenssonFemalePolymorphismFrequency2005;
+@sinervoDevelopmentalPhysiologicalNeural2006;
+@alonzoMateChoiceGames2001]. In general, the frequency-dependent fitness
+surfaces prevent the loss of any morphs, and will result in either
+oscillations of a predictable period or an evolutionarily stable
+equilibrium point. Many of these models rely on game theory approaches
+-- such as the dynamics of the rock-paper-scissors game
+[@sinervoRockPaperScissors1996] -- and all of them either implicitly or
+explicitly assume relatively simple genetic mechanisms underpinning the
+discrete traits. The models with explicit population genetic components
+to them include either one or two genetic loci with two to three alleles
+[@takahashiNegativeFrequencyDependentSelection2010;
+@sinervoRunawaySocialGames2001;
+@svenssonFemalePolymorphismFrequency2005;
+@morrisIntralocusTacticalConflict2013]. *Something about the
+correlational selection* [@sinervoCorrelationalSelectionEvolution2002a]
+While these relatively simple genetic models do capture the evolutionary
+dynamics of the specific examples they are paired with
+[@sinervoRunawaySocialGames2001], genomic data has accumulated for a
+number of species suggesting that categorical traits might in fact be
+underpinned by numerous quantitative genetic loci
+(examples)...Furthermore, morphs are comprised of multiple traits, and
+thus variation at multiple genetic loci is likely to contribute to the
+evolutionary dynamics of morph frequencies. As such, we might be missing
+out on important factors constraining or facilitating evolution.
+
+When traits are comprised of multiple loci, evolutionary constraints
+arising from pleiotropy, genetic correlations, and physical linkage
+could impact shifts in morph frequencies within and among populations.
+As such, the reduction or removal of these constraints can facilitate
+sequence evolution by relaxing positive selection on genes
 [@harrisonSexualSelectionDrives2015; @dapperRelaxedSelectionRapid2020].
 When polymorphic traits create conflict between sexes or morphs, these
 genetic constraints can prevent the resolution of conflict and therefore
@@ -223,16 +254,6 @@ androgen receptors [@maneySupergenesSteroids2022]-- the white-throated
 sparrow supergene contains the estrogen receptor gene which directly
 influences the aggressive aspects of the dominant male phenotype
 [\@merrittSupergenelinkedEstrogenReceptor2020].
-
-Alternative reproductive tactics are suites of behavioural, phenotypic,
-and hormonal traits that are inherited and expressed together. As such,
-they are often treated as single discrete traits in models, including
-those investigating intralocus conflict among morphs
-[@morrisIntralocusTacticalConflict2013]. *Expand this a bit more to
-transition to supergenes : touch on the fact that simple pop gen models
-using the same genetic controls that are different between alternatives,
-while multilocus models predict... and then supergenes is one
-hypothesized solution to this evolutionary puzzle*
 
 An open question is to what extent do supergenes facilitate the
 maintenance of multiple morphs, versus whether the evolution of multiple
