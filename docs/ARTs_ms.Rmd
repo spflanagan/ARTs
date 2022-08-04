@@ -386,6 +386,30 @@ knitr::include_graphics("../figs/mathModel_diagram.png", dpi=150)
 
 *make sure fig. 1 equations are complete and also in the main text*
 
+The total reproductive effort in the population per morph is determined by 
+the number of males belonging to that morph and the morph's specified 
+reproductive allocation, which determines the maximum number of eggs an 
+individual male can fertilize:
+
+$$
+s_M = f_M N_m r_M.
+$$
+Chosen males have the first priority to fertilize the eggs in their clutch, 
+so the number of eggs fertilized within a single clutch per morph is determined by 
+the reproductive effort and the probability of being chosen: $e_{o_M} = s_M w_{s_M}$. 
+However, non-courting males also sneak fertilizations, which impacts the 
+overall proportion of fertilizations per morph. The maximum number of possible 
+fertilizations arising from sneaking is 
+$N_s = n \times c \times n_{sneakers} \times r_{NN}$. 
+This value reflects that for every clutch ($n$), each sneaker can 
+contribute up to their individual reproductive allocation (where $r_{NN} = r_{NP}$) 
+offset by the sperm competition coefficient ($c$). The overall number of 
+eggs that are fertilized through sneaking per morph is then determined as 
+the minimum of either their own reproductive effort ($(1-w_s)s_M$)
+or the difference between current and future reproduction... **this is not correct**
+
+
+
 Likewise, the proportion of clutches each type of male receives to care
 for (${p_n}_M$) is determined by the number of morphs in the population
 ($N_mf_M$ for the $M$ morph), the probability of a female choosing that
