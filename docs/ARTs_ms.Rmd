@@ -744,21 +744,21 @@ pnn<-nrow(divRes[divRes$NN>=0.5,])/ndiv
 
 ```
 
-The regions of the parameter space the have non-zero diversity values
+The regions of the parameter space that have non-zero diversity values
 correspond to scenarios where three of the four morphs were retained
 (courter-parents, non-courter-parents, and non-courter-non-parents). The
 dominant morph differed with various parameter combinations. Assuming
-equal starting frequencies, after 10000 generations, `r pcourt*100`% of
+equal starting frequencies, after 10,000 generations, `r pcourt*100`% of
 parameter combinations that retained polymorphism resulted in the
 courter-parent morph comprising $\le$ 50% of the population. The
-remaining `r (1-pcourt)*100`% of parameter combinations resulting in
-polymorphism had more equal representation of all three morphs, with the
-average proportion of the population being
-`r mean(divRes[divRes$CP<=0.5,"CP"])*100` % ($pm$
+remaining `r (1-pcourt)*100`% of parameter combinations resulting in the
+maintenance of alternative morphs had more equal representation of all
+three morphs, with the average proportion of the population being
+`r mean(divRes[divRes$CP<=0.5,"CP"])*100` % ($\pm$
 `r sem(divRes[divRes$CP<=0.5,"CP"])*100` %) courter-parents,
-`r mean(divRes[divRes$CP<=0.5,"NP"])*100` % ($pm$
+`r mean(divRes[divRes$CP<=0.5,"NP"])*100` % ($\pm$
 `r sem(divRes[divRes$CP<=0.5,"NP"])*100` %) non-courter-parents, and
-`r mean(divRes[divRes$CP<=0.5,"NN"])*100` % ($pm$
+`r mean(divRes[divRes$CP<=0.5,"NN"])*100` % ($\pm$
 `r sem(divRes[divRes$CP<=0.5,"NN"])*100` %) non-courter-non-parents.
 
 *Could expand this explanation to build readers' intuition: As expected,
