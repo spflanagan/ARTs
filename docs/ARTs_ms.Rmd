@@ -653,7 +653,7 @@ To implement this analysis, we used vcfR
 [@knausVcfrPackageManipulate2017] to estimate observed heterozygosity
 (i.e., a measure of variation at a locus) for all markers in the genome,
 including QTLs, and compared the frequencies of alleles between morphs
-using Gst, which is a measure between 0 and 1 that indicates how
+using $G_{ST}$, which is a measure between 0 and 1 that indicates how
 different the frequencies are between groups. Additionally, an
 association between male phenotypes and genetic markers was tested for
 using GWASpoly [@rosyaraSoftwareGenomeWideAssociation2016]. Finally, we
@@ -661,9 +661,9 @@ used vcftools [@danecekVariantCallFormat2011] to test for signals of
 balancing selection at the QTL loci compared to non-QTL loci. Because
 linkage cause loci near to the actual target of selection (the QTL) to
 have elevated variation as well, we identified 'peaks' of
-differentiation (Gst) and association (GWAS p-values), and determined
-the proportion of these peaks that were within a 50 basepair window of
-one of the true QTLs.
+differentiation ($G_{ST}$) and association (GWAS p-values), and
+determined the proportion of these peaks that were within a 50 basepair
+window of one of the true QTLs.
 
 Linkage disequilibrium can occur among loci due to shared selection
 pressures, in addition to physical linkage. Therefore, we might expect
