@@ -829,6 +829,8 @@ kable(SimParams, "latex",booktab=TRUE,
 
 ### Impacts of mating system on the model
 
+*Need to be clear which one is consistent with the mathematical model!*
+
 As expected, in the low diversity parameter space, the majority of
 simulations resulted in fixation or near-fixation of the courter-parent
 morph (Fig. \@ref(fig:MatingTypesFig)). A more surprising result was the
@@ -1039,6 +1041,9 @@ QTL, even when QTLs are segregating together in a supergene.
 
 ### Selection on courter and parent traits
 
+*Add a reminder/explanation around why we look at selection -- also lay
+it out in the methods*
+
 Selection consistently favoured parent traits, whereas courter traits
 could experience negative selection in high diversity parameter
 scenarios (Fig. \@ref(fig:selectionOverTime)). Selection was strong in
@@ -1150,6 +1155,9 @@ outer_legend("top",
 ```
 
 ### Genome-wide genetic diversity
+
+*Expand explanation for why we did this for the reader: what is expected
+and build the intuition. Add more explanation for non-geneticists*
 
 In the final generation of the simulations, the average genome-wide
 heterozygosity was not substantially different in simulations with
@@ -1310,6 +1318,8 @@ outer_legend("top",
 ```
 
 ### Will GWAS detect the actual QTLs?
+
+*. Add more explanation for non-geneticists and build intuition*
 
 As expected, the detection of true QTLs in a GWAS was more likely when
 fewer QTLs underpin the trait, especially if those QTLs are aggregated
