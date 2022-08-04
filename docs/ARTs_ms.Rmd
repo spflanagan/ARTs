@@ -381,7 +381,7 @@ males.
 
 
 ```{r mathModel, fig.cap="Diagram of the mathematical model describing the inheritance of alternative male reproductive morphs given courtship and parenting traits.", out.width='100%'}
-knitr::include_graphics("frequencyDependence.png", dpi=150)
+knitr::include_graphics("../figs/mathModel_diagram.png", dpi=150)
 ```
 
 *make sure fig. 1 equations are complete and also in the main text*
