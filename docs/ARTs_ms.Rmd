@@ -693,27 +693,7 @@ parameter space that resulted in multiple morphs, we focus on parameters
 yielding Shannon-Wiener diversity indices $\ge 1$ because it simplifies
 comparisons of frequencies of all four morphs.
 
-Overall, the parameters impacting whether diversity was maintained after
-both 100 and 1000 generations were the initial frequencies of the
-morphs, sperm competition ($c$), relative reproductive allocation
-(\$r\$), and the number of sneakers allowed (\$n\_{sneak}\$), which
-impacted the proportion of offspring a courting male could sire in his
-own clutch). Some initial starting conditions took more than 100
-generations to reach a consistent (i.e., equilibrial) state, but the
-contributions of the initial frequencies and these three parameters
-remained qualitatively consistent across 100 and 1000 generations.
-Reproductive allocations corresponding to a range of approximately 0.5
-to 1 (meaning that courters invest half as much to just as much as
-non-courters in producing sperm) resulted in the maximum amount of
-diversity, as long as sperm competition (\$c\$) was above 0.2 (meaning
-that, if a non-courting male produced 8 sperm and courting males produce
-4, the non-courting male would fertilize r (8\*0.2)/(4+(2\*0.2\*8)) or
-more of the offspring). This importance of the sperm competition
-coefficient was influenced by $n_{sneak}$, with larger contributions
-from an individual non-courting male (e.g., larger $c$) being required
-with fewer sneakers (Fig. \@ref(fig:mathParams)).
-
-```{r mathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=4.5, fig.height=7, warning=FALSE,message=FALSE}
+```{r mathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=4, fig.height=6.5, warning=FALSE,message=FALSE}
 
 results<-readRDS("../morph_predictions/morph_results_10000_equalStart.RDS")
 results$diversity<-vegan::diversity(round(results[,c("CP","CN","NP","NN")],4))
@@ -780,6 +760,30 @@ average proportion of the population being
 `r sem(divRes[divRes$CP<=0.5,"NP"])*100` %) non-courter-parents, and
 `r mean(divRes[divRes$CP<=0.5,"NN"])*100` % ($pm$
 `r sem(divRes[divRes$CP<=0.5,"NN"])*100` %) non-courter-non-parents.
+
+*Could expand this explanation to build readers' intuition: As expected,
+sperm competition leads to an increase in...which makes sense given that
+c affects...*
+
+Overall, the parameters impacting whether diversity was maintained after
+both 100 and 1000 generations were the initial frequencies of the
+morphs, sperm competition ($c$), relative reproductive allocation
+($r$), and the number of sneakers allowed ($n_{sneak}$, which
+impacted the proportion of offspring a courting male could sire in his
+own clutch). Some initial starting conditions took more than 100
+generations to reach a consistent (i.e., equilibrial) state, but the
+contributions of the initial frequencies and these three parameters
+remained qualitatively consistent across 100 and 1000 generations.
+Reproductive allocations corresponding to a range of approximately 0.5
+to 1 (meaning that courters invest half as much to just as much as
+non-courters in producing sperm) resulted in the maximum amount of
+diversity, as long as sperm competition ($c$) was above 0.2 (meaning
+that, if a non-courting male produced 8 sperm and courting males produce
+4, the non-courting male would fertilize `r (8*0.2)/(4+(2*0.2*8))` or
+more of the offspring). This importance of the sperm competition
+coefficient was influenced by $n_{sneak}$, with larger contributions
+from an individual non-courting male (e.g., larger $c$) being required
+with fewer sneakers (Fig. \@ref(fig:mathParams)).
 
 ## Individual-based simulation model
 
