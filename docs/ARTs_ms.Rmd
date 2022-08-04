@@ -91,7 +91,7 @@ occur, and as such the maintenance of variation in populations has long
 been of interest to evolutionary biologists and conservation
 geneticists. In general, evolution by natural selection is predicted to
 decrease variation in populations, while only a few specific forms of
-selection can maintain variation in populations, such as overdominance,
+selection can maintain variation in populations, such as overdominance,
 sexually antagonistic selection
 [@connallonEvolutionaryConsequencesSexSpecific2018;
 @connallonResolutionSexualAntagonism2011], and frequency dependent
@@ -379,7 +379,7 @@ the relative reproductive investment for that morph ($r_M$), and the
 total number of sneaker males allowed to fertilize a given males'
 clutch. As this is a population-level model, rather than an
 individual-based model, these variables combined to determine the
-expected frequency of offpspring per morph as follows:
+expected frequency of offspring per morph as follows:
 
 $$
 m=c \times n_{sneak} \times r_f \\
@@ -894,9 +894,9 @@ final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
 ```
 
 We incorporated polygenic inheritance of the male traits in two ways,
-both of which reduced the impacts of stochasticity on the final morph
+both of which reduced the effect of stochasticity on the final morph
 frequencies. In the low diversity parameter space, the outcomes remained
-consistent with the single-locus model (and the expectations from the
+consistent with the single-locus model (and the predictions of the
 mathematical model): courter/parents dominated the populations, with
 complete fixation of the morph in the majority of runs, and any
 variation existing in the form of 1-2 individuals (courter/parent
