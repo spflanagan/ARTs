@@ -21,7 +21,6 @@ abstract: null
 header-includes: | 
   \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H} \usepackage[sfdefault]{roboto} \usepackage[T1]{fontenc}
 preprint: no
-fontfamily: roboto
 mainfont: roboto
 geometry: margin=2.5cm
 papersize: a4
