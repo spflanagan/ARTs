@@ -916,6 +916,12 @@ qtls<-data.frame(chrom=gsub("(\\d)\\.(\\d+)","\\1",qtl_dat[!is.na(qtl_dat)][-1])
                  qtl=gsub("(\\d)\\.(\\d+)","\\2",qtl_dat[!is.na(qtl_dat)][-1]),
                  trait=gsub("^(\\w).*$","\\1",colnames(qtl_dat[which(!is.na(qtl_dat))[-1]])))
 
+
+qtls$col<-cols["courter"]
+qtls$col[qtls$trait=="P"]<-cols["parent"]
+
+qtls$loc<-as.numeric(qtls$chrom)*1000 + as.numeric(qtls$qtl)
+
 # taj d
 td<-read.delim(gsub("vcf","Tajima\\.D",vcfname))
 td$QTL<-FALSE
