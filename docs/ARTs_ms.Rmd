@@ -14,12 +14,12 @@ capsize: normalsize
 documentclass: article
 editor_options:
   chunk_output_type: console
-  markdown: 
+  markdown:
     wrap: 72
 fontsize: 11pt
-abstract: |
 header-includes: |
   \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H}
+abstract: null
 preprint: no
 spacing: singlespacing
 ---
