@@ -10,7 +10,6 @@ output:
     number_sections: no
     toc: no
 bibliography: references.bib
-csl: proceedings-of-the-royal-society-b.csl
 capsize: normalsize
 documentclass: article
 editor_options:
