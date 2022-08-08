@@ -44,6 +44,7 @@ library(dplyr)
 library(vegan)
 library(tidyr)
 library(vcfR)
+library(GWASpoly)
 source("../R/003_genomic_summaries.R")
 source("../R/002_freq_functions.R")
 source("../morph_predictions/check_freqs.R")
@@ -386,7 +387,6 @@ I am using the package GWASpoly to run genome-wide association studies for the c
 As an example of what I could do re: manhattan plots (but am not doing on all of them), here is an example with one rep.
 
 ```{r}
-library(GWASpoly)
 genofile <- gsub("\\.vcf","_gt.csv",vcfname)
 trait_name<-gsub("_pop_\\d+\\.vcf","_traits\\.txt",vcfname)
 pop<-as.numeric(gsub("^.*pop_(\\d+).*$","\\1",vcfname))
