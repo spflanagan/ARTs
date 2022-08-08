@@ -1342,12 +1342,13 @@ plot(data2@scores$ParentTrait$additive,
      xaxt='n',
      pch=19,
      col=c("grey73","grey44")[chrIndex],
-     bty='l')
-parentQTLs<-qtl_dat[1,grep("ParentQTL",colnames(qtl_dat))]
-qtllocs<-as.numeric(gsub("(\\d)\\.(\\d+)","\\1",parentQTLs))*1000 + 
-  as.numeric(gsub("(\\d)\\.(\\d+)","\\2",parentQTLs))
+     bty='l',
+     cex.lab=1.5)
+qtllocs<-qtls[qtls$trait=="P","loc"]
+qtlvals<-data2@scores$ParentTrait$additive[qtllocs]
+qtlvals[is.na(qtlvals)]<-0
 points(qtllocs, 
-       data2@scores$ParentTrait$additive[qtllocs],
+       qtlvals,
        lwd=6,
        col=cols["parent"],
        cex=2)
@@ -1358,8 +1359,12 @@ plot(mtm_diff$Gprimest,pch=19,
      ylab=expression(G[ST]*"'"),
      xaxt='n',
      bty='l',
-     col=c("grey73","grey44")[factor(mtm_diff$CHROM)])
-points(qtl_locs, mtm_diff$Gprimest[qtl_locs],cex=2,col="red",lwd=2)
+     col=c("grey73","grey44")[factor(mtm_diff$CHROM)],
+     cex.lab=1.5)
+
+points(qtls$loc, 
+       mtm_diff$Gprimest[qtls$loc],cex=2,
+       col=qtls$col,lwd=6)
 #abline(h=mean(mtm_diff$Gprimest, na.rm = TRUE),col="grey",lty=2,lwd=2)
 #abline(h=median(mtm_diff$Gprimest, na.rm = TRUE),col="grey",lty=3,lwd=2)
 
@@ -1371,7 +1376,8 @@ plot(td$TajimaD,
      pch=19,
      col=c("grey73","grey44")[factor(td$CHROM)],
      bty='l',
-     lwd=2
+     lwd=2,
+     cex.lab=1.5
 )
 lines(1:nrow(td),
        td$TajimaD,
@@ -1381,11 +1387,16 @@ lines(which(td$CHROM==1),
        td$TajimaD[td$CHROM==1],
       col="grey44",
       lwd=2)
-points(which(td$QTL==TRUE),
-       td$TajimaD[td$QTL==TRUE],
+points(which(td$QTL==TRUE & td$CHROM==0),
+       td$TajimaD[td$QTL==TRUE & td$CHROM==0],
        cex=2,
-       col="red",
-       lwd=2)
+       col=qtls$col[qtls$chrom==0][order(qtls$qtl[qtls$chrom==0])],
+       lwd=6)
+points(which(td$QTL==TRUE & td$CHROM==1),
+       td$TajimaD[td$QTL==TRUE & td$CHROM==1],
+       cex=2,
+       col=qtls$col[qtls$chrom==1][order(qtls$qtl[qtls$chrom==1])],
+       lwd=6)
 
 # Heterozygosity
 plot(mf_diff$Ht,
@@ -1394,9 +1405,13 @@ plot(mf_diff$Ht,
      lwd=2,
      col=c("grey73","grey44")[factor(mf_diff$CHROM)],
      xlab="",
-     ylab="Heterozygosity",
-     xaxt='n')
-points(qtl_locs, mf_diff$Ht[qtl_locs],cex=2,col="red",lwd=2)
+     ylab=expression(italic("H"["T"])),
+     xaxt='n',
+     cex.lab=1.5)
+points(qtls$loc, mf_diff$Ht[qtls$loc],
+       cex=2,
+       col=qtls$col,
+       lwd=6)
 
 # QTL genotypes
 tmp<-cbind(p_num,
