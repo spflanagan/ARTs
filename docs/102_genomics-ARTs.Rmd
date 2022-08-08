@@ -1262,6 +1262,35 @@ data2 <- set.threshold(court_scan,method="M.eff",level=0.05)
 ```
 
 
+```{r qtlLD, eval=FALSE}
+ld_file<-gsub(".vcf",".LD.geno.ld",vcfname)
+ld_info<-read.delim(ld_file)
+
+ld_summary<-data.frame(CHR=NA,POS=NA,AvgR2=NA, AvgR2Q=NA, AvgR2NQ=NA)
+counter<-1
+for(chrom in unique(ld_info$CHR)){
+  chld<-ld_info[ld_info$CHR==chrom,]
+  locs<-qtls[qtls$chrom ==chrom,"qtl"]
+  for(pos in unique(chld$POS1)){
+    ld_summary[counter,"CHR"]<-chrom
+    ld_summary[counter,"POS"]<-pos
+    ld_summary[counter,"AvgR2"]<-mean(chld[chld$POS1==pos,"R.2"], na.rm=TRUE)
+    ld_summary[counter,"AvgR2Q"]<-mean(chld[chld$POS1==pos & chld$POS2 %in% locs,"R.2"], na.rm=TRUE)
+    ld_summary[counter,"AvgR2NQ"]<-mean(chld[chld$POS1==pos & !(chld$POS2 %in% locs),"R.2"], na.rm=TRUE)
+    counter<-counter + 1
+  }
+}
+write.table(ld_summary,paste0(ld_file,"_summary.txt"),
+            row.names = FALSE,
+            col.names = TRUE)
+
+```
+```{r readQTLLD}
+ld_summary<-read.delim(gsub(".vcf",".LD.geno.ld_summary.txt",vcfname),
+                       sep=' ')
+```
+
+
 ```{r qtlGenos}
 vcf_cp<- vcf1[vcf1@fix[,"CHROM"] %in% qtls$chrom & vcf1@fix[,"POS"] %in% qtls$qtl, grep("_CP",colnames(vcf1@gt))]
 cp_gts<-vcf_cp@gt
