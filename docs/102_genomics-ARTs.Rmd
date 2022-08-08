@@ -876,7 +876,9 @@ hist(td_summary$p,
 So I have two suggestions: 
 
 - dig into the ones with small p-values, see what's going on
+
 - compare these to the runs with negative selection on courters/that maintained diversity
+
 
 ```{r}
 final_freqs$rep  <-gsub("../fixedART-results/.*\\/(.*\\w+_monogamy_nm_.*pop\\d).*","\\1",final_freqs$file)
