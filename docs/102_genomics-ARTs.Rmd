@@ -1129,9 +1129,9 @@ plot(mf_diff$Ht,
      lwd=2,
      col=c("grey73","grey44")[factor(mf_diff$CHROM)],
      xlab="",
-     ylab="Heterozygosity",
-     xaxt='n')
-points(qtl_locs, mf_diff$Ht[qtl_locs],cex=2,col="red",lwd=2)
+     ylab=expression(italic("H"["T"])),
+     xaxt='n',
+     cex.lab=1.5)
 points(qtls$loc, mf_diff$Ht[qtls$loc],
        cex=2,
        col=qtls$col,
