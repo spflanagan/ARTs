@@ -27,6 +27,7 @@ geometry: margin=2.5cm
 papersize: a4
 ---
 
+
 ```{r setup, include=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
 knitr::opts_knit$set(root.dir='../results/') #change
@@ -67,6 +68,7 @@ poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
 divcols<-c("#e78ac3","#ffd92f")
 
 ```
+
 
 *Think about a better title!*
 
