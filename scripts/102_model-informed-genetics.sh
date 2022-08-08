@@ -29,8 +29,8 @@ LC=0.5
 
 # Things to vary
 SUPERGENE_PROP_VARS='0.05 0.25 0.5'
-NUM_CHROM='2 4 8'
-NUM_QTL='8 16 32 64'
+NUM_CHROM='2' #'2 4 8'
+NUM_QTL='1' #'8 16 32 64'
 
 ### --- MOVE TO THE CORRECT DIRECTORIES --- ###
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

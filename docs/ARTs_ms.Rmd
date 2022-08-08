@@ -1,12 +1,8 @@
 ---
 title: "Genetic architecthure of alternative reproductive tactics"
 author:
-- affilnum: 1
-  corresponding: yes
-  email: spflanagan.phd@gmail.com
-  name: Sarah P. Flanagan
-- affilnum: 2
-  name: Suzanne Alonzo
+  - Sarah P. Flanagan
+  - Suzanne Alonzo
 output:
   bookdown::pdf_document2:
     fig_caption: yes
@@ -31,12 +27,6 @@ fontsize: 11pt
 abstract: |
 header-includes: |
   \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H}
-affiliation:
-- affil: School of Biological Sciences, University of Canterbury, 4800 Private Bag,
-    Christchurch 8140 New Zealand
-  affilnum: 1
-- affil: University of California Santa Cruz, Santa Cruz, California, USA
-  affilnum: 2
 preprint: no
 spacing: singlespacing
 ---
