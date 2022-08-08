@@ -1182,7 +1182,7 @@ mtext("NP",2,line=2,adj =0.2,cex=0.75)
 ### qtls
 
 
-```{r qtlExampleData, warning=FALSE}
+```{r qtlExampleData, warning=FALSE, message=FALSE}
 # Looking into supergene haplotypes
 vcfname<-"highDiversity_qtls_monogamy_nm_q8_c2_1_pop_0.vcf"
 vcf1<-read.vcfR(vcfname)
@@ -1229,7 +1229,7 @@ phenofile <- gsub("traits\\.txt",paste0("pop",pop,"_pheno.csv"),trait_name)
 
 ```
 
-```{r qtlGWAS}
+```{r qtlGWAS, message=FALSE}
 data <- read.GWASpoly(ploidy=2, 
                       pheno.file=phenofile, 
                       geno.file=genofile,
