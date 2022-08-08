@@ -931,6 +931,7 @@ for(chrom in unique(td$CHROM)){
   locs<-qtls[qtls$chrom ==chrom,"qtl"]
   for(i in 1:nrow(chtd)){
     for(loc in locs){
+      loc<-as.numeric(loc)
       if(loc >= chtd[i,"BIN_START"] & loc <= chtd[i,"BIN_START"]+chtd[i,"N_SNPS"]){
         # then there's a qtl there
         chtd$QTL[i] <- TRUE
