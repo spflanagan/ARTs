@@ -1499,8 +1499,8 @@ Summary of findings
 -   do supergenes not differ from QTLs because they are still multilocus
     (not quite operating asdiscrete haplotypes?)
 
--   GWAS is only going to pick up ≤ 50% of true QTLs, and will provide
-    spurious results
+-   GWAS is only going to pick up $\le$ 50% of true QTLs, and will
+    provide spurious results
 
 -   a mention of intralocus conflict?
 
