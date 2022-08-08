@@ -17,9 +17,9 @@ editor_options:
   markdown:
     wrap: 72
 fontsize: 11pt
-header-includes: |
-  \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H}
 abstract: null
+header-includes: | 
+  \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H} \usepackage[sfdefault]{roboto} \usepackage[T1]{fontenc}
 preprint: no
 spacing: singlespacing
 ---
