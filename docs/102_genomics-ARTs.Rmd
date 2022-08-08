@@ -1037,18 +1037,19 @@ p_num<-matrix(as.numeric(p_gts),    # Convert to numeric matrix
 
 
 ```{r supergeneFig}
-par(mfrow=c(6,1),mar=c(1,4,2,2),oma=c(2,2,1,1), xpd=TRUE)
+par(mfrow=c(6,1),mar=c(1,4,2,2),oma=c(2,3.5,1,1), xpd=TRUE)
 
 chrIndex<-factor(gsub("(\\d)_\\d+","\\1",colnames(data2@geno)))
 # GWAS courter
 plot(data2@scores$CourtTrait$additive,
-     ylab=expression(Courter~-log[10](p)),
+     ylab=expression(-log[10](p)),
      xlab="",
      xaxt='n',
      pch=19,
      col=c("grey73","grey44")[chrIndex],
      bty='l',
      cex.lab=1.5)
+mtext("Courter",2,line=5)
 qtllocs<-qtls[qtls$trait=="C","loc"]
 qtlvals<-data2@scores$CourtTrait$additive[qtllocs]
 qtlvals[is.na(qtlvals)]<-0
@@ -1060,13 +1061,14 @@ points(qtllocs,
 
 # GWAS parent
 plot(data2@scores$ParentTrait$additive,
-     ylab=expression(Parent~-log[10](p)),
+     ylab=expression(-log[10](p)),
      xlab="",
      xaxt='n',
      pch=19,
      col=c("grey73","grey44")[chrIndex],
      bty='l',
      cex.lab=1.5)
+mtext("Parent",2,line=5)
 qtllocs<-qtls[qtls$trait=="P","loc"]
 qtlvals<-data2@scores$ParentTrait$additive[qtllocs]
 qtlvals[is.na(qtlvals)]<-0
@@ -1314,18 +1316,19 @@ p_num<-matrix(as.numeric(p_gts),    # Convert to numeric matrix
 
 
 ```{r QTLFig}
-par(mfrow=c(6,1),mar=c(1,4,2,2),oma=c(2,2,1,1), xpd=TRUE)
+par(mfrow=c(6,1),mar=c(1,4.5,2,2),oma=c(2,3.5,1,1), xpd=TRUE)
 
 chrIndex<-factor(gsub("(\\d)_\\d+","\\1",colnames(data2@geno)))
 # GWAS courter
 plot(data2@scores$CourtTrait$additive,
-     ylab=expression(Courter~-log[10](p)),
+     ylab=expression(-log[10](p)),
      xlab="",
      xaxt='n',
      pch=19,
      col=c("grey73","grey44")[chrIndex],
      bty='l',
      cex.lab=1.5)
+mtext("Courter",2,line=5)
 qtllocs<-qtls[qtls$trait=="C","loc"]
 qtlvals<-data2@scores$CourtTrait$additive[qtllocs]
 qtlvals[is.na(qtlvals)]<-0
@@ -1337,13 +1340,14 @@ points(qtllocs,
 
 # GWAS parent
 plot(data2@scores$ParentTrait$additive,
-     ylab=expression(Parent~-log[10](p)),
+     ylab=expression(-log[10](p)),
      xlab="",
      xaxt='n',
      pch=19,
      col=c("grey73","grey44")[chrIndex],
      bty='l',
      cex.lab=1.5)
+mtext("Parent",2,line=5)
 qtllocs<-qtls[qtls$trait=="P","loc"]
 qtlvals<-data2@scores$ParentTrait$additive[qtllocs]
 qtlvals[is.na(qtlvals)]<-0
