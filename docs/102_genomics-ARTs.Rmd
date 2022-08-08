@@ -1037,8 +1037,7 @@ p_num<-matrix(as.numeric(p_gts),    # Convert to numeric matrix
 
 
 ```{r supergeneFig}
-
-par(mfrow=c(6,1),mar=c(1,4,2,2),oma=c(2,2,1,1))
+par(mfrow=c(6,1),mar=c(1,4,2,2),oma=c(2,2,1,1), xpd=TRUE)
 
 chrIndex<-factor(gsub("(\\d)_\\d+","\\1",colnames(data2@geno)))
 # GWAS courter
