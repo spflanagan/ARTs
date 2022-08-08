@@ -959,7 +959,7 @@ phenofile <- gsub("traits\\.txt",paste0("pop",pop,"_pheno.csv"),trait_name)
 
 ```
 
-```{r supergeneGWAS}
+```{r supergeneGWAS, message=FALSE}
 data <- read.GWASpoly(ploidy=2, 
                       pheno.file=phenofile, 
                       geno.file=genofile,
