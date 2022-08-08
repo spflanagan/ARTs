@@ -9,12 +9,6 @@ output:
     keep_tex: yes
     number_sections: no
     toc: no
-    toc_depth: 2
-  html_document: null
-  pdf_document:
-    toc: yes
-    toc_depth: '2'
-  word_document: null
 bibliography: references.bib
 csl: proceedings-of-the-royal-society-b.csl
 capsize: normalsize
