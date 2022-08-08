@@ -1413,6 +1413,30 @@ points(qtls$loc, mf_diff$Ht[qtls$loc],
        col=qtls$col,
        lwd=6)
 
+# LD
+plot(ld_summary$AvgR2,
+     type='l',
+     bty='l',
+     lwd=2,
+     col=c("grey73","grey44")[ld_summary$CHR+1],
+     xlab="",
+     ylab="Mean LD",
+     xaxt='n',
+     cex.lab=1.5)
+lines(which(ld_summary$CHR==1),
+       ld_summary$AvgR2[ld_summary$CHR==1],
+      col="grey44",
+      lwd=2)
+points(qtls$loc,
+       ld_summary$AvgR2[qtls$loc],
+       cex=2,
+       col=qtls$col,
+       lwd=6)
+
+```
+
+
+```{r qtlGenotypes}
 # QTL genotypes
 tmp<-cbind(p_num,
             rep(NA,nrow(qtls)),
