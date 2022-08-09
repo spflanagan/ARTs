@@ -160,11 +160,6 @@ polymorphism encoding the male morphs appears to have resolved conflict
 among the male morphs, while simultaneously exacerbating intralocus
 sexual conflict [@giraldo-deckIntralocusConflictsAssociated2022].
 
-*Expand this a bit more to transition to supergenes : touch on the fact
-that simple pop gen models using the same genetic controls that are
-different between alternatives, while multilocus models predict... and
-then supergenes is one hypothesized solution to this evolutionary
-puzzle*
 
 The genetic architectures of alternative reproductive tactics have been
 characterized in a few examples, and the diversity of outcomes highlight
