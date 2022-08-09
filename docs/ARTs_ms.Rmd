@@ -26,7 +26,6 @@ geometry: margin=2.5cm
 papersize: a4
 ---
 
-
 ```{r setup, include=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
 knitr::opts_knit$set(root.dir='../results/') #change
@@ -67,7 +66,6 @@ poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
 divcols<-c("#e78ac3","#ffd92f")
 
 ```
-
 
 *Think about a better title!*
 
@@ -1476,62 +1474,94 @@ plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture
 
 # Discussion
 
-Summary of findings
+Understanding how the genetic architecture of stable polymorphisms
+facilitates or constrains their evolution has been an open question.
+Using a simulation model, we show that genetic architecture might not
+shift the parameter space in which polymorphism are stable, but can
+determine which morphs are likely to be retained. Complex genetic
+architectures reduced the stochasticity associated with
+architecture-free models, likely due to genetic correlations between
+traits and loci. Surprisingly, QTLs organised into supergenes, although
+associated with high linkage disequilibrium, did not have different
+outcomes than QTLs distributed genome-wide, and unexpectedly high levels
+of genetic diversity were retained.
 
--   genetic architecture matters20
+What drove our results?
 
--   maybe counter intuitively, architecture reduces stochasticity,
-    likely through genetic correlationsand/or linkage disequilibrium?
+-   LD, selection (and relaxation of selection?)
 
--   do supergenes not differ from QTLs because they are still multilocus
-    (not quite operating asdiscrete haplotypes?)
-
--   GWAS is only going to pick up $\le$ 50% of true QTLs, and will
-    provide spurious results
+-   genetic correlations - compare to previous models and speculate on
+    how it might impact their results - discuss real-world examples
 
 -   a mention of intralocus conflict?
 
-Why might cause the deviation from the single-locus expectation?
+Our choice to compare QTLs co-located within non-recombining supergenes
+to a genome-wide distribution was motivated by recent evidence of
+alternative reproductive morphs having both of these genetic
+architectures. A striking difference in our results from those of the
+empirical ones -- in particular, the empirical results relating to
+supergenes -- is that we do not see fixed alleles exclusively in one
+morph of the other. Instead, quantitative variation is retained within
+the supergenes, and we do not observe discrete haplotypes underlying the
+categorical morphs. To some extent, this is likely an artefact of our
+model set-up. In empirical examples, a key gene substantially
+contributes to the phenotypic morph, for example the steroid hormone
+receptor genes in white-throated sparrows and ruffs supergenes
+[@maneySupergenesSteroids2022]. In our model, we assumed all QTLs had
+roughly similar but small contributions to the phenotype. Furthermore,
+many polymorphisms could rely on dominance hierarchies (e.g., modelled
+as such by X), and could even be underpinned by dominance reversals
+between morphs [@pearseSexdependentDominanceMaintains2019]or sexes
+[@grieshopDominanceReversalsAntagonistic2021]. Regardless, we provide
+the important revelation that discrete morphs can be maintained within
+populations even without discrete genetic architectures with a
+threshold-based switch, contrary to predictions from some authors
+[@boltonColourPolymorphismLikely2016].
 
--   LD,
+One of the primary ways that empirical researchers characterise the
+genetic architectures underlying traits such as discrete morphs is
+through genome-wide association studies and other genome-wide scans of
+genetic diversity and differentiation. Putative regions are usually
+first identified through estimating allele frequency differences between
+morphs, testing for associations with the traits of interest (e.g.,
+[22]). We performed these analyses on simulated genome-wide data, and
+found that genome-wide association studies are likely to only identify
+$\le$ 50% of true QTLs, and identify many false positives. Low true
+positives and high false positives are consistent with other simulation
+studies of genome-wide studies of selection and trait associations
+[@flanaganIdentifyingSignaturesSexual2015]. In this study, these
+limitations are consistent with both genetic architectures, so appears
+to not only be driven by the extreme linkage disequilibrium within
+supergenes that makes associations difficult to identify
+[@kimSexlinkedSupergeneControls2017]. A possible explanation for the
+results in this study could be the relaxed selection observed at the
+point when the populations were 'genotyped' -- mutations could have
+cropped up that were no longer being removed by selection due to relaxed
+selection.
 
--   genetic correlations - compare to previous models and speculate on
-    how it might impact theirresults - discuss real-world examples
-
--   QTLs vs supergenes don't make much of a difference, it seems:
-    multilocus additive architecturesare still additive and multivariate
-
--   other patterns of inheritance (e.g., dominance) might be important
-    (and would match patternsin empirical examples)
-
-Inability to detect QTLs -- why would that happen?
-
--   Relaxed selection
-
--   extreme LD within supergenes makes associations difficult to
-    identify (e.g., Kim et al zebrafinchpaper)
-
--   this is consistent with my SCA paper - what does this mean for our
-    ability to study real worldpops?
-
--   One way that researchers have observed a role for supergenes is
-    through genomic analysis. Putative regions are usually first
-    identified through estimating allele frequency differencesbetween
-    morphs, testing for associations with the traits of interest (e.g.,
-    [22]).
-
--   Recent mathematical and simulation models have helped clarify the
-    allelic variation that isexpected to be maintained under
-    sex-specific selection pressures, and importantly have suggestedthat
-    sex-specific selection must be incredibly strong [50].
-
-Maintenance of variation (esp. morphs) and genetic architectures
+Recent mathematical and simulation models have helped clarify the
+allelic variation that is expected to be maintained under sex-specific
+selection pressures, and importantly have suggested that sex-specific
+selection must be incredibly strong
+[@kasimatisLimitsGenomicDivergence2019]. When it comes to morphs, this
+might not be true -- we observed both maintenance of variation in
+phenotypes and in genotypes, with high-ish levels of genetic
+differentiation between male types.
 
 -   genetic architecture is critically important
 
 -   this doesn't include other elements of sex-specific or
-    morph-specific architectures such assex-specific dominance of
+    morph-specific architectures such as sex-specific dominance of
     sex-biased gene expression
+
+This model only applies to fixed polymorphisms, which only describes a
+portion of alternative reproductive tactics
+
+-   hormonal control/cascades
+
+-   gene expression networks and dynamics
+
+-   plastic traits
 
 Overall conclusions
 
