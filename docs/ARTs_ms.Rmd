@@ -122,17 +122,20 @@ to them include either one or two genetic loci with two to three alleles
 [@takahashiNegativeFrequencyDependentSelection2010;
 @sinervoRunawaySocialGames2001;
 @svenssonFemalePolymorphismFrequency2005;
-@morrisIntralocusTacticalConflict2013]. *Something about the
-correlational selection* [@sinervoCorrelationalSelectionEvolution2002a]
-While these relatively simple genetic models do capture the evolutionary
-dynamics of the specific examples they are paired with
-[@sinervoRunawaySocialGames2001], genomic data has accumulated for a
-number of species suggesting that categorical traits might in fact be
-underpinned by numerous quantitative genetic loci
-(examples)...Furthermore, morphs are comprised of multiple traits, and
-thus variation at multiple genetic loci is likely to contribute to the
-evolutionary dynamics of morph frequencies. As such, we might be missing
-out on important factors constraining or facilitating evolution.
+@morrisIntralocusTacticalConflict2013]. Given that morphs are suites of
+traits inherited together, some authors have explored in verbal models
+the importance of correlational selection and its associated formation
+of genetic correlations and linkage disequilibrium across loci
+[@sinervoCorrelationalSelectionEvolution2002a]. While these relatively
+simple genetic models do capture the evolutionary dynamics of the
+specific examples they are paired with [@sinervoRunawaySocialGames2001],
+genomic data has accumulated for a number of species suggesting that
+categorical traits might in fact be underpinned by numerous quantitative
+genetic loci (examples). Furthermore, morphs are comprised of multiple
+traits, and thus variation at multiple genetic loci is likely to
+contribute to the evolutionary dynamics of morph frequencies. As such,
+we might be missing out on important factors constraining or
+facilitating evolution.
 
 When traits are comprised of multiple loci, evolutionary constraints
 arising from pleiotropy, genetic correlations, and physical linkage
