@@ -181,41 +181,30 @@ loci throughout the genome [@slyMolecularParallelismSignaling2022;
 @flanaganGenomewideSelectionComponents2017], several alternative
 reproductive tactics are associated with many genetic variants
 throughout the genome which contribute primarily additively to the
-phenotypes (examples) -- implying that although the tactics might be
-discrete and inherited in an apparently Mendelian fashion, their genetic
-basis is much more complex and multivariate. A particularly intriguing
-result is that structural variants have aggregated multiple variants
-contributing to the tactics into a
-'supergene'[\@thomasChromosomalPolymorphismLinked2008;
-\@kupperSupergeneDeterminesHighly2016;
-\@lamichhaneyStructuralGenomicChanges2016;
-\@hendrickxMasculinizingSupergene2022].
-
-One genetic mechanism that is increasingly being considered as an
-important mechanism in evolution are structural variants, such as
-inversion polymorphisms that harbour so-called 'supergenes'. These
-variants are regions of the genome in which some individuals carry an
-inversion, in which genes with direct phenotypic effects exist. The
-mismatched directionality reduces recombination between the different
-variants, facilitating the maintenance of both genetic and phenotypic
-variations. These supergenes have been shown to underpin stable
-polymporhisms including multiple social morphs in fire ants
-[@yanEvolutionSupergeneThat2020], colony sex ratio skew in ants
-[\@lagunas-roblesLinkedSupergenesUnderlie2021], sex-specific migratory
-behaviours [\@pearseSexdependentDominanceMaintains2019], sperm length
-and swim speed [\@kimSexlinkedSupergeneControls2017;
-\@kniefSexchromosomeInversionCauses2017], venom composition in
-rattlesnakes [\@zancolliWhenOnePhenotype2019], and sexually dimorphic
-alternative reproductive tactics
-[\@thomasChromosomalPolymorphismLinked2008;
-\@kupperSupergeneDeterminesHighly2016;
-\@lamichhaneyStructuralGenomicChanges2016;
-\@hendrickxMasculinizingSupergene2022].
+phenotypes @kimGeneticsEvidenceBalancing2019 -- implying that although
+the tactics might be discrete and inherited in an apparently Mendelian
+fashion, their genetic basis is much more complex and multivariate. A
+particularly intriguing result is that structural variants have
+aggregated multiple variants contributing to the tactics into a
+'supergene' in at least three species with alternative reproductive
+tactics: the ruff
+[@lamichhaneyStructuralGenomicChanges2016;@kupperSupergeneDeterminesHighly2016],
+white-throated sparrow [@thomasChromosomalPolymorphismLinked2008], and
+dwarf spiders [ @hendrickxMasculinizingSupergeneUnderlies2022]. *Also in
+sex-specific traits like sperm morphology [@kimSexlinkedSupergeneControls2017;
+@kniefSexchromosomeInversionCauses2017] and sex-specific migratory
+behaviours [@pearseSexdependentDominanceMaintains2019].*
 
 The potential for structural variants to underpin sexually dimorphic
-polymorphisms is intriguing, as most research to date has focused on the
-role of differential gene expression in underlying sexual dimorphism
-(e.g., [@harrisonSexualSelectionDrives2015]). For example, in canaries,
+polymorphisms is intriguing, as it could explain the apparent mis-match
+between suites of traits being inherited in patterns that match
+predictions from simple population genetic models remarkably well
+[@sinervoRunawaySocialGames2001]. Supergenes, with their reduced
+recombination between variants, also provides a mechanism for
+individuals with largely similar genomic information to harbour fixed
+genetic variation without requiring differential gene expression --
+although in some cases, differential expression of single genes could
+explain complex and stable polymorphisms. For example, in canaries,
 sexual dichromatism appears to be mediated by differential expression of
 a single gene involved in carotenoid breakdown
 [\@gazdaGeneticMechanismSexual2020]. Androgens are a likely mechanism
