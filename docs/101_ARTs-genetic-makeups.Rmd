@@ -932,5 +932,108 @@ for(i in 1:length(seldat)){
 ```
 
 
+### Evaluating balancing selection
+
+While we can look at the selection gradients on the traits in general, we might also want to know if the surviving morphs have similar reproductive success. 
+
+```{r}
+traits_files<-c(
+  list.files(path="../fixedART-results/qtls/", pattern="_traits.txt", full.names = TRUE),
+  list.files(path="../fixedART-results/supergene/", pattern="_traits.txt", full.names = TRUE))
+
+fitness_dat<-lapply(traits_files, function(filename){
+  traits<-read.delim(filename)
+  fitdat<-do.call(rbind,by(traits, traits$Pop, function(popdat){
+    
+    gens<-as.matrix(do.call(rbind,by(popdat, popdat$Gen, function(dat){
+      # males
+      maldat<-dat[dat$Sex=="MALE",]
+      
+      return(c(
+        cp_muRS=mean(maldat$LifetimeRS[maldat$Courter==1 & maldat$Parent == 1]),
+        np_muRS=mean(maldat$LifetimeRS[maldat$Courter==0 & maldat$Parent == 1]),
+        cn_muRS=mean(maldat$LifetimeRS[maldat$Courter==1 & maldat$Parent == 0]),
+        nn_muRS=mean(maldat$LifetimeRS[maldat$Courter==0 & maldat$Parent == 0]),
+        
+        cp_semRS=sem(maldat$LifetimeRS[maldat$Courter==1 & maldat$Parent == 1]),
+        np_semRS=sem(maldat$LifetimeRS[maldat$Courter==0 & maldat$Parent == 1]),
+        cn_semRS=sem(maldat$LifetimeRS[maldat$Courter==1 & maldat$Parent == 0]),
+        nn_semRS=sem(maldat$LifetimeRS[maldat$Courter==0 & maldat$Parent == 0]),
+        
+        cp_freq=nrow(maldat[maldat$Courter==1 & maldat$Parent == 1,])/nrow(maldat),
+        np_freq=nrow(maldat[maldat$Courter==0 & maldat$Parent == 1,])/nrow(maldat),
+        cn_freq=nrow(maldat[maldat$Courter==1 & maldat$Parent == 0,])/nrow(maldat),
+        nn_freq=nrow(maldat[maldat$Courter==0 & maldat$Parent == 0,])/nrow(maldat)
+        
+      ))
+    })))
+     
+    gens<-cbind(gens, 
+                gen=as.numeric(rownames(gens)),
+                pop= as.numeric(popdat$Pop[1]))
+    
+    return(gens)
+  }))
+  if(length(grep("supergene", filename)>0)){
+    fitdat<-cbind(fitdat,supergene=1)  
+  } else {
+    fitdat<-cbind(fitdat,supergene=0)
+  }
+  
+   if(length(grep("high", filename)>0)){
+    fitdat<-cbind(fitdat,highDiv=1)  
+  } else {
+    fitdat<-cbind(fitdat,highDiv=0)
+  }
+  
+  return(fitdat)
+})
+names(fitness_dat)<-traits_files
+
+```
+
+```{r}
+
+plot(1:4,
+     seq(0,3,length.out=4),
+     xlab="",
+     xaxt='n',
+     ylab="Lifetime Reproductive Success",
+     bty='l',
+     type='n')
+axis(1,at=1:4,labels=c("CP","NP","CN","NN"))
+
+for(i in 1:length(fitness_dat)){
+   
+  fitdat12000<-fitness_dat[[i]][fitness_dat[[i]][,"gen"]==12000,]
+  
+  if(nrow(fitdat12000)>0){
+    
+    apply(fitdat12000,1,function(dat){
+      # points
+      points(1:4,
+         dat[1:4],
+         pch=19,
+         col=scales::alpha(cols2,0.5))
+      arrows(x0=1:4,
+           x1=1:4,
+           y0=dat[1:4]+dat[5:8],
+           y1=dat[1:4]-dat[5:8],
+           code=0,
+           col=scales::alpha(cols2,0.5)
+           )
+      lines(1:4,
+            dat[1:4],
+            lwd=2,
+            col=scales::alpha("grey",0.5))
+      })
+    
+ 
+    }
+}
+
+
+
+```
 
 
