@@ -112,5 +112,5 @@ for i in `seq ${NUMREPS}`; do
 	done
 done
 
-parallel -k -j 10 < "parallel_cmds.sh"
+parallel -k -j 3 < "parallel_cmds.sh"
 
