@@ -21,7 +21,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-The purpose of this model is to understand how genetic architectures of alternative reproductive tactics impact their maintenance in populations. I'm using an individual-based simulation model with different selection scenarios, types of alternative tactics, and genetic architectures (genome-wide additive genetic variance, supergenes, expression networks). To explore the parameter space, I'm also using a mathematical model without the genetic architectures to identify regions of parameter space where we expect multiple morphs to be maintained. 
+The purpose of this model is to understand how genetic architectures of alternative reproductive tactics impact their maintenance in populations. I'm using an individual-based simulation model with different selection scenarios, types of alternative tactics, and genetic architectures (genome-wide additive genetic variance vs supergenes). To explore the parameter space, I'm also using a mathematical model without the genetic architectures to identify regions of parameter space where we expect multiple morphs to be maintained. 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
