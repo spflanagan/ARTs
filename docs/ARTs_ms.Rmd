@@ -160,7 +160,6 @@ polymorphism encoding the male morphs appears to have resolved conflict
 among the male morphs, while simultaneously exacerbating intralocus
 sexual conflict [@giraldo-deckIntralocusConflictsAssociated2022].
 
-
 The genetic architectures of alternative reproductive tactics have been
 characterized in a few examples, and the diversity of outcomes highlight
 the need for improved predictions. The majority of these examples first
@@ -187,12 +186,12 @@ fashion, their genetic basis is much more complex and multivariate. A
 particularly intriguing result is that structural variants have
 aggregated multiple variants contributing to the tactics into a
 'supergene' in at least three species with alternative reproductive
-tactics: the ruff
-[@lamichhaneyStructuralGenomicChanges2016;@kupperSupergeneDeterminesHighly2016],
-white-throated sparrow [@thomasChromosomalPolymorphismLinked2008], and
-dwarf spiders [ @hendrickxMasculinizingSupergeneUnderlies2022]. *Also in
-sex-specific traits like sperm morphology [@kimSexlinkedSupergeneControls2017;
-@kniefSexchromosomeInversionCauses2017] and sex-specific migratory
+tactics: the ruff [@lamichhaneyStructuralGenomicChanges2016;
+@kupperSupergeneDeterminesHighly2016], white-throated sparrow
+[@thomasChromosomalPolymorphismLinked2008], and dwarf spiders
+[@hendrickxMasculinizingSupergeneUnderlies2022]. *Also in sex-specific
+traits like sperm morphology [@kimSexlinkedSupergeneControls2017;
+@kniefSexchromosomeInversionCauses2017*] *and sex-specific migratory
 behaviours [@pearseSexdependentDominanceMaintains2019].*
 
 The potential for structural variants to underpin sexually dimorphic
@@ -207,13 +206,13 @@ although in some cases, differential expression of single genes could
 explain complex and stable polymorphisms. For example, in canaries,
 sexual dichromatism appears to be mediated by differential expression of
 a single gene involved in carotenoid breakdown
-[@gazdaGeneticMechanismSexual2020]. Androgens are a likely mechanism
-for modulating these gene expression differences, for example in
-primates male-biased genes are more likely to be proximal to androgen
-response elements [@andersonRelationshipSexualDimorphism]. Unlike the
-canaries, though, examples where supergenes apparently underpin sexually
-dimorphic phenotypes tend to involve multiple morphs of one sex, usually
-males. All known examples of alternative morphs determined by supergenes
+[@gazdaGeneticMechanismSexual2020]. Androgens are a likely mechanism for
+modulating these gene expression differences, for example in primates
+male-biased genes are more likely to be proximal to androgen response
+elements [@andersonRelationshipSexualDimorphism]. Unlike the canaries,
+though, examples where supergenes apparently underpin sexually dimorphic
+phenotypes tend to involve multiple morphs of one sex, usually males.
+All known examples of alternative morphs determined by supergenes
 include a female-mimic morph, including ruffs
 [@kupperSupergeneDeterminesHighly2016;
 @lamichhaneyStructuralGenomicChanges2016], dwarf spiders
@@ -222,9 +221,8 @@ include a female-mimic morph, including ruffs
 morph exists, with an intermediate phenotype between the dominant or
 'classic' male morph and the female-mimic
 [@kupperSupergeneDeterminesHighly2016;
-@lamichhaneyStructuralGenomicChanges2016]. In some cases, a
-heterozygous genotype is lethal (e.g., ruffs
-[@kupperSupergeneDeterminesHighly2016;
+@lamichhaneyStructuralGenomicChanges2016]. In some cases, a heterozygous
+genotype is lethal (e.g., ruffs [@kupperSupergeneDeterminesHighly2016;
 @lamichhaneyStructuralGenomicChanges2016]), but not in others (e.g.,
 dwarf spiders [@hendrickxMasculinizingSupergene2022]). In the
 white-throated sparrow and the ruff, these structural variants are
