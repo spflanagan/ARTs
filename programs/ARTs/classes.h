@@ -271,7 +271,24 @@ public:
 				qtl_counter = qtl_counter+ qtl_per_chrom[j];
 			}
 		}
-		else
+		else if (num_qtl == 1 && no_genetics==false)
+		{ // set up a special alternative if there is 1 QTL but genetic architectures
+			qtl_counter=0;
+			int chosen_chrom = randnum(num_chrom);
+			for(j = 0; j<num_chrom; j++)
+			{
+				if(j == chosen_chrom)
+				{
+					qtl_per_chrom.push_back(num_qtl);
+				} 
+				else
+				{
+					qtl_per_chrom.push_back(0);
+				}
+				qtl_counter = qtl_counter + qtl_per_chrom[j];
+			}
+		}
+		else 
 		{
 			qtl_counter = 0;
 			for (j = 0; j < num_chrom; j++)
