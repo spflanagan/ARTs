@@ -51,13 +51,13 @@ for i in `seq ${NUMREPS}`; do
 			
 			# expected high diversity 
 			echo "./ARTs --courter --parent \
-				-b ../../results/qtls/highDiversity_qtls_q${q}_c${c}_${i} \
+				-b ../../fixedART-results/qtls/highDiversity_qtls_q${q}_c${c}_${i} \
 				-crs ${CRS} -ncrs ${NRS} -sperm-r ${C} \
 				-surv-noparent 0 -surv-parent 1 --viability \
 				--same-base -mm 4 -p 4 --polygyny --output-vcf \
 				-q ${q} -c ${c}" >> "parallel_cmds.sh"
 			echo "./ARTs --courter --parent \
-				-b ../../results/qtls/highDiversity_qtls_nm_q${q}_c${c}_${i} \
+				-b ../../fixedART-results/qtls/highDiversity_qtls_nm_q${q}_c${c}_${i} \
 				-crs ${CRS} -ncrs ${NRS} -sperm-r ${C} \
 				-surv-noparent 0 -surv-parent 1 --viability \
 				--same-base -mm 4 -p 4 --polygyny --allow-no-mating --output-vcf \
@@ -65,13 +65,13 @@ for i in `seq ${NUMREPS}`; do
 			
 			# expected low diversity
 			echo "./ARTs --courter --parent \
-				-b ../../results/qtls/lowDiversity_polygyny_qtls_q${q}_c${c}_${i} \
+				-b ../../fixedART-results/qtls/lowDiversity_polygyny_qtls_q${q}_c${c}_${i} \
 				-crs ${LCRS} -ncrs ${LNRS} -sperm-r ${LC} \
 				-surv-noparent 0 -surv-parent 1 --viability \
 				-mm 4 --same-base -p 4 --polygyny --output-vcf \
 				-q ${q} -c ${c}" >> "parallel_cmds.sh"
 			echo "./ARTs --courter --parent \
-				-b ../../results/qtls/lowDiversity_qtls_nm_q${q}_c${c}_${i} \
+				-b ../../fixedART-results/qtls/lowDiversity_qtls_nm_q${q}_c${c}_${i} \
 				-crs ${LCRS} -ncrs ${LNRS} -sperm-r ${LC} \
 				-surv-noparent 0 -surv-parent 1 --viability \
 				-mm 4 --same-base -p 4 --polygyny --allow-no-mating --output-vcf \
@@ -82,13 +82,13 @@ for i in `seq ${NUMREPS}`; do
 				
 				# expected high diversity 
 				echo "./ARTs --courter --parent --supergene \
-					-b ../../results/supergene/highDiversity_supergene_prop${p}_q${q}_c${c}_${i} \
+					-b ../../fixedART-results/supergene/highDiversity_supergene_prop${p}_q${q}_c${c}_${i} \
 					-crs ${CRS} -ncrs ${NRS} -sperm-r ${C} \
 					-surv-noparent 0 -surv-parent 1 --viability \
 					--same-base -mm 4 -p 4 --polygyny --output-vcf \
 					-q ${q} -c ${c} -sprop ${p}" >> "parallel_cmds.sh"
 				echo "./ARTs --courter --parent --supergene \
-					-b ../../results/supergene/highDiversity_supergene_nm_prop${p}_q${q}_c${c}_${i} \
+					-b ../../fixedART-results/supergene/highDiversity_supergene_nm_prop${p}_q${q}_c${c}_${i} \
 					-crs ${CRS} -ncrs ${NRS} -sperm-r ${C} \
 					-surv-noparent 0 -surv-parent 1 --viability \
 					--same-base -mm 4 -p 4 --polygyny --allow-no-mating --output-vcf \
@@ -96,13 +96,13 @@ for i in `seq ${NUMREPS}`; do
 				
 				# expected low diversity
 				echo "./ARTs --courter --parent --supergene \
-					-b ../../results/supergene/lowDiversity_supergene_polygyny_prop${p}_q${q}_c${c}_${i} \
+					-b ../../fixedART-results/supergene/lowDiversity_supergene_polygyny_prop${p}_q${q}_c${c}_${i} \
 					-crs ${LCRS} -ncrs ${LNRS} -sperm-r ${LC} \
 					-surv-noparent 0 -surv-parent 1 --viability \
 					-mm 4 --same-base -p 4 --polygyny --output-vcf \
 					-q ${q} -c ${c} -sprop ${p}" >> "parallel_cmds.sh"
 				echo "./ARTs --courter --parent --supergene \
-					-b ../../results/supergene/lowDiversity_supergene_nm_prop${p}_q${q}_c${c}_${i} \
+					-b ../../fixedART-results/supergene/lowDiversity_supergene_nm_prop${p}_q${q}_c${c}_${i} \
 					-crs ${LCRS} -ncrs ${LNRS} -sperm-r ${LC} \
 					-surv-noparent 0 -surv-parent 1 --viability \
 					-mm 4 --same-base -p 4 --polygyny --allow-no-mating --output-vcf \
