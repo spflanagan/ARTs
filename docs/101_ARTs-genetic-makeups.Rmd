@@ -1016,8 +1016,38 @@ fitness_plot<-function(fitness_dat,cols2){
      
     fitdat12000<-fitness_dat[[i]][fitness_dat[[i]][,"gen"]==12000,]
     
+    if(nrow(fitdat12000)>0){
+      
+      apply(fitdat12000,1,function(dat){
+        # points
+        points(1:4,
+           dat[1:4],
+           pch=19,
+           col=scales::alpha(cols2,0.5),
+           cex=1+2*dat[9:12])
+        arrows(x0=1:4,
+             x1=1:4,
+             y0=dat[1:4]+dat[5:8],
+             y1=dat[1:4]-dat[5:8],
+             code=0,
+             col=scales::alpha(cols2,0.5)
+             )
+        lines(which(!is.na(dat[1:4])),
+              dat[1:4][!is.na(dat[1:4])],
+              lwd=2,
+              col=scales::alpha("grey",0.5))
+        })
+      
+      fitdf<-rbind(fitdf,fitdat12000)
     }
+    
+  }
+  fitdf<-fitdf[-1,] # remove initial NA row
+  return(fitdf)
+
 }
+```
+
 ```{r fitnessPlots, fig.cap="Plot of average lifetime reproductive success (and SEM) for each male morph in each replicate in the final generation of the simulations. The lines connect points from within a replicate. Point size reflects the frequency of that morph in the replicate. These graphs show that the high diversity scenarios generally maintain a stable polymorphism of two or more morphs at high frequency due to balancing selection (i.e., equivalent fitness of morphs). The low diversity scenarios occasionally have low frequencies of other morphs, but they tend to be the result of recombination and not balancing selection (i.e., their fitnesses are substantially lower than the high frequency CP morph)."}
 
 par(mfrow=c(2,2), mar=c(2,2,2,2),oma=c(2,2,1,1))
