@@ -666,7 +666,8 @@ contours<-by(results, results$num_sneak, function(sub_calcs){
     x = as.numeric(colnames(data_wide)), 
     y = as.numeric(rownames(data_wide)), 
     z = as.matrix(data_wide), 
-    type = "contour"
+    type = "contour",
+    width = 450, height = 650
   )
   # add axis labels
   x<-list(title="r")
@@ -681,7 +682,7 @@ contours<-by(results, results$num_sneak, function(sub_calcs){
 
 multi_fig <- subplot(contours, nrows = 5, shareY = TRUE, shareX = TRUE)
 
-multi_fig %>% layout(autosize = F, width = 450, height = 650)
+multi_fig %>% layout(autosize = F)
 
 
 ```
