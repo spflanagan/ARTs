@@ -939,6 +939,9 @@ for(i in 1:length(seldat)){
 While we can look at the selection gradients on the traits in general, we might also want to know if the surviving morphs have similar reproductive success. 
 
 
+```{r getFitnessInfo, eval=FALSE}
+
+
 fitness_dat<-lapply(traits_files, function(filename){
   traits<-read.delim(filename)
   fitdat<-do.call(rbind,by(traits, traits$Pop, function(popdat){
