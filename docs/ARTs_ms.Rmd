@@ -783,34 +783,34 @@ kable(SimParams, "latex",booktab=TRUE,
 
 ### Impacts of mating system on the model
 
-*Need to be clear which one is consistent with the mathematical model!*
-
 As expected, in the low diversity parameter space, the majority of
 simulations resulted in fixation or near-fixation of the courter-parent
 morph (Fig. \@ref(fig:MatingTypesFig)). A more surprising result was the
 inconsistency of results from the mating types within the the high
-diversity parameter space. Polygyny resulted in the fixation of the
+diversity parameter space. Only the case most similar to the
+mathematical model -- monogamy with no mating -- resulted in
+polymorphism, with the courter/parent morph coexisting with either the
+non-courter/parent or the non-courter/non-parent morph (Fig.
+\@ref(fig:MatingTypesFig)). Polygyny resulted in the fixation of the
 courter/parent morph regardless of whether females mated at random if a
-suitable mate was found, and monogamy resulted in the fixation of the
-non-courter/parent morph in every case. Only monogamy with no mating
-resulted in polymorphism, with the courter/parent morph coexisting with
-either the non-courter/parent or the non-courter/non-parent morph (Fig.
-\@ref(fig:MatingTypesFig)). These results can be explained by the nature
-of density-dependent survival in the individual-based model that are not
-consistent with the mathematical model; in the simulation model,
-offspring are created in proportion to the surviving offspring after
-mating has occurred, increasing the males' reproductive success above
-their specified reproductive investments. This allows males to escape
-the costs and increase their reproductive success beyond what is
-possible in the mathematical model. Random mating if non-preferred males
-are unable to be found also enables non-courter/parents to have
-increased reproductive success compared the the mathematical model
-predictions, which is why they are fixed in the monogamy case. If
-stricter costs on courting males are imposed, specifying $r=0.25$,
-meaning that $r_{courter}=2$ and $r_{non-courter}=8$, the scenarios
-without random mating do result in the maintenance of 2 or 3 morphs in
-most cases for both monogamy and polygyny (Fig.
-\@ref(fig:MatingTypesFig)), as expected.
+suitable mate was found, and monogamy with random mating after searching
+for a preferred mate is unsuccessful resulted in the fixation of the
+non-courter/parent morph in every case. These results can be explained
+by the nature of density-dependent survival in the individual-based
+model that are not consistent with the mathematical model; in the
+simulation model, offspring are created in proportion to the surviving
+offspring after mating has occurred, increasing the males' reproductive
+success above their specified reproductive investments. This allows
+males to escape the costs and increase their reproductive success beyond
+what is possible in the mathematical model. Random mating if
+non-preferred males are unable to be found also enables
+non-courter/parents to have increased reproductive success compared the
+the mathematical model predictions, which is why they are fixed in the
+monogamy case. If stricter costs on courting males are imposed,
+specifying $r=0.25$, meaning that $r_{courter}=2$ and
+$r_{non-courter}=8$, the scenarios without random mating do result in
+the maintenance of 2 or 3 morphs in most cases for both monogamy and
+polygyny (Fig. \@ref(fig:MatingTypesFig)), as expected.
 
 ```{r MatingTypesFig, fig.cap="The frequencies of morphs in the final generation of simulation runs a single gene underlying each trait, with parameters expected to yield low diversity (top row), high diversity (centre row), and high diversity with stronger costs on courter reproductive success (bottom row). The frequency of the courter/parent morph in the final generation is printed on top of each bar. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available). Within each parameter set, the numbers below the bars identify sets of simulation runs that were initiated with identical starting conditions."}
 
