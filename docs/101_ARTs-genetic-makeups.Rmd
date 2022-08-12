@@ -996,43 +996,26 @@ saveRDS(fitness_dat, "fitness_dat.RDS")
 fitness_dat<-readRDS("fitness_dat.RDS")
 ```
 
-```{r}
 
-plot(1:4,
-     seq(0,3,length.out=4),
-     xlab="",
-     xaxt='n',
-     ylab="Lifetime Reproductive Success",
-     bty='l',
-     type='n')
-axis(1,at=1:4,labels=c("CP","NP","CN","NN"))
-
-for(i in 1:length(fitness_dat)){
-   
-  fitdat12000<-fitness_dat[[i]][fitness_dat[[i]][,"gen"]==12000,]
+```{r fitnessPlotFXN}
+fitness_plot<-function(fitness_dat,cols2){
   
-  if(nrow(fitdat12000)>0){
+  
+  plot(1:4,
+       seq(0,3,length.out=4),
+       xlab="",
+       xaxt='n',
+       ylab="",
+       bty='l',
+       type='n')
+  axis(1,at=1:4,labels=c("CP","NP","CN","NN"))
+  
+  fitdf<-data.frame(matrix(ncol = ncol(fitness_dat[[1]])))
+  colnames(fitdf)<-colnames(fitness_dat[[1]])
+  for(i in 1:length(fitness_dat)){
+     
+    fitdat12000<-fitness_dat[[i]][fitness_dat[[i]][,"gen"]==12000,]
     
-    apply(fitdat12000,1,function(dat){
-      # points
-      points(1:4,
-         dat[1:4],
-         pch=19,
-         col=scales::alpha(cols2,0.5))
-      arrows(x0=1:4,
-           x1=1:4,
-           y0=dat[1:4]+dat[5:8],
-           y1=dat[1:4]-dat[5:8],
-           code=0,
-           col=scales::alpha(cols2,0.5)
-           )
-      lines(1:4,
-            dat[1:4],
-            lwd=2,
-            col=scales::alpha("grey",0.5))
-      })
-    
- 
     }
 }
 
