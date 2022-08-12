@@ -576,13 +576,19 @@ many different formats for these two genetic architectures were then
 compared in terms of the morph composition in the final generation, and
 the amount of variation among replicate runs.
 
-To identify how selection acts on the two male traits over the course of
-the simulations (10,000 generations), selection gradients on the courter
-trait and parent trait (both the binary variable of courter/non-courter
-and parent/non-parent) were estimated as the slope of a linear
-regression of lifetime reproductive success on each trait values. The
-patterns of selection were compared across genetic architectures and
-parameter settings.
+Although selection is built into the model, if the population becomes
+fixed for specific morphs -- and specific genotypes -- selection might
+not be able to act due to a lack of variation. To investigate the
+dynamics of selection over the course of the simulations (12,000
+generations total), selection gradients on the courter trait and parent
+trait (both the binary variable of courter/non-courter and
+parent/non-parent) were estimated as the slope of a linear regression of
+lifetime reproductive success on each trait value in generation 0 and in
+generation 12,000. The patterns of selection were compared across
+genetic architectures and parameter settings. Furthermore, we looked at
+patterns of lifetime reproductive success across morphs within each
+simulation in the final generation to evaluate whether balancing
+selection contributed to morph diversity.
 
 ### Analysing multilocus genotypes
 
