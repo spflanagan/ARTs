@@ -914,7 +914,6 @@ Which of these ones have cp_freq close to 1 and 0?? They haven't shown up in the
 ```{r}
 for(i in 1:length(seldat)){
   if(mean(seldat[[i]][seldat[[i]][,"gen"]==12000,"cp_freq"])>0.9){
-    browser()
     dat<-get.morph.freqs(
       plot.pc.reps(pattern=gsub("../fixedART-results/.*//(.*)_traits.txt","\\1_summary.txt",traits_files[i]),
                    path=gsub("(../fixedART-results/.*/).*$","\\1",traits_files[i]),
