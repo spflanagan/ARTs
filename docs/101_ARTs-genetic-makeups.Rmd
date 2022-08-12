@@ -1018,7 +1018,28 @@ fitness_plot<-function(fitness_dat,cols2){
     
     }
 }
+```{r fitnessPlots, fig.cap="Plot of average lifetime reproductive success (and SEM) for each male morph in each replicate in the final generation of the simulations. The lines connect points from within a replicate. Point size reflects the frequency of that morph in the replicate. These graphs show that the high diversity scenarios generally maintain a stable polymorphism of two or more morphs at high frequency due to balancing selection (i.e., equivalent fitness of morphs). The low diversity scenarios occasionally have low frequencies of other morphs, but they tend to be the result of recombination and not balancing selection (i.e., their fitnesses are substantially lower than the high frequency CP morph)."}
 
+par(mfrow=c(2,2), mar=c(2,2,2,2),oma=c(2,2,1,1))
+
+# High diversity, QTLS
+hq<-fitness_plot(fitness_dat[grep("qtls//high",names(fitness_dat))], cols2)
+mtext("QTLs, high diversity",3)
+
+# High diversity, supergene
+hs<-fitness_plot(fitness_dat[grep("supergene//high",names(fitness_dat))], cols2)
+mtext("supergene, high diversity",3)
+
+# Low diversity, QTLS
+lq<-fitness_plot(fitness_dat[grep("qtls//low",names(fitness_dat))], cols2)
+mtext("QTLs, low diversity",3)
+
+# Low diversity, supergene
+ls<-fitness_plot(fitness_dat[grep("supergene//low",names(fitness_dat))], cols2)
+mtext("supergene, low diversity",3)
+
+mtext("Morph",1,outer=TRUE)
+mtext("Lifetime Reproductive Success",2,outer=TRUE)
 
 
 ```
