@@ -990,7 +990,10 @@ fitness_dat<-lapply(traits_files, function(filename){
   return(fitdat)
 })
 names(fitness_dat)<-traits_files
-
+saveRDS(fitness_dat, "fitness_dat.RDS")
+```
+```{r readFitnessInfo}
+fitness_dat<-readRDS("fitness_dat.RDS")
 ```
 
 ```{r}
