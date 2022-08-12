@@ -591,13 +591,13 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 # Selection on traits
 
-
-```{r traitsSelection, warning=FALSE, eval=FALSE}
 ```{r traitsFiles}
 traits_files<-c(
   list.files(path="../fixedART-results/qtls/", pattern="_traits.txt", full.names = TRUE),
   list.files(path="../fixedART-results/supergene/", pattern="_traits.txt", full.names = TRUE))
 ```
+
+```{r traitsSelection, warning=FALSE, eval=FALSE}
 
 seldat<-lapply(traits_files, function(filename){
   traits<-read.delim(filename)
