@@ -995,17 +995,17 @@ QTL, even when QTLs are segregating together in a supergene.
 
 ### Selection on courter and parent traits
 
-*Add a reminder/explanation around why we look at selection -- also lay
-it out in the methods*
-
-Selection consistently favoured parent traits, whereas courter traits
-could experience negative selection in high diversity parameter
-scenarios (Fig. \@ref(fig:selectionOverTime)). Selection was strong in
-the first generation, but by generation 12000 selection was
-substantially relaxed on one or the other trait, in most cases. A number
-of the low diversity replkicates resulted in highly correlated selection
-on courters and parents, with a number of points falling on the positive
-1:1 line (Fig. \@ref(fig:selectionOverTime)).
+To identify how selection impacted the maintenance of morphs, we
+estimated selection gradients for the courter and parental traits in the
+first and last generations of the simulations. Selection consistently
+favoured parent traits, whereas courter traits could experience negative
+selection in high diversity parameter scenarios (Fig.
+\@ref(fig:selectionOverTime)). Selection was strong in the first
+generation, but by generation 12000 selection was substantially relaxed
+on one or the other trait, in most cases. A number of the low diversity
+replkicates resulted in highly correlated selection on courters and
+parents, with a number of points falling on the positive 1:1 line (Fig.
+\@ref(fig:selectionOverTime)).
 
 ```{r selectionGradients, fig.height=4.5, fig.width=7, fig.cap="Selection gradients on parent and courter traits differ across the scenarios of our simulation model. In the first generation, selection always favours the parent trait, but selection gradients on the courter trait can be negative under parameter settings that favoured high diversity. By the end of the simulations (generation 12000), selection has been relaxed, so that selection on the parent trait is often near zero, as is selection on the courter trait. In some cases, the selection gradients on courter and parent triats are correlated at this final generation, especially in low diversity scenarios with QTLs as the genetic architecture. Solid grey lines show the x- and y-axes, with dotted grey lines showing the one-to-one correlation lines."}
 par(mfrow=c(1,2))
