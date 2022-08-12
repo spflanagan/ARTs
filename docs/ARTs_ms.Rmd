@@ -687,7 +687,7 @@ multi_fig %>% layout(autosize = F)
 
 ```
 
-```{r}
+```{r calcProps}
 divRes<-results[results$diversity>0,]
 ndiv<-nrow(divRes)
 
