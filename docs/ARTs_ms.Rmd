@@ -751,12 +751,12 @@ The chosen parameter settings are shown in Table
 
 ```{r SimParamsTable}
 SimParams<-data.frame(
-  parameter = c("r",
+  parameter = c("r (courter:non-courter ratio)",
                 "Max number of offspring CP males can produce",
                 "Max number of offspring CN males can produce",
                 "Max number of offspring NP males can produce",
                 "Max number of offspring NN males can produce",
-                "c",
+                "c (sperm competition coefficient)",
                 "number of sneakers"),
   LowDiv = c( 2, 
              8,
