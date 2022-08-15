@@ -368,20 +368,20 @@ $$
 Chosen males have the first priority to fertilize the eggs in their
 clutch, so the number of eggs fertilized within a single clutch per
 morph is determined by the reproductive effort and the probability of
-being chosen: $e_{o_M} = s_M w_{s_M}$. However, non-courting males also
-sneak fertilizations, which impacts the overall proportion of
+being chosen: $$e_{o_M} = s_M w_{s_M}$$. However, non-courting males
+also sneak fertilizations, which impacts the overall proportion of
 fertilizations per morph. The maximum number of possible fertilizations
 arising from sneaking for a given non-parental male is
-$N_s = n \times c \times n_{sneakers} \times r_{NN}$. This value
+$$N_s = n \times c \times n_{sneakers} \times r_{NN}$$. This value
 reflects that for every clutch ($n$), each sneaker can contribute up to
 their individual reproductive allocation (where $r_{NN} = r_{NP}$)
 offset by the sperm competition coefficient ($c$), but that this
 potential allocation is proportional to the number of sneakers
-(\$n\_{sneakers}\$) that are allowed to fertilize each clutch. If the
+($n_{sneakers}$) that are allowed to fertilize each clutch. If the
 number of fertilizations arising from sneaking is smaller than the
-morph's potential reproductive effort (i.e, if \$N_s \\lt s_M\$), the
+morph's potential reproductive effort (i.e, if $N_s \lt s_M$), the
 number of eggs fertilized through sneaking for that morph is the
-difference between $N_s$ and \$s_M\$, truncated at zero. Otherwise, the
+difference between $N_s$ and $s_M$, truncated at zero. Otherwise, the
 number of eggs fertilized through sneaking is $s_M$.
 
 The survival of offspring can similarly be divided into offspring within
@@ -720,23 +720,23 @@ three morphs, with the average proportion of the population being
 
 Overall, the parameters impacting whether diversity was maintained after
 both 100 and 1000 generations were the initial frequencies of the
-morphs, sperm competition ($c$), relative reproductive allocation
-($r$), and the number of sneakers allowed ($n_{sneak}$, which impacted
-the proportion of offspring a courting male could sire in his own
-clutch). Some initial starting conditions took more than 100 generations
-to reach a consistent (i.e., equilibrial) state, but the contributions
-of the initial frequencies and these three parameters remained
-qualitatively consistent across 100 and 1000 generations.
+morphs, sperm competition ($c$), relative reproductive allocation ($r$),
+and the number of sneakers allowed ($n_{sneak}$, which impacted the
+proportion of offspring a courting male could sire in his own clutch).
+Some initial starting conditions took more than 100 generations to reach
+a consistent (i.e., equilibrial) state, but the contributions of the
+initial frequencies and these three parameters remained qualitatively
+consistent across 100 and 1000 generations.
 
 As expected, larger sperm competition coefficients ($c$) resulted in a
 higher likelihood of non-courters being retained in the population,
 which makes sense given that $c$ impacts the proportion of eggs within a
 clutch that a non-courting male can successfully fertilize. Sperm
-competition interacted with the reproductive allocation ratio, $r$,
-such that as long as $c>0.2$, if $0.5 \le r \le 1$, the maximum
-diversity was achieved. As an example of why this makes sense, that if
-$r = 0.5$, $c=0.2$, and the non-courting male's number of eggs he can
-fertilize is 8, the non-courting male would fertilize
+competition interacted with the reproductive allocation ratio, $r$, such
+that as long as $c>0.2$, if $0.5 \le r \le 1$, the maximum diversity was
+achieved. As an example of why this makes sense, that if $r = 0.5$,
+$c=0.2$, and the non-courting male's number of eggs he can fertilize is
+8, the non-courting male would fertilize
 $\frac{8 \times 2}{(8 \times 0.5)+(2 \times 0.2 \times 8)}$ =
 `r (8*0.2)/(4+(2*0.2*8))` of the offspring. The impacts of sperm
 competition on morph diversity were further influenced by $n_{sneak}$,
