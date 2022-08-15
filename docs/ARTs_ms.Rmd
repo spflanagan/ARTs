@@ -254,10 +254,13 @@ a major effect is an estrogen receptor
 expression of many genes. Furthermore, it is currently unknown to what
 extent genetic architectures interact with the frequency- and
 density-dependent mechanisms that maintain multiple morphs in
-populations. *Expand: the questions/problems our theory aims to
-answer/address are laid out a bit more explicitly and fully* *possibly
-this is a good way to describe how folks have looked into supergenes,
-and set up our genome-wide analyses*
+populations.
+
+*Expand: the questions/problems our theory aims to answer/address are
+laid out a bit more explicitly and fully* *possibly this is a good way
+to describe how folks have looked into supergenes, and set up our
+genome-wide analyses. Possibly less focus on our results and instead lay
+out our questions and analyses a bit more*
 
 To tackle these problems, we have developed a simulation model
 incorporating explicit genetic architectures. We first identify regions
@@ -271,9 +274,7 @@ that are predicted to persist changes when multilocus genotypes are
 involved. When the morphs have arrived at equilibrial frequencies,
 selection on male traits is generally relaxed, and this corresponds with
 a decreased ability to reliably detect causative variants using typical
-genomic analysis approaches (i.e., genome-wide associations). *Possibly
-less focus on our results and instead lay out our questions and analyses
-a bit more*
+genomic analysis approaches (i.e., genome-wide associations).
 
 # Methods
 
