@@ -157,9 +157,10 @@ intralocus conflict can emerge among morphs of the same sex, as they
 also share the majority of their genome
 [@morrisIntralocusTacticalConflict2013]. Intriguingly, in ruffs, which
 have three male alternative tactics, the evolution of the inversion
-polymorphism encoding the male morphs appears to have resolved conflict
-among the male morphs, while simultaneously exacerbating intralocus
-sexual conflict [@giraldo-deckIntralocusConflictsAssociated2022].
+polymorphism underpinning the male morphs appears to have resolved
+conflict among the male morphs, while simultaneously exacerbating
+intralocus sexual conflict
+[@giraldo-deckIntralocusConflictsAssociated2022].
 
 The genetic architectures of alternative reproductive tactics have been
 characterized in a few examples, and the diversity of outcomes highlight
@@ -172,16 +173,17 @@ phenotypic tactics [@lamichhaneyStructuralGenomicChanges2016;
 @merrittSupergenelinkedEstrogenReceptor2020;
 @kimSexlinkedSupergeneControls2017; @kimGeneticsEvidenceBalancing2019;
 @thomasChromosomalPolymorphismLinked2008;
-@hendrickxMasculinizingSupergene2022], although other work has instead
-focused on the expression of genes
+@hendrickxMasculinizingSupergene2022], although some researchers have
+instead used linkage mapping [@lepaisGeneticArchitectureThreshold2017]
+or investigation of differential gene expression between morphs
 [@nugentNeuroendocrineProfilesAssociated2016]. Consistent with other
-work on traits such as these that are critical to reproductive fitness
-suggest that traits are determined by the additive contributions of many
-loci throughout the genome [@slyMolecularParallelismSignaling2022;
+work suggesting that traits critical to reproductive fitness are
+determined by the additive contributions of many loci throughout the
+genome [@slyMolecularParallelismSignaling2022;
 @flanaganGenomewideSelectionComponents2017], several alternative
 reproductive tactics are associated with many genetic variants
 throughout the genome which contribute primarily additively to the
-phenotypes @kimGeneticsEvidenceBalancing2019 -- implying that although
+phenotypes [@kimGeneticsEvidenceBalancing2019] -- implying that although
 the tactics might be discrete and inherited in an apparently Mendelian
 fashion, their genetic basis is much more complex and multivariate. A
 particularly intriguing result is that structural variants have
@@ -190,12 +192,14 @@ aggregated multiple variants contributing to the tactics into a
 tactics: the ruff [@lamichhaneyStructuralGenomicChanges2016;
 @kupperSupergeneDeterminesHighly2016], white-throated sparrow
 [@thomasChromosomalPolymorphismLinked2008], and dwarf spiders
-[@hendrickxMasculinizingSupergeneUnderlies2022]. *Also in sex-specific
-traits like sperm morphology [@kimSexlinkedSupergeneControls2017;
-@kniefSexchromosomeInversionCauses2017*] *and sex-specific migratory
-behaviours [@pearseSexdependentDominanceMaintains2019].*
+[@hendrickxMasculinizingSupergeneUnderlies2022]. Supergenes have also
+been linked to sex-specific traits important to reproduction such as
+sperm morphology [@kimSexlinkedSupergeneControls2017;
+@kniefSexchromosomeInversionCauses2017], head colour
+[@gazdaGeneticMechanismSexual2020], and sex-specific migratory
+behaviours [@pearseSexdependentDominanceMaintains2019].
 
-The potential for structural variants to underpin sexually dimorphic
+The potential for supergenes to underpin sexually dimorphic
 polymorphisms is intriguing, as it could explain the apparent mis-match
 between suites of traits being inherited in patterns that match
 predictions from simple population genetic models remarkably well
@@ -233,9 +237,9 @@ sparrow supergene contains the estrogen receptor gene which directly
 influences the aggressive aspects of the dominant male phenotype
 [@merrittSupergenelinkedEstrogenReceptor2020].
 
-An open question is to what extent do supergenes facilitate the
+An open question is: to what extent do supergenes facilitate the
 maintenance of multiple morphs, versus whether the evolution of multiple
-morphs might facilitate the evolution of supergenes. This question is
+morphs might facilitate the evolution of supergenes? This question is
 difficult to address empirically, and is likely to have consequences for
 the maintenance of genetic variation at loci contributing to traits. For
 example, if a supergene exists and a mutation or arises within it that
