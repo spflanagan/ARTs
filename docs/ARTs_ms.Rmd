@@ -1302,7 +1302,7 @@ knitr::include_graphics(c("../figs/QTLFig.png","../figs/supergeneFig.png"))
 
 ### Will GWAS detect the actual QTLs?
 
-*. Add more explanation for non-geneticists and build intuition*
+*Add more explanation for non-geneticists and build intuition*
 
 As expected, the detection of true QTLs in a GWAS was more likely when
 fewer QTLs underpin the trait, especially if those QTLs are aggregated
