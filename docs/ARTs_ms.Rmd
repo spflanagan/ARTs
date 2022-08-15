@@ -131,13 +131,14 @@ simple genetic models do capture the evolutionary dynamics of the
 specific examples they are paired with [@sinervoRunawaySocialGames2001],
 genomic data has accumulated for a number of species suggesting that
 categorical traits might in fact be underpinned by numerous quantitative
-genetic loci (examples). Furthermore, morphs are comprised of multiple
-traits, and thus variation at multiple genetic loci is likely to
-contribute to the evolutionary dynamics of morph frequencies. As such,
-we might be missing out on important factors constraining or
-facilitating evolution.
+genetic loci [@kimGeneticsEvidenceBalancing2019;
+@slyMolecularParallelismSignaling2022]. Furthermore, morphs are
+comprised of multiple traits, and thus variation at multiple genetic
+loci is likely to contribute to the evolutionary dynamics of morph
+frequencies. As such, we might be missing out on important factors
+constraining or facilitating evolution.
 
-When traits are comprised of multiple loci, evolutionary constraints
+When traits are encoded by multiple loci, evolutionary constraints
 arising from pleiotropy, genetic correlations, and physical linkage
 could impact shifts in morph frequencies within and among populations.
 As such, the reduction or removal of these constraints can facilitate
