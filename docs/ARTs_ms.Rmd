@@ -329,9 +329,6 @@ multiple morphs are maintained.
 
 ## Mathematical model
 
-*Need to adjust the terms/explanations, and adjust the terminology to
-avoid 'nests laid', which is confusing*
-
 In the mathematical model, we model the proportion of the population
 that belong to morphs at each stage of the lifecycle (Fig.
 \@ref(fig:mathModel)). In the first stage, we consider the proportion of
@@ -340,7 +337,7 @@ maximum number of clutches that could exist is proportional to the
 number of males in the population ($N_m$), if each male has the same
 likelihood of attracting a female to deposit eggs with him. However, in
 our model, males are not equally likely to be chosen by females, and
-therefore the maximum number of nests is scaled by the probability of
+therefore the maximum number of clutches is scaled by the probability of
 females mating with each type of male morph (denoted in a generic sense
 with the subscript $M$), denoted by a sexual selection parameter $w_s$.
 In general for this model, the probability of NP and NN males being
@@ -510,7 +507,7 @@ all of his reproductive effort to his own nest) and up to $n_{sneak}$
 non-courting males could 'sneak' fertilizations, with their
 contributions discounted by a factor of $c$. For all models analysed
 here, $n_{sneak}=3$ and $c=0.5$. After the males were assigned their
-paternity shares, the nests survived if the chosen male was also a
+paternity shares, the clutch survived if the chosen male was also a
 parent. Subsequently, the total number of offspring in the population
 were created based on the proportion of population reproductive success
 achieved by each individual male and female (i.e., each generation, the
@@ -823,7 +820,7 @@ $r_{non-courter}=8$, the scenarios without random mating do result in
 the maintenance of 2 or 3 morphs in most cases for both monogamy and
 polygyny (Fig. \@ref(fig:MatingTypesFig)), as expected.
 
-```{r MatingTypesFig, fig.cap="The frequencies of morphs in the final generation of simulation runs a single gene underlying each trait, with parameters expected to yield low diversity (top row), high diversity (centre row), and high diversity with stronger costs on courter reproductive success (bottom row). The frequency of the courter/parent morph in the final generation is printed on top of each bar. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available). Within each parameter set, the numbers below the bars identify sets of simulation runs that were initiated with identical starting conditions."}
+```{r MatingTypesFig, fig.cap="The frequencies of morphs in the final generation of simulation runs a single gene underlying each trait, with parameters expected to yield low diversity (top row), high diversity (centre row), and high diversity with stronger costs on courter reproductive success (bottom row). The frequency of the courter/parent morph in the final generation is printed on top of each bar. In 'monogamy' cases, the males were constrained to only accept eggs from one female in a single clutch, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available). Within each parameter set, the numbers below the bars identify sets of simulation runs that were initiated with identical starting conditions."}
 
 
 
