@@ -414,9 +414,10 @@ frequencies and repeated those iterations across 5 values for the sperm
 competition coefficient ($c$ = {0..1}), 21 values for the relative
 reproductive coefficient ($r_M$ = {0...2}), and 3 values of the number
 of sneakers ($n_{sneakers}$ ={1..3}). The iterations were implemented in
-R v. 4.1.1 [@rcoreteam2021] using some features of tidyR [@wickham2021].
-We also ran a subset of parameter combinations for 1,000 generations for
-better comparisons with the simulation model (see below).
+R v. 4.1.1 [@rcoreteamLanguageEnvironmentStatistical2021] using some
+features of tidyR [@wickhamTidyrTidyMessy2021]. We also ran a subset of
+parameter combinations for 1,000 generations for better comparisons with
+the simulation model (see below).
 
 We were interested in identifying the regions of parameter space that
 resulted in the largest diversity of male morphs. To ameliorate the
@@ -424,12 +425,15 @@ difficulty of visualising and summarizing four frequencies, we leveraged
 existing ecological mathematical tools to summarize diversity of a
 system into a single metric. Specifically, we calculated the Shannon's
 diversity index. We calculated this index in the 100th generation using
-the R package vegan [@oksanen2015] and subsequently visualised the
-diversity of the population using contour plots produced by plotly
-[@sievert2020] in a shiny app that relies on R packages shiny
-[@chang2021], shinydashboard [@chang2018], rsconnect [@mcpherson2021],
-dplyr [@wickham2021], and rmarkdown [@allaire2021; @xie2020; @xie2018].
-The interactive app is available at
+the R package vegan [@oksanenVeganCommunityEcology2015] and subsequently
+visualised the diversity of the population using contour plots produced
+by plotly [@sievertInteractiveWebbasedData2020] in a shiny app that
+relies on R packages shiny [@changShinyWebApplication2021],
+shinydashboard [@changShinydashboardCreateDashboards2018], rsconnect
+[@mcphersonRsconnectDeploymentInterface2021], dplyr
+[@wickhamDplyrGrammarData2021], and rmarkdown
+[@allaireRmarkdownDynamicDocuments2021; @xieMarkdownDefinitiveGuide2018;
+@xieMarkdownCookbook2020]. The interactive app is available at
 <https://spflanagan.shinyapps.io/morph_predictions/>.
 
 Note that this model does not incorporate recombination or inheritance
@@ -632,7 +636,7 @@ pressures, in addition to physical linkage. Therefore, we might expect
 that QTLs would be in linkage disequilibrium with each other, regardless
 of genetic architecture. To investigate whether linkage disequilibrium
 persisted over time within our various genetic architectures, we used
-vcftools [\@danecekVariantCallFormat2011] to estimate linkage
+vcftools [@danecekVariantCallFormat2011] to estimate linkage
 disequilibrium between all loci. We then estimated summary statistics
 for each locus and compared linkage disequilibrium between QTLs to
 linkage disequilibrium among non-QTLs. Because we had far fewer QTLs
