@@ -222,10 +222,6 @@ males. All known examples of alternative morphs determined by supergenes
 include a female-mimic morph, including ruffs
 [@kupperSupergeneDeterminesHighly2016;
 @lamichhaneyStructuralGenomicChanges2016], dwarf spiders
-[@hendrickxMasculinizingSupergene2022], and white-throated sparrows
-[@thomasChromosomalPolymorphismLinked2008]. In the ruffs, a third male
-morph exists, with an intermediate phenotype between the dominant or
-'classic' male morph and the female-mimic
 [@hendrickxMasculinizingSupergeneUnderlies2022], and white-throated
 sparrows [@thomasChromosomalPolymorphismLinked2008]. In the ruffs, a
 third male morph exists, with an intermediate phenotype between the
