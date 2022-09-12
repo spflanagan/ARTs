@@ -596,7 +596,7 @@ selection contributed to morph diversity.
 ### Analysing multilocus genotypes
 
 To provide a link between the predictions of our theoretical models and
-empirical data, we analyzed the genetic diversity of the populations at
+empirical data, we analysed the genetic diversity of the populations at
 the final generation of the individual based simulations. This is an
 equivalent analysis to that of the re-sequencing that was conducted by
 (examples). The general idea behind these genome-wide analyses is that
