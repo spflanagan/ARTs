@@ -808,14 +808,14 @@ by the nature of density-dependent survival in the individual-based
 model that are not consistent with the mathematical model; in the
 simulation model, offspring are created in proportion to the surviving
 offspring after mating has occurred, increasing the males' reproductive
-success above their specified reproductive investments. This allows
-males to escape the costs and increase their reproductive success beyond
-what is possible in the mathematical model. Random mating if
-non-preferred males are unable to be found also enables
-non-courter/parents to have increased reproductive success compared the
-the mathematical model predictions, which is why they are fixed in the
-monogamy case. If stricter costs on courting males are imposed,
-specifying $r=0.25$, meaning that $r_{courter}=2$ and
+success above their specified reproductive investments. This
+proportional survival allows males to escape the costs and increase
+their reproductive success beyond what is possible in the mathematical
+model. Random mating if non-preferred males are unable to be found also
+enables non-courter-parents to have increased reproductive success
+compared the the mathematical model predictions, which is why they are
+fixed in the monogamy case. If stricter costs on courting males are
+imposed, specifying $r=0.25$, meaning that $r_{courter}=2$ and
 $r_{non-courter}=8$, the scenarios without random mating do result in
 the maintenance of 2 or 3 morphs in most cases for both monogamy and
 polygyny (Fig. \@ref(fig:MatingTypesFig)), as expected.
