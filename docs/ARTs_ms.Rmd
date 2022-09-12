@@ -656,10 +656,10 @@ maintained in the population. This result makes intuitive sense, because
 if a female chooses to nest with a courter-nonparent, the nest will
 always die (given our parameter settings). For identifying regions of
 parameter space that resulted in multiple morphs, we focus on parameters
-yielding Shannon-Wiener diversity indices $\ge 1$ because it simplifies
-comparisons of frequencies of all four morphs.
 
 ```{r mathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=4, fig.height=6.5, warning=FALSE,message=FALSE}
+yielding Shannon-Wiener diversity indices $\ge 1$ , rather than attempt
+to inspect plots of three or four frequencies.
 
 ```{r getMathResults}
 results<-readRDS("../morph_predictions/morph_results_10000_equalStart.RDS")
