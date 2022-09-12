@@ -1517,23 +1517,6 @@ What drove our results?
 
 -   a mention of intralocus conflict?
 
-Our choice to compare QTLs co-located within non-recombining supergenes
-to a genome-wide distribution was motivated by recent evidence of
-alternative reproductive morphs having both of these genetic
-architectures. A striking difference in our results from those of the
-empirical ones -- in particular, the empirical results relating to
-supergenes -- is that we do not see fixed alleles exclusively in one
-morph of the other. Instead, quantitative variation is retained within
-the supergenes, and we do not observe discrete haplotypes underlying the
-categorical morphs. To some extent, this is likely an artefact of our
-model set-up. In empirical examples, a key gene substantially
-contributes to the phenotypic morph, for example the steroid hormone
-receptor genes in white-throated sparrows and ruffs supergenes
-[@maneySupergenesSteroids2022]. In our model, we assumed all QTLs had
-roughly similar but small contributions to the phenotype. Furthermore,
-many polymorphisms could rely on dominance hierarchies (e.g., modelled
-as such by X), and could even be underpinned by dominance reversals
-between morphs [@pearseSexdependentDominanceMaintains2019]or sexes
 [@grieshopDominanceReversalsAntagonistic2021]. Regardless, we provide
 the important revelation that discrete morphs can be maintained within
 populations even without discrete genetic architectures with a
@@ -1544,6 +1527,15 @@ quantitative threshold traits, they could occur in a supergene and not
 result in the single- or two-locus inheritance patterns seen in
 side-blotched lizards [@sinervoRunawaySocialGames2001] and [other
 examples].
+
+Our choice to compare QTLs co-located within non-recombining supergenes
+to a genome-wide distribution was motivated by recent evidence of
+alternative reproductive morphs having both of these genetic
+architectures. As expected, linkage disequilibrium was elevated within
+the supergene region, and similarly high levels of LD were not observed
+in the genome-wide QTL models. However, measures of genetic variation
+and between-morph differentiation were similar in the two types of
+models.
 
 One of the primary ways that empirical researchers characterise the
 genetic architectures underlying traits such as discrete morphs is
