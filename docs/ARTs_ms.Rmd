@@ -1135,13 +1135,15 @@ knitr::include_graphics("../figs/fitnessPlots-1.png")
 
 ### Genome-wide genetic diversity
 
-*Expand explanation for why we did this for the reader: what is expected
-and build the intuition. Add more explanation for non-geneticists*
-
-In the final generation of the simulations, the average genome-wide
-heterozygosity was not substantially different in simulations with
-genome-wide QTLs versus QTLs in supergenes (t = -0.31, df = 326.75, p =
--0.31; genome-wide mean = 0.15, supergene mean = 0.16; Fig.
+Supergenes enable specific combinations of alleles at multiple loci to
+be inherited together as a single haplotype; as such, we expected that
+the simulations with supergenes would evolve to have lower within-morph
+genetic diversity at QTLs (i.e., low observed heterozygosity) than the
+genome-wide QTLs scenarios. Surprisingly, we found that the average
+genome-wide expected heterozygosity was not substantially different in
+simulations with genome-wide QTLs versus QTLs in supergenes in the final
+generation of the simulations (t = -0.31, df = 326.75, p = -0.31;
+genome-wide mean = 0.15, supergene mean = 0.16; Fig.
 \@ref(fig:genomewideDiv) A, B). In most runs, the heterozygosity at QTLs
 was did not significantly differ from heterozygosity at neutral markers
 (mean p-value from t-tests is 0.5 ± 0.01). Tajima's D, which tests for
