@@ -412,7 +412,7 @@ To evaluate the outcomes of this mathematical model, we iterated forward
 in time for 100 generations from 1659 combinations of initial morph
 frequencies and repeated those iterations across 5 values for the sperm
 competition coefficient ($c$ = {0..1}), 21 values for the relative
-reproductive coefficient ($r_M$ = {0...2}), and xx values of the number
+reproductive coefficient ($r_M$ = {0...2}), and 3 values of the number
 of sneakers ($n_{sneakers}$ ={1..3}). The iterations were implemented in
 R v. 4.1.1 [@rcoreteam2021] using some features of tidyR [@wickham2021].
 We also ran a subset of parameter combinations for 1,000 generations for
