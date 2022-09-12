@@ -173,9 +173,10 @@ phenotypic tactics [@lamichhaneyStructuralGenomicChanges2016;
 @merrittSupergenelinkedEstrogenReceptor2020;
 @kimSexlinkedSupergeneControls2017; @kimGeneticsEvidenceBalancing2019;
 @thomasChromosomalPolymorphismLinked2008;
-@hendrickxMasculinizingSupergene2022], although some researchers have
-instead used linkage mapping [@lepaisGeneticArchitectureThreshold2017]
-or investigation of differential gene expression between morphs
+@hendrickxMasculinizingSupergeneUnderlies2022], although some
+researchers have instead used linkage mapping
+[@lepaisGeneticArchitectureThreshold2017] or investigation of
+differential gene expression between morphs
 [@nugentNeuroendocrineProfilesAssociated2016]. Consistent with other
 work suggesting that traits critical to reproductive fitness are
 determined by the additive contributions of many loci throughout the
@@ -214,10 +215,10 @@ a single gene involved in carotenoid breakdown
 [@gazdaGeneticMechanismSexual2020]. Androgens are a likely mechanism for
 modulating these gene expression differences, for example in primates
 male-biased genes are more likely to be proximal to androgen response
-elements [@andersonRelationshipSexualDimorphism]. Unlike the canaries,
-though, examples where supergenes apparently underpin sexually dimorphic
-phenotypes tend to involve multiple morphs of one sex, usually males.
-All known examples of alternative morphs determined by supergenes
+elements [@andersonRelationshipSexualDimorphism2022]. Unlike the
+canaries, though, examples where supergenes apparently underpin sexually
+dimorphic phenotypes tend to involve multiple morphs of one sex, usually
+males. All known examples of alternative morphs determined by supergenes
 include a female-mimic morph, including ruffs
 [@kupperSupergeneDeterminesHighly2016;
 @lamichhaneyStructuralGenomicChanges2016], dwarf spiders
@@ -225,11 +226,15 @@ include a female-mimic morph, including ruffs
 [@thomasChromosomalPolymorphismLinked2008]. In the ruffs, a third male
 morph exists, with an intermediate phenotype between the dominant or
 'classic' male morph and the female-mimic
+[@hendrickxMasculinizingSupergeneUnderlies2022], and white-throated
+sparrows [@thomasChromosomalPolymorphismLinked2008]. In the ruffs, a
+third male morph exists, with an intermediate phenotype between the
+dominant or 'classic' male morph and the female-mimic
 [@kupperSupergeneDeterminesHighly2016;
 @lamichhaneyStructuralGenomicChanges2016]. In some cases, a heterozygous
 genotype is lethal (e.g., ruffs [@kupperSupergeneDeterminesHighly2016;
 @lamichhaneyStructuralGenomicChanges2016]), but not in others (e.g.,
-dwarf spiders [@hendrickxMasculinizingSupergene2022]). In the
+dwarf spiders [@hendrickxMasculinizingSupergeneUnderlies2022]). In the
 white-throated sparrow and the ruff, these structural variants are
 successful in coding for these variable phenotypes because they include
 androgen receptors [@maneySupergenesSteroids2022]-- the white-throated
