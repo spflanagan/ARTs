@@ -1153,8 +1153,8 @@ peaks in genome-wide Gst estimates were identified, and we evaluated
 whether QTLs were located near to those Gst peaks (i.e., we identified
 if Gst outliers were associated with true QTLs). From this, we then
 calculated the proportion of true QTLs that were located in these
-significant Gst peaks, and found that on average 0.71 (± 0), and this
-proportion was not related to the Courter/Parent frequency (Fig.
+significant $G_{ST}$ peaks, and found that on average 0.71 (± 0), and
+this proportion was not related to the courter-parent frequency (Fig.
 \@ref(fig:genomewideDiv) F).
 
 ```{r}
