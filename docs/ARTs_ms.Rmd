@@ -126,7 +126,7 @@ to them include either one or two genetic loci with two to three alleles
 traits inherited together, some authors have explored in verbal models
 the importance of correlational selection and its associated formation
 of genetic correlations and linkage disequilibrium across loci
-[@sinervoCorrelationalSelectionEvolution2002a]. While these relatively
+[@sinervoCorrelationalSelectionEvolution2002]. While these relatively
 simple genetic models do capture the evolutionary dynamics of the
 specific examples they are paired with [@sinervoRunawaySocialGames2001],
 genomic data has accumulated for a number of species suggesting that
