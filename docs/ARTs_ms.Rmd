@@ -1500,7 +1500,7 @@ plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture
 Understanding how the genetic architecture of stable polymorphisms
 facilitates or constrains their evolution has been an open question.
 Using a simulation model, we show that genetic architecture might not
-shift the parameter space in which polymorphism are stable, but can
+shift the parameter space in which polymorphisms are stable, but can
 determine which morphs are likely to be retained. Complex genetic
 architectures reduced the stochasticity associated with
 architecture-free models, likely due to genetic correlations between
