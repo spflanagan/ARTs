@@ -1302,8 +1302,9 @@ knitr::include_graphics(c("../figs/QTLFig.png","../figs/supergeneFig.png"))
 
 ### Will GWAS detect the actual QTLs?
 
-*Add more explanation for non-geneticists and build intuition*
-
+Genome-wide association studies are commonly used to test for
+associations between alleles and traits within populations, and we
+assessed how well this technique detects true QTLs from our simulations.
 As expected, the detection of true QTLs in a GWAS was more likely when
 fewer QTLs underpin the trait, especially if those QTLs are aggregated
 on fewer chromosomes (Fig. \@ref(fig:GWASoutcomes)). Somewhat
