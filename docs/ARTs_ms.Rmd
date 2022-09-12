@@ -1505,18 +1505,26 @@ architectures reduced the stochasticity associated with
 architecture-free models, likely due to genetic correlations between
 traits and loci. Surprisingly, QTLs organised into supergenes, although
 associated with high linkage disequilibrium, did not have different
-outcomes than QTLs distributed genome-wide, and unexpectedly high levels
-of genetic diversity were retained.
+outcomes than QTLs distributed genome-wide. In addition, unexpectedly
+high levels of genetic diversity were retained within morphs in the
+supergene scenarios.
 
-What drove our results?
-
--   LD, selection (and relaxation of selection?)
-
--   genetic correlations - compare to previous models and speculate on
-    how it might impact their results - discuss real-world examples
-
--   a mention of intralocus conflict?
-
+We expected the supergenes to evolve to contain single haplotypes for
+each morph, as has been reported in [examples]. A striking difference in
+our results from those of the empirical ones -- in particular, the
+empirical results relating to supergenes -- is that we do not see fixed
+alleles exclusively in one morph of the other. Instead, quantitative
+variation is retained within the supergenes, and we do not observe
+discrete haplotypes underlying the categorical morphs. To some extent,
+this is likely an artefact of our model set-up. In empirical examples, a
+key gene substantially contributes to the phenotypic morph, for example
+the steroid hormone receptor genes in white-throated sparrows and ruffs
+supergenes [@maneySupergenesSteroids2022]. In our model, we assumed all
+QTLs had roughly similar but small contributions to the phenotype.
+Furthermore, many polymorphisms could rely on dominance hierarchies
+(e.g., modelled as such by X), and could even be underpinned by
+dominance reversals between morphs
+[@pearseSexdependentDominanceMaintains2019]or sexes
 [@grieshopDominanceReversalsAntagonistic2021]. Regardless, we provide
 the important revelation that discrete morphs can be maintained within
 populations even without discrete genetic architectures with a
