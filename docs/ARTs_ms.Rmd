@@ -1539,6 +1539,11 @@ the important revelation that discrete morphs can be maintained within
 populations even without discrete genetic architectures with a
 threshold-based switch, contrary to predictions from some authors
 [@boltonColourPolymorphismLikely2016].
+[@boltonColourPolymorphismLikely2016]. This means that for such
+quantitative threshold traits, they could occur in a supergene and not
+result in the single- or two-locus inheritance patterns seen in
+side-blotched lizards [@sinervoRunawaySocialGames2001] and [other
+examples].
 
 One of the primary ways that empirical researchers characterise the
 genetic architectures underlying traits such as discrete morphs is
