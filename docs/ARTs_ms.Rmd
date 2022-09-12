@@ -1567,27 +1567,34 @@ selection pressures, and importantly have suggested that sex-specific
 selection must be incredibly strong
 [@kasimatisLimitsGenomicDivergence2019]. When it comes to morphs, this
 might not be true -- we observed both maintenance of variation in
-phenotypes and in genotypes, with high-ish levels of genetic
-differentiation between male types.
+phenotypes and in genotypes, with reasonably high levels of genetic
+differentiation between male types, even after selection had been
+relaxed.
 
--   genetic architecture is critically important
+Our model only applies to fixed polymorphisms, which only describes a
+portion of alternative reproductive tactics. Evidence from ruffs and
+white-throated sparrows suggest that some of the single-locus dynamics
+are driven by genetic variation at key hormone receptor genes
+[@maneySupergenesSteroids2022], highlighting the importance of
+considering hormonal cascades and gene expression networks in models
+(e.g., [@draghiEvolutionaryDynamicsEvolvability2009;
+@draghiRobustnessNoiseGene2015]). These genetic networks might be
+especially important for plastic traits (e.g., [examples]) or those that
+appear to be controlled by gene expression rather than fixed genetic
+variants (e.g., ocellated wrasse,
+[@nugentNeuroendocrineProfilesAssociated2016]). Future models could
+investigate the evolutionary dynamics of morphs that are controlled by
+gene networks.
 
--   this doesn't include other elements of sex-specific or
-    morph-specific architectures such as sex-specific dominance of
-    sex-biased gene expression
-
-This model only applies to fixed polymorphisms, which only describes a
-portion of alternative reproductive tactics
-
--   hormonal control/cascades
-
--   gene expression networks and dynamics
-
--   plastic traits
-
-Overall conclusions
-
--   importance of supergenes? are they important?
+Here, we show that the genetic architecture of discrete morphs impacts
+the frequency of morphs maintained under balancing selection, but
+genetic architecture does not impact the parameter space in which
+multiple morphs are maintained. Our models highlight the limitations of
+using genome-wide scans to identify the architecture of discrete traits,
+as we show that most QTLs are not detected even when the overall number
+of QTLs is low and balancing selection is ongoing. These simulation
+results have implications for empirical studies aiming to identify the
+genetic basis of discrete traits.
 
 # Acknowledgments
 
