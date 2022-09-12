@@ -379,10 +379,10 @@ offset by the sperm competition coefficient ($c$), but that this
 potential allocation is proportional to the number of sneakers
 ($n_{sneakers}$) that are allowed to fertilize each clutch. If the
 number of fertilizations arising from sneaking is smaller than the
-morph's potential reproductive effort (i.e, if $N_s \lt s_M$), the
-number of eggs fertilized through sneaking for that morph is the
-difference between $N_s$ and $s_M$, truncated at zero. Otherwise, the
-number of eggs fertilized through sneaking is $s_M$.
+morph's potential reproductive effort (i.e, if $N_s < s_M$), the number
+of eggs fertilized through sneaking for that morph is the difference
+between $N_s$ and $s_M$, truncated at zero. Otherwise, the number of
+eggs fertilized through sneaking is $s_M$.
 
 The survival of offspring can similarly be divided into offspring within
 a male's own clutch versus in others' clutches. The offspring surviving
