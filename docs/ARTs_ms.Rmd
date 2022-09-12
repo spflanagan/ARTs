@@ -944,7 +944,6 @@ maintenance of the courter-parent trait at a frequency of
 `r round(mean(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%
 ($\pm$
 `r round(sem(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%),
-with the non-courter/parent being the dominant morph. These proportions
 with the non-courter-parent being the dominant morph. These proportions
 are remarkably consistent across genetic architectures. Most simulations
 with supergenes resulted in very similar final morph frequencies
