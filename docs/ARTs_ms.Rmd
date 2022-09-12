@@ -256,25 +256,15 @@ extent genetic architectures interact with the frequency- and
 density-dependent mechanisms that maintain multiple morphs in
 populations.
 
-*Expand: the questions/problems our theory aims to answer/address are
-laid out a bit more explicitly and fully* *possibly this is a good way
-to describe how folks have looked into supergenes, and set up our
-genome-wide analyses. Possibly less focus on our results and instead lay
-out our questions and analyses a bit more*
-
-To tackle these problems, we have developed a simulation model
-incorporating explicit genetic architectures. We first identify regions
-of the frequency-dependent parameter space that should result in the
-maintenance of multiple morphs in a single-locus context using a
-mathematical model, and subsequently compare the outcomes of multilocus
-genetic architectures to those baselines. Our results suggest that
-morphs encoded by many genes are more robust to stochastic elements that
-impact the morph frequencies over time, and that the number of morphs
-that are predicted to persist changes when multilocus genotypes are
-involved. When the morphs have arrived at equilibrial frequencies,
-selection on male traits is generally relaxed, and this corresponds with
-a decreased ability to reliably detect causative variants using typical
-genomic analysis approaches (i.e., genome-wide associations).
+To tackle these problems, we use models to test how different genetic
+architectures impact the maintenance of multiple male reproductive
+morphs. We focus on first identifying key reproductive parameters that
+influence the maintenance or loss of morphs using a mathematical model.
+Then, we test whether different types of multilocus genetic
+architectures change the frequencies of morphs that are maintained using
+a simulation model. Our simulations of genetic architectures allow us to
+output genotypes and apply genetic analyses that are commonly used in
+empirical studies, including genome-wide association tests.
 
 # Methods
 
