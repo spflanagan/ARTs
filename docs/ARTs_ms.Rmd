@@ -661,8 +661,13 @@ comparisons of frequencies of all four morphs.
 
 ```{r mathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=4, fig.height=6.5, warning=FALSE,message=FALSE}
 
+```{r getMathResults}
 results<-readRDS("../morph_predictions/morph_results_10000_equalStart.RDS")
 results$diversity<-vegan::diversity(round(results[,c("CP","CN","NP","NN")],4))
+```
+
+```{r MakeMathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=4, fig.height=6.5, warning=FALSE,message=FALSE, eval=FALSE, include=FALSE}
+
 
 contours<-by(results, results$num_sneak, function(sub_calcs){
   
@@ -695,9 +700,11 @@ contours<-by(results, results$num_sneak, function(sub_calcs){
 
 multi_fig <- subplot(contours, nrows = 5, shareY = TRUE, shareX = TRUE)
 
-multi_fig %>% layout(autosize = F)
+multi_fig %>% layout(autosize = F) 
+```
 
-
+```{r mathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=4, fig.height=6.5}
+knitr::include_graphics("../figs/mathParams.png")
 ```
 
 ```{r calcProps}
