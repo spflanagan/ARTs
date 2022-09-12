@@ -1130,7 +1130,7 @@ or more morphs, even after selection has been relaxed on each trait
 individually.
 
 ```{r balacingSelection, fig.cap="Plots of average lifetime reproductive success (and SEM) for each male morph in each replicate in the final generation of the simulations. The lines connect points from within a replicate. Point size reflects the frequency of that morph in the replicate. These graphs show that the high diversity scenarios generally maintain a stable polymorphism of two or more morphs at high frequency due to balancing selection (i.e., equivalent fitness of morphs). The low diversity scenarios occasionally have low frequencies of other morphs, but they tend to be the result of recombination and not balancing selection (i.e., their fitnesses are substantially lower than the high frequency CP morph)."}
-knitr::include_graphics("../figs/fitnessPlots.png")
+knitr::include_graphics("../figs/fitnessPlots-1.png")
 ```
 
 ### Genome-wide genetic diversity
