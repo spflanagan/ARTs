@@ -1551,11 +1551,12 @@ through genome-wide association studies and other genome-wide scans of
 genetic diversity and differentiation. Putative regions are usually
 first identified through estimating allele frequency differences between
 morphs, testing for associations with the traits of interest (e.g.,
-found that genome-wide association studies are likely to only identify
-$\le$ 50% of true QTLs, and identify many false positives. Low true
-positives and high false positives are consistent with other simulation
-studies of genome-wide studies of selection and trait associations
 [@lagunas-roblesLinkedSupergenesUnderlie2021]). We performed these
+analyses on simulated genome-wide data, and found that genome-wide
+association studies are likely to only identify $\le$ 50% of true QTLs,
+and identify many false positives. Low true positives and high false
+positives are consistent with other simulation studies of genome-wide
+studies of selection and trait associations
 [@flanaganIdentifyingSignaturesSexual2015]. In this study, these
 limitations are consistent with both genetic architectures, so appears
 to not only be driven by the extreme linkage disequilibrium within
