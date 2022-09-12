@@ -598,12 +598,18 @@ selection contributed to morph diversity.
 To provide a link between the predictions of our theoretical models and
 empirical data, we analysed the genetic diversity of the populations at
 the final generation of the individual based simulations. This is an
-equivalent analysis to that of the re-sequencing that was conducted by
-(examples). The general idea behind these genome-wide analyses is that
-QTLs will have higher genetic diversity than background marker loci
-because balancing selection is favouring multiple alleles at those loci,
-with genetic variation existing between the morphs and specific variants
-associated with the different phenotypes.
+equivalent analysis to that of the re-sequencing that was conducted in
+empirical studies [@lamichhaneyStructuralGenomicChanges2016;
+@maneySupergeneBirdFour2020; @kupperSupergeneDeterminesHighly2016;
+@merrittSupergenelinkedEstrogenReceptor2020;
+@kimSexlinkedSupergeneControls2017; @kimGeneticsEvidenceBalancing2019;
+@thomasChromosomalPolymorphismLinked2008;
+@hendrickxMasculinizingSupergeneUnderlies2022]. The general idea behind
+these genome-wide analyses is that QTLs will have higher genetic
+diversity than background marker loci because balancing selection is
+favouring multiple alleles at those loci, with genetic variation
+existing between the morphs and specific variants associated with the
+different phenotypes.
 
 To implement this analysis, we used vcfR
 [@knausVcfrPackageManipulate2017] to estimate observed heterozygosity
