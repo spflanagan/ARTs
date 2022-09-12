@@ -797,13 +797,13 @@ morph (Fig. \@ref(fig:MatingTypesFig)). A more surprising result was the
 inconsistency of results from the mating types within the the high
 diversity parameter space. Only the case most similar to the
 mathematical model -- monogamy with no mating -- resulted in
-polymorphism, with the courter/parent morph coexisting with either the
-non-courter/parent or the non-courter/non-parent morph (Fig.
+polymorphism, with the courter-parent morph coexisting with either the
+non-courter-parent or the non-courter-non-parent morph (Fig.
 \@ref(fig:MatingTypesFig)). Polygyny resulted in the fixation of the
-courter/parent morph regardless of whether females mated at random if a
+courter-parent morph regardless of whether females mated at random if a
 suitable mate was found, and monogamy with random mating after searching
 for a preferred mate is unsuccessful resulted in the fixation of the
-non-courter/parent morph in every case. These results can be explained
+non-courter-parent morph in every case. These results can be explained
 by the nature of density-dependent survival in the individual-based
 model that are not consistent with the mathematical model; in the
 simulation model, offspring are created in proportion to the surviving
@@ -930,13 +930,14 @@ maintenance of the courter-parent trait at a frequency of
 ($\pm$
 `r round(sem(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%),
 with the non-courter/parent being the dominant morph. These proportions
+with the non-courter-parent being the dominant morph. These proportions
 are remarkably consistent across genetic architectures. Most simulations
 with supergenes resulted in very similar final morph frequencies
 (`r round(mean(final_freqs$CP[grep("supergene.*highDiversity",final_freqs$file)])*100,2)`%
 $\pm$
 `r round(sem(final_freqs$CP[grep("supergene.*highDiversity",final_freqs$file)])*100,2)`%),
 and only occasionally resulted in either three morphs being retained or
-the non-courter/non-parent morph replacing the non-courter parent. The
+the non-courter-non-parent morph replacing the non-courter-parent. The
 size of the supergene did not substantially impact the final morph
 frequencies, nor did the total number of QTLs underlying each locus.
 
