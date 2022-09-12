@@ -1,5 +1,5 @@
 ---
-title: "Genetic architecthure of alternative reproductive tactics"
+title: "Genetic architecthure of alternative reproductive tactics impacts which morphs are maintained under balancing selection"
 author:
   - Sarah P. Flanagan
   - Suzanne Alonzo
@@ -66,8 +66,6 @@ poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
 divcols<-c("#e78ac3","#ffd92f")
 
 ```
-
-*Think about a better title!*
 
 # Introduction
 
