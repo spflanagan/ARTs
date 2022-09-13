@@ -17,8 +17,6 @@ editor_options:
     wrap: 72
 fontsize: 11pt
 abstract: null
-header-includes: | 
-  \usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H} \usepackage[sfdefault]{roboto} \usepackage[T1]{fontenc}
 preprint: no
 mainfont: roboto
 geometry: margin=2.5cm
