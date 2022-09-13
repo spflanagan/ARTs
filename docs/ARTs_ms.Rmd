@@ -448,7 +448,7 @@ simulation model in C++. The simulation model follows a lifecycle that
 is largely the same as the mathematical model (Fig.
 \@ref(fig:mathModel)), but rather than tracking proportions of the
 population belonging to particular morphs, we tracked individuals within
-the population (Fig. \@ref(Fig:simModel)). Each individual contained
+the population (Fig. \@ref(fig:simModel)). Each individual contained
 diploid genotypes, which included both non-coding loci and quantitative
 trait loci (QTLs). We included two types of QTLs: ones that determined
 the individual's courting trait and ones that determined the
@@ -573,7 +573,7 @@ The model results were first assessed visually by graphing the
 proportion of each morph that persisted to the final generation of the
 model. Our first priority was to compare the outcomes of the simulation
 model with a single locus for each trait to the results of our
-mathematical model (from Section \@ref(mathematical-model)). Next, the
+mathematical model (from Section \@ref(math-model)). Next, the
 four mating systems were compared in the single-locus model. From this
 comparison, we were then able to narrow the parameter space for the
 comparisons of the two different multilocus genetic architectures. The
@@ -1021,12 +1021,12 @@ estimated selection gradients for the courter and parental traits in the
 first and last generations of the simulations. Selection consistently
 favoured parent traits, whereas courter traits could experience negative
 selection in high diversity parameter scenarios (Fig.
-\@ref(fig:selectionOverTime)). Selection was strong in the first
+\@ref(fig:selectionGradients)). Selection was strong in the first
 generation, but by generation 12000 selection was substantially relaxed
 on one or the other trait, in most cases. A number of the low diversity
 replkicates resulted in highly correlated selection on courters and
 parents, with a number of points falling on the positive 1:1 line (Fig.
-\@ref(fig:selectionOverTime)).
+\@ref(fig:selectionGradients)).
 
 ```{r selectionGradients, fig.height=4.5, fig.width=7, fig.cap="Selection gradients on parent and courter traits differ across the scenarios of our simulation model. In the first generation, selection always favours the parent trait, but selection gradients on the courter trait can be negative under parameter settings that favoured high diversity. By the end of the simulations (generation 12000), selection has been relaxed, so that selection on the parent trait is often near zero, as is selection on the courter trait. In some cases, the selection gradients on courter and parent triats are correlated at this final generation, especially in low diversity scenarios with QTLs as the genetic architecture. Solid grey lines show the x- and y-axes, with dotted grey lines showing the one-to-one correlation lines."}
 par(mfrow=c(1,2))
