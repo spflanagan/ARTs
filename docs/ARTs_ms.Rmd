@@ -1,14 +1,13 @@
 ---
 title: "Genetic architecthure of alternative reproductive tactics impacts which morphs are maintained under balancing selection"
-author:
-  - Sarah P. Flanagan
-  - Suzanne Alonzo
 output:
   bookdown::pdf_document2:
     fig_caption: yes
     keep_tex: yes
     number_sections: no
     toc: no
+    includes:
+      in_header: preamble.sty
 bibliography: references.bib
 capsize: normalsize
 documentclass: article
@@ -25,6 +24,18 @@ mainfont: roboto
 geometry: margin=2.5cm
 papersize: a4
 ---
+
+```{r, include=FALSE}
+remove_author <- function(x) {
+  # identify empty author line
+  i <- grep("^\\\\author\\{\\}$", x)
+  # be sure it is the one pandoc inserts
+  if(length(i) != 0 && grepl('^\\\\date\\{', x[i+1])) x <- x[-i]
+  x
+}
+options(bookdown.post.latex = remove_author)
+```
+
 
 ```{r setup, include=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
