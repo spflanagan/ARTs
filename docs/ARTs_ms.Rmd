@@ -1008,7 +1008,7 @@ models (e.g., [@hendrickxMasculinizingSupergeneUnderlies2022,
 @kupperSupergeneDeterminesHighly2016,,@lamichhaneyStructuralGenomicChanges2016]).
 To better understand the reasons for the similarity between the the
 genome-wide QTLs simulations versus the supergene simulations, we
-visualised the QTL haplotypes in supergenes (see Fig. \@ref(fig:example)
+visualised the QTL haplotypes in supergenes (see Fig. \@ref(fig:ExampleGenomewide)
 for a representative image). These visualisations suggest that because
 of the additive, polygenic nature of our traits, individuals have
 multiple pathways to creating the morphs in terms of genotypes at each
