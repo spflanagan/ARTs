@@ -265,9 +265,9 @@ true in cases such as the white-throated sparrow, in which the gene with
 a major effect is an estrogen receptor
 [@merrittSupergenelinkedEstrogenReceptor2020], which likely impacts the
 expression of many genes. Furthermore, it is currently unknown to what
-extent genetic architectures interact with the frequency- and
-density-dependent mechanisms that maintain multiple morphs in
-populations.
+extent genetic architectures -- and the constraints inherit to them --
+impact the dynamics of the frequency- and density-dependent mechanisms
+that maintain simple cases of genetic variation in populations.
 
 To tackle these problems, we use models to test how different genetic
 architectures impact the maintenance of multiple male reproductive
