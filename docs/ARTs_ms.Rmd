@@ -34,7 +34,6 @@ remove_author <- function(x) {
 options(bookdown.post.latex = remove_author)
 ```
 
-
 ```{r setup, include=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
 knitr::opts_knit$set(root.dir='../results/') #change
