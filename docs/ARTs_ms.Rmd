@@ -212,18 +212,18 @@ sperm morphology [@kimSexlinkedSupergeneControls2017;
 [@gazdaGeneticMechanismSexual2020], and sex-specific migratory
 behaviours [@pearseSexdependentDominanceMaintains2019].
 
-The potential for supergenes to underpin sexually dimorphic
-polymorphisms is intriguing, as it could explain the apparent mis-match
-between suites of traits being inherited in patterns that match
-predictions from simple population genetic models remarkably well
+The potential for supergenes to underpin sexually dimorphic polyphenisms
+is intriguing, as it could explain the apparent mis-match between simple
+single-locus population genetic models and the fact that these
+reproductive tactics are suites of complex traits
 [@sinervoRunawaySocialGames2001]. Supergenes, with their reduced
-recombination between variants, also provides a mechanism for
-individuals with largely similar genomic information to harbour fixed
-genetic variation without requiring differential gene expression --
-although in some cases, differential expression of single genes could
-explain complex and stable polymorphisms. For example, in canaries,
-sexual dichromatism appears to be mediated by differential expression of
-a single gene involved in carotenoid breakdown
+recombination between variants, also provide a mechanism for individuals
+with largely similar genomic information to harbour fixed genetic
+variation without requiring differential gene expression -- although in
+some cases, differential expression of single genes could explain
+complex and stable polymorphisms. For example, in canaries, sexual
+dichromatism appears to be mediated by differential expression of a
+single gene involved in carotenoid breakdown
 [@gazdaGeneticMechanismSexual2020]. Androgens are a likely mechanism for
 modulating these gene expression differences, for example in primates
 male-biased genes are more likely to be proximal to androgen response
