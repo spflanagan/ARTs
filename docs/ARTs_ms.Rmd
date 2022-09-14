@@ -330,7 +330,7 @@ as the 'simulation model' throughout the text. The purpose of the
 mathematical model was to generate baseline predictions for when
 multiple morphs are maintained.
 
-## Mathematical model {math-model}
+## Mathematical model {#math-model-methods}
 
 In the mathematical model, we model the proportion of the population
 that belong to morphs at each stage of the lifecycle (Fig.
@@ -445,7 +445,7 @@ parameter values likely to facilitate morph diversity within a
 population. These limitations are addressed in the individual-based
 simulation model.
 
-## Individual-based simulation model
+## Individual-based simulation model {#sim-model-methods}
 
 To evaluate the role of genetic architecture in the maintenance of
 alternative reproductive tactics, we wrote an individual-based
