@@ -77,7 +77,9 @@ morphs_ternary_plot<-function(){
 ```
 
 
-## Read in files
+## Single locus simulations
+
+These simulations had three diversity settings but also four mating systems, so I'll use a mix of colors and points to show the differences.
 
 ```{r singleLocusData}
 lowDiv<-morphs_to_ternary(pattern="lowDiversity.*summary.txt",path="single_locus")
