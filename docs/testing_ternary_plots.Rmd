@@ -58,6 +58,23 @@ morphs_to_ternary<-function(pattern, path){
 }
 
 ```
+```{r makeTernaryMorphsFXN}
+# made with inspiration from this tutorial: https://cran.r-project.org/web/packages/Ternary/vignettes/Ternary.html
+morphs_ternary_plot<-function(){
+  TernaryPlot(atip="CP",
+            btip="NP",
+            ctip="NN",
+            alab="Courter/Parent",
+            blab="Noncourter/Parent",
+            clab="Noncourter/Nonparent",
+            grid.lines=4,
+            grid.minor.lines = 1,
+            grid.lty = "dotted",
+            grid.minor.lty = "dotted",
+            lab.col=cols2[c(1,2,4)],
+            tip.col=cols2[c(1,2,4)])
+}
+```
 
 
 ## Read in files
