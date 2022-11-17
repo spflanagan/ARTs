@@ -151,9 +151,10 @@ outer_legend("topleft",
        pch=c(rep(1,4),6,0,5),
        pt.cex=2,
        bty='n',
-       ncol=3,
-       pt.lwd=2,
-       title = "Diversity")
+       ncol=2,
+       pt.lwd=2)
+
+
 ```
 
 
