@@ -106,7 +106,7 @@ strict_patts<-grep("v0",grep("RM", strict_patts, invert=TRUE, value=TRUE), inver
 ```
 
 
-## Create ternary plot
+```{r singleLocusPlot}
 
 This tutorial has information: https://cran.r-project.org/web/packages/Ternary/vignettes/Ternary.html
 
