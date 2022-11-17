@@ -108,7 +108,10 @@ strict_patts<-grep("v0",grep("RM", strict_patts, invert=TRUE, value=TRUE), inver
 
 ```{r singleLocusPlot}
 
-This tutorial has information: https://cran.r-project.org/web/packages/Ternary/vignettes/Ternary.html
+ms_cols<-c(monogamy='#e08214',
+           monogamy_nm='#b35806',
+           polygyny='#998ec3',
+           polygyny_nm='#5e3c99')
 
 ```{r}
 # create the base
