@@ -145,10 +145,10 @@ AddToTernary(
   cex=2 # add color based on param values
 )
 
-legend("top",
-       c("low", "high", "strict high"),
-       col=c(divcols,"#e6f598"),
-       pch=c(6,0,5),
+outer_legend("topleft",
+       c(names(ms_cols),"low", "high", "strict high"),
+       col=c(ms_cols, rep("dark grey",3)),
+       pch=c(rep(1,4),6,0,5),
        pt.cex=2,
        bty='n',
        ncol=3,
