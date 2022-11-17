@@ -87,6 +87,18 @@ highDiv<-morphs_to_ternary(pattern="highDiversity_.*summary.txt", path="single_l
 highDivStrict<-morphs_to_ternary(pattern="highDiversityStrict.*summary.txt",path="single_locus")
 ```
 
+```{r singleLocusMSinfo}
+# extract corresponding mating system info
+low_patts<-gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",names(lowDiv))
+low_patts<-grep("v0",grep("RM", low_patts, invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)
+
+high_patts<-gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",names(highDiv))
+high_patts<-grep("v0",grep("RM", high_patts, invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)
+
+strict_patts<-gsub(".*highDiversityStrict_(.*)_\\d_summary.txt_\\d","\\1",names(highDivStrict))
+strict_patts<-grep("v0",grep("RM", strict_patts, invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)
+
+```
 
 
 ## Create ternary plot
