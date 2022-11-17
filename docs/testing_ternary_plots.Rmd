@@ -1,0 +1,131 @@
+---
+title: "Ternary plots for ARTs results"
+output: html_notebook
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
+knitr::opts_knit$set(root.dir='../results/') #change
+```
+```{r opts, echo = FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+  fig.path = "../figs/",
+  dev="png"
+)
+```
+```{r librarysetup, echo=FALSE,echo=FALSE,message=FALSE}
+library(RColorBrewer)
+library(scales)
+library(sm)
+library(kableExtra)
+library(plotly)
+library(dplyr)
+library(vegan)
+library(tidyr)
+library(Ternary)
+source("../R/002_freq_functions.R")
+tmp<-sapply(list.files(path="../../spfTools/R/",full.names = TRUE),source)
+source("../morph_predictions/check_freqs.R")
+source("../morph_predictions/morph_gens_ns.R")
+
+```
+```{r baseCols}
+cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
+cols2<-c(CP='#d7191c',NCP='#fdae61',CNP='#abd9e9',NCNP='#2c7bb6')
+base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                   "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
+poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
+                    "FreqNcP","FreqCP","Polygyny")
+divcols<-c(low="#e78ac3",high="#ffd92f")
+
+```
+
+```{r dataConversionFXN}
+morphs_to_ternary<-function(pattern, path){
+  data<-get.morph.freqs(plot.pc.reps(pattern=pattern,path=path,cols,make.plot=FALSE))
+  data_points<-apply(data,
+                   1,
+                   function(dat){
+                     out<-dat[c("FreqCP","FreqNcP","FreqNcNp")]
+                     return(as.numeric(out))
+                   },
+                   simplify = FALSE)
+  return(data_points)
+}
+
+```
+
+
+## Read in files
+
+```{r singleLocusData}
+lowDiv<-morphs_to_ternary(pattern="lowDiversity.*summary.txt",path="single_locus")
+highDiv<-morphs_to_ternary(pattern="highDiversity_.*summary.txt", path="single_locus")
+highDivStrict<-morphs_to_ternary(pattern="highDiversityStrict.*summary.txt",path="single_locus")
+```
+
+
+
+## Create ternary plot
+
+This tutorial has information: https://cran.r-project.org/web/packages/Ternary/vignettes/Ternary.html
+
+```{r}
+# create the base
+TernaryPlot(atip="CP",
+            btip="NP",
+            ctip="NN",
+            alab="Courter/Parent",
+            blab="Noncourter/Parent",
+            clab="Noncourter/Nonparent",
+            grid.lines=4,
+            grid.minor.lines = 1,
+            grid.lty = "dotted",
+            grid.minor.lty = "dotted",
+            lab.col=cols2[c(1,2,4)],
+            tip.col=cols2[c(1,2,4)])
+
+# add the points
+AddToTernary(
+  points,
+  lowDiv,
+  col=divcols['low'],
+  pch=6,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+AddToTernary(
+  points,
+  highDiv,
+  col=divcols['high'],
+  pch=0,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+AddToTernary(
+  points,
+  highDivStrict,
+  col="#e6f598",
+  pch=5,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+legend("top",
+       c("low", "high", "strict high"),
+       col=c(divcols,"#e6f598"),
+       pch=c(6,0,5),
+       pt.cex=2,
+       bty='n',
+       ncol=3,
+       pt.lwd=2,
+       title = "Diversity")
+```
+
+
