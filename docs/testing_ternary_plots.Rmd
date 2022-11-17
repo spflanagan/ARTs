@@ -157,4 +157,6 @@ outer_legend("topleft",
 
 ```
 
+## Polygenic inheritance
+
 
