@@ -85,6 +85,11 @@ These simulations had three diversity settings but also four mating systems, so 
 lowDiv<-morphs_to_ternary(pattern="lowDiversity.*summary.txt",path="single_locus")
 highDiv<-morphs_to_ternary(pattern="highDiversity_.*summary.txt", path="single_locus")
 highDivStrict<-morphs_to_ternary(pattern="highDiversityStrict.*summary.txt",path="single_locus")
+
+# remove ones with no viability sel or random mating
+lowDiv<-lowDiv[grep("v0",grep("RM", names(lowDiv), invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)] 
+highDiv<-highDiv[grep("v0",grep("RM", names(highDiv), invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)]
+highDivStrict<-highDivStrict[grep("v0",grep("RM", names(highDivStrict), invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)]
 ```
 
 ```{r singleLocusMSinfo}
