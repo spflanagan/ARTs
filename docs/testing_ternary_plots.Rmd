@@ -113,20 +113,9 @@ ms_cols<-c(monogamy='#e08214',
            polygyny='#998ec3',
            polygyny_nm='#5e3c99')
 
-```{r}
 # create the base
-TernaryPlot(atip="CP",
-            btip="NP",
-            ctip="NN",
-            alab="Courter/Parent",
-            blab="Noncourter/Parent",
-            clab="Noncourter/Nonparent",
-            grid.lines=4,
-            grid.minor.lines = 1,
-            grid.lty = "dotted",
-            grid.minor.lty = "dotted",
-            lab.col=cols2[c(1,2,4)],
-            tip.col=cols2[c(1,2,4)])
+par(mar=c(0,0,0,0))
+morphs_ternary_plot()
 
 # add the points
 AddToTernary(
