@@ -121,7 +121,7 @@ morphs_ternary_plot()
 AddToTernary(
   points,
   lowDiv,
-  col=divcols['low'],
+  col=ms_cols[low_patts],
   pch=6,
   lwd=2,
   cex=2 # add color based on param values
@@ -130,7 +130,7 @@ AddToTernary(
 AddToTernary(
   points,
   highDiv,
-  col=divcols['high'],
+  col=ms_cols[high_patts],
   pch=0,
   lwd=2,
   cex=2 # add color based on param values
@@ -139,7 +139,7 @@ AddToTernary(
 AddToTernary(
   points,
   highDivStrict,
-  col="#e6f598",
+  col=ms_cols[strict_patts],
   pch=5,
   lwd=2,
   cex=2 # add color based on param values
