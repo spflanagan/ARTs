@@ -159,4 +159,89 @@ outer_legend("topleft",
 
 ## Polygenic inheritance
 
+The main variables I want to show with the polygenic inheritance are the genetic architecture (QTLs vs supergenes with diff props) and number of chromosomes. I could also do number of QTLs -- that wasn't shown in the main manuscript, as I showed representative images from the 8 QTLs scenarios. How do I want to show this? 
+
+- In other figures, I've used circles and triangles for QTLs and supergenes, respectively
+- I could use colors to show num of chromosomes and do different triangles for each architecture
+- scale points based on the number of QTLs?
+
+```{r}
+final_freqs<-read.csv("../results/morph_freqs_summary.csv")
+final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
+
+# extract the relevant info for plotting
+final_freqs$nqtl<-as.numeric(gsub("^.*q(\\d+)_.*$","\\1",final_freqs$rep))
+final_freqs$nchrom<-as.factor(gsub("^.*c(\\d+)_.*$","\\1",final_freqs$rep))
+final_freqs$arch<-gsub("^.*results\\/(\\w+)\\/.*$","\\1",final_freqs$file)
+final_freqs$arch[final_freqs$arch=="supergene"]<-gsub("^.*(prop\\d+\\.\\d+).*$","\\1",final_freqs$arch[final_freqs$arch=="supergene"])
+```
+```{r}
+chr_col<-c(
+  "#cccccc",
+  "#969696",
+  "#636363"
+)
+names(chr_col)<-levels(final_freqs$nchrom)
+```
+
+
+I'll start with just the QTL options.
+
+```{r}
+qtls<-final_freqs[which(final_freqs$arch=="qtls"),]
+
+
+# convert the data into the list format
+qtl_points<-apply(qtls,
+                   1,
+                   function(dat){
+                     out<-dat[c("CP","P","NON")]
+                     return(as.numeric(out))
+                   },
+                   simplify = FALSE)
+```
+
+
+```{r}
+par(mar=c(0,0,0,0))
+morphs_ternary_plot()
+
+# add the points
+AddToTernary(
+  points,
+  qtl_points,
+  bg=alpha(chr_col[qtls$nchrom],0.5),
+  col=chr_col[qtls$nchrom],
+  pch=16,
+  lwd=2,
+  cex=sqrt(qtls$nqtl)/4
+)
+
+outer_legend("topleft",
+       names(chr_col),
+       col=chr_col,
+       pch=,
+       pt.cex=2,
+       bty='n',
+       ncol=2,
+       pt.lwd=2)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
