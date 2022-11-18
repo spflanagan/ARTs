@@ -44,7 +44,7 @@ summarize_peaks<-function(path, pattern, pop, m=50){
                  mean=mean(mtm_diff$Gprimest),
                  sd = sd(mtm_diff$Gprimest))
   sigPeaks<-peaks[which(mtm_diff$Gprimest[peaks] >= Gcutoff)]
-  if(is.null(sigPeaks)) { 
+  if(is.null(sigPeaks) | length(sigPeaks)==0) { 
     sigPeaks<-0
     QTLsInPeaks <- 0
   }  else {
