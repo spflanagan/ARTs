@@ -4,7 +4,7 @@ library(dplyr)
 setwd("../results/")
 source("../R/003_genomic_summaries.R")
 
-QTLS<-FALSE
+QTLS<-TRUE
 SUPS<-TRUE
 if(isTRUE(QTLS)){
   path <- "/mnt/BigData/fixedART-results/qtls"
