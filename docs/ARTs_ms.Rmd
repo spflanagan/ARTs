@@ -570,7 +570,7 @@ The model results were first assessed visually by graphing the
 proportion of each morph that persisted to the final generation of the
 model. Our first priority was to compare the outcomes of the simulation
 model with a single locus for each trait to the results of our
-mathematical model (from Section \@ref(math-model)). Next, the
+mathematical model (from Section \@ref(math-model-methods)). Next, the
 four mating systems were compared in the single-locus model. From this
 comparison, we were then able to narrow the parameter space for the
 comparisons of the two different multilocus genetic architectures. The
