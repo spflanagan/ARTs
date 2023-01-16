@@ -1180,14 +1180,14 @@ architectures and did not relate to final morph frequencies (Fig.
 
 Similarly, we expected supergenes to show more differentiation between
 morphs, since their QTLs segregated together. However, $G_{ST}$ between
-male morphs was also not predicted by the frequency of courter-parent
+male morphs was also not predicted by the frequency of courter/parent
 morphs (Fig. \@ref(fig:genomewideDiv) E). Significant peaks in
 genome-wide $G_{ST}$ estimates were identified, and we evaluated whether
 QTLs were located near to those $G_{ST}$ peaks (i.e., we identified if
 $G_{ST}$ outliers were associated with true QTLs). From this, we then
 calculated the proportion of true QTLs that were located in these
 significant $G_{ST}$ peaks, and found that on average 0.71 (± 0), and
-this proportion was not related to the courter-parent frequency (Fig.
+this proportion was not related to the courter/parent frequency (Fig.
 \@ref(fig:genomewideDiv) F).
 
 ```{r}
