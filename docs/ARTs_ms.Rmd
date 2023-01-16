@@ -806,18 +806,18 @@ kable(SimParams, "latex",booktab=TRUE,
 ### Impacts of mating system on the model {#mating-system-results}
 
 As expected, in the low diversity parameter space, the majority of
-simulations resulted in fixation or near-fixation of the courter-parent
+simulations resulted in fixation or near-fixation of the courter/parent
 morph (Fig. \@ref(fig:MatingTypesFig)). A more surprising result was the
 inconsistency of results from the mating types within the the high
 diversity parameter space. Only the case most similar to the
 mathematical model -- monogamy with no mating -- resulted in
-polymorphism, with the courter-parent morph coexisting with either the
-non-courter-parent or the non-courter-non-parent morph (Fig.
+polymorphism, with the courter/parent morph coexisting with either the
+non-courter/parent or the non-courter/non-parent morph (Fig.
 \@ref(fig:MatingTypesFig)). Polygyny resulted in the fixation of the
-courter-parent morph regardless of whether females mated at random if a
+courter/parent morph regardless of whether females mated at random if a
 suitable mate was found, and monogamy with random mating after searching
 for a preferred mate is unsuccessful resulted in the fixation of the
-non-courter-parent morph in every case. These results can be explained
+non-courter/parent morph in every case. These results can be explained
 by the nature of density-dependent survival in the individual-based
 model that are not consistent with the mathematical model; in the
 simulation model, offspring are created in proportion to the surviving
@@ -826,7 +826,7 @@ success above their specified reproductive investments. This
 proportional survival allows males to escape the costs and increase
 their reproductive success beyond what is possible in the mathematical
 model. Random mating if non-preferred males are unable to be found also
-enables non-courter-parents to have increased reproductive success
+enables non-courter/parents to have increased reproductive success
 compared the the mathematical model predictions, which is why they are
 fixed in the monogamy case. If stricter costs on courting males are
 imposed, specifying $r=0.25$, meaning that $r_{courter}=2$ and
@@ -904,7 +904,7 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 ```
 
 One striking result is that stochasticity appears to play a major role
-in which morphs co-exist with the courter-parent morph, even when
+in which morphs co-exist with the courter/parent morph, even when
 initial starting conditions are identical (Fig.
 \@ref(fig:MatingTypesFig)). Across independent iterations of the model,
 variation in the initial starting frequencies of each morph (which
@@ -931,26 +931,26 @@ We incorporated polygenic inheritance of the male traits in two ways,
 both of which reduced the effect of stochasticity on the final morph
 frequencies. In the low diversity parameter space, the outcomes remained
 consistent with the single-locus model (and the predictions of the
-mathematical model): courter-parents dominated the populations, with
+mathematical model): courter/parents dominated the populations, with
 complete fixation of the morph in the majority of runs, and any
-variation existing in the form of 1-2 individuals (courter-parent
+variation existing in the form of 1-2 individuals (courter/parent
 frequencies were $\ge$ 99% in all cases). These results were consistent
 across all genetic architectures, including QTLs distributed across 2,
 4, and 8 chromosomes and QTLs clustered in supergenes spanning from 5%
 to 50% of a single chromosome. In the high diversity parameter space,
 polygenic loci distributed throughout the genome resulted in the
-maintenance of the courter-parent trait at a frequency of
+maintenance of the courter/parent trait at a frequency of
 `r round(mean(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%
 ($\pm$
 `r round(sem(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%),
-with the non-courter-parent being the dominant morph. These proportions
+with the non-courter/parent being the dominant morph. These proportions
 are remarkably consistent across genetic architectures. Most simulations
 with supergenes resulted in very similar final morph frequencies
 (`r round(mean(final_freqs$CP[grep("supergene.*highDiversity",final_freqs$file)])*100,2)`%
 $\pm$
 `r round(sem(final_freqs$CP[grep("supergene.*highDiversity",final_freqs$file)])*100,2)`%),
 and only occasionally resulted in either three morphs being retained or
-the non-courter-non-parent morph replacing the non-courter-parent. The
+the non-courter/non-parent morph replacing the non-courter/parent. The
 size of the supergene did not substantially impact the final morph
 frequencies, nor did the total number of QTLs underlying each locus.
 
