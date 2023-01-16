@@ -88,6 +88,7 @@ kable(highDivParams, "latex",booktab=TRUE,
 
 ```
 
+
 ### QTLs
 
 ```{r lowDivGenetics}
@@ -102,62 +103,10 @@ qs<-unique(gsub(".*lowDiversity_.*_q(\\d+)_c(\\d)_\\d_summary.txt_\\d","\\1",lna
 cs<-unique(gsub(".*lowDiversity_.*_q(\\d+)_c(\\d)_\\d_summary.txt_\\d","\\1",lnames))
 ```
 
-```{r lowDivQTLs16, fig.cap="Final generation frequencies based on the model with 16 QTLs, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+```{r lowDivQTLs1, fig.cap="Final generation frequencies based on the model with 1 QTLs, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
 
 var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[1]),lnames)]))
-
-
-par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
-varDat<-lapply(var_patts,function(pattern){
-  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
-  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
-        col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
-        las=2,
-        border=NA,
-        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
-  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
-
-  return(dat)
-})
-par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
-plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
-legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
-       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
-
-```
-
-```{r lowDivQTLs32, fig.cap="Final generation frequencies based on the model with 32 QTLs, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
-
-var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
-                       lnames[grep(paste0("q",qs[2]),lnames)]))
-
-
-par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
-varDat<-lapply(var_patts,function(pattern){
-  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
-  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
-        col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
-        las=2,
-        border=NA,
-        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
-  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
-
-  return(dat)
-})
-par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
-plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
-legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
-       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
-
-```
-
-```{r lowDivQTLs64, fig.cap="Final generation frequencies based on the model with 64 QTLs, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
-
-var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
-                       lnames[grep(paste0("q",qs[3]),lnames)]))
 
 
 par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
@@ -183,7 +132,7 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 ```{r lowDivQTLs8, fig.cap="Final generation frequencies based on the model with 8 QTLs, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
 
 var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
-                       lnames[grep(paste0("q",qs[4]),lnames)]))
+                       lnames[grep(paste0("q",qs[5]),lnames)]))
 
 
 par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
@@ -206,48 +155,8 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
-### Supergenes
 
-
-```{r lowDivGenetics2}
-lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm.*summary.txt",
-                                     path="/mnt/BigData/fixedART-results/supergene",
-                                     cols,make.plot=FALSE))
-lnames<-rownames(lowDiv)
-```
-
-```{r}
-qs<-unique(gsub(".*lowDiversity_.*_q(\\d+)_c(\\d)_\\d_summary.txt_\\d","\\1",lnames))
-cs<-unique(gsub(".*lowDiversity_.*_q(\\d+)_c(\\d)_\\d_summary.txt_\\d","\\1",lnames))
-```
-
-```{r lowDivQTLs16super, fig.cap="Final generation frequencies based on the model with 16 QTLs in a supergene, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
-
-var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
-                       lnames[grep(paste0("q",qs[1]),lnames)]))
-
-
-par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
-varDat<-lapply(var_patts,function(pattern){
-  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
-  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
-        col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
-        las=2,
-        border=NA,
-        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
-  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
-
-  return(dat)
-})
-par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
-plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
-legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
-       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
-
-```
-
-```{r lowDivQTLs32super, fig.cap="Final generation frequencies based on the model with 32 QTLs in a supergene, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+```{r lowDivQTLs16, fig.cap="Final generation frequencies based on the model with 16 QTLs, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
 
 var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[2]),lnames)]))
@@ -273,7 +182,7 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
-```{r lowDivQTLs64super, fig.cap="Final generation frequencies based on the model with 64 QTLs in a supergene, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+```{r lowDivQTLs32, fig.cap="Final generation frequencies based on the model with 32 QTLs, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
 
 var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[3]),lnames)]))
@@ -299,7 +208,153 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
+```{r lowDivQTLs64, fig.cap="Final generation frequencies based on the model with 64 QTLs, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+
+var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
+                       lnames[grep(paste0("q",qs[4]),lnames)]))
+
+
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+
+```
+
+
+### Supergenes
+
+
+```{r lowDivGenetics2}
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm.*summary.txt",
+                                     path="/mnt/BigData/fixedART-results/supergene",
+                                     cols,make.plot=FALSE))
+lnames<-rownames(lowDiv)
+```
+
+```{r}
+qs<-unique(gsub(".*lowDiversity_.*_q(\\d+)_c(\\d)_\\d_summary.txt_\\d","\\1",lnames))
+cs<-unique(gsub(".*lowDiversity_.*_q(\\d+)_c(\\d)_\\d_summary.txt_\\d","\\1",lnames))
+```
+
+```{r lowDivQTL1 super, fig.cap="Final generation frequencies based on the model with 1 QTLs in a supergene, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+
+var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
+                       lnames[grep(paste0("q",qs[1]),lnames)]))
+
+
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+
+```
+
 ```{r lowDivQTLs8 super, fig.cap="Final generation frequencies based on the model with 8 QTLs in a supergene, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+
+var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
+                       lnames[grep(paste0("q",qs[5]),lnames)]))
+
+
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+
+```
+
+```{r lowDivQTLs16super, fig.cap="Final generation frequencies based on the model with 16 QTLs in a supergene, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+
+var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
+                       lnames[grep(paste0("q",qs[2]),lnames)]))
+
+
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+
+```
+
+```{r lowDivQTLs32super, fig.cap="Final generation frequencies based on the model with 32 QTLs in a supergene, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+
+var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
+                       lnames[grep(paste0("q",qs[3]),lnames)]))
+
+
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+
+```
+
+```{r lowDivQTLs64super, fig.cap="Final generation frequencies based on the model with 64 QTLs in a supergene, with parameters that are expected to result in no diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
 
 var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[4]),lnames)]))
@@ -356,26 +411,79 @@ kable(highDivParams, "latex",booktab=TRUE,
 ### QTLs
 
 ```{r highDivGenetics}
-lowDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*monogamy_nm.*summary.txt",
+highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*monogamy_nm.*summary.txt",
                                      path="/mnt/BigData/fixedART-results/qtls",
                                      cols,make.plot=FALSE))
-lnames<-rownames(lowDiv)
+hnames<-rownames(highDiv)
 ```
 
 ```{r}
-qs<-unique(gsub(".*highDiversity_.*_q(\\d+)_c(\\d)_\\d_summary.txt_\\d","\\1",lnames))
-cs<-unique(gsub(".*highDiversity_.*_q(\\d+)_c(\\d)_\\d_summary.txt_\\d","\\1",lnames))
+qs<-unique(gsub(".*highDiversity_.*_q(\\d+)_c(\\d)_\\d_summary.txt_\\d","\\1",hnames))
+cs<-unique(gsub(".*highDiversity_.*_q(\\d+)_c(\\d)_\\d_summary.txt_\\d","\\1",hnames))
+```
+
+```{r highDivQTLs1, fig.cap="Final generation frequencies based on the model with 1 QTLs, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+
+var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
+                       hnames[grep(paste0("q",qs[1]),hnames)]))
+
+
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+
+```
+
+
+```{r highDivQTLs8, fig.cap="Final generation frequencies based on the model with 8 QTLs, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+
+var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
+                       hnames[grep(paste0("q",qs[5]),hnames)]))
+
+
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+
 ```
 
 ```{r highDivQTLs16, fig.cap="Final generation frequencies based on the model with 16 QTLs, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
 
 var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
-                       lnames[grep(paste0("q",qs[1]),lnames)]))
+                       hnames[grep(paste0("q",qs[2]),hnames)]))
 
 
 par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
-  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
         col=cols2[c("NCNP","CNP","NCP","CP")],
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
@@ -396,12 +504,12 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 ```{r highDivQTLs32, fig.cap="Final generation frequencies based on the model with 32 QTLs, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
 
 var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
-                       lnames[grep(paste0("q",qs[2]),lnames)]))
+                       hnames[grep(paste0("q",qs[3]),hnames)]))
 
 
 par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
-  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
         col=cols2[c("NCNP","CNP","NCP","CP")],
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
@@ -422,12 +530,12 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 ```{r highDivQTLs64, fig.cap="Final generation frequencies based on the model with 64 QTLs, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
 
 var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
-                       lnames[grep(paste0("q",qs[3]),lnames)]))
+                       hnames[grep(paste0("q",qs[4]),hnames)]))
 
 
 par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
 varDat<-lapply(var_patts,function(pattern){
-  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
   bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
         col=cols2[c("NCNP","CNP","NCP","CP")],
         names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
@@ -445,31 +553,6 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
-```{r highDivQTLs8, fig.cap="Final generation frequencies based on the model with 8 QTLs, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
-
-var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
-                       lnames[grep(paste0("q",qs[4]),lnames)]))
-
-
-par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
-varDat<-lapply(var_patts,function(pattern){
-  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
-  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
-        col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
-        las=2,
-        border=NA,
-        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
-  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
-
-  return(dat)
-})
-par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
-plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
-legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
-       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
-
-```
 
 ### Supergenes
 
@@ -486,10 +569,64 @@ qs<-unique(gsub(".*highDiversity_.*_q(\\d+)_c(\\d)_\\d_summary.txt_\\d","\\1",ln
 cs<-unique(gsub(".*highDiversity_.*_q(\\d+)_c(\\d)_\\d_summary.txt_\\d","\\1",lnames))
 ```
 
-```{r highDivQTLs16super, fig.cap="Final generation frequencies based on the model with 16 QTLs in a supergene, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+```{r highDivQTLs1super, fig.cap="Final generation frequencies based on the model with 1 QTLs in a supergene, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
 
 var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[1]),lnames)]))
+
+
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+
+```
+
+
+```{r highDivQTLs8super, fig.cap="Final generation frequencies based on the model with 8 QTLs in a supergene, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+
+var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
+                       lnames[grep(paste0("q",qs[5]),lnames)]))
+
+
+par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+
+```
+
+
+```{r highDivQTLs16super, fig.cap="Final generation frequencies based on the model with 16 QTLs in a supergene, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+
+var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
+                       lnames[grep(paste0("q",qs[2]),lnames)]))
 
 
 par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
@@ -515,32 +652,6 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 ```{r highDivQTLs32super, fig.cap="Final generation frequencies based on the model with 32 QTLs in a supergene, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
 
 var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
-                       lnames[grep(paste0("q",qs[2]),lnames)]))
-
-
-par(mfrow=c(2,ceiling(length(var_patts)/2)),oma=c(3,1,4,1),mar=c(3,1,4,1),xpd=TRUE)
-varDat<-lapply(var_patts,function(pattern){
-  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
-  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
-        col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
-        las=2,
-        border=NA,
-        main=gsub("qtls_monogamy_nm_(.*)","\\1",pattern))
-  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
-
-  return(dat)
-})
-par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
-plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
-legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
-       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
-
-```
-
-```{r highDivQTLs64super, fig.cap="Final generation frequencies based on the model with 64 QTLs in a supergene, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
-
-var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[3]),lnames)]))
 
 
@@ -564,7 +675,7 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ```
 
-```{r highDivQTLs8super, fig.cap="Final generation frequencies based on the model with 8 QTLs in a supergene, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
+```{r highDivQTLs64super, fig.cap="Final generation frequencies based on the model with 64 QTLs in a supergene, with parameters that are expected to result in high diversity based on the mathematical model. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available)."}
 
 var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",
                        lnames[grep(paste0("q",qs[4]),lnames)]))
@@ -911,7 +1022,7 @@ legend("topleft",
 
 Which of these ones have cp_freq close to 1 and 0?? They haven't shown up in the plots of high diversity parameters.
 
-```{r}
+```{r eval=FALSE}
 for(i in 1:length(seldat)){
   if(mean(seldat[[i]][seldat[[i]][,"gen"]==12000,"cp_freq"])>0.9){
     dat<-get.morph.freqs(
@@ -998,7 +1109,7 @@ fitness_dat<-readRDS("fitness_dat.RDS")
 
 
 ```{r fitnessPlotFXN}
-fitness_plot<-function(fitness_dat,cols2){
+fitness_plot<-function(fitness_dat,cols2, pch=19){
   
   
   plot(1:4,
@@ -1022,7 +1133,7 @@ fitness_plot<-function(fitness_dat,cols2){
         # points
         points(1:4,
            dat[1:4],
-           pch=19,
+           pch=pch,
            col=scales::alpha(cols2,0.5),
            cex=1+2*dat[9:12])
         arrows(x0=1:4,
@@ -1053,19 +1164,19 @@ fitness_plot<-function(fitness_dat,cols2){
 par(mfrow=c(2,2), mar=c(2,2,2,2),oma=c(2,2,1,1))
 
 # High diversity, QTLS
-hq<-fitness_plot(fitness_dat[grep("qtls//high",names(fitness_dat))], cols2)
+hq<-fitness_plot(fitness_dat[grep("qtls//high",names(fitness_dat))], cols2, pch=16)
 mtext("QTLs, high diversity",3)
 
 # High diversity, supergene
-hs<-fitness_plot(fitness_dat[grep("supergene//high",names(fitness_dat))], cols2)
+hs<-fitness_plot(fitness_dat[grep("supergene//high",names(fitness_dat))], cols2, pch=16)
 mtext("supergene, high diversity",3)
 
 # Low diversity, QTLS
-lq<-fitness_plot(fitness_dat[grep("qtls//low",names(fitness_dat))], cols2)
+lq<-fitness_plot(fitness_dat[grep("qtls//low",names(fitness_dat))], cols2, pch=17)
 mtext("QTLs, low diversity",3)
 
 # Low diversity, supergene
-ls<-fitness_plot(fitness_dat[grep("supergene//low",names(fitness_dat))], cols2)
+ls<-fitness_plot(fitness_dat[grep("supergene//low",names(fitness_dat))], cols2, pch=17)
 mtext("supergene, low diversity",3)
 
 mtext("Morph",1,outer=TRUE)
