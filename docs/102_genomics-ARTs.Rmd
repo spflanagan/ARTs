@@ -632,6 +632,9 @@ propQTL_plot<-function(gsummary,propCol,cols,ylabel="Proportion of QTL detected 
 
 ```{r QTLplots}
 par(mfrow=c(2,2),mar=c(5,5,2,2))
+gwas_summary<-gwas_summary[grep("monogamy_nm",gwas_summary$File),]
+gwas_summary$CQ<-factor(gwas_summary$CQ)
+
 propQTL_plot(gwas_summary[gwas_summary$Architecture=="qtls",],"PropQTL",cols)
 propQTL_plot(gwas_summary[gwas_summary$Architecture=="qtls",],"PropWrongQTL",cols,"Falsely detected QTLs")
 
