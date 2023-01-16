@@ -922,8 +922,8 @@ tmp<-lapply(points_list[c("qtls","prop0.05","prop0.25","prop0.5")], function(poi
 mtext("High diversity",
       2,
       outer=TRUE,
-      line=-1.15,
-      adj = 0.215,
+      line=-1.1,
+      adj = 0.235,
       col=divcols[1],
       cex=1.5)
 
