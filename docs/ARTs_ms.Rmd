@@ -1,5 +1,5 @@
 ---
-title: "Genetic architecthure of alternative reproductive tactics impacts which morphs are maintained under balancing selection"
+title: "Genetic architecture of alternative reproductive tactics impacts which morphs are maintained under balancing selection"
 output:
   bookdown::pdf_document2:
     fig_caption: yes
