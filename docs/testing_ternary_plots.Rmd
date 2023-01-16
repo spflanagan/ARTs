@@ -739,7 +739,7 @@ AddToTernary(
 
 
 ```{r baselinesNoStrictPercentages}
-divcols<-c("#e78ac3","#ffd92f")
+
 
 layout(matrix(c(1,1,2,3), nrow=2))
 par(mar=c(0,0,0,0))
