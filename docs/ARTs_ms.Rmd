@@ -333,11 +333,11 @@ likelihood of attracting a female to deposit eggs with him. However, in
 our model, males are not equally likely to be chosen by females, and
 therefore the maximum number of clutches is scaled by the probability of
 females mating with each type of male morph (denoted in a generic sense
-with the subscript $M$), denoted by a sexual selection parameter $w_s$.
-In general for this model, the probability of NP and NN males being
-chosen should equal $1-w_s$, where $w_s$ is the probability of courting
-males (CP and CN) being chosen. The general calculation for the number
-of clutches is:
+with the subscript $M$, where $M$ contains ${CP, CN, NP, NN}$), denoted
+by a sexual selection parameter $w_s$. In general for this model, the
+probability of NP and NN males being chosen should equal $1-w_s$, where
+$w_s$ is the probability of courting males (CP and CN) being chosen. The
+general calculation for the number of clutches is:
 
 $$
 n=w_s(N_m f_{CP} + N_m f_{CN}) + (1-w_s)(N_m f_{NP} + N_m f_{NN}).
