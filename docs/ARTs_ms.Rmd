@@ -715,7 +715,7 @@ pnn<-nrow(divRes[divRes$NN>=0.5,])/ndiv
 
 The regions of the parameter space that have non-zero diversity values
 correspond to scenarios where three of the four morphs were retained
-(courter-parents, non-courter-parents, and non-courter-non-parents). The
+(courter/parents, non-courter/parents, and non-courter/non-parents). The
 dominant morph differed with various parameter combinations. Assuming
 equal starting frequencies, after 10,000 generations, `r pcourt*100`% of
 parameter combinations that retained polymorphism resulted in the
