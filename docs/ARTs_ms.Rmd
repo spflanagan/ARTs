@@ -1540,6 +1540,9 @@ plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture
      #xlim=c(0,1),
      bty='l'
      )
+mtext("QTLs",3,cex=2,line=-2,outer=TRUE)
+mtext("Supergenes",3,cex=2,line=-30,outer=TRUE)
+
 ```
 
 # Discussion
