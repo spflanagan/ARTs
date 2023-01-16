@@ -954,7 +954,14 @@ the non-courter/non-parent morph replacing the non-courter/parent. The
 size of the supergene did not substantially impact the final morph
 frequencies, nor did the total number of QTLs underlying each locus.
 
-```{r ArchitecturesProps, fig.cap=""}
+(ref:archPropCap) Frequencies of morphs across replicates with different
+genetic architectures when 8 QTLs encoded each male trait. Shown are
+when these QTLs were distributed across 2, 4, and 8 chromosomes, and
+whether those QTLs were allocated genome-wide (top row), on a supergene
+taking up 5% of a chromosome (second from top), 25% of a chromosome
+(third row), or 50% of a chromosome (bottom row).
+
+```{r ArchitecturesProps, fig.cap='(ref:archPropCap)'}
 
 plot_dat<-final_freqs[grep("highDiversity.*monogamy_nm.*q8", final_freqs$file),]
 plot_dat$params<-gsub("../fixedART-results/(\\w+).*(_c\\d+).*$","\\1",plot_dat$file)
