@@ -1258,50 +1258,54 @@ plot(popgen_data$propCP,
      popgen_data$gHtMean,
      pch=as.numeric(as.factor(popgen_data$Architecture))+15,
      col=scales::alpha(
-       divcols[as.numeric(as.factor(popgen_data[,"Diversity"]))+1],
+       divcols[as.numeric(popgen_data[,"Diversity"])],
        0.5),
      cex=1.5,
+     cex.lab=1.5,
      xlab="Courter/Parent Frequency",
-     ylab="Average Obs. Het.",
+     ylab="Mean Obs. Het.",
      bty='l')
-text(0.3,0.25,"A",cex=3)
+text(0.28,0.42,"A",cex=2.5)
 
 plot(popgen_data$propCP,
      popgen_data$HetP,
      pch=as.numeric(as.factor(popgen_data$Architecture))+15,
      col=scales::alpha(
-       divcols[as.numeric(as.factor(popgen_data[,"Diversity"]))+1],
+       divcols[as.numeric(popgen_data[,"Diversity"])],
        0.5),
      cex=1.5,
+     cex.lab=1.5,
      xlab="Courter/Parent Frequency",
      ylab="Obs. Het P-values",
      bty='l')
-text(0.3,0.85,"B",cex=3)
+text(0.28,0.9,"B",cex=2.5)
 
 # Tajima's D
 plot(td_freqs$CP,
      td_freqs$avgTD,
      pch=as.numeric(as.factor(td_freqs$architecture))+15,
      col=scales::alpha(
-       divcols[as.numeric(as.factor(td_freqs$diversity))],
+       divcols[as.numeric(td_freqs$diversity)],
        0.5),
      cex=1.5,
+     cex.lab=1.5,
      xlab="Courter/Parent Frequency",
-     ylab="Average Tajima's D",
+     ylab="Mean Tajima's D",
      bty='l')
-text(0.3,0.25,"C",cex=3)
+text(0.28,4.4,"C",cex=2.5)
 
 plot(td_freqs$CP,
      td_freqs$p,
      pch=as.numeric(as.factor(td_freqs$architecture))+15,
      col=scales::alpha(
-       divcols[as.numeric(as.factor(td_freqs$diversity))],
+       divcols[as.numeric(td_freqs$diversity)],
        0.5),
      cex=1.5,
+     cex.lab=1.5,
      xlab="Courter/Parent Frequency",
      ylab="Tajima's D P-values",
      bty='l')
-text(0.3,0.25,"A",cex=3)
+text(0.28,0.9,"D",cex=2.5)
 
 
 # Fst
@@ -1309,36 +1313,37 @@ plot(popgen_data$propCP,
      popgen_data$gGpMeanMM,
      pch=as.numeric(as.factor(popgen_data$Architecture))+15,
      col=scales::alpha(
-       divcols[as.numeric(as.factor(popgen_data[,"Diversity"]))+1],
+       divcols[as.numeric(popgen_data[,"Diversity"])],
        0.5),
      cex=1.5,
+     cex.lab=1.5,
      xlab="Courter/Parent Frequency",
      ylab="Mean male-male Gst",
      bty='l')
-text(0.02,0.8,"E",cex=3)
+text(0.28,0.6,"E",cex=2.5)
 
 plot(popgen_data$propCP,
      popgen_data$propQTLsInPeaksMM,
      pch=as.numeric(as.factor(popgen_data$Architecture))+15,
      col=scales::alpha(
-       divcols[as.numeric(as.factor(popgen_data[,"Diversity"]))+1],
+       divcols[as.numeric(popgen_data[,"Diversity"])],
        0.5),
      cex=1.5,
+     cex.lab=1.5,
      xlab="Courter/Parent Frequency",
      ylab="Prop. QTL in Gst peak",
      bty='l')
-text(0.3,0.8,"F",cex=3)
+text(0.28,0.9,"F",cex=2.5)
 
 outer_legend("top",
        bty='n',
-       pch=c(15, 16, 0,0),
+       pch=c(17, 16, 15,15),
        lty=c(0, 0, 1,1),
-       lwd=c(2,2,1,1),
        col=c("grey", "grey",divcols[2],divcols[1]),
        legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
-       ncol=4)
+       ncol=4,
+       cex=1.5)
 ```
-
 
 ### Will GWAS detect the actual QTLs?
 
