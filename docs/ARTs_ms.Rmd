@@ -1427,7 +1427,7 @@ propQTL_plot<-function(gsummary,propCol,cols,ylabel="Prop. QTL detected",add_leg
           ylim=c(0,1),
           border=cols["courter"],
           lineCol=cols["courter"],
-          colMed="black",
+          colMed=cols["courter"],
           cex.axis=2,
           cex.lab=2,
           las=2
@@ -1439,7 +1439,7 @@ propQTL_plot<-function(gsummary,propCol,cols,ylabel="Prop. QTL detected",add_leg
           add=TRUE,
           border=cols["parent"],
           lineCol=cols["parent"],
-          colMed="black"
+          colMed=cols["parent"]
           )
   
   mtext(ylabel,2,cex=2,line=4)
