@@ -1097,7 +1097,8 @@ points(qtllocs,
        qtlvals,
        lwd=6,
        col=cols["parent"],
-       cex=2)
+       cex=2,
+       pch=2)
 
 # Gst
 plot(mtm_diff$Gprimest,pch=19,
@@ -1110,7 +1111,8 @@ plot(mtm_diff$Gprimest,pch=19,
 
 points(qtls$loc, 
        mtm_diff$Gprimest[qtls$loc],cex=2,
-       col=qtls$col,lwd=6)
+       col=qtls$col,lwd=6,
+       pch=2)
 #abline(h=mean(mtm_diff$Gprimest, na.rm = TRUE),col="grey",lty=2,lwd=2)
 #abline(h=median(mtm_diff$Gprimest, na.rm = TRUE),col="grey",lty=3,lwd=2)
 
@@ -1137,12 +1139,14 @@ points(which(td$QTL==TRUE & td$CHROM==0),
        td$TajimaD[td$QTL==TRUE & td$CHROM==0],
        cex=2,
        col=qtls$col[qtls$chrom==0][order(qtls$qtl[qtls$chrom==0])],
-       lwd=6)
+       lwd=6,
+       pch=2)
 points(which(td$QTL==TRUE & td$CHROM==1),
        td$TajimaD[td$QTL==TRUE & td$CHROM==1],
        cex=2,
        col=qtls$col[qtls$chrom==1][order(qtls$qtl[qtls$chrom==1])],
-       lwd=6)
+       lwd=6,
+       pch=2)
 
 # Heterozygosity
 plot(mf_diff$Ht,
@@ -1157,7 +1161,8 @@ plot(mf_diff$Ht,
 points(qtls$loc, mf_diff$Ht[qtls$loc],
        cex=2,
        col=qtls$col,
-       lwd=6)
+       lwd=6,
+       pch=2)
 
 # LD
 plot(ld_summary$AvgR2,
@@ -1177,7 +1182,8 @@ points(qtls$loc,
        ld_summary$AvgR2[qtls$loc],
        cex=2,
        col=qtls$col,
-       lwd=6)
+       lwd=6,
+       pch=2)
 ```
 
 ```{r supergeneGenotypes}
