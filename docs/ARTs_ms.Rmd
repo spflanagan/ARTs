@@ -457,7 +457,7 @@ then compared to a threshold to dichotomize each trait. The threshold
 for each trait was the mean trait value during the initialization of the
 model (i.e., at generation 0).
 
-```{r simModel, fig.cap="Overview of the individual-based simulation model."}
+```{r simModel, fig.cap="Overview of the individual-based simulation model.", out.width="75%"}
 knitr::include_graphics("../figs/simulation_flowchart_densitydependent.png", dpi=150)
 ```
 
