@@ -643,7 +643,7 @@ resampled estimates with the actual number of QTLs in each replicate.
 
 # Results
 
-## Frequency-dependent population dynamics model
+## Mathematical model
 
 The purpose of exploring the mathematical model was to identify the
 parameter space in which, in a non-genetic model, more than one male
