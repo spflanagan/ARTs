@@ -752,10 +752,10 @@ achieved. As an example of why this makes sense, that if $r = 0.5$,
 $c=0.2$, and the non-courting male's number of eggs he can fertilize is
 8, the non-courting male would fertilize
 $\frac{8 \times 2}{(8 \times 0.5)+(2 \times 0.2 \times 8)}$ =
-`r (8*0.2)/(4+(2*0.2*8))` of the offspring. The impacts of sperm
-competition on morph diversity were further influenced by $n_{sneak}$,
-with larger contributions from an individual non-courting male (e.g.,
-larger $c$) being required with fewer sneakers (Fig.
+`r round((8*0.2)/(4+(2*0.2*8)),3)` of the offspring. The impacts of
+sperm competition on morph diversity were further influenced by
+$n_{sneak}$, with larger contributions from an individual non-courting
+male (e.g., larger $c$) being required with fewer sneakers (Fig.
 \@ref(fig:mathParams)). This result makes sense because the number of
 sneakers is multiplied by the sperm competition coefficient to determine
 the proportion of offspring fertilized by the non-courters for a given
