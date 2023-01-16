@@ -803,7 +803,7 @@ kable(SimParams, "latex",booktab=TRUE,
 
 ```
 
-### Impacts of mating system on the model
+### Impacts of mating system on the model {#mating-system-results}
 
 As expected, in the low diversity parameter space, the majority of
 simulations resulted in fixation or near-fixation of the courter-parent
