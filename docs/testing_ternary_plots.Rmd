@@ -339,8 +339,25 @@ names(chr_col)<-levels(final_freqs$nchrom)
 I'll start with just the QTL options.
 
 ```{r}
-qtls<-final_freqs[which(final_freqs$arch=="qtls"),]
 
+points_list<-by(high_freqs, high_freqs$arch, function(arch_dat){
+  # convert the data into the list format
+  points<-apply(arch_dat,
+               1,
+               function(dat){
+                 out<-dat[c("CP","P","NON")]
+                 return(as.numeric(out))
+                 },
+               simplify = FALSE)
+  # output the data with the other info
+  return(list(points=points,
+              chroms=as.factor(arch_dat$nchrom),
+              qtls=as.numeric(arch_dat$nqtl),
+              arch=unique(arch_dat$arch)
+              )
+         )
+}
+)
 
 # convert the data into the list format
 qtl_points<-apply(qtls,
