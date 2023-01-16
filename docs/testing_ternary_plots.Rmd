@@ -359,40 +359,74 @@ points_list<-by(high_freqs, high_freqs$arch, function(arch_dat){
 }
 )
 
-# convert the data into the list format
-qtl_points<-apply(qtls,
-                   1,
-                   function(dat){
-                     out<-dat[c("CP","P","NON")]
-                     return(as.numeric(out))
-                   },
-                   simplify = FALSE)
+
+
+
+```
+
+
+```{r architectureTernary}
+arch_pch<-c(rep(2,3),6)
+names(arch_pch)<-names(points_list)
+
+
+par(mar=c(0,0,0,0),
+    mfrow=c(1,4))
+
+tmp<-lapply(points_list, function(points_info){
+  morphs_ternary_plot()
+  
+  # add the points
+  AddToTernary(
+    points,
+    points_info$points,
+    col=alpha(chr_col[points_info$chroms],0.75),
+    pch=arch_pch[points_info$arch],
+    lwd=2,
+    cex=log(points_info$qtls,base = 2)-1
+  )
+  text(x=0,
+       y=1.1,
+       points_info$arch,
+       cex=2,
+       xpd=TRUE
+       )
+})
+
+
+
+lgd<-outer_legend(x=-0.35,
+                  y=0.65,
+                  names(chr_col),
+                  col=chr_col,
+                  pch=15,
+                  cex=2,
+                  bty='n',
+                  horiz=TRUE,
+                  pt.lwd=2,
+                  title="Number of Chromosomes")
+outer_legend(x=-0.35,
+             y=-0.45,
+             legend=levels(as.factor(unique(high_freqs$nqtl))),
+             pch=15,
+             cex=2,
+             pt.cex=log(as.numeric((levels(as.factor(unique(high_freqs$nqtl))))),base=2)-1,
+             horiz=2,
+             pt.lwd=2,
+             bty='n',
+             title="Number of QTLs")
 ```
 
 
 ```{r}
-par(mar=c(0,0,0,0))
 morphs_ternary_plot()
 
 # add the points
 AddToTernary(
   points,
-  qtl_points,
-  bg=alpha(chr_col[qtls$nchrom],0.5),
-  col=chr_col[qtls$nchrom],
-  pch=16,
   lwd=2,
-  cex=sqrt(qtls$nqtl)/4
 )
 
-outer_legend("topleft",
-       names(chr_col),
-       col=chr_col,
-       pch=,
-       pt.cex=2,
-       bty='n',
-       ncol=2,
-       pt.lwd=2)
 
 ```
 
