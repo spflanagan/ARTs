@@ -315,6 +315,15 @@ write.csv(qtl_outliers,"qtl_outliers.csv",quote=FALSE,row.names = FALSE)
 
 ```
 
+```{r runQTLsLow, eval=FALSE}
+qtl_outliers<-dplyr::bind_rows(lapply(
+  list.files(path="/mnt/BigData/fixedART-results/qtls", 
+             pattern = ".*lowDiversity_qtls_monogamy_nm.*.vcf",
+             full.names = TRUE),
+  get_summary))
+write.csv(qtl_outliers,"qtl_outliers.csv",quote=FALSE,row.names = FALSE, append = TRUE)
+
+```
 
 
 ```{r runSupergenesHigh,eval=FALSE}
@@ -329,6 +338,16 @@ write.csv(supergene_outliers,"supergene_outliers.csv",quote=FALSE,row.names = FA
 ```
 
 
+```{r runSupergenesLow,eval=FALSE}
+
+supergene_outliers<-dplyr::bind_rows(lapply(
+  list.files(pattern=".*lowDiversity.*monogamy_nm.*.vcf",
+             path= "/mnt/BigData/fixedART-results/supergene/", 
+             full.names = TRUE),
+  get_summary))
+write.csv(supergene_outliers,"supergene_outliers.csv",quote=FALSE,row.names = FALSE, append=TRUE)
+
+```
 
 ```{r, eval=TRUE}
 qtl_outliers<-read.csv("qtl_outliers.csv")
