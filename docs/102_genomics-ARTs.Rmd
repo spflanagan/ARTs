@@ -746,7 +746,6 @@ plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture
      )
 ```
 
-
 # Linkage disequilibrium
 
 Let's look into LD. I've estimated LD using vcftools
