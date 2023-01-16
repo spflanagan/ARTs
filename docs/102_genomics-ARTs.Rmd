@@ -137,7 +137,7 @@ So this works well for visualising, but in this particular example the QTLs aren
 
 If I use a similar approach as I did for my gwsca model, I want to find peaks and identify if a QTL exists in the peak. In my previous model, I hard-coded that in C++, but I'm feeling lazy and would prefer to just do it in R at this point. So I found some code online that should find peaks for me.
 
-```{r}
+```{r findPeaksFXN}
 # From https://stats.stackexchange.com/questions/22974/how-to-find-local-peaks-valleys-in-a-series-of-data
 # answer/code by stas g, posted 5 Aug 2015, accessed 6 Dec 2021
 find_peaks <- function (x, m = 3){
@@ -157,7 +157,7 @@ find_peaks <- function (x, m = 3){
 }
 ```
 
-```{r}
+```{r plotGstExample}
 mtm_diff$Gprimest[is.na(mtm_diff$Gprimest)]<-0
 peaks<-find_peaks(mtm_diff$Gprimest,m = 50)
 plot(mtm_diff$Gprimest,
@@ -168,7 +168,7 @@ points(qtl_locs, mtm_diff$Gprimest[qtl_locs],cex=2,col="red",pch=8)
 points(peaks,mtm_diff$Gprimest[peaks],cex=2,col="purple",pch=6)
 ```
 
-```{r}
+```{r Gcutoff}
 Gcutoff<-qnorm(p = 0.99,
                mean=mean(mtm_diff$Gprimest),
                sd = sd(mtm_diff$Gprimest))
@@ -187,7 +187,7 @@ QTLsInPeaks<-sapply(qtl_locs,function(q,peaks){
 
 
 
-```{r}
+```{r popgenSummaryFXN}
 get_summary<-function(vcfname){
   
   # get the data
@@ -305,7 +305,7 @@ get_summary<-function(vcfname){
 
 
 
-```{r runQTLs, eval=FALSE}
+```{r runQTLsHigh, eval=FALSE}
 qtl_outliers<-dplyr::bind_rows(lapply(
   list.files(path="/mnt/BigData/fixedART-results/qtls", 
              pattern = ".*highDiversity_qtls_monogamy_nm.*.vcf",
@@ -317,7 +317,7 @@ write.csv(qtl_outliers,"qtl_outliers.csv",quote=FALSE,row.names = FALSE)
 
 
 
-```{r runSupergenes,eval=FALSE}
+```{r runSupergenesHigh,eval=FALSE}
 
 supergene_outliers<-dplyr::bind_rows(lapply(
   list.files(pattern=".*highDiversity.*monogamy_nm.*.vcf",
@@ -663,7 +663,6 @@ overall_info<-merge(final_freqs,
 overall_info$diversity<-gsub("^.*\\/(\\w+)Diversity.*$","\\1",overall_info$file)
 ```
 
-```{r}
 par(mfrow=c(2,2),mar=c(5,5,2,2))
 plot(overall_info$P[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
      overall_info$PropQTL[overall_info$Traits=="Parent" & overall_info$Architecture=="qtls"],
