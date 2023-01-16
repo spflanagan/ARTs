@@ -1027,7 +1027,6 @@ in a supergene.
 knitr::include_graphics(c("../figs/QTLFig-1.png","../figs/supergeneFig-1.png"))
 ```
 
-
 ### Selection on courter and parent traits
 
 To identify how selection impacted the maintenance of morphs, we
@@ -1038,7 +1037,7 @@ selection in high diversity parameter scenarios (Fig.
 \@ref(fig:selectionGradients)). Selection was strong in the first
 generation, but by generation 12000 selection was substantially relaxed
 on one or the other trait, in most cases. A number of the low diversity
-replkicates resulted in highly correlated selection on courters and
+replicates resulted in highly correlated selection on courters and
 parents, with a number of points falling on the positive 1:1 line (Fig.
 \@ref(fig:selectionGradients)).
 
