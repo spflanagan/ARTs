@@ -862,7 +862,14 @@ points_list_low<-by(low_freqs, low_freqs$arch, function(arch_dat){
 }
 )
 tmp<-lapply(points_list_low[c("qtls","prop0.05","prop0.25","prop0.5")], function(points_info){
-  morphs_ternary_plot()
+  morphs_ternary_plot(lab.cex=1.5,
+                      lab.offset=0.25,
+                      atip.pos=3,
+                      atip.rotate=0,
+                      btip.pos=2, 
+                      btip.rotate=0,
+                      ctip.pos=2,
+                      ctip.rotate=0)
   
   # add the points
   AddToTernary(
@@ -892,7 +899,14 @@ mtext("Low diversity",
 par(mar=c(2,1,0,0))
 
 tmp<-lapply(points_list[c("qtls","prop0.05","prop0.25","prop0.5")], function(points_info){
-  morphs_ternary_plot()
+  morphs_ternary_plot(lab.cex=1.5,
+                      lab.offset=0.25,
+                      atip.pos=3,
+                      atip.rotate=0,
+                      btip.pos=2, 
+                      btip.rotate=0,
+                      ctip.pos=2,
+                      ctip.rotate=0)
   
   # add the points
   AddToTernary(
