@@ -723,12 +723,14 @@ courter-parent morph comprising $\le$ 50% of the population. The
 remaining `r (1-pcourt)*100`% of parameter combinations resulting in the
 maintenance of alternative morphs had more equal representation of all
 three morphs, with the average proportion of the population being
-`r mean(divRes[divRes$CP<=0.5,"CP"])*100` % ($\pm$
-`r sem(divRes[divRes$CP<=0.5,"CP"])*100` %) courter-parents,
-`r mean(divRes[divRes$CP<=0.5,"NP"])*100` % ($\pm$
-`r sem(divRes[divRes$CP<=0.5,"NP"])*100` %) non-courter-parents, and
-`r mean(divRes[divRes$CP<=0.5,"NN"])*100` % ($\pm$
-`r sem(divRes[divRes$CP<=0.5,"NN"])*100` %) non-courter-non-parents.
+`r round(mean(divRes[divRes$CP<=0.5,"CP"])*100,2)` % ($\pm$
+`r round(sem(divRes[divRes$CP<=0.5,"CP"])*100,2)` %) courter/parents,
+`r round(mean(divRes[divRes$CP<=0.5,"NP"])*100,2)` % ($\pm$
+`r round(sem(divRes[divRes$CP<=0.5,"NP"])*100,2)` %)
+non-courter/parents, and
+`r round(mean(divRes[divRes$CP<=0.5,"NN"])*100,2)` % ($\pm$
+`r round(sem(divRes[divRes$CP<=0.5,"NN"])*100,2)` %)
+non-courter/non-parents.
 
 Overall, the parameters impacting whether diversity was maintained after
 both 100 and 1000 generations were the initial frequencies of the
