@@ -825,7 +825,7 @@ And then to follow up on this one, we'll do a two-row genetic architectures one
 
 
 
-```{r architectureTernaryLowHigh, fig.height=8.14, fig.width=4.72}
+```{r architectureTernaryLowHigh, fig.width=8.15, fig.height=4.72}
 arch_pch<-c(rep(2,3),6)
 names(arch_pch)<-names(points_list)
 
