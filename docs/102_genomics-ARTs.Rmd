@@ -1080,7 +1080,8 @@ points(qtllocs,
        qtlvals,
        lwd=6,
        col=cols["courter"],
-       cex=2)
+       cex=2,
+       pch=2)
 
 # GWAS parent
 plot(data2@scores$ParentTrait$additive,
