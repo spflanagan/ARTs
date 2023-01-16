@@ -1,7 +1,10 @@
 ---
 title: "Ternary plots for ARTs results"
-output: html_notebook
-editor_options: 
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+editor_options:
   chunk_output_type: console
 ---
 
