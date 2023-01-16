@@ -418,13 +418,318 @@ outer_legend(x=-0.35,
 ```
 
 
+
+
+
+## A combined diagram
+
+I will create a combined diagram, with the top row showing the baseline model, the single locus model, and QTLs, and the second row showing the three supergene options. Maybe add a star to the baseline model to show which parameter combination we selected to use for the simulations?
+
+I'll only want to plot the monogamy_nm ones from the single_locus runs.
+
 ```{r}
+sim_high<-morph_results[morph_results$initial_CN==0.25 & 
+                           morph_results$initial_CP==0.25 &
+                           morph_results$initial_NN==0.25 &
+                           morph_results$initial_NP==0.25 &
+                           round(morph_results$c,2) == 0.75 &
+                           round(morph_results$r,1) == 0.7 &
+                           morph_results$num_sneak == 2,]
+
+sim_low<-morph_results[morph_results$initial_CN==0.25 & 
+                           morph_results$initial_CP==0.25 &
+                           morph_results$initial_NN==0.25 &
+                           morph_results$initial_NP==0.25 &
+                           round(morph_results$c,2) == 0.5 &
+                           round(morph_results$r,1) == 2 &
+                           morph_results$num_sneak == 2,]
+```
+
+
+```{r}
+
+par(mar=c(0,0,0,0),
+    mfrow=c(2,3))
+
+
+# --------------- Baseline model
+dupdat<-data.table::setDT(baseline_points)[,list(Count=.N),names(baseline_points)]
+# Calculate the percentage for easier point plotting
+dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
+
+# Make the ternary diagram
 morphs_ternary_plot()
 
 # add the points
 AddToTernary(
   points,
+  col="black",
+  dupdat[,1:3],
   lwd=2,
+  cex=6*dupdat$Percent
+)
+
+
+# -------------- Single locus sims
+
+morphs_ternary_plot()
+
+# add the points
+AddToTernary(
+  points,
+  lowDiv[low_patts=="monogamy_nm"],
+  col="black",
+  pch=6,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+AddToTernary(
+  points,
+  highDiv[low_patts=="monogamy_nm"],
+  col="black",
+  pch=0,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+AddToTernary(
+  points,
+  highDivStrict[strict_patts=="monogamy_nm"],
+  col="black",
+  pch=5,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+# outer_legend("top",
+#        c("low", "high", "strict high"),
+#        col="black",
+#        pch=c(6,0,5),
+#        pt.cex=2,
+#        bty='n',
+#        ncol=3,
+#        pt.lwd=2)
+
+
+# ---------------- QTLs etc. 
+
+tmp<-lapply(points_list[c("qtls","prop0.05","prop0.25","prop0.5")], 
+            function(points_info){
+              morphs_ternary_plot()
+              
+              # add the points
+              AddToTernary(
+                points,
+                points_info$points,
+                col=alpha(chr_col[points_info$chroms],0.75),
+                pch=arch_pch[points_info$arch],
+                lwd=2,
+                cex=log(points_info$qtls,base = 2)-1
+              )
+              text(x=0,
+                   y=1.1,
+                   points_info$arch,
+                   cex=2,
+                   xpd=TRUE
+                   )
+})
+
+
+
+# lgd<-outer_legend(x=-0.35,
+#                   y=0.65,
+#                   names(chr_col),
+#                   col=chr_col,
+#                   pch=15,
+#                   cex=2,
+#                   bty='n',
+#                   horiz=TRUE,
+#                   pt.lwd=2,
+#                   title="Number of Chromosomes")
+# outer_legend(x=-0.35,
+#              y=-0.45,
+#              legend=levels(as.factor(unique(high_freqs$nqtl))),
+#              pch=15,
+#              cex=2,
+#              pt.cex=log(as.numeric((levels(as.factor(unique(high_freqs$nqtl))))),base=2)-1,
+#              horiz=2,
+#              pt.lwd=2,
+#              bty='n',
+#              title="Number of QTLs")
+
+```
+
+
+I'm not sure I like the fully combined one, as it hides some of the important details (low vs high diversity settings, for example.) What if instead I have two plots, one with the baseline and low/high/strict settings? 
+
+```{r}
+base_dat<-morph_results[which(morph_results$initial_CP==0.25 &
+                                        morph_results$initial_NP==0.25 & 
+                                        morph_results$initial_NN==0.25),
+                                ]
+high_which<-which(base_dat$initial_CN==0.25 & 
+                           base_dat$initial_CP==0.25 &
+                           base_dat$initial_NN==0.25 &
+                           base_dat$initial_NP==0.25 &
+                           round(base_dat$c,2) == 0.75 &
+                           round(base_dat$r,1) == 0.7 &
+                           base_dat$num_sneak == 2)
+low_which<-which(base_dat$initial_CN==0.25 & 
+                           base_dat$initial_CP==0.25 &
+                           base_dat$initial_NN==0.25 &
+                           base_dat$initial_NP==0.25 &
+                           round(base_dat$c,2) == 0.5 &
+                           round(base_dat$r,1) == 2 &
+                           base_dat$num_sneak == 2)
+```
+
+
+```{r baselinesWithStrict}
+
+layout(matrix(c(1,1,2,3), nrow=2))
+
+# --------------- Baseline model
+dupdat<-data.table::setDT(baseline_points)[,list(Count=.N),names(baseline_points)]
+# Calculate the percentage for easier point plotting
+dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
+
+# Make the ternary diagram
+morphs_ternary_plot()
+
+# add the points
+AddToTernary(
+  points,
+  col="black",
+  dupdat[,1:3],
+  lwd=2,
+  cex=10*dupdat$Percent
+)
+
+#high div point
+AddToTernary(
+  points,
+  col=divcols[1],
+  baseline_points[high_which,],
+  lwd=2,
+  pch=8,
+  cex=2
+)
+#low dive point
+AddToTernary(
+  points,
+  col=divcols[2],
+  baseline_points[low_which,],
+  lwd=2,
+  pch=8,
+  cex=1
+)
+
+# -------------- Single locus sims: low
+
+morphs_ternary_plot()
+
+# add the points
+AddToTernary(
+  points,
+  lowDiv[low_patts=="monogamy_nm"],
+  col=divcols[2],
+  pch=6,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+# -------------- Single locus sims: high
+
+morphs_ternary_plot()
+
+AddToTernary(
+  points,
+  highDiv[high_patts=="monogamy_nm"],
+  col=divcols[1],
+  pch=0,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+AddToTernary(
+  points,
+  highDivStrict[strict_patts=="monogamy_nm"],
+  col=divcols[1],
+  pch=5,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+```
+
+
+
+
+```{r baselinesNoStrict}
+
+layout(matrix(c(1,1,2,3), nrow=2))
+
+# --------------- Baseline model
+dupdat<-data.table::setDT(baseline_points)[,list(Count=.N),names(baseline_points)]
+# Calculate the percentage for easier point plotting
+dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
+
+# Make the ternary diagram
+morphs_ternary_plot()
+
+# add the points
+AddToTernary(
+  points,
+  col="black",
+  dupdat[,1:3],
+  lwd=2,
+  cex=100*dupdat$Percent
+)
+
+#high div point
+AddToTernary(
+  points,
+  col=divcols[1],
+  baseline_points[high_which,],
+  lwd=2,
+  pch=8,
+  cex=2
+)
+#low dive point
+AddToTernary(
+  points,
+  col=divcols[2],
+  baseline_points[low_which,],
+  lwd=2,
+  pch=8,
+  cex=1
+)
+
+# -------------- Single locus sims: low
+
+morphs_ternary_plot()
+
+# add the points
+AddToTernary(
+  points,
+  lowDiv[low_patts=="monogamy_nm"],
+  col=divcols[2],
+  pch=6,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+# -------------- Single locus sims: high
+
+morphs_ternary_plot()
+
+AddToTernary(
+  points,
+  highDiv[high_patts=="monogamy_nm"],
+  col=divcols[1],
+  pch=0,
+  lwd=2,
+  cex=2 # add color based on param values
 )
 
 
@@ -432,15 +737,203 @@ AddToTernary(
 
 
 
+```{r baselinesNoStrictPercentages}
+divcols<-c("#e78ac3","#ffd92f")
+
+layout(matrix(c(1,1,2,3), nrow=2))
+par(mar=c(0,0,0,0))
+# --------------- Baseline model
+dupdat<-data.table::setDT(baseline_points)[,list(Count=.N),names(baseline_points)]
+# Calculate the percentage for easier point plotting
+dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
+
+# Make the ternary diagram
+morphs_ternary_plot()
+
+# add the points
+AddToTernary(
+  points,
+  col="black",
+  dupdat[,1:3],
+  lwd=2,
+  cex=10*dupdat$Percent+1
+)
+
+#high div point
+AddToTernary(
+  points,
+  col=divcols[1],
+  baseline_points[high_which,],
+  lwd=2,
+  pch=8,
+  cex=2
+)
+#low div point
+AddToTernary(
+  points,
+  col=divcols[2],
+  baseline_points[low_which,],
+  lwd=2,
+  pch=8,
+  cex=2
+)
+
+# -------------- Single locus sims: low
+lowdat<-as.data.frame(do.call(rbind,lowDiv[low_patts=="monogamy_nm"]))
+colnames(lowdat)<-c("CP","NP","NN")
+dupdat<-data.table::setDT(lowdat)[,list(Count=.N),
+                                  names(lowdat)]
+# Calculate the percentage for easier point plotting
+dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
+
+morphs_ternary_plot()
+
+# add the points
+AddToTernary(
+  points,
+  dupdat[,1:3],
+  col=divcols[2],
+  pch=6,
+  lwd=2,
+  cex=10*dupdat$Percent
+)
+
+# -------------- Single locus sims: high
+highdat<-as.data.frame(do.call(rbind,highDiv[high_patts=="monogamy_nm"]))
+colnames(highdat)<-c("CP","NP","NN")
+dupdat<-data.table::setDT(highdat)[,list(Count=.N),
+                                  names(highdat)]
+dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
+
+morphs_ternary_plot()
+
+AddToTernary(
+  points,
+  dupdat[,1:3],
+  col=divcols[1],
+  pch=0,
+  lwd=2,
+  cex=100*dupdat$Percent # add color based on param values
+)
+
+
+```
+
+And then to follow up on this one, we'll do a two-row genetic architectures one
 
 
 
 
+```{r architectureTernaryLowHigh, fig.height=8.14, fig.width=4.72}
+arch_pch<-c(rep(2,3),6)
+names(arch_pch)<-names(points_list)
+
+arch_labels<-c(qtls="QTLs",
+              prop0.05="Supergene 5%",
+              prop0.25="Supergene 25%",
+              prop0.5="Supergene 50%")
 
 
+par(mar=c(0,1,1,0),
+    mfrow=c(2,4))
+
+# -------------- low diversity
 
 
+low_freqs<-final_freqs[which(final_freqs$diversity=="low"),]
+points_list_low<-by(low_freqs, low_freqs$arch, function(arch_dat){
+  # convert the data into the list format
+  points<-apply(arch_dat,
+               1,
+               function(dat){
+                 out<-dat[c("CP","P","NON")]
+                 return(as.numeric(out))
+                 },
+               simplify = FALSE)
+  # output the data with the other info
+  return(list(points=points,
+              chroms=as.factor(arch_dat$nchrom),
+              qtls=as.numeric(arch_dat$nqtl),
+              arch=unique(arch_dat$arch)
+              )
+         )
+}
+)
+tmp<-lapply(points_list_low[c("qtls","prop0.05","prop0.25","prop0.5")], function(points_info){
+  morphs_ternary_plot()
+  
+  # add the points
+  AddToTernary(
+    points,
+    points_info$points,
+    col=alpha(chr_col[points_info$chroms],0.75),
+    pch=arch_pch[points_info$arch],
+    lwd=2,
+    cex=log(points_info$qtls,base = 2)-1
+  )
+  text(x=0,
+       y=1.1,
+       arch_labels[points_info$arch],
+       cex=2,
+       xpd=TRUE
+       )
+})
+mtext("Low diversity",
+      2,
+      outer=TRUE,
+      line=-2,
+      adj = 0.875,
+      col=divcols[2],
+      cex=1.5)
 
+# --------------- high diversity
+par(mar=c(2,1,0,0))
+
+tmp<-lapply(points_list[c("qtls","prop0.05","prop0.25","prop0.5")], function(points_info){
+  morphs_ternary_plot()
+  
+  # add the points
+  AddToTernary(
+    points,
+    points_info$points,
+    col=alpha(chr_col[points_info$chroms],0.75),
+    pch=arch_pch[points_info$arch],
+    lwd=2,
+    cex=log(points_info$qtls,base = 2)-1
+  )
+})
+
+mtext("High diversity",
+      2,
+      outer=TRUE,
+      line=-2,
+      adj = 0.225,
+      col=divcols[1],
+      cex=1.5)
+
+lgd<-outer_legend(x=-1.15,
+                  y=-0.91,
+                  c("# Chrom:", names(chr_col)),
+                  col=c(NA,chr_col),
+                  pch=c(NA,rep(15,3)),
+                  cex=2,
+                  bty='n',
+                  horiz=TRUE,
+                  pt.lwd=2,
+                 text.width=c(0.2,rep(0.1,3)))
+outer_legend(x=0,
+             y=-0.91,
+             legend=c("# QTLs:", levels(as.factor(unique(high_freqs$nqtl)))),
+             pch=c(NA,rep(0,4)),
+             col=c(NA,rep("black",4)),
+             cex=2,
+             pt.cex=c(0,log(as.numeric((levels(as.factor(unique(high_freqs$nqtl))))),base=2)-1),
+             horiz=2,
+             pt.lwd=2,
+             bty='n',
+             text.width=c(0.2, rep(0.1,4)),
+             inset=0)
+```
 
 
 
