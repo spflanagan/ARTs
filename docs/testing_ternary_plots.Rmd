@@ -928,7 +928,7 @@ mtext("High diversity",
       cex=1.5)
 
 lgd<-outer_legend(x=-1.15,
-                  y=-0.91,
+                  y=-0.9,
                   c("# Chrom:", names(chr_col)),
                   col=c(NA,chr_col),
                   pch=c(NA,rep(15,3)),
@@ -938,7 +938,7 @@ lgd<-outer_legend(x=-1.15,
                   pt.lwd=2,
                  text.width=c(0.2,rep(0.1,3)))
 outer_legend(x=0,
-             y=-0.91,
+             y=-0.9,
              legend=c("# QTLs:", levels(as.factor(unique(high_freqs$nqtl)))),
              pch=c(NA,rep(0,4)),
              col=c(NA,rep("black",4)),
