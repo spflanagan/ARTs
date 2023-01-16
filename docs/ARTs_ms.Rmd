@@ -1227,7 +1227,8 @@ HetP<-pt(HetT,
          lower.tail = (HetT >=0))
 
 popgen_data$HetP<-HetP
-popgen_data$Diversity<-gsub("^.*/(\\w+)Diversity.*$","\\1",popgen_data$sim)
+popgen_data$Diversity<-factor(gsub("^.*/(\\w+)Diversity.*$","\\1",popgen_data$sim),
+                              levels=c("low","high"))
 
 
 
@@ -1238,15 +1239,18 @@ td_summary<-read.csv("../results/tajimaD_summary.csv", row.names = 1)
 td_summary<-td_summary[grep("monogamy_nm",rownames(td_summary)),]
 td_summary$rep<-gsub("../fixedART-results/.*\\/(.*\\w+_monogamy_nm_.*pop)_(\\d).*","\\1\\2",rownames(td_summary))
 
+td_summary$architecture<-gsub("../fixedART-results/(.*)\\/\\/(\\w+)Diversity_.*_monogamy_nm_.*pop_(\\d).*","\\1",rownames(td_summary))
+td_summary$diversity<-factor(gsub("../fixedART-results/(.*)\\/\\/(\\w+)Diversity_.*_monogamy_nm_.*pop_(\\d).*","\\2",rownames(td_summary)),
+                           levels=c("low","high"))
+
+
 td_freqs<-merge(td_summary, final_freqs,by="rep")
 
-td_freqs$architecture<-gsub("../fixedART-results/(.*)\\/\\/(\\w+)Diversity_.*_monogamy_nm_.*pop_(\\d).*","\\1",rownames(td_summary))
-td_freqs$diversity<-gsub("../fixedART-results/(.*)\\/\\/(\\w+)Diversity_.*_monogamy_nm_.*pop_(\\d).*","\\2",rownames(td_summary))
 
-```
 
 **Note to self: something seems off about this graph, compared to what
 it was previously**
+```
 
 ```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the simulation results. Genome-wide observed heterozygosity (A), Tajima’s D (C), and male-male Fst (E) were not influenced by the frequency of the morphs in the final generation, nor by the genetic architecture. The final morph frequencies also did not impact the significance of comparisons of QTLs versus neutral loci for heterozygosity (B) or Tajima’s D (D), or the proportion of QTLs found in the Fst peaks (F). Note that heterozygosity and Gst results are only shown for the runs with high diversity parameter sets"}
 
