@@ -1065,7 +1065,7 @@ tmp<-lapply(seldat, function(dat){
 
   points(dat[,"court_cat_b1"],
          dat[,"parent_cat_b1"],
-         pch=dat[,"supergene"]+15,
+         pch=dat[,"supergene"]+16,
          col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5),
            cex=1.5
   )
@@ -1110,7 +1110,7 @@ tmp<-lapply(seldat, function(dat){
     
     points(dat[,"court_cat_b1"],
            dat[,"parent_cat_b1"],
-           pch=dat[,"supergene"]+15,
+           pch=dat[,"supergene"]+16,
            col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5),
            cex=1.5
     )
