@@ -1208,6 +1208,14 @@ supergene_outliers<-read.csv("supergene_outliers.csv")
 supergene_outliers$Architecture<-"supergene"
 popgen_data<-dplyr::bind_rows(qtl_outliers,supergene_outliers)
 
+# add low diversity ones
+qtl_outliers<-read.csv("qtl_outliers_lowDiv.csv")
+qtl_outliers$Architecture<-"qtls"
+popgen_data<-dplyr::bind_rows(popgen_data,qtl_outliers)
+supergene_outliers<-read.csv("supergene_outliers_lowDiv.csv")
+supergene_outliers$Architecture<-"supergene"
+popgen_data<-dplyr::bind_rows(popgen_data,supergene_outliers)
+
 sediff<-sqrt((popgen_data$gHtVar/(popgen_data$nChrom*1000)) + 
                (popgen_data$qHtVar/(popgen_data$nQTLS)))
 HetT<-(popgen_data$gHtMean - popgen_data$qHtMean)/sediff
