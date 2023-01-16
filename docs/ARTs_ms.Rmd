@@ -1016,7 +1016,6 @@ models (e.g., [@hendrickxMasculinizingSupergeneUnderlies2022,
 @kupperSupergeneDeterminesHighly2016,,@lamichhaneyStructuralGenomicChanges2016]).
 To better understand the reasons for the similarity between the the
 genome-wide QTLs simulations versus the supergene simulations, we
-```{r ExampleGenomewide,echo=FALSE,out.width="49%", out.height="20%",fig.cap="Plots of representative simulations using QTLs (left) versus supergenes (right), both with 8 QTLs per trait and 2 chromosomes with 1000 marker loci each. The plots show genome-wide estimates of commonly-estimated population genetic parameters. From top to bottom: p-values from a genome-wide association test for the courter trait; p-values from a genome-wide association test for the parent trait; Gst between male morphs; smoothed Tajima's D estimated in 10bp segments; expected heterozygosity; and average pairwise linkage disequilibrium. QTLs for courter and parent traits are circled in blue and green, respectively.",fig.show='hold',fig.align='center'}
 visualised the QTL haplotypes in supergenes (see Fig.
 \@ref(fig:ExampleGenomewide) for a representative image). These
 visualisations suggest that because of the additive, polygenic nature of
