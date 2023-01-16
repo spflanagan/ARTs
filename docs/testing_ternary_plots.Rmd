@@ -201,6 +201,108 @@ outer_legend("topleft",
 
 ```
 
+
+```{r singleLocusSidBySide}
+
+
+# create the base
+par(mar=c(0,0,0,0),
+    mfrow=c(1,4))
+morphs_ternary_plot()
+
+# add the points
+AddToTernary(
+  points,
+  lowDiv,
+  col=ms_cols[low_patts],
+  pch=6,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+morphs_ternary_plot()
+AddToTernary(
+  points,
+  highDiv,
+  col=ms_cols[high_patts],
+  pch=0,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+morphs_ternary_plot()
+AddToTernary(
+  points,
+  highDivStrict,
+  col=ms_cols[strict_patts],
+  pch=5,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+outer_legend("topleft",
+       c(names(ms_cols),"low", "high", "strict high"),
+       col=c(ms_cols, rep("dark grey",3)),
+       pch=c(rep(1,4),6,0,5),
+       pt.cex=2,
+       bty='n',
+       ncol=2,
+       pt.lwd=2)
+
+
+```
+
+```{r monogamyPlot}
+
+ms_cols<-c(monogamy='#e08214',
+           monogamy_nm='#b35806',
+           polygyny='#998ec3',
+           polygyny_nm='#5e3c99')
+
+# create the base
+par(mar=c(0,0,0,0))
+morphs_ternary_plot()
+
+# add the points
+AddToTernary(
+  points,
+  lowDiv,
+  col=ms_cols[low_patts],
+  pch=6,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+AddToTernary(
+  points,
+  highDiv,
+  col=ms_cols[high_patts],
+  pch=0,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+AddToTernary(
+  points,
+  highDivStrict,
+  col=ms_cols[strict_patts],
+  pch=5,
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+outer_legend("topleft",
+       c(names(ms_cols),"low", "high", "strict high"),
+       col=c(ms_cols, rep("dark grey",3)),
+       pch=c(rep(1,4),6,0,5),
+       pt.cex=2,
+       bty='n',
+       ncol=2,
+       pt.lwd=2)
+
+
+```
+
 ## Polygenic inheritance
 
 The main variables I want to show with the polygenic inheritance are the genetic architecture (QTLs vs supergenes with diff props) and number of chromosomes. I could also do number of QTLs -- that wasn't shown in the main manuscript, as I showed representative images from the 8 QTLs scenarios. How do I want to show this? 
