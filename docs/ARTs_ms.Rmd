@@ -62,18 +62,9 @@ source("../R/002_freq_functions.R")
 source("../morph_predictions/check_freqs.R")
 source("../morph_predictions/morph_gens_ns.R")
 
-cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
-cols2<-c(CP='#d7191c',NCP='#fdae61',CNP='#abd9e9',NCNP='#2c7bb6')
+source("../R/formatting.R")
 ```
 
-```{r baseCols}
-base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
-                   "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
-poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
-                    "FreqNcP","FreqCP","Polygyny")
-divcols<-c("#e78ac3","#ffd92f")
-
-```
 
 # Introduction
 
