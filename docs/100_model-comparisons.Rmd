@@ -852,11 +852,11 @@ Some other important differences between the simulation model and the mathematic
 
 # Genetic architectures
 
-Out of interest, I also ran some iterations with genetic architectures -- QTLs distributed throughout the genome (labelled 'qtls') and QTLs linked in a supergene with low recombination. The two model runs -- for these parameter settings -- show quite different outcomes. In the low diversity expectation, on some occasions additional unexpected diversity can occur with either case (Fi.g \@ref(fig:lowDivQTLs)). However, supergenes cause a consistent maintenance of two morphs, the courter-parent and noncourter-parent (Fig. \@ref(fig:highDivQTLs)). For simplicity, let's consider the case with 8 QTLs distributed across 2 chromosomes. 
+Out of interest, I also ran some iterations with genetic architectures -- QTLs distributed throughout the genome (labelled 'qtls') and QTLs linked in a supergene with low recombination. The two model runs -- for these parameter settings -- show quite different outcomes. In the low diversity expectation, on some occasions additional unexpected diversity can occur with either case (Fi.g \@ref(fig:lowDivQTLs)). However, supergenes cause a consistent maintenance of two morphs, the courter-parent and noncourter-parent (Fig. \@ref(fig:highDivQTLs)). For simplicity, let's consider the case with 1 QTL. 
 
 ```{r lowDivGenetics}
-lowDivQ<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm_q8.*summary.txt",path="../fixedART-results/qtls/",cols,make.plot=FALSE))
-lowDivS<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm_prop0.25_q8.*summary.txt",path="../fixedART-results/supergene/",cols,make.plot=FALSE))
+lowDivQ<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm_q1_.*summary.txt",path="../fixedART-results/qtls/",cols,make.plot=FALSE))
+lowDivS<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*monogamy_nm_.*_q1_.*summary.txt",path="../fixedART-results/supergene/",cols,make.plot=FALSE))
 lowDiv<-dplyr::bind_rows(lowDivQ, lowDivS)
 ```
 
@@ -888,8 +888,8 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 ```
 
 ```{r highDivGenetics}
-highDivQ<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*monogamy_nm_q8.*summary.txt",path="../fixedART-results/qtls/",cols,make.plot=FALSE))
-highDivS<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*monogamy_nm_prop0.25_q8.*summary.txt",path="../fixedART-results/supergene/",cols,make.plot=FALSE))
+highDivQ<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*monogamy_nm_q1_.*summary.txt",path="../fixedART-results/qtls/",cols,make.plot=FALSE))
+highDivS<-get.morph.freqs(plot.pc.reps(pattern="highDiversity.*monogamy_nm_.*_q1_.*summary.txt",path="../fixedART-results/supergene/",cols,make.plot=FALSE))
 highDiv <- dplyr::bind_rows(highDivQ, highDivS)
 ```
 
