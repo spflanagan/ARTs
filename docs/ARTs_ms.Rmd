@@ -698,7 +698,7 @@ multi_fig <- subplot(contours, nrows = 5, shareY = TRUE, shareX = TRUE)
 multi_fig %>% layout(autosize = F) 
 ```
 
-```{r mathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=8}
+```{r mathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", out.width="200%"}
 knitr::include_graphics("../figs/mathParams.png")
 ```
 
