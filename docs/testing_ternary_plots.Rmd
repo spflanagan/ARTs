@@ -834,9 +834,10 @@ arch_labels<-c(qtls="QTLs",
               prop0.25="Supergene 25%",
               prop0.5="Supergene 50%")
 
-
-par(mar=c(0,1,1,0),
-    mfrow=c(2,4))
+layout(matrix(c(1,2,3,4,5,6,7,8),nrow=2,byrow = TRUE))
+par(mar=c(0,2,1,1.5),
+    oma=c(1,1,0,0),
+    xpd=TRUE)
 
 # -------------- low diversity
 
