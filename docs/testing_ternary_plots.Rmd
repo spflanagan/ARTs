@@ -319,7 +319,12 @@ final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
 final_freqs$nqtl<-as.numeric(gsub("^.*q(\\d+)_.*$","\\1",final_freqs$rep))
 final_freqs$nchrom<-as.factor(gsub("^.*c(\\d+)_.*$","\\1",final_freqs$rep))
 final_freqs$arch<-gsub("^.*results\\/(\\w+)\\/.*$","\\1",final_freqs$file)
-final_freqs$arch[final_freqs$arch=="supergene"]<-gsub("^.*(prop\\d+\\.\\d+).*$","\\1",final_freqs$arch[final_freqs$arch=="supergene"])
+final_freqs$arch[final_freqs$arch=="supergene"]<-gsub("^.*(prop\\d+\\.\\d+).*$","\\1",final_freqs$file[final_freqs$arch=="supergene"])
+final_freqs$diversity<-gsub("^.*\\/(\\w+)Diversity.*$","\\1",final_freqs$file)
+
+# only keep the high diversity ones
+high_freqs<-final_freqs[which(final_freqs$diversity=="high"),]
+
 ```
 ```{r}
 chr_col<-c(
