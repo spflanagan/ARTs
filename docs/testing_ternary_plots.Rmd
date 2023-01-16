@@ -896,7 +896,7 @@ mtext("Low diversity",
       cex=1.5)
 
 # --------------- high diversity
-par(mar=c(2,1,0,0))
+par(mar=c(2,2,0,1.5))
 
 tmp<-lapply(points_list[c("qtls","prop0.05","prop0.25","prop0.5")], function(points_info){
   morphs_ternary_plot(lab.cex=1.5,
