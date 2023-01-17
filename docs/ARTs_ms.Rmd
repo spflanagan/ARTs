@@ -1029,7 +1029,7 @@ surprisingly, the QTLs for parent traits were more reliably detected by
 GWAS than the courter QTLs. In the majority of simulations, the final
 population only contained parental males, but both courters and
 non-courters persisted in the population (Fig.
-\@ref(fig:MatingTypesFig)). The finding the parent QTLs are more likely
+\@ref(fig:architectureTernary)). The finding the parent QTLs are more likely
 to be detected is likely because that trait experienced stronger
 selection on it (i.e., being a non-parent was more costly than being a
 non-courter).
@@ -1220,7 +1220,7 @@ architectures [@lamichhaneyStructuralGenomicChanges2016;
 One of the primary ways that empirical researchers characterise the
 genetic architectures underlying traits such as discrete morphs is
 through genome-wide association studies and other genome-wide scans of
-genetic diversity and differentiation. Putative regions are usually
+genetic diversity and differentiation. Putative regions are usually
 first identified through estimating allele frequency differences between
 morphs, testing for associations with the traits of interest (e.g.,
 [@lagunas-roblesLinkedSupergenesUnderlie2021;
@@ -1237,7 +1237,7 @@ supergenes that makes associations difficult to identify
 [@kimSexlinkedSupergeneControls2017]. A possible explanation for the
 results in this study could be the relaxed selection observed at the
 point when the populations were 'genotyped' (Fig.
-\@ref(fig:selectionGradients)) -- mutations could have cropped up that
+S4) -- mutations could have cropped up that
 were no longer being removed by selection due to relaxed selection.
 
 Mathematical and simulation models have helped clarify the allelic
@@ -1302,3 +1302,4 @@ All code has been archived on Zenodo (DOI: ) and is maintained on github
 # Author Contributions
 
 # References
+
