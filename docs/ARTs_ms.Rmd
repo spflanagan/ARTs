@@ -792,7 +792,7 @@ maintenance of the courter/parent trait at a frequency of
 ($\pm$
 `r round(sem(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%),
 with the non-courter/parent being the dominant morph. These proportions
-are remarkably consistent across genetic architectures. Most simulations
+are remarkably consistent across genetic architectures (Fig. \@ref(fig:architectureTernary)). Most simulations
 with supergenes resulted in very similar final morph frequencies
 (`r round(mean(final_freqs$CP[grep("supergene.*highDiversity",final_freqs$file)])*100,2)`%
 $\pm$
@@ -802,60 +802,13 @@ the non-courter/non-parent morph replacing the non-courter/parent. The
 size of the supergene did not substantially impact the final morph
 frequencies, nor did the total number of QTLs underlying each locus.
 
-(ref:archPropCap) Frequencies of morphs across replicates with different
-genetic architectures when 8 QTLs encoded each male trait. Shown are
-when these QTLs were distributed across 2, 4, and 8 chromosomes, and
-whether those QTLs were allocated genome-wide (top row), on a supergene
-taking up 5% of a chromosome (second from top), 25% of a chromosome
-(third row), or 50% of a chromosome (bottom row).
+(ref:archTernCap) Caption for the ternary diagram.
 
-```{r ArchitecturesProps, fig.cap='(ref:archPropCap)'}
-
-plot_dat<-final_freqs[grep("highDiversity.*monogamy_nm.*q8", final_freqs$file),]
-plot_dat$params<-gsub("../fixedART-results/(\\w+).*(_c\\d+).*$","\\1",plot_dat$file)
-plot_dat$params[grep("supergene",plot_dat$params)]<-paste0(plot_dat$params[grep("supergene",plot_dat$params)],
-                                                           "_", 
-                                                           gsub("../fixedART-results/(\\w+).*(prop0\\.\\d).*(_c\\d+).*$","\\2",
-                                                                plot_dat$file[grep("supergene",plot_dat$params)]))
-plot_dat$params<-paste0(plot_dat$params, 
-                        gsub("../fixedART-results/(\\w+).*(_c\\d+).*$","\\2",plot_dat$file))
-
-par(mfrow=c(4,3),oma=c(3,5,4,1),mar=c(3,1,1,1),xpd=TRUE)
-varDat<-by(plot_dat,plot_dat$params,function(dat){
-
-  
-  bp<-barplot(t(as.matrix(dat[,c("NON", "C", "P", "CP")])),
-        col=cols2[c("NCNP","CNP","NCP","CP")],
-        names.arg =gsub("^.*(\\d)_pop.*$","\\1",dat[,"rep"]),
-        las=2,
-        border=NA,
-      #  main=paste(gsub("^.*c(\\d+).*$","\\1",dat[1,"params"]), "chroms"),
-        beside = FALSE
-       )
-  #text(x=bp,y=0.5,srt=90,labels = dat["CP"])
-  if(length(grep("qtl",dat[,"params"]))>0){
-    mtext(paste(gsub("^.*c(\\d+).*$","\\1",dat[1,"params"]), "chroms"),3)
-    if(length(grep("c2",dat[,"params"]))>0){
-      mtext("QTLs",2, line=3)
-    }
-  } else {
-    if(length(grep("c2",dat[,"params"]))>0){
-      mtext(paste0("Supergene\nProp ",gsub("^.*prop(\\d\\.\\d).*$","\\1",dat[1,"params"])),2,line=3)
-    }
-  }
-  return(dat)
-})
-
-par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
-plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
-legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
-       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+```{r architectureTernary,  fig.cap='(ref:archTernCap)'}
+knitr::include_graphics("../figs/architectureTernaryLowHigh-1.png")
 ```
 
-```{r seldat}
-seldat<-readRDS("selection_gradients.RDS")
-seldat<-seldat[grep("monogamy_nm",names(seldat))]
-```
+
 
 Our initial expectation was that supergenes would follow a pattern more
 similar to the single locus results, because empirical examples have
