@@ -828,6 +828,7 @@ in a supergene.
 knitr::include_graphics(c("../figs/QTLFig-1.png","../figs/supergeneFig-1.png"))
 ```
 
+*Add some info about balancing selection and fitness and reference the supplement*
 
 
 ### Genome-wide genetic diversity
