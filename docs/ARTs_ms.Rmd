@@ -664,47 +664,6 @@ results<-readRDS("../morph_predictions/morph_results_10000_equalStart.RDS")
 results$diversity<-vegan::diversity(round(results[,c("CP","CN","NP","NN")],4))
 ```
 
-```{r MakeMathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=4, fig.height=6.5, warning=FALSE,message=FALSE, eval=FALSE, include=FALSE}
-
-
-contours<-by(results, results$num_sneak, function(sub_calcs){
-  
-  
-  data_wide<-tidyr::spread(
-    sub_calcs[,c("r","c","diversity")],
-    r,
-    diversity
-  )
-  rownames(data_wide)<-data_wide[,1]
-  data_wide<-data_wide[,-1]
-  
-  fig <- plot_ly(
-    x = as.numeric(colnames(data_wide)), 
-    y = as.numeric(rownames(data_wide)), 
-    z = as.matrix(data_wide), 
-    type = "contour",
-    width = 450, height = 650
-  )
-  # add axis labels
-  x<-list(title="r")
-  y<-list(title="c")
-  fig <- fig %>% layout(xaxis=x,yaxis=y)
-  # add label to contour names
-  fig <- fig %>% colorbar(title = "Diversity")
-  # plot
-  return(fig)
-})
-
-
-multi_fig <- subplot(contours, nrows = 5, shareY = TRUE, shareX = TRUE)
-
-multi_fig %>% layout(autosize = F) 
-```
-
-```{r mathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", out.width="200%"}
-knitr::include_graphics("../figs/mathParams.png")
-```
-
 ```{r calcProps}
 divRes<-results[results$diversity>0,]
 ndiv<-nrow(divRes)
@@ -759,7 +718,7 @@ $\frac{8 \times 2}{(8 \times 0.5)+(2 \times 0.2 \times 8)}$ =
 sperm competition on morph diversity were further influenced by
 $n_{sneak}$, with larger contributions from an individual non-courting
 male (e.g., larger $c$) being required with fewer sneakers (Fig.
-\@ref(fig:mathParams)). This result makes sense because the number of
+S1). This result makes sense because the number of
 sneakers is multiplied by the sperm competition coefficient to determine
 the proportion of offspring fertilized by the non-courters for a given
 clutch.
