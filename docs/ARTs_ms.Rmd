@@ -325,7 +325,7 @@ multiple morphs are maintained.
 
 In the mathematical model, we model the proportion of the population
 that belong to morphs at each stage of the lifecycle (Fig.
-\@ref(fig:mathModel)). In the first stage, we consider the proportion of
+\@ref(fig:modelDiagram)). In the first stage, we consider the proportion of
 the population's clutches that will be allocated to each morph. The
 maximum number of clutches that could exist is proportional to the
 number of males in the population ($N_m$), if each male has the same
@@ -346,8 +346,8 @@ $$
 We have constrained females to only mate with courting males, so
 $w_{s_M}$ is equal to 1 for CP and CN males and 0 for NP and NN males.
 
-```{r mathModel, fig.cap="Diagram of the mathematical model describing the inheritance of alternative male reproductive morphs given courtship and parenting traits.", out.width='100%'}
-knitr::include_graphics("../figs/mathModel_diagram.png", dpi=150)
+```{r modelDiagram, fig.cap="Diagram of the two models describing the inheritance of alternative male reproductive morphs given courtship and parenting traits.", out.width='100%'}
+knitr::include_graphics("../figs/Combined_model_diagrams.png", dpi=150)
 ```
 
 The total reproductive effort in the population per morph is determined
@@ -442,9 +442,9 @@ To evaluate the role of genetic architecture in the maintenance of
 alternative reproductive tactics, we wrote an individual-based
 simulation model in C++. The simulation model follows a lifecycle that
 is largely the same as the mathematical model (Fig.
-\@ref(fig:mathModel)), but rather than tracking proportions of the
+\@ref(fig:modelDiagram)), but rather than tracking proportions of the
 population belonging to particular morphs, we tracked individuals within
-the population (Fig. \@ref(fig:simModel)). Each individual contained
+the population (Fig. \@ref(fig:modelDiagram)). Each individual contained
 diploid genotypes, which included both non-coding loci and quantitative
 trait loci (QTLs). We included two types of QTLs: ones that determined
 the individual's courting trait and ones that determined the
@@ -456,10 +456,6 @@ environmental effects impacted the trait value. These trait values were
 then compared to a threshold to dichotomize each trait. The threshold
 for each trait was the mean trait value during the initialization of the
 model (i.e., at generation 0).
-
-```{r simModel, fig.cap="Overview of the individual-based simulation model.", out.width="75%"}
-knitr::include_graphics("../figs/simulation_flowchart_densitydependent.png", dpi=150)
-```
 
 We implemented three different genetic architectures for these QTLs: a
 single gene per trait without any additional genetic information,
