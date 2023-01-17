@@ -749,12 +749,12 @@ SimParams<-data.frame(
              4,
              0.5,
              2),
-   HighDiv = c( 0.75, 
+   HighDiv = c( 0.7, 
              6,
              6,
              8,
              8,
-             0.7,
+             0.75,
              2)
 )
 
