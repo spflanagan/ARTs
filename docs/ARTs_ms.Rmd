@@ -765,6 +765,7 @@ kable(SimParams, "latex",booktab=TRUE,
 
 ```
 
+Describe (Fig. \@ref(fig:baselineResults)).
 
 ### The role of polygenic inheritance of traits
 
