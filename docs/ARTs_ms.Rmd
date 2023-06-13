@@ -70,21 +70,9 @@ source("../R/formatting.R")
 
 # Introduction
 
-Both genetic and phenotypic variation are required for selection to
-occur, and as such the maintenance of variation in populations has long
-been of interest to evolutionary biologists and conservation
-geneticists. In general, evolution by natural selection is predicted to
-decrease variation in populations, while only a few specific forms of
-selection can maintain variation in populations, such as overdominance,
-sexually antagonistic selection
-[@connallonResolutionSexualAntagonism2011;
-@connallonEvolutionaryConsequencesSexspecific2018], and frequency
-dependent selection [@sinervoRockPaperScissors1996]. Yet, substantial
-phenotypic variation is observed, with ubiquitous examples such as the
-prevalence of sexual dimorphism. Across a wide range of taxa, discrete
-alternative reproductive tactics are frequently maintained, in which
-individuals of the same species and sex display different morphs to
-maximize reproductive fitness in unique ways
+A wide variety of animals exhibit sex-specific morphs that are generally
+associated with different discrete ways of maximizing reproductive
+success, which are often referred to as alternative reproductive tactics
 [@oliveiraAlternativeReproductiveTactics2008]. These stable
 polymorphisms are typically maintained in populations through negative
 frequency-dependent selection (e.g., female morphs in damselflies
@@ -96,51 +84,29 @@ selection pressures enabling the partitioning of reproductive success
 over time (e.g., the feminized dwarf spider morph mates earlier, whereas
 the alternative morph is able to mate with previously-mated females
 later in the season [@hendrickxMasculinizingSupergeneUnderlies2022]).
-While some of these alternative reproductive tactics are likely
-determined by external cues and are therefore plastic (e.g., scarab
-beetles, ocellated wrasse, wild turkeys), others are known to be fixed
-at birth, and therefore are likely to be underpinned by genetic variants
-(e.g., dwarf spiders, side-blotched lizards, ruffs; examples reviewed in
+When these tactics are fixed within an individual throughout its
+lifetime, they are likely to be underpinned by genetic variants (e.g.,
+dwarf spiders, side-blotched lizards, ruffs; examples reviewed in
 [@oliveiraAlternativeReproductiveTactics2008;
-@mankSexspecificMorphsGenetics2022]).
-
-Several authors have elegantly combined empirical data on fitness and
-morph frequencies with theoretical models to uncover the primary
-mechanisms driving the observed evolutionary dynamics in natural
-populations [@sinervoRunawaySocialGames2001;
+@mankSexspecificMorphsGenetics2022]), and have been modelled using
+explicitly or implicitly simple genetic architectures of one or two
+genetic loci [@sinervoRunawaySocialGames2001;
 @sinervoRockPaperScissors1996;
 @takahashiNegativeFrequencydependentSelection2010;
 @svenssonFemalePolymorphismFrequency2005;
 @sinervoDevelopmentalPhysiologicalNeural2006;
-@alonzoMateChoiceGames2001]. In general, the frequency-dependent fitness
-surfaces prevent the loss of any morphs, and will result in either
-oscillations of a predictable period or an evolutionarily stable
-equilibrium point. Many of these models rely on game theoretical
-approaches -- such as the dynamics of the rock-paper-scissors game
-[@sinervoRockPaperScissors1996] -- and all of them either implicitly or
-explicitly assume relatively simple genetic mechanisms underpinning the
-discrete traits. The models with explicit population genetics include
-either one or two genetic loci with two to three alleles
-[@takahashiNegativeFrequencydependentSelection2010;
-@sinervoRunawaySocialGames2001;
-@svenssonFemalePolymorphismFrequency2005;
-@morrisIntralocusTacticalConflict2013], including a single locus linked
-to sex chromosomes [@ryanGeneticPolymorphismSwordtail1992]. Given that
-morphs are suites of traits inherited together, some authors have
-explored in verbal models the importance of correlational selection and
-its associated formation of genetic correlations and linkage
-disequilibrium across loci
+@alonzoMateChoiceGames2001; @ryanGeneticPolymorphismSwordtail1992;
+@morrisIntralocusTacticalConflict2013]. Given that morphs are suites of
+traits inherited together, some authors have explored in verbal models
+the importance of correlational selection and its associated formation
+of genetic correlations and linkage disequilibrium across loci
 [@sinervoCorrelationalSelectionEvolution2002]. While these relatively
 simple genetic models do capture the evolutionary dynamics of the
 specific examples they are paired with [@sinervoRunawaySocialGames2001],
 genomic data has accumulated for a number of species suggesting that
 categorical traits might in fact be underpinned by numerous quantitative
 genetic loci [@kimGeneticsEvidenceBalancing2019;
-@slyMolecularParallelismSignaling2022]. Furthermore, morphs are
-comprised of multiple traits, and thus variation at multiple genetic
-loci is likely to contribute to the evolutionary dynamics of morph
-frequencies. As such, we might be missing out on important factors
-constraining or facilitating evolution.
+@slyMolecularParallelismSignaling2022].
 
 When traits are encoded by multiple loci, evolutionary constraints
 arising from pleiotropy, genetic correlations, and physical linkage
