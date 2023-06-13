@@ -177,6 +177,28 @@ extent genetic architectures -- and the constraints inherit to them --
 impact the dynamics of the frequency- and density-dependent mechanisms
 that maintain simple cases of genetic variation in populations.
 
+An additional challenge arises from limitations in the empirical data
+that can be used to identify genetic architectures of these traits. The
+majority of examples involved researchers first generating a high
+quality reference genome and subsequently performing whole genome
+resequencing of individuals of each morph and sex to identify variants
+within populations that are associated with the phenotypic tactics
+[@lamichhaneyStructuralGenomicChanges2016; @maneySupergeneBirdFour2020;
+@kupperSupergeneDeterminesHighly2016;
+@merrittSupergenelinkedEstrogenReceptor2020;
+@kimSexlinkedSupergeneControls2017; @kimGeneticsEvidenceBalancing2019;
+@thomasChromosomalPolymorphismLinked2008;
+@hendrickxMasculinizingSupergeneUnderlies2022]. Alternative approaches
+involve linkage mapping [@lepaisGeneticArchitectureThreshold2017] or the
+investigation of differential gene expression between morphs
+[@nugentNeuroendocrineProfilesAssociated2016;
+@stuglikAlternativeReproductiveTactics2014]. Regardless, the ability to
+detect causal loci in these methods is not fully clear, and for
+quantitative traits (rather than these categorical traits) is likely
+limited in power (citations). Furthermore, we lack a predictive
+understanding of how different genetic architectures can influence
+evolutionary dynamics of polygenic traits.
+
 To tackle these problems, we use models to test how different genetic
 architectures impact the maintenance of multiple male reproductive
 morphs. We focus on first identifying key reproductive parameters that
