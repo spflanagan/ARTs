@@ -526,7 +526,7 @@ the traits, the offspring was considered not viable.
 After recombination occurred, if the progeny survived, the genotypes
 underwent mutation, which occurred at a rate of $\mu$. For a given
 individual, the number of mutations introduced was determined as
-$2\mu  n_{SNPs}  n_{chrom}$. The location of each mutation was randomly
+$2\mu n_{SNPs} n_{chrom}$. The location of each mutation was randomly
 selected and the allele at that location was randomly chosen from the
 set of existing alleles. The mutation also impacted the phenotypic
 effects of QTLs by altering the original effect by a value drawn from a
