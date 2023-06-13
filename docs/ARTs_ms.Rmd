@@ -77,14 +77,14 @@ geneticists. In general, evolution by natural selection is predicted to
 decrease variation in populations, while only a few specific forms of
 selection can maintain variation in populations, such as overdominance,
 sexually antagonistic selection
-[@connallonEvolutionaryConsequencesSexSpecific2018;
-@connallonResolutionSexualAntagonism2011], and frequency dependent
-selection [@alonzoMateChoiceGames2001]. Yet, substantial phenotypic
-variation is observed, with ubiquitous examples such as the prevalence
-of sexual dimorphism. Across a wide range of taxa, discrete alternative
-reproductive tactics are frequently maintained, in which individuals of
-the same species and sex display different morphs to maximize
-reproductive fitness in unique ways
+[@connallonResolutionSexualAntagonism2011;
+@connallonEvolutionaryConsequencesSexspecific2018], and frequency
+dependent selection [@sinervoRockPaperScissors1996]. Yet, substantial
+phenotypic variation is observed, with ubiquitous examples such as the
+prevalence of sexual dimorphism. Across a wide range of taxa, discrete
+alternative reproductive tactics are frequently maintained, in which
+individuals of the same species and sex display different morphs to
+maximize reproductive fitness in unique ways
 [@oliveiraAlternativeReproductiveTactics2008]. These stable
 polymorphisms are typically maintained in populations through negative
 frequency-dependent selection (e.g., female morphs in damselflies
