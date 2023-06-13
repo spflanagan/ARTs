@@ -833,9 +833,26 @@ the non-courter/non-parent morph replacing the non-courter/parent. The
 size of the supergene did not substantially impact the final morph
 frequencies, nor did the total number of QTLs underlying each locus.
 
-(ref:archTernCap) Caption for the ternary diagram.
+(ref:archTernCap) Adding explicit genetic architectures affects which
+morphs are maintained for the high diversity parameters, but the number
+of QTLs or chromosomes are not driving factors, and low diversity
+parameter settings resulted in the predicted outcomes. The ternary
+diagrams show the final frequencies of the courter/parent,
+non-courter/parent, and non-courter/non-parent individuals from
+individual-based simulations with QTLs distributed throughout the genome
+(left column) or clustered into supergenes that make up 5%, 25%, or 50%
+of the chromosome the supergene is situated on. Colours represent the
+number of chromosomes considered by the model and the size of the points
+depict the number of QTLs underlying each trait. In low diversity
+scenarios, regardless of genetic architecture, the courter-parent morph
+is the one that is retained, same as in the baseline model and
+architecture-free simulations (Fig. \@ref(fig:baselineResults)). Unlike
+in the baseline and architecture-free models, in high diversity
+scenarios the non-courter/non-parent individuals are rarely retained,
+and are only retained in a few cases when supergenes are very tightly
+linked.
 
-```{r architectureTernary,  fig.cap='(ref:archTernCap)'}
+```{r architectureTernary,  fig.cap='(ref:archTernCap)', out.width="95%"}
 knitr::include_graphics("../figs/architectureTernaryLowHigh-1.png")
 ```
 
