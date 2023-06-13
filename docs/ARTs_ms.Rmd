@@ -750,12 +750,14 @@ consistent with the single-locus model (and the predictions of the
 mathematical model): courter/parents dominated the populations, with
 complete fixation of the morph in the majority of runs, and any
 variation existing in the form of 1-2 individuals (courter/parent
-frequencies were $\ge$ 99% in all cases). These results were consistent
-across all genetic architectures, including QTLs distributed across 2,
-4, and 8 chromosomes and QTLs clustered in supergenes spanning from 5%
-to 50% of a single chromosome. In the high diversity parameter space,
-polygenic loci distributed throughout the genome resulted in the
-maintenance of the courter/parent trait at a frequency of
+frequencies were $\ge$ 99% in all cases), which were a result of
+stochasticity and recombination as opposed to balancing selection on
+morphs (Supplemental Fig. X). These results were consistent across all
+genetic architectures, including QTLs distributed across 2, 4, and 8
+chromosomes and QTLs clustered in supergenes spanning from 5% to 50% of
+a single chromosome. In the high diversity parameter space, polygenic
+loci distributed throughout the genome resulted in the maintenance of
+the courter/parent trait at a frequency of
 `r round(mean(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%
 ($\pm$
 `r round(sem(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%),
