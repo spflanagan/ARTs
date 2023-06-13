@@ -347,7 +347,7 @@ $$
 We have constrained females to only mate with courting males, so
 $w_{s_M}$ is equal to 1 for CP and CN males and 0 for NP and NN males.
 
-```{r modelDiagram, fig.cap="Diagram of the two models describing the inheritance of alternative male reproductive morphs given courtship and parenting traits.", out.width='100%'}
+```{r modelDiagram, fig.cap="Diagrams of the two models of alternative male reproductive morphs. For both, begin reading at the top with the step labelled (1) and continue around the circle clockwise.", out.width='100%'}
 knitr::include_graphics("../figs/Combined_model_diagrams.png", dpi=150)
 ```
 
