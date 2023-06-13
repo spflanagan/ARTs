@@ -108,50 +108,9 @@ categorical traits might in fact be underpinned by numerous quantitative
 genetic loci [@kimGeneticsEvidenceBalancing2019;
 @slyMolecularParallelismSignaling2022].
 
-When traits are encoded by multiple loci, evolutionary constraints
-arising from pleiotropy, genetic correlations, and physical linkage
-could affect morph frequencies within and among populations. As such,
-the reduction or removal of these constraints can facilitate sequence
-evolution by relaxing positive selection on genes
-[@harrisonSexualSelectionDrives2015; @dapperRelaxedSelectionRapid2020].
-When polymorphic traits create conflict between sexes or morphs, these
-genetic constraints can prevent the resolution of conflict and therefore
-result in the maintenance of diversity
-([@pennellContrastingEffectsIntralocus2016]). Often, these constraints
-are overcome through mechanisms such as gene duplications (e.g.,
-[@desmaraisEscapeAdaptiveConflict2008]), differential gene expression
-[@mankPopulationGeneticsSexual2017], or even the evolution of asexuality
-[@brownSocialDilemmasSupergenes2011]. Most work on such intralocus
-conflict is related to sexual antagonism and sexual conflict, but
-intralocus conflict can emerge among morphs of the same sex, as they
-also share the majority of their genome
-[@morrisIntralocusTacticalConflict2013]. Intriguingly, in ruffs, which
-have three male alternative tactics, the evolution of the inversion
-polymorphism underpinning the male morphs appears to have resolved
-conflict among the male morphs, while simultaneously exacerbating
-intralocus sexual conflict
-[@giraldo-deckIntralocusConflictsAssociated2022].
-
-The genetic architectures of alternative reproductive tactics have been
-characterized in a few examples, and the diversity of outcomes highlight
-the need for improved predictions. The majority of these examples first
-generated a high quality reference genome and subsequently performed
-whole genome resequencing of individuals of each morph and sex to
-identify variants within populations that are associated with the
-phenotypic tactics [@lamichhaneyStructuralGenomicChanges2016;
-@maneySupergeneBirdFour2020; @kupperSupergeneDeterminesHighly2016;
-@merrittSupergenelinkedEstrogenReceptor2020;
-@kimSexlinkedSupergeneControls2017; @kimGeneticsEvidenceBalancing2019;
-@thomasChromosomalPolymorphismLinked2008;
-@hendrickxMasculinizingSupergeneUnderlies2022], although some
-researchers have instead used linkage mapping
-[@lepaisGeneticArchitectureThreshold2017] or investigation of
-differential gene expression between morphs
-[@nugentNeuroendocrineProfilesAssociated2016;
-@stuglikAlternativeReproductiveTactics2014]. Consistent with other work
-suggesting that traits critical to reproductive fitness are determined
-by the additive contributions of many loci throughout the genome
-[@slyMolecularParallelismSignaling2022;
+Consistent with other work suggesting that traits critical to
+reproductive fitness are determined by the additive contributions of
+many loci throughout the genome [@slyMolecularParallelismSignaling2022;
 @flanaganGenomewideSelectionComponents2017], several alternative
 reproductive tactics are associated with many genetic variants
 throughout the genome which contribute primarily additively to the
@@ -169,29 +128,19 @@ been linked to sex-specific traits important to reproduction such as
 sperm morphology [@kimSexlinkedSupergeneControls2017;
 @kniefSexchromosomeInversionCauses2017], head colour
 [@gazdaGeneticMechanismSexual2020], and sex-specific migratory
-behaviours [@pearseSexdependentDominanceMaintains2019].
-
-The potential for supergenes to underpin sexually dimorphic polyphenisms
-is intriguing, as it could explain the apparent mis-match between simple
+behaviours [@pearseSexdependentDominanceMaintains2019]. The potential
+for supergenes to underpin sexually dimorphic polyphenisms is
+intriguing, as it could explain the apparent mis-match between simple
 single-locus population genetic models and the fact that these
 reproductive tactics are suites of complex traits
 [@sinervoRunawaySocialGames2001]. Supergenes, with their reduced
 recombination between variants, also provide a mechanism for individuals
 with largely similar genomic information to harbour fixed genetic
-variation without requiring differential gene expression -- although in
-some cases, differential expression of single genes could explain
-complex and stable polymorphisms. For example, in canaries, sexual
-dichromatism appears to be mediated by differential expression of a
-single gene involved in carotenoid breakdown
-[@gazdaGeneticMechanismSexual2020]. Androgens are a likely mechanism for
-modulating these gene expression differences, for example in primates
-male-biased genes are more likely to be proximal to androgen response
-elements [@andersonRelationshipSexualDimorphism2022]. Unlike the
-canaries, though, examples where supergenes apparently underpin sexually
-dimorphic phenotypes tend to involve multiple morphs of one sex, usually
-males. All known examples of alternative morphs determined by supergenes
-include a female-mimic morph, including ruffs
-[@kupperSupergeneDeterminesHighly2016;
+variation without requiring differential gene expression. Examples where
+supergenes apparently underpin sexually dimorphic phenotypes tend to
+involve multiple morphs of one sex, usually males. All known examples of
+alternative morphs determined by supergenes include a female-mimic
+morph, including ruffs [@kupperSupergeneDeterminesHighly2016;
 @lamichhaneyStructuralGenomicChanges2016], dwarf spiders
 [@hendrickxMasculinizingSupergeneUnderlies2022], and white-throated
 sparrows [@thomasChromosomalPolymorphismLinked2008]. In the ruffs, a
