@@ -204,10 +204,11 @@ architectures impact the maintenance of multiple male reproductive
 morphs. We focus on first identifying key reproductive parameters that
 influence the maintenance or loss of morphs using a mathematical model.
 Then, we test whether different types of multilocus genetic
-architectures change the frequencies of morphs that are maintained using
-a simulation model. Our simulations of genetic architectures allow us to
-output genotypes and apply genetic analyses that are commonly used in
-empirical studies, including genome-wide association tests.
+architectures (single locus, polygenic, and polygenic supergene) change
+the frequencies of morphs that are maintained using a simulation model.
+We also test the accuracy and ability of current empirical methods in
+identifying true causal genetic variants using the simulated genotypes
+from our model.
 
 # Methods
 
