@@ -1189,7 +1189,7 @@ propQTL_plot<-function(gsummary,propCol,cols,ylabel="Prop. QTL detected",add_leg
 
 ```
 
-```{r GWASoutcomes,fig.width=10,fig.height=9, fig.cap="Genome-wide association studies of the simulated genotypes reveals a relatively low detection rate of QTLs and a generally high false positive rate, both influenced by the genetic architecture of the traits. The top row show the results for genome-wide QTLs and the bottom row shows the results for supergenes."}
+```{r GWASoutcomes,fig.width=10,fig.height=9, fig.cap="Genome-wide association studies of the simulated genotypes reveals a relatively low detection rate of QTLs (left) and a generally high false positive rate (right), both influenced by the genetic architecture of the traits. The top row show the results for genome-wide QTLs and the bottom row shows the results for supergenes. Violin plots show the distributions for association tests with the courter trait (green) and parent trait (blue) across different numbers of chromosomes and QTLs.", fig.keep=TRUE}
 par(mfrow=c(2,2),mar=c(5,6,4,2))
 gwas_summary<-gwas_summary[grep("monogamy_nm",gwas_summary$File),]
 gwas_summary$CQ<-factor(gwas_summary$CQ)
