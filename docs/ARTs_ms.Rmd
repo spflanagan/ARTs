@@ -615,7 +615,7 @@ including QTLs, and compared the frequencies of alleles between morphs
 using $G_{ST}$, which is a measure between 0 and 1 that indicates how
 different the frequencies are between groups. Additionally, an
 association between male phenotypes and genetic markers was tested for
-using GWASpoly [@rosyaraSoftwareGenomeWideAssociation2016]. Finally, we
+using GWASpoly [@rosyaraSoftwareGenomewideAssociation2016]. Finally, we
 used vcftools [@danecekVariantCallFormat2011] to test for signals of
 balancing selection at the QTL loci compared to non-QTL loci. Because
 linkage cause loci near to the actual target of selection (the QTL) to
