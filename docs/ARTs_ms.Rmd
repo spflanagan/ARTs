@@ -1249,9 +1249,17 @@ to not only be driven by the extreme linkage disequilibrium within
 supergenes that makes associations difficult to identify
 [@kimSexlinkedSupergeneControls2017]. A possible explanation for the
 results in this study could be the relaxed selection observed at the
-point when the populations were 'genotyped' (Fig. S4) -- mutations could
-have cropped up that were no longer being removed by selection due to
-relaxed selection.
+point when the populations were 'genotyped' (Fig. S4) -- mutations of
+small effect could have cropped up that were no longer being removed by
+due to relaxed selection. Altogether, our results suggest that
+genome-wide association studies alone are likely to miss key causal
+variants, even if such approaches have been sufficient in identifying
+causal regions in some species
+[@lamichhaneyStructuralGenomicChanges2016;
+@kupperSupergeneDeterminesHighly2016;
+@kimSexlinkedSupergeneControls2017;
+@hendrickxMasculinizingSupergeneUnderlies2022;
+@kimGeneticsEvidenceBalancing2019; @gazdaGeneticMechanismSexual2020].
 
 Mathematical and simulation models have helped clarify the allelic
 variation that is expected to be maintained under sex-specific selection
