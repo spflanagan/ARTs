@@ -1202,11 +1202,11 @@ assumptions, in which the effects of each locus on the trait values were
 drawn from a normal distribution. In empirical examples, a key gene
 substantially contributes to the phenotypic morph, for example the
 steroid hormone receptor genes in white-throated sparrows and ruffs
-supergenes [@maneySupergenesSteroids2022]. In our model, we assumed all
-QTLs had roughly similar but small contributions to the phenotype.
-Furthermore, many polymorphisms could rely on dominance hierarchies
-(e.g., as modelled by [@svenssonFemalePolymorphismFrequency2005]), and
-could even be underpinned by dominance reversals between morphs
+supergenes [@maneySupergenesSteroids2022], which would be better
+approximated by a logarithmic distribution. Additionally, many
+polymorphisms could rely on dominance hierarchies (e.g., as modelled by
+[@svenssonFemalePolymorphismFrequency2005]), and could even be
+underpinned by dominance reversals between morphs
 [@pearseSexdependentDominanceMaintains2019]or sexes
 [@grieshopDominanceReversalsAntagonistic2021]. Regardless, we provide
 the important revelation that discrete morphs can be maintained within
