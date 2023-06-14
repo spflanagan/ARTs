@@ -1241,7 +1241,9 @@ studies are likely to only identify $\le$ 50% of true QTLs, and identify
 many false positives. Low true positives and high false positives are
 consistent with other simulation studies of genome-wide studies of
 selection and trait associations
-[@flanaganIdentifyingSignaturesSexual2015]. In this study, these
+[@flanaganIdentifyingSignaturesSexual2015], especially for genome-wide
+associations with dichotomous traits
+[@stringerUnderestimatedEffectSizes2011]. In this study, these
 limitations are consistent with both genetic architectures, so appears
 to not only be driven by the extreme linkage disequilibrium within
 supergenes that makes associations difficult to identify
