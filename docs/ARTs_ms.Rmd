@@ -613,7 +613,7 @@ from the individual-based simulation models without explicit genetic
 architectures for the low diversity parameters (top) and for the high
 diversity parameters (bottom). Most low diversity replicates result in
 fixation of the courter/parent, with some having one or two
-non-courter/parent individuals int he final population, while the high
+non-courter/parent individuals in the final population, while the high
 diversity replicates include maintenance of two morphs (courter/parent
 and non-courter/parent or courter/parent and non-courter/non-parent) and
 the fixation of the courter/parent morph.
