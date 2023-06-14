@@ -645,12 +645,12 @@ positive diversity values correspond to scenarios where three of the
 four morphs were retained (courter/parents, non-courter/parents, and
 non-courter/non-parents). The dominant morph depended on the specific
 parameter combinations. Assuming equal starting frequencies, after
-10,000 generations, `r pcourt*100`% of parameter combinations that
-retained polymorphism resulted in the courter-parent morph comprising
-$\le$ 50% of the population. The remaining `r (1-pcourt)*100`% of
-parameter combinations resulting in the maintenance of alternative
-morphs had more equal representation of all three morphs, with the
-average proportion of the population being
+10,000 generations, `r round(pcourt*100,2)`% of parameter combinations
+that retained polymorphism resulted in the courter-parent morph
+comprising $\le$ 50% of the population. The remaining
+`r round((1-pcourt)*100,2)`% of parameter combinations resulting in the
+maintenance of alternative morphs had more equal representation of all
+three morphs, with the average proportion of the population being
 `r round(mean(divRes[divRes$CP<=0.5,"CP"])*100,2)` % ($\pm$
 `r round(sem(divRes[divRes$CP<=0.5,"CP"])*100,2)` %) courter/parents,
 `r round(mean(divRes[divRes$CP<=0.5,"NP"])*100,2)` % ($\pm$
