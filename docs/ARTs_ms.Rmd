@@ -12,6 +12,7 @@ output:
     includes:
       in_header: preamble.sty
 bibliography: references.bib
+csl: proceedings-of-the-royal-society-b.csl
 capsize: normalsize
 documentclass: article
 editor_options:
