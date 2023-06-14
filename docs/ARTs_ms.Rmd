@@ -816,7 +816,7 @@ Our initial expectation was that supergenes would follow a pattern more
 similar to the single locus results, because empirical examples have
 demonstrated Mendelian inheritance patterns approximating single-locus
 models (e.g., [@hendrickxMasculinizingSupergeneUnderlies2022,
-@kupperSupergeneDeterminesHighly2016,,@lamichhaneyStructuralGenomicChanges2016]).
+@kupperSupergeneDeterminesHighly2016,@lamichhaneyStructuralGenomicChanges2016]).
 To better understand the reasons for the similarity between the the
 genome-wide QTLs simulations versus the supergene simulations, we
 visualised the QTL haplotypes in supergenes (see Fig.
