@@ -196,12 +196,16 @@ populations that are associated with the phenotypic tactics
 involve linkage mapping [@lepaisGeneticArchitectureThreshold2017] or the
 investigation of differential gene expression between morphs
 [@nugentNeuroendocrineProfilesAssociated2016;
-@stuglikAlternativeReproductiveTactics2014]. These methods have proven
+@stuglikAlternativeReproductiveTactics2014;
+@takahashiCandidateGenesAssociated2019]. These methods have proven
 successful in some cases, although for many other types of traits the
-ability to detect causal variants is generally limited (citations).
-Regardless, despite the potential ability to uncover the most important
-evolutionary processes in the evolution of these traits using genomic
-data [@bitarelloInferringBalancingSelection2023;
+ability to detect causal variants is generally limited
+[@josephsWhatCanGenomewide2017;
+@uricchioEvolutionaryPerspectivesPolygenic2020;
+@stringerUnderestimatedEffectSizes2011]. Regardless, despite the
+potential ability to uncover the most important evolutionary processes
+in the evolution of these traits using genomic data
+[@bitarelloInferringBalancingSelection2023;
 @svenssonCorrelationalSelectionAge2021;
 @weigandDetectingSignaturesPositive2018], the power might be
 substantially limited in real-world samples
