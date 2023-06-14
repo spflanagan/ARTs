@@ -722,7 +722,7 @@ SimParams<-data.frame(
              2)
 )
 
-kable(SimParams, "latex",booktab=TRUE,
+knitr::kable(SimParams, booktab=TRUE,
       col.names = c("Parameter", "Low Diversity Value","High Diversity Value"),
       caption="Table of parameters selected to create a high-diversity population. All morphs started at equal frequencies.")  %>% 
   kableExtra::kable_styling(latex_options = "HOLD_position")
