@@ -1161,17 +1161,24 @@ mtext("Supergenes",3,cex=2,line=-30,outer=TRUE, font=2)
 # Discussion
 
 Understanding how the genetic architecture of stable polymorphisms
-facilitates or constrains their evolution has been an open question.
-Using a simulation model, we show that genetic architecture might not
-shift the parameter space in which polymorphisms are stable, but can
-determine which morphs are likely to be retained. Complex genetic
-architectures reduced the stochasticity associated with
-architecture-free models, likely due to genetic correlations between
-traits and loci. Surprisingly, QTLs organised into supergenes, although
-associated with high linkage disequilibrium, did not have different
-outcomes than QTLs distributed genome-wide. In addition, unexpectedly
-high levels of genetic diversity were retained within morphs in the
-supergene scenarios.
+facilitates or constrains their evolution is crucial for understanding
+the mechanisms shaping diversity, but previous models have not explored
+polygenic models of inheritance. Using a simulation model, we show that
+genetic architecture -- specifically, the number of loci and the extent
+of linkage among them -- does impact the evolution of complex
+dichotomous traits. In our single-gene models, under parameter
+conditions that facilitated balancing selection in simple single-gene
+models, which male morphs were retained was determined due to
+stochasticity. However, when more complex architectures are modeled
+using the same parameters, specific combinations of morphs were
+retained; thus, genetic complexity of traits reduced the importance of
+stochasticity. This phenomenon was likely due to genetic correlations
+between traits and loci. Surprisingly, QTLs organised into supergenes
+(in which causal SNPs are physically co-located and experience reduced
+recombination), although associated with high linkage disequilibrium,
+did not have qualitatively different outcomes than QTLs distributed
+genome-wide. In addition, unexpectedly high levels of genetic diversity
+were retained within morphs in the supergene scenarios.
 
 We expected the supergenes to evolve to contain single haplotypes for
 each morph, as has been reported in empirical examples of supergenes
