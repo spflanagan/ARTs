@@ -49,6 +49,7 @@ library(knitr)
 knitr::opts_chunk$set(
   fig.path = "../figs/"
 )
+options(kableExtra.auto_format = FALSE)
 ```
 
 ```{r librarysetup, echo=FALSE,echo=FALSE,message=FALSE, warning=FALSE}
