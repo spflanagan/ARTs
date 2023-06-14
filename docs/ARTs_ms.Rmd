@@ -1208,15 +1208,17 @@ polymorphisms could rely on dominance hierarchies (e.g., as modelled by
 [@svenssonFemalePolymorphismFrequency2005]), and could even be
 underpinned by dominance reversals between morphs
 [@pearseSexdependentDominanceMaintains2019]or sexes
-[@grieshopDominanceReversalsAntagonistic2021]. Regardless, we provide
-the important revelation that discrete morphs can be maintained within
-populations even without discrete genetic architectures with a
-threshold-based switch, contrary to predictions from some authors
-[@boltonColourPolymorphismLikely2016]. This means that for such
-quantitative threshold traits, they could occur in a supergene and not
-result in the single- or two-locus inheritance patterns seen in
-side-blotched lizards [@sinervoRunawaySocialGames2001] and damselflies
-[@svenssonFemalePolymorphismFrequency2005].
+[@grieshopDominanceReversalsAntagonistic2021], which were not
+possibilities considered in our model. These additional forms of
+complexity in genetic architectures are fruitful areas for future
+research. Regardless, we provide the important revelation that discrete
+morphs can be maintained within populations even without discrete
+genetic architectures with a threshold-based switch, contrary to
+predictions from some authors [@boltonColourPolymorphismLikely2016].
+This means that for such quantitative threshold traits, they could occur
+in a supergene and not result in the single- or two-locus inheritance
+patterns seen in side-blotched lizards [@sinervoRunawaySocialGames2001]
+and damselflies [@svenssonFemalePolymorphismFrequency2005].
 
 Our choice to compare QTLs co-located within non-recombining supergenes
 to a genome-wide distribution was motivated by evidence of fixed
