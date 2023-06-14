@@ -1,14 +1,14 @@
 ---
 title: Genetic architecture underlying alternative reproductive tactics impacts which morphs are maintained under balancing selection
 output:
-  bookdown::word_document2: 
-    includes:
-      in_header: preamble.sty
   bookdown::pdf_document2:
     fig_caption: yes
     keep_tex: yes
     number_sections: no
     toc: no
+    includes:
+      in_header: preamble.sty
+  bookdown::word_document2: 
     includes:
       in_header: preamble.sty
 bibliography: references.bib
