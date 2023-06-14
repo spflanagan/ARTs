@@ -1196,9 +1196,11 @@ disequilibrium was elevated within the supergene region in our model,
 and similarly high levels of LD were not observed in the genome-wide QTL
 models (Fig. \@ref(fig:ExampleGenomewide)). However, measures of genetic
 variation and between-morph differentiation were similar in the two
-types of models (Fig. \@ref(fig:genomewideDiv)). To some extent, this is
-likely an artefact of our model set-up. In empirical examples, a key
-gene substantially contributes to the phenotypic morph, for example the
+types of models (Fig. \@ref(fig:genomewideDiv)). The discrepancy between
+our model and empirical examples could be a result of our model
+assumptions, in which the effects of each locus on the trait values were
+drawn from a normal distribution. In empirical examples, a key gene
+substantially contributes to the phenotypic morph, for example the
 steroid hormone receptor genes in white-throated sparrows and ruffs
 supergenes [@maneySupergenesSteroids2022]. In our model, we assumed all
 QTLs had roughly similar but small contributions to the phenotype.
