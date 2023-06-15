@@ -40,6 +40,13 @@ source("../morph_predictions/check_freqs.R")
 source("../morph_predictions/morph_gens_ns.R")
 source("../R/formatting.R")
 ```
+```{r colsSetup}
+
+ms_cols<-c(monogamy='#e08214',
+           monogamy_nm='#b35806',
+           polygyny='#998ec3',
+           polygyny_nm='#5e3c99')
+```
 
 
 ```{r dataConversionFXN}
@@ -258,10 +265,6 @@ outer_legend("topleft",
 
 ```{r monogamyPlot, eval=FALSE}
 
-ms_cols<-c(monogamy='#e08214',
-           monogamy_nm='#b35806',
-           polygyny='#998ec3',
-           polygyny_nm='#5e3c99')
 
 # create the base
 par(mar=c(0,0,0,0))
