@@ -1256,14 +1256,15 @@ investigate the evolutionary dynamics of morphs that are controlled by
 gene networks.
 
 Here, we show that the genetic architecture of discrete morphs impacts
-the frequency of morphs maintained under balancing selection, but
-genetic architecture does not impact the parameter space in which
-multiple morphs are maintained. Our models highlight the limitations of
-using genome-wide scans to identify the architecture of discrete traits,
-as we show that most QTLs are not detected even when the overall number
-of QTLs is low and balancing selection is ongoing. These simulation
-results have implications for empirical studies aiming to identify the
-genetic basis of discrete traits.
+the frequency of morphs maintained under balancing selection, but does
+not fundamentally change the conditions enabling balancing selection to
+favour multiple morphs. We also show surprisingly elevated genetic
+diversity can be maintained, but that genome-wide scans are unable to
+accurately identify the complete genetic architecture of discrete
+traits. Our results highlight that additively determined dichotomous
+traits can be polygenic and exhibit evolutionary dynamics equivalent to
+a single-locus model, regardless of the physical configuration of the
+causal variants.
 
 # Acknowledgments
 
