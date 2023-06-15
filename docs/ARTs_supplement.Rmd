@@ -277,7 +277,22 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 
 ### Selection on courter and parent traits
 
-To identify how selection impacted the maintenance of morphs, we
+
+Although selection is built into the model, if the population becomes
+fixed for specific morphs -- and specific genotypes -- selection might
+not be able to act due to a lack of variation. To investigate the
+dynamics of selection over the course of each simulation (12,000
+generations total), selection gradients on the courter trait and parent
+trait (both the binary variable of courter/non-courter and
+parent/non-parent) were estimated as the slope of a linear regression of
+lifetime reproductive success on each trait value in generation 0 and in
+generation 12,000. These patterns of selection were compared across
+genetic architectures and parameter settings. Furthermore, we looked at
+patterns of lifetime reproductive success across morphs within each
+simulation in the final generation to evaluate whether balancing
+selection contributed to morph diversity.
+
+Specifically, we
 estimated selection gradients for the courter and parental traits in the
 first and last generations of the simulations. Selection consistently
 favoured parent traits, whereas courter traits could experience negative

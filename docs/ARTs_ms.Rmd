@@ -516,23 +516,6 @@ To explore the impacts of genetic architecture on morph maintenance, we used two
 
 We first compared the predictions of our baseline model to the results of a simulation model with a single locus for each trait in order to establish the effect of stochasticity on the predictions of the model. This allowed us to separate the effects of stochasticity inherent to a simulation from how the genetic architecture affects the maintenance of alternative male morphs. Using a consistent set of population parameters that determined the extent of balancing selection on the population, we then explored the impacts of different genetic architectures on the maintenance of male morphs.
 
-
-
-
-Although selection is built into the model, if the population becomes
-fixed for specific morphs -- and specific genotypes -- selection might
-not be able to act due to a lack of variation. To investigate the
-dynamics of selection over the course of each simulation (12,000
-generations total), selection gradients on the courter trait and parent
-trait (both the binary variable of courter/non-courter and
-parent/non-parent) were estimated as the slope of a linear regression of
-lifetime reproductive success on each trait value in generation 0 and in
-generation 12,000. These patterns of selection were compared across
-genetic architectures and parameter settings. Furthermore, we looked at
-patterns of lifetime reproductive success across morphs within each
-simulation in the final generation to evaluate whether balancing
-selection contributed to morph diversity.
-
 ### Analysing multilocus genotypes
 
 To provide a link between the predictions of our theoretical models and
