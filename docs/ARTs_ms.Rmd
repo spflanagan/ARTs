@@ -502,10 +502,7 @@ selected to become adults. When offspring matured to adulthood, the
 previous generation's adults were replaced, and the lifecycle began
 again.
 
-Each set of genetic architectures and population parameters was also was
-run with four types of mating systems, all of which required females to
-lay their eggs with only a single male: males accept eggs from a single
-female, and females deposit their eggs with a randomly-selected unmated
+To explore the impacts of genetic architecture on morph maintenance, we used two sets of demographic and reproductive parameters that were identified by the baseline model as either facilitating high or low morph diversity. Within each of these parameter settings, we compared model outcomes with for cases with each combination of 2, 4, or 8 chromosomes and 8, 16, 32, or 68 QTLs underlying each trait. We also tested three supergene sizes: occupying 5% of a chromosome, 25% of a chromosome, or 50% of a chromosome. In all cases, a chromosome was comprised of 1000 loci (including marker loci and QTLs). 
 ### Assessing model sensitivity and dynamics
 
 We first compared the predictions of our baseline model to the results of a simulation model with a single locus for each trait in order to establish the effect of stochasticity on the predictions of the model. This allowed us to separate the effects of stochasticity inherent to a simulation from how the genetic architecture affects the maintenance of alternative male morphs. Using a consistent set of population parameters that determined the extent of balancing selection on the population, we then explored the impacts of different genetic architectures on the maintenance of male morphs.
