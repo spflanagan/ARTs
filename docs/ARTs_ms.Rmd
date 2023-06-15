@@ -980,8 +980,8 @@ surprisingly, the QTLs for parent traits were more reliably detected by
 GWAS than the courter QTLs. In the majority of simulations, the final
 population only contained parental males, but both courters and
 non-courters persisted in the population (Fig.
-\@ref(fig:architectureTernary)). The finding the parent QTLs are more
-likely to be detected is likely because that trait experienced stronger
+\@ref(fig:ternaryPlots)B). The finding the parent QTLs are more likely
+to be detected is likely because that trait experienced stronger
 selection on it (i.e., being a non-parent was more costly than being a
 non-courter).
 
