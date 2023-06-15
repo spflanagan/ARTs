@@ -92,7 +92,7 @@ baseline_points<-baseline_points[which(rowSums(baseline_points)>0),]
 
 ```
 
-```{r baselineTernary}
+```{r baselineTernary, eval=FALSE}
 morphs_ternary_plot()
 
 # add the points
@@ -107,11 +107,14 @@ AddToTernary(
 
 Note: would be good to scale points based on number of times they land at one outcome...
 
-```{r}
+```{r dupdat}
 dupdat<-data.table::setDT(baseline_points)[,list(Count=.N),names(baseline_points)]
 # Calculate the percentage for easier point plotting
 dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
+```
 
+
+```{r ternaryScaledPts, eval=FALSE}
 # Make the ternary diagram
 morphs_ternary_plot()
 
@@ -155,12 +158,8 @@ strict_patts<-grep("v0",grep("RM", strict_patts, invert=TRUE, value=TRUE), inver
 ```
 
 
-```{r singleLocusPlot}
+```{r singleLocusPlot, eval=FALSE}
 
-ms_cols<-c(monogamy='#e08214',
-           monogamy_nm='#b35806',
-           polygyny='#998ec3',
-           polygyny_nm='#5e3c99')
 
 # create the base
 par(mar=c(0,0,0,0))
@@ -207,7 +206,7 @@ outer_legend("topleft",
 ```
 
 
-```{r singleLocusSidBySide}
+```{r singleLocusSidBySide, eval=FALSE}
 
 
 # create the base
@@ -257,7 +256,7 @@ outer_legend("topleft",
 
 ```
 
-```{r monogamyPlot}
+```{r monogamyPlot, eval=FALSE}
 
 ms_cols<-c(monogamy='#e08214',
            monogamy_nm='#b35806',
@@ -316,7 +315,7 @@ The main variables I want to show with the polygenic inheritance are the genetic
 - I could use colors to show num of chromosomes and do different triangles for each architecture
 - scale points based on the number of QTLs?
 
-```{r}
+```{r finalfreqs}
 final_freqs<-read.csv("../results/morph_freqs_summary.csv")
 final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
 
@@ -331,7 +330,7 @@ final_freqs$diversity<-gsub("^.*\\/(\\w+)Diversity.*$","\\1",final_freqs$file)
 high_freqs<-final_freqs[which(final_freqs$diversity=="high"),]
 
 ```
-```{r}
+```{r chrcol}
 chr_col<-c(
   "#cccccc",
   "#969696",
@@ -343,7 +342,7 @@ names(chr_col)<-levels(final_freqs$nchrom)
 
 I'll start with just the QTL options.
 
-```{r}
+```{r getpoints}
 
 points_list<-by(high_freqs, high_freqs$arch, function(arch_dat){
   # convert the data into the list format
@@ -432,7 +431,7 @@ I will create a combined diagram, with the top row showing the baseline model, t
 
 I'll only want to plot the monogamy_nm ones from the single_locus runs.
 
-```{r}
+```{r onlyMonogNM}
 sim_high<-morph_results[morph_results$initial_CN==0.25 & 
                            morph_results$initial_CP==0.25 &
                            morph_results$initial_NN==0.25 &
@@ -451,7 +450,7 @@ sim_low<-morph_results[morph_results$initial_CN==0.25 &
 ```
 
 
-```{r}
+```{r combinedTernary}
 
 par(mar=c(0,0,0,0),
     mfrow=c(2,3))
@@ -568,7 +567,7 @@ tmp<-lapply(points_list[c("qtls","prop0.05","prop0.25","prop0.5")],
 
 I'm not sure I like the fully combined one, as it hides some of the important details (low vs high diversity settings, for example.) What if instead I have two plots, one with the baseline and low/high/strict settings? 
 
-```{r}
+```{r separateDataTypes}
 base_dat<-morph_results[which(morph_results$initial_CP==0.25 &
                                         morph_results$initial_NP==0.25 & 
                                         morph_results$initial_NN==0.25),
