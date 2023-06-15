@@ -1,0 +1,412 @@
+---
+title: "A supplement to: Genetic architecture of alternative reproductive tactics impacts which morphs are maintained under balancing selection"
+output:
+  bookdown::pdf_document2:
+    fig_caption: yes
+    keep_tex: yes
+    number_sections: no
+    toc: no
+    includes:
+      in_header: supplement_preamble.sty
+bibliography: references.bib
+capsize: normalsize
+documentclass: article
+editor_options:
+  chunk_output_type: console
+  markdown:
+    wrap: 72
+fontsize: 11pt
+preprint: no
+mainfont: roboto
+geometry: margin=2.5cm
+papersize: a4
+---
+
+```{r, include=FALSE}
+remove_author <- function(x) {
+  # identify empty author line
+  i <- grep("^\\\\author\\{\\}$", x)
+  # be sure it is the one pandoc inserts
+  if(length(i) != 0 && grepl('^\\\\date\\{', x[i+1])) x <- x[-i]
+  x
+}
+options(bookdown.post.latex = remove_author)
+```
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
+knitr::opts_knit$set(root.dir='../results/') #change
+
+```
+
+```{r opts, echo = FALSE, warning=FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+  fig.path = "../figs/"
+)
+```
+
+```{r librarysetup, echo=FALSE,echo=FALSE,message=FALSE, warning=FALSE}
+library(RColorBrewer)
+library(scales)
+library(sm)
+library(kableExtra)
+library(plotly)
+library(dplyr)
+library(vegan)
+library(tidyr)
+tmp<-sapply(list.files(path="../../spfTools/R/",full.names = TRUE),source)
+source("../R/002_freq_functions.R")
+
+source("../morph_predictions/check_freqs.R")
+source("../morph_predictions/morph_gens_ns.R")
+
+source("../R/formatting.R")
+```
+```{r}
+final_freqs<-read.csv("../results/morph_freqs_summary.csv")
+final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
+
+```
+
+## Supplemental figure 1
+
+```{r getMathResults}
+results<-readRDS("../morph_predictions/morph_results_10000_equalStart.RDS")
+results$diversity<-vegan::diversity(round(results[,c("CP","CN","NP","NN")],4))
+```
+
+```{r MakeMathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", fig.width=4, fig.height=6.5, warning=FALSE,message=FALSE, eval=FALSE, include=FALSE}
+
+
+contours<-by(results, results$num_sneak, function(sub_calcs){
+  
+  
+  data_wide<-tidyr::spread(
+    sub_calcs[,c("r","c","diversity")],
+    r,
+    diversity
+  )
+  rownames(data_wide)<-data_wide[,1]
+  data_wide<-data_wide[,-1]
+  
+  fig <- plot_ly(
+    x = as.numeric(colnames(data_wide)), 
+    y = as.numeric(rownames(data_wide)), 
+    z = as.matrix(data_wide), 
+    type = "contour",
+    width = 450, height = 650
+  )
+  # add axis labels
+  x<-list(title="r")
+  y<-list(title="c")
+  fig <- fig %>% layout(xaxis=x,yaxis=y)
+  # add label to contour names
+  fig <- fig %>% colorbar(title = "Diversity")
+  # plot
+  return(fig)
+})
+
+
+multi_fig <- subplot(contours, nrows = 5, shareY = TRUE, shareX = TRUE)
+
+multi_fig %>% layout(autosize = F) 
+```
+
+```{r mathParams, fig.cap="Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).", out.width="200%"}
+knitr::include_graphics("../figs/mathParams.png")
+```
+
+## Impacts of mating system on the model {#mating-system-results}
+
+As expected, in the low diversity parameter space, the majority of
+simulations resulted in fixation or near-fixation of the courter/parent
+morph (Fig. \@ref(fig:MatingTypesFig)). A more surprising result was the
+inconsistency of results from the mating types within the the high
+diversity parameter space. Only the case most similar to the
+mathematical model -- monogamy with no mating -- resulted in
+polymorphism, with the courter/parent morph coexisting with either the
+non-courter/parent or the non-courter/non-parent morph (Fig.
+\@ref(fig:MatingTypesFig)). Polygyny resulted in the fixation of the
+courter/parent morph regardless of whether females mated at random if a
+suitable mate was found, and monogamy with random mating after searching
+for a preferred mate is unsuccessful resulted in the fixation of the
+non-courter/parent morph in every case. These results can be explained
+by the nature of density-dependent survival in the individual-based
+model that are not consistent with the mathematical model; in the
+simulation model, offspring are created in proportion to the surviving
+offspring after mating has occurred, increasing the males' reproductive
+success above their specified reproductive investments. This
+proportional survival allows males to escape the costs and increase
+their reproductive success beyond what is possible in the mathematical
+model. Random mating if non-preferred males are unable to be found also
+enables non-courter/parents to have increased reproductive success
+compared the the mathematical model predictions, which is why they are
+fixed in the monogamy case. If stricter costs on courting males are
+imposed, specifying $r=0.25$, meaning that $r_{courter}=2$ and
+$r_{non-courter}=8$, the scenarios without random mating do result in
+the maintenance of 2 or 3 morphs in most cases for both monogamy and
+polygyny (Fig. \@ref(fig:MatingTypesFig)), as expected.
+
+```{r MatingTypesFig, fig.cap="The frequencies of morphs in the final generation of simulation runs a single gene underlying each trait, with parameters expected to yield low diversity (top row), high diversity (centre row), and high diversity with stronger costs on courter reproductive success (bottom row). The frequency of the courter/parent morph in the final generation is printed on top of each bar. In 'monogamy' cases, the males were constrained to only accept eggs from one female in a single clutch, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available). Within each parameter set, the numbers below the bars identify sets of simulation runs that were initiated with identical starting conditions."}
+
+
+
+par(mfrow=c(3,4),oma=c(3,3,4,1),mar=c(3,1,4,1),xpd=TRUE)
+
+# Low diversity
+lowDiv<-get.morph.freqs(plot.pc.reps(pattern="lowDiversity.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+var_patts<-unique(gsub(".*lowDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(lowDiv)))
+var_patts<-grep("v0",grep("RM", var_patts, invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)
+varDat<-lapply(var_patts,function(pattern){
+  dat<-lowDiv[grep(paste0(pattern,"_\\d"),rownames(lowDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main=pattern)
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+
+# High diversity
+highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversity_.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+var_patts<-unique(gsub(".*highDiversity_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
+var_patts<-grep("v0",grep("RM", var_patts, invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)
+
+varDat<-lapply(var_patts,function(pattern){
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main="")
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+
+# Strict High Diversity
+highDiv<-get.morph.freqs(plot.pc.reps(pattern="highDiversityStrict.*summary.txt",path="single_locus",cols,make.plot=FALSE))
+var_patts<-unique(gsub(".*highDiversityStrict_(.*)_\\d_summary.txt_\\d","\\1",rownames(highDiv)))
+var_patts<-grep("v0",grep("RM", var_patts, invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)
+
+
+varDat<-lapply(var_patts,function(pattern){
+  dat<-highDiv[grep(paste0(pattern,"_\\d"),rownames(highDiv)),]
+  bp<-barplot(t(as.matrix(dat[,c("FreqNcNp", "FreqCNp", "FreqNcP", "FreqCP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_summary.txt.*$","\\1",rownames(dat)),
+        las=2,
+        border=NA,
+        main="")
+  text(x=bp,y=0.5,srt=90,labels = dat$FreqCP)
+
+  return(dat)
+})
+
+# outer legend
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2,cex=1.25)
+
+
+```
+
+
+
+## Genetic architectures
+
+(ref:archPropCap) Frequencies of morphs across replicates with different
+genetic architectures when 8 QTLs encoded each male trait. Shown are
+when these QTLs were distributed across 2, 4, and 8 chromosomes, and
+whether those QTLs were allocated genome-wide (top row), on a supergene
+taking up 5% of a chromosome (second from top), 25% of a chromosome
+(third row), or 50% of a chromosome (bottom row).
+
+```{r ArchitecturesProps, fig.cap='(ref:archPropCap)'}
+
+plot_dat<-final_freqs[grep("highDiversity.*monogamy_nm.*q8", final_freqs$file),]
+plot_dat$params<-gsub("../fixedART-results/(\\w+).*(_c\\d+).*$","\\1",plot_dat$file)
+plot_dat$params[grep("supergene",plot_dat$params)]<-paste0(plot_dat$params[grep("supergene",plot_dat$params)],
+                                                           "_", 
+                                                           gsub("../fixedART-results/(\\w+).*(prop0\\.\\d).*(_c\\d+).*$","\\2",
+                                                                plot_dat$file[grep("supergene",plot_dat$params)]))
+plot_dat$params<-paste0(plot_dat$params, 
+                        gsub("../fixedART-results/(\\w+).*(_c\\d+).*$","\\2",plot_dat$file))
+
+par(mfrow=c(4,3),oma=c(3,5,4,1),mar=c(3,1,1,1),xpd=TRUE)
+varDat<-by(plot_dat,plot_dat$params,function(dat){
+
+  
+  bp<-barplot(t(as.matrix(dat[,c("NON", "C", "P", "CP")])),
+        col=cols2[c("NCNP","CNP","NCP","CP")],
+        names.arg =gsub("^.*(\\d)_pop.*$","\\1",dat[,"rep"]),
+        las=2,
+        border=NA,
+      #  main=paste(gsub("^.*c(\\d+).*$","\\1",dat[1,"params"]), "chroms"),
+        beside = FALSE
+       )
+  #text(x=bp,y=0.5,srt=90,labels = dat["CP"])
+  if(length(grep("qtl",dat[,"params"]))>0){
+    mtext(paste(gsub("^.*c(\\d+).*$","\\1",dat[1,"params"]), "chroms"),3)
+    if(length(grep("c2",dat[,"params"]))>0){
+      mtext("QTLs",2, line=3)
+    }
+  } else {
+    if(length(grep("c2",dat[,"params"]))>0){
+      mtext(paste0("Supergene\nProp ",gsub("^.*prop(\\d\\.\\d).*$","\\1",dat[1,"params"])),2,line=3)
+    }
+  }
+  return(dat)
+})
+
+par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0), mar=c(0, 0, 0, 0), new=TRUE)
+plot(0,0, type='n', bty='n', xaxt='n', yaxt='n')
+legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-courter/Parent","Non-courter/Non-parent"),
+       col=cols2[c("CP","CNP","NCP","NCNP")],pch=15,xpd = TRUE,ncol=2)
+```
+
+
+### Selection on courter and parent traits
+
+To identify how selection impacted the maintenance of morphs, we
+estimated selection gradients for the courter and parental traits in the
+first and last generations of the simulations. Selection consistently
+favoured parent traits, whereas courter traits could experience negative
+selection in high diversity parameter scenarios (Fig.
+\@ref(fig:selectionGradients)). Selection was strong in the first
+generation, but by generation 12000 selection was substantially relaxed
+on one or the other trait, in most cases. A number of the low diversity
+replicates resulted in highly correlated selection on courters and
+parents, with a number of points falling on the positive 1:1 line (Fig.
+\@ref(fig:selectionGradients)).
+
+
+```{r seldat}
+seldat<-readRDS("selection_gradients.RDS")
+seldat<-seldat[grep("monogamy_nm",names(seldat))]
+```
+```{r selectionGradients, fig.height=4.5, fig.width=7, fig.cap="Selection gradients on parent and courter traits differ across the scenarios of our simulation model. In the first generation, selection always favours the parent trait, but selection gradients on the courter trait can be negative under parameter settings that favoured high diversity. By the end of the simulations (generation 12000), selection has been relaxed, so that selection on the parent trait is often near zero, as is selection on the courter trait. In some cases, the selection gradients on courter and parent traits are correlated at this final generation, especially in low diversity scenarios with QTLs as the genetic architecture. Solid grey lines show the x- and y-axes, with dotted grey lines showing the one-to-one correlation lines."}
+par(mfrow=c(1,2))
+plot(-0.25:0.25, -0.25:0.25, 
+     type='n',
+     xlim=c(-.25,0.25),
+     ylim=c(-0.01,0.25),
+     xlab="Initial generation",
+     ylab="Selection gradient on parent trait",
+     main="",
+     bty='n', 
+     axes=FALSE)
+abline(v=0, col="grey")
+abline(a=0,b=1,col="grey",lwd=2,lty=2)
+abline(a=0,b=-1,col="grey",lwd=2,lty=2)
+mtext("Selection gradient on courter trait", side=1,outer=TRUE, line=-3)
+axis(1, col="grey",pos=0,col.axis="grey",at = seq(-0.25,0.25,by=0.25))
+axis(2, col="grey", pos=-0.25,col.axis="grey",lwd=0,at = seq(0,0.25,by=0.125))
+
+tmp<-lapply(seldat, function(dat){
+  dat<-dat[dat[,"gen"]==0,]
+  
+
+  points(dat[,"court_cat_b1"],
+         dat[,"parent_cat_b1"],
+         pch=dat[,"supergene"]+16,
+         col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5),
+           cex=1.5
+  )
+  arrows(
+    x0 = dat[,"court_cat_b1"] - dat[,"court_cat_b1_se"],
+    x1 = dat[,"court_cat_b1"] + dat[,"court_cat_b1_se"],
+    y0 = dat[,"parent_cat_b1"],
+    y1 = dat[,"parent_cat_b1"],
+    code = 0,
+    col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5)
+      )
+    arrows(
+    x0 = dat[,"court_cat_b1"] ,
+    x1 = dat[,"court_cat_b1"] ,
+    y0 = dat[,"parent_cat_b1"] - dat[,"parent_cat_b1_se"],
+    y1 = dat[,"parent_cat_b1"] + dat[,"parent_cat_b1_se"],
+    code = 0,
+    col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5)
+      )
+
+})
+
+plot(-0.25:0.25, -0.25:0.25, 
+     type='n',
+     xlim=c(-.25,0.25),
+     ylim=c(-0.01,0.25),
+     xlab="Final Generation",
+     ylab="",
+     main="",
+     bty='n', 
+     axes=FALSE)
+abline(v=0, col="grey")
+abline(a=0,b=1,col="grey",lwd=2,lty=2)
+abline(a=0,b=-1,col="grey",lwd=2,lty=2)
+axis(1, col="grey",pos=0,col.axis="grey",at = seq(-0.25,0.25,by=0.25))
+axis(2, col="grey", pos=-0.25,col.axis="grey",lwd=0,at = seq(0,0.25,by=0.125))
+
+tmp<-lapply(seldat, function(dat){
+  dat<-dat[dat[,"gen"]==12000,]
+  if(nrow(dat)>0){
+    
+    
+    points(dat[,"court_cat_b1"],
+           dat[,"parent_cat_b1"],
+           pch=dat[,"supergene"]+16,
+           col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5),
+           cex=1.5
+    )
+    arrows(
+      x0 = dat[,"court_cat_b1"] - dat[,"court_cat_b1_se"],
+      x1 = dat[,"court_cat_b1"] + dat[,"court_cat_b1_se"],
+      y0 = dat[,"parent_cat_b1"],
+      y1 = dat[,"parent_cat_b1"],
+      code = 0,
+      col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5)
+        )
+      arrows(
+      x0 = dat[,"court_cat_b1"] ,
+      x1 = dat[,"court_cat_b1"] ,
+      y0 = dat[,"parent_cat_b1"] - dat[,"parent_cat_b1_se"],
+      y1 = dat[,"parent_cat_b1"] + dat[,"parent_cat_b1_se"],
+      code = 0,
+      col=scales::alpha(divcols[dat[,"highDiv"]+1],0.5)
+        )
+  }
+})
+outer_legend("top",
+       bty='n',
+       pch=c(15, 16, 0,0),
+       lty=c(0, 0, 1,1),
+       lwd=c(2,2,1,1),
+       col=c("grey", "grey",divcols[2],divcols[1]),
+       legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
+       ncol=4)
+```
+
+We also compared lifetime reproductive success across male morphs to
+determine whether balancing selection is the primary factor maintaining
+variation. We found that in the high diversity parameter sets -- when
+two morphs are maintained at high frequencies -- that the retained
+morphs tend to have relatively equal lifetime reproductive success in
+the final generation of the model (Fig. \@ref(fig:balacingSelection)).
+In the low diversity parameter sets, if multiple morphs are found, the
+others are at low frequency compared to the high frequency CP morph, and
+have substantially lower lifetime reproductive success. These patterns
+are indicative of balancing selection favouring the maintenance of two
+or more morphs, even after selection has been relaxed on each trait
+individually.
+
+```{r balacingSelection, fig.cap="Plots of average lifetime reproductive success (and SEM) for each male morph in each replicate in the final generation of the simulations. The lines connect points from within a replicate. Point size reflects the frequency of that morph in the replicate. These graphs show that the high diversity scenarios generally maintain a stable polymorphism of two or more morphs at high frequency due to balancing selection (i.e., equivalent fitness of morphs). The low diversity scenarios occasionally have low frequencies of other morphs, but they tend to be the result of recombination and not balancing selection (i.e., their fitnesses are substantially lower than the high frequency CP morph)."}
+knitr::include_graphics("../figs/fitnessPlots-1.png")
+```
+
+
