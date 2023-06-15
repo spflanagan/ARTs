@@ -1261,6 +1261,11 @@ causal regions in some species
 @hendrickxMasculinizingSupergeneUnderlies2022;
 @kimGeneticsEvidenceBalancing2019; @gazdaGeneticMechanismSexual2020].
 
+Our model can provide insight into expected levels of genetic diversity
+when selection is action on genomic regions that are primarily shared
+among members of a population, which can be analogous to sex-specific
+selection [@morrisIntralocusTacticalConflict2013]
+
 Mathematical and simulation models have helped clarify the allelic
 variation that is expected to be maintained under sex-specific selection
 pressures [@flanaganIdentifyingSignaturesSexual2015;
