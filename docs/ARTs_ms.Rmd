@@ -411,9 +411,10 @@ values were then compared to a threshold to dichotomize each trait. The
 threshold for each trait was the mean trait value during the
 initialization of the model (i.e., at generation 0).
 
-We considered three different genetic architectures for these QTLs: a
-single gene per trait without any additional genetic information,
-multiple QTLs randomly placed throughout chromosomes, and supergenes
+
+We considered three different genetic architectures for these QTLs: (a) a
+single gene per trait without any additional genetic information (i.e., no non-coding loci to create chromosomes), (b)
+multiple QTLs randomly placed throughout chromosomes, and (c) supergenes
 located on one of multiple chromosomes. The single gene scenario is most
 analogous to the baseline model described above. When the traits had
 multiple QTLs determining their trait values, each QTL was assigned a
