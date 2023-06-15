@@ -306,19 +306,14 @@ $$
 
 We have constrained females to only mate with courting males, so
 $w_{s_M}$ is equal to 1 for CP and CN males and 0 for NP and NN males.
-The total reproductive effort in the population per morph is determined
-by the number of males belonging to that morph and the morph's specified
-reproductive allocation, which determines the maximum number of eggs an
-individual male can fertilize:
-
-$$
-s_M = f_M N_m r_M.
-$$
-
-Chosen males have the first priority to fertilize the eggs laid in their
-territory, so the number of eggs fertilized within a single clutch per
-morph is determined by the male reproductive effort of each morph and
-the probability of being chosen: $e_{o_M} = s_M w_{s_M}$. However,
+We next calculate the proportion of eggs in the population that are
+sired by each morph (Stage 2 in Fig. \@ref(fig:modelDiagram)). Each
+morph has an inherent maximum reproductive allocation, $r_M$ (where $M$
+designates the morph and contains $\{CP, CN, NP, NN\}$). Chosen males
+have the first priority to fertilize the eggs laid in their territory,
+so the number of eggs fertilized within a single clutch per morph is
+determined by the male reproductive effort of each morph and the
+probability of being chosen: $e_{o_M} = f_M N_m r_M w_{s_M}$. However,
 non-courting males also sneak fertilizations, which impacts the overall
 proportion of fertilizations per morph. The maximum number of possible
 fertilizations arising from sneaking for a given non-courting male is
@@ -328,10 +323,11 @@ reproductive allocation (where $r_{NN} = r_{NP}$) offset by the sperm
 competition coefficient ($c$), but that this potential allocation is
 proportional to the number of sneakers ($n_{sneakers}$) that are allowed
 to fertilize each clutch. If the number of fertilizations arising from
-sneaking is smaller than the morph's potential reproductive effort (i.e,
-if $N_s < s_M$), the number of eggs fertilized through sneaking for that
-morph is the difference between $N_s$ and $s_M$, truncated at zero.
-Otherwise, the number of eggs fertilized through sneaking is $s_M$.
+sneaking is smaller than the morph's potential population-level
+reproductive effort (i.e, if $N_s < f_M N_m r_M$), the number of eggs
+fertilized through sneaking for that morph is the difference between
+$N_s$ and $f_M N_m r_M$, truncated at zero. Otherwise, the number of
+eggs fertilized through sneaking is $f_M N_m r_M$.
 
 Next, parental care determines whether clutches survive to a juveniles
 (Stage 3 in Fig. \@ref(fig:modelDiagram)). The offspring surviving in
