@@ -284,28 +284,30 @@ baseline model and the simulation model respectively.
 
 ## Baseline model {#math-model-methods}
 
-We developed a baseline model that predicts the proportion of morphs
-present in the population at each stage of the lifecycle (Fig.
-\@ref(fig:modelDiagram)). We first consider the proportion of the
-population's clutches that will be allocated to each morph. The maximum
-number of clutches that could exist is proportional to the number of
-males in the population ($N_m$), if each male has the same likelihood of
-attracting a female to deposit eggs with him. However, in our model,
-males are not equally likely to be chosen by females, and therefore the
-maximum number of clutches is scaled by the probability of females
-mating with each type of male morph (denoted in a generic sense with the
-subscript $M$, where $M$ contains ${CP, CN, NP, NN}$), denoted by a
-sexual selection parameter $w_s$. In general for this model, the
-probability of NP and NN males being chosen will be $1-w_s$, where $w_s$
-is the probability of courting males (CP and CN) being chosen. The
-general calculation for the number of clutches is:
+We developed a baseline analytical model that predicts the proportion of
+morphs present in the population at each stage of the lifecycle (Fig.
+\@ref(fig:modelDiagram)), without explicitly modelling genetic
+properties. As such, it is a demographic model of the morphs, where
+frequencies are altered from one generation to the next based on
+selection at each life stage.
+
+We first consider which morphs will be chosen by females (Stage 1 in
+Fig. \@ref(fig:modelDiagram)), and how this corresponds to the total
+number of clutches in the population. The maximum number of clutches is
+determined by the probability of females mating with each type of male
+morph: the probability of courting males (CP and CN) being chosen is
+$w_s$ and the probability of NP and NN males being chosen is $1-w_s$.
+The general calculation for the number of clutches is:
 
 $$
-n=w_s(N_m f_{CP} + N_m f_{CN}) + (1-w_s)(N_m f_{NP} + N_m f_{NN}).
+n=w_s(N_m f_{CP} + N_m f_{CN}) + (1-w_s)(N_m f_{NP} + N_m f_{NN}), 
 $$
 
-We have constrained females to only mate with courting males, so
-$w_{s_M}$ is equal to 1 for CP and CN males and 0 for NP and NN males.
+where $N_m$ is the number of males in the population and the $f$ terms
+represent the frequency of each morph. For simplicity, we focus on the
+case where females only mate with courting males ($w_s=1$), so $n$
+simplifies to $w_s(N_m f_{CP} + N_m f_{CN})$.
+
 We next calculate the proportion of eggs in the population that are
 sired by each morph (Stage 2 in Fig. \@ref(fig:modelDiagram)). Each
 morph has an inherent maximum reproductive allocation, $r_M$ (where $M$
