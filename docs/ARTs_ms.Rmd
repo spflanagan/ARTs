@@ -104,11 +104,11 @@ the importance of correlational selection and its associated formation
 of genetic correlations and linkage disequilibrium across loci
 [@sinervoCorrelationalSelectionEvolution2002]. While these relatively
 simple genetic models do capture the evolutionary dynamics of the
-specific examples they are paired with
-[@sinervoRunawaySocialGames2001;@tsubakiGeneticPolymorphismLinked2003a],
-genomic data has accumulated for a number of species suggesting that
-categorical traits might in fact be underpinned by numerous quantitative
-genetic loci [@kimGeneticsEvidenceBalancing2019;
+specific examples they are paired with [@sinervoRunawaySocialGames2001;
+@tsubakiGeneticPolymorphismLinked2003a], genomic data has accumulated
+for a number of species suggesting that categorical traits might in fact
+be underpinned by numerous quantitative genetic loci
+[@kimGeneticsEvidenceBalancing2019;
 @slyMolecularParallelismSignaling2022].
 
 Consistent with other work suggesting that traits critical to
