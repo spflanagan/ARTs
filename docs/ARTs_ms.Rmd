@@ -463,11 +463,10 @@ population depended on the proportion of population reproductive success
 achieved by each individual male and female (i.e., each generation, the
 number of offspring created was equal to the carrying capacity).
 
-When fertilization occurred, the parents' genotypes (both neutral
-markers and QTLs) had the opportunity to recombine. Recombination
-occurred independently on the chromosome inherited from the mother and
-the chromosome inherited from the father. The number of recombination
-events for a given chromosome was determined by drawing from a Poisson
+As part of the fertilization process, recombination occurred
+independently on the chromosome inherited from the mother and the
+chromosome inherited from the father. The number of recombination events
+for a given chromosome was determined by drawing from a Poisson
 distribution with the recombination rate as the mean, which we set to
 0.2. For each recombination event, breakpoints were chosen by randomly
 drawing from the total number of markers on a chromosome. These
