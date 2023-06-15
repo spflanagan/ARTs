@@ -923,7 +923,7 @@ td_freqs<-merge(td_summary, final_freqs,by="rep")
 
 ```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the final generation of the simulations was not influcenced by genetic architecture or the phenotypic diversity (i.e., morph frequencies), but did differ between low- and high-diversity parameter settings. Shown are genome-wide observed heterozygosity (A), Tajima’s D (B), and male-male Fst (C) were not influenced by the frequency of the morphs in the final generation, nor by the genetic architecture.", fig.keep=TRUE}
 
-par(mfrow=c(3,2),xpd=TRUE, mar=c(5,5,1.5,1), oma=c(2,2,3,1))
+par(mfrow=c(1,3),xpd=TRUE, mar=c(5,5,1.5,1), oma=c(2,2,3,1))
 
 plot(popgen_data$propCP,
      popgen_data$gHtMean,
@@ -938,18 +938,6 @@ plot(popgen_data$propCP,
      bty='l')
 text(0.28,0.42,"A",cex=2.5)
 
-plot(popgen_data$propCP,
-     popgen_data$HetP,
-     pch=as.numeric(as.factor(popgen_data$Architecture))+15,
-     col=scales::alpha(
-       divcols[as.numeric(popgen_data[,"Diversity"])],
-       0.5),
-     cex=1.5,
-     cex.lab=1.5,
-     xlab="Courter/Parent Frequency",
-     ylab="Obs. Het P-values",
-     bty='l')
-text(0.28,0.9,"B",cex=2.5)
 
 # Tajima's D
 plot(td_freqs$CP,
@@ -963,20 +951,8 @@ plot(td_freqs$CP,
      xlab="Courter/Parent Frequency",
      ylab="Mean Tajima's D",
      bty='l')
-text(0.28,4.4,"C",cex=2.5)
+text(0.28,4.4,"B",cex=2.5)
 
-plot(td_freqs$CP,
-     td_freqs$p,
-     pch=as.numeric(as.factor(td_freqs$architecture))+15,
-     col=scales::alpha(
-       divcols[as.numeric(td_freqs$diversity)],
-       0.5),
-     cex=1.5,
-     cex.lab=1.5,
-     xlab="Courter/Parent Frequency",
-     ylab="Tajima's D P-values",
-     bty='l')
-text(0.28,0.9,"D",cex=2.5)
 
 
 # Fst
@@ -991,20 +967,7 @@ plot(popgen_data$propCP,
      xlab="Courter/Parent Frequency",
      ylab="Mean male-male Gst",
      bty='l')
-text(0.28,0.6,"E",cex=2.5)
-
-plot(popgen_data$propCP,
-     popgen_data$propQTLsInPeaksMM,
-     pch=as.numeric(as.factor(popgen_data$Architecture))+15,
-     col=scales::alpha(
-       divcols[as.numeric(popgen_data[,"Diversity"])],
-       0.5),
-     cex=1.5,
-     cex.lab=1.5,
-     xlab="Courter/Parent Frequency",
-     ylab="Prop. QTL in Gst peak",
-     bty='l')
-text(0.28,0.9,"F",cex=2.5)
+text(0.28,0.6,"C",cex=2.5)
 
 outer_legend("top",
        bty='n',
@@ -1014,6 +977,7 @@ outer_legend("top",
        legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
        ncol=4,
        cex=1.5)
+
 ```
 
 ### Will GWAS detect the actual QTLs?
