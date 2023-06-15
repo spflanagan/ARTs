@@ -953,7 +953,17 @@ outer_legend(x=0,
              bty='n',
              text.width=c(0.2, rep(0.1,4)),
              inset=0)
+
+### All ternary plots together
+
+```{r combinedTernaryTall}
+figa <-grid::rasterGrob(png::readPNG("../figs/baselinesNoStrictPercentages-1.png"))
+figb<-grid::rasterGrob(png::readPNG("../figs/architectureTernaryLowHigh-1.png"))
+gridExtra::grid.arrange(figa, figb, nrow=2)
+
+
 ```
+
 
 
 \newpage
