@@ -289,9 +289,7 @@ baseline model and the simulation model respectively.
 We developed a baseline analytical model that predicts the proportion of
 morphs present in the population at each stage of the lifecycle (Fig.
 \@ref(fig:modelDiagram)), without explicitly modelling genetic
-properties. As such, it is a demographic model of the morphs, where
-frequencies are altered from one generation to the next based on
-selection at each life stage.
+properties. As such, this model implicitly assumes a haploid population where morphs are determined by a single locus, with no mutation, recombination, or environmental effects.
 
 We first consider which morphs will be chosen by females (Stage 1 in
 Fig. \@ref(fig:modelDiagram)), and how this corresponds to the total
@@ -566,7 +564,7 @@ resampled estimates with the actual number of QTLs in each replicate.
 ## Baseline model
 
 The purpose of exploring the baseline model was to identify the
-parameter space in which, in a non-genetic model, more than one male
+parameter space in which, in a simplistic model, more than one male
 type is predicted to persist, thereby creating a baseline for comparison
 to the simulation results. The courter/non-parent morph was never
 maintained in the population. This result makes intuitive sense, because
