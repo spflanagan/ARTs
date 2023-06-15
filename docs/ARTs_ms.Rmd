@@ -476,7 +476,9 @@ recombination, and each segment was randomly chosen to be assigned the
 genotypes and effects from the parents' maternal or paternal chromosome.
 When the genetic architecture was that of a supergene, if the
 breakpoints fell within the region containing the aggregated QTLs for
-the traits, the offspring was considered not viable.
+the traits, the offspring was considered not viable, mimicking
+suppressed recombination as observed in empirical examples (e.g., ruffs
+[@lamichhaneyStructuralGenomicChanges2016; @kupperSupergeneDeterminesHighly2016]).
 
 After recombination occurred, if the progeny survived, the genotypes
 underwent mutation, which occurred at a rate of $\mu$ at each locus. For
