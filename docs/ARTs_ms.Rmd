@@ -936,7 +936,7 @@ plot(td_freqs$CP,
        0.5),
      cex=1.5,
      cex.lab=1.5,
-     xlab="Courter/Parent Frequency",
+     xlab="CP Frequency",
      ylab="Mean Tajima's D",
      bty='l')
 legend("topleft","B",cex=2.5, bty='n', x.intersp = -0.9)
