@@ -506,14 +506,11 @@ To explore the impacts of genetic architecture on morph maintenance, we used two
 ### Assessing model sensitivity and dynamics
 
 We first compared the predictions of our baseline model to the results of a simulation model with a single locus for each trait in order to establish the effect of stochasticity on the predictions of the model. This allowed us to separate the effects of stochasticity inherent to a simulation from how the genetic architecture affects the maintenance of alternative male morphs. Using a consistent set of population parameters that determined the extent of balancing selection on the population, we then explored the impacts of different genetic architectures on the maintenance of male morphs.
+
+We tested the sensitivity of the single-locus model to the strict assumptions of the monogamous mating system. In all models, females were restricted to mate with a single male. First, we relaxed the constraint that females failed to mate if no acceptable male was chosen, and instead allowed females deposit their eggs with a randomly-selected unmated
 male in the population should they fail to find a preferred mate
-('monogamy'); males accept eggs from multiple females, and females
-deposit their eggs with a randomly-selected unmated male in the
-population should they fail to find a preferred mate ('polygyny'); males
-accept eggs from a single female, and females who fail to find a
-preferred mate do not produce offspring ('monogamy no mating'); males
-accept eggs from multiple females, and females who fail to find a
-preferred mate do not produce offspring ('polygyny no mating').
+('monogamy + random'). Next we allowed males to be chosen by multiple females, with females who failed to find a preferred mate not being able to produce offspring ('polygyny'). Finally, we allowed males to be chosen y multiple females but allowed females to mate with a randomly-selected unmated male in the
+population should they fail to find a preferred mate ('polygyny + random'). 
 
 
 Although selection is built into the model, if the population becomes
