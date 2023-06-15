@@ -300,8 +300,8 @@ $$
 We have constrained females to only mate with courting males, so
 $w_{s_M}$ is equal to 1 for CP and CN males and 0 for NP and NN males.
 
-```{r modelDiagram, fig.cap="Diagrams of the two models of alternative male reproductive morphs. For both, begin reading at the top with the step labelled (1) and continue around the circle clockwise.", out.width='100%'}
-knitr::include_graphics("../figs/Combined_model_diagrams.png", dpi=150)
+```{r modelDiagram, fig.cap="Diagram of the biological life cycle modelled in both the analytical model and the simulation model. The model has five phases, starting with (1) Adults interact to find mates. Differences between the models are articulated in the diagram.", out.width='100%'}
+knitr::include_graphics("../figs/lifecycle_biology.png", dpi=150)
 ```
 
 The total reproductive effort in the population per morph is determined
