@@ -606,14 +606,12 @@ will always die (given our parameter settings) (Fig.
 \@ref(fig:ternaryPlots)A).
 
 (ref:ternaryCap) Recombination and stochasticity alter the frequency of
-male morphs. Each point in the triangle represents a different
+male morphs, and explicit genetic architectures impacts which morphs are maintained under balancing selection. In all diagrams, each point in the triangle represents a different
 combination of the predicted frequency of the three male morphs, where
 the corners represent 100% of each morph and each edge represents
-different combinations of two out of the three morphs. Point size
-reflects the number of parameter settings resulting in that exact
-combination of morph frequencies. The left panel represents the
+different combinations of two out of the three morphs. (A) A comparison of the baseline analytical model and the architecture-free single-locus simulations. In these diagrams, point size reflects the number of parameter settings resulting in that exact combination of morph frequencies. The left panel represents the
 predictions of the baseline model, in which most parameter combinations
-result in the fixation of the courter/parent morph. The outcome of the
+result in the fixation of the courter/parent morph but many retain three morphs. The outcomes of the
 chosen low diversity and high diversity parameter sets are marked with a
 purple and a pink asterisk, respectively. On the right are the outputs
 from the individual-based simulation models without explicit genetic
