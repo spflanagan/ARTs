@@ -794,9 +794,9 @@ the courter/parent trait at a frequency of
 `r round(sem(final_freqs$CP[grep("qtls.*highDiversity",final_freqs$file)])*100,2)`%),
 with the non-courter/parent being the dominant morph. These proportions
 are remarkably consistent across genetic architectures (Fig.
-alternative morphs (Supplemental Fig. X). Most simulations with
-supergenes resulted in very similar final morph frequencies
 \@ref(fig:ternaryPlots)B) and result from balancing selection on
+alternative morphs (Fig. S5). Most simulations with supergenes resulted
+in very similar final morph frequencies
 (`r round(mean(final_freqs$CP[grep("supergene.*highDiversity",final_freqs$file)])*100,2)`%
 $\pm$
 `r round(sem(final_freqs$CP[grep("supergene.*highDiversity",final_freqs$file)])*100,2)`%),
