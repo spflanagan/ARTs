@@ -349,13 +349,17 @@ $$
 
 Because we assume entirely obligate parental care, the fraction will
 either be 1 or 0, depending on whether the morph holding the clutch has
-the parental care trait. Following the determination of clutch survival,
-we then impose viability selection on surviving juveniles by multiplying
-the viability selection coefficient (${w_v}_M$) by the surviving number
-of offspring per morph ($o_M$): $j_M = o_M w_{v_M}$. Finally, the
-frequency of each morph in the next generation was calculated by
-dividing the surviving number of juveniles ($j_M$) by the sum of all
-surviving juveniles: $f_M = \frac{j_M}{\Sigma_{i=1}^4{j_i}}$.
+the parental care trait.
+
+Following the outcomes of parental care, we impose viability selection
+on surviving juveniles (Stage 4 in Fig. \@ref(fig:modelDiagram)) by
+multiplying the viability selection coefficient (${w_v}_M$) by the
+surviving number of offspring per morph ($o_M$): $j_M = o_M w_{v_M}$.
+Finally, these juveniles mature to adulthood (Stage 5 in Fig.
+\@ref(fig:modelDiagram)) and we calculate the frequency of each morph in
+the next generation by dividing the surviving number of juveniles
+($j_M$) by the sum of all surviving juveniles:
+$f_M = \frac{j_M}{\Sigma_{i=1}^4{j_i}}$.
 
 To evaluate the outcomes of this mathematical model, we iterated forward
 in time for 100 generations from 1659 combinations of initial morph
