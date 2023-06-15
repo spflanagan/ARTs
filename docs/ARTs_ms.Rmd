@@ -893,9 +893,9 @@ td_freqs<-merge(td_summary, final_freqs,by="rep")
 
 ```
 
-```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the final generation of the simulations was not influcenced by genetic architecture or the phenotypic diversity (i.e., morph frequencies), but did differ between low- and high-diversity parameter settings. Shown are genome-wide observed heterozygosity (A), Tajima’s D (B), and male-male Fst (C).", fig.keep=TRUE, fig.height=3.5}
+```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the final generation of the simulations was not influcenced by genetic architecture or the phenotypic diversity (i.e., morph frequencies), but did differ between low- and high-diversity parameter settings. Shown are genome-wide observed heterozygosity (A), Tajima’s D (B), and male-male Fst (C).", fig.keep='last', fig.height=3.5, fig.width=10}
 
-par(mfrow=c(1,3),xpd=TRUE, mar=c(5,5,1.5,1), oma=c(2,2,5,1))
+par(mfrow=c(1,3),xpd=TRUE, mar=c(5,5,1.5,1), oma=c(0,0,5,1))
 
 plot(popgen_data$propCP,
      popgen_data$gHtMean,
@@ -903,9 +903,10 @@ plot(popgen_data$propCP,
      col=scales::alpha(
        divcols[as.numeric(popgen_data[,"Diversity"])],
        0.5),
-     cex=1.5,
-     cex.lab=1.5,
-     xlab="CP Frequency",
+     cex=2,
+     cex.lab=2,
+     cex.axis=2,
+     xlab="",
      ylab="Mean Obs. Het.",
      bty='l')
 legend("topleft","A",cex=2.5, bty='n', x.intersp = -0.9)
@@ -918,9 +919,10 @@ plot(td_freqs$CP,
      col=scales::alpha(
        divcols[as.numeric(td_freqs$diversity)],
        0.5),
-     cex=1.5,
-     cex.lab=1.5,
-     xlab="CP Frequency",
+     cex=2,
+     cex.lab=2,
+     cex.axis=2,
+     xlab="",
      ylab="Mean Tajima's D",
      bty='l')
 legend("topleft","B",cex=2.5, bty='n', x.intersp = -0.9)
@@ -934,12 +936,15 @@ plot(popgen_data$propCP,
      col=scales::alpha(
        divcols[as.numeric(popgen_data[,"Diversity"])],
        0.5),
-     cex=1.5,
-     cex.lab=1.5,
-     xlab="CP Frequency",
+     cex=2,
+     cex.lab=2,
+     cex.axis=2,
+     xlab="",
      ylab="Mean male-male Gst",
      bty='l')
 legend("topleft","C",cex=2.5, bty='n', x.intersp = -0.9)
+
+mtext("Courter-Parent Frequency", 1, outer=TRUE, line=-1, cex=1.5)
 
 outer_legend("top",
        bty='n',
@@ -948,7 +953,8 @@ outer_legend("top",
        col=c("grey", "grey",divcols["high"],divcols["low"]),
        legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
        ncol=4,
-       cex=1.5)
+       cex=2.5,
+       pt.cex=2)
 
 ```
 
