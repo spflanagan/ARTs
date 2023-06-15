@@ -1271,17 +1271,19 @@ variation that is expected to be maintained under sex-specific selection
 pressures [@flanaganIdentifyingSignaturesSexual2015;
 @connallonGeneralPopulationGenetic2012], and importantly have suggested
 that sex-specific selection must be incredibly strong
-[@kasimatisLimitsGenomicDivergence2019]. When it comes to morphs, this
-might not be true -- we observed both maintenance of variation in
-phenotypes and in genotypes, with reasonably high levels of genetic
-differentiation between male types, even after selection had been
-relaxed. In other words, even the runs where the selection coefficient
-was estimated to be zero had average male-male $G_{ST}$ substantially
-above zero, which is counter the the predictions from single-locus
-models [@kasimatisLimitsGenomicDivergence2019]. As such, our model
-highlights how demographic factors, stochasticity, and genomic effects
-such as pleiotropy and linkage can impact genetic variation, and
-potentially obscure putative genome-wide signals of selection.
+[@kasimatisLimitsGenomicDivergence2019].
+
+When it comes to morphs, this might not be true -- we observed both
+maintenance of variation in phenotypes and in genotypes, with reasonably
+high levels of genetic differentiation between male types, even after
+selection had been relaxed. In other words, even the runs where the
+selection coefficient was estimated to be zero had average male-male
+$G_{ST}$ substantially above zero, which is counter the the predictions
+from single-locus models [@kasimatisLimitsGenomicDivergence2019]. As
+such, our model highlights how demographic factors, stochasticity, and
+genomic effects such as pleiotropy and linkage can impact genetic
+variation, and potentially obscure putative genome-wide signals of
+selection.
 
 Our model applies to fixed polymorphisms, which only describes a portion
 of alternative reproductive tactics. Evidence from ruffs and
