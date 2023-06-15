@@ -438,8 +438,8 @@ reached a steady state in which we could examine any stable
 polymorphisms or cyclical fluctuations in morph frequencies.
 
 Within each of those generations, the population underwent four main
-phases: (1) mate choice and fertilization; (2) clutch survival; (3)
-viability selection on juveniles; (4) maturation to adulthood (Fig.
+phases: (1) mate choice; (2) fertilization; (3) clutch survival; (4)
+viability selection on juveniles; (5) maturation to adulthood (Fig.
 \@ref(fig:modelDiagram)). The main differences between the
 individual-based simulation model and the baseline model were the
 introduction of stochasticity during mate choice and the introduction of
