@@ -270,11 +270,17 @@ of survival than females and males without either courtship or
 parenting. Males who are both courters and parents have a multiplicative
 effect of viability selection.
 
-We implemented our model first as a mathematical model and then as an
-individual-based simulation model, which for simplicity we will refer to
-as the 'simulation model' throughout the text. The purpose of the
-mathematical model was to generate baseline predictions for when
-multiple morphs are maintained.
+```{r modelDiagram, fig.cap="Diagram of the biological life cycle modelled in both the analytical model and the simulation model. The model has five phases, starting with (1) Adults interact to find mates. Differences between the models are articulated in the diagram.", out.width='100%'}
+knitr::include_graphics("../figs/lifecycle_biology.png", dpi=150)
+```
+
+We first explored a version of our model that could be solved
+analytically to generate baseline predictions for when multiple morphs
+are maintained. We then used an individual-based simulation model to ask
+how the underlying genetic architecture of these traits affect (compared
+to the baseline) the presence, frequency, and type of alternative male
+phenotypes maintained in the population. We refer to these as the
+baseline model and the simulation model respectively.
 
 ## Baseline model {#math-model-methods}
 
@@ -300,11 +306,6 @@ $$
 
 We have constrained females to only mate with courting males, so
 $w_{s_M}$ is equal to 1 for CP and CN males and 0 for NP and NN males.
-
-```{r modelDiagram, fig.cap="Diagram of the biological life cycle modelled in both the analytical model and the simulation model. The model has five phases, starting with (1) Adults interact to find mates. Differences between the models are articulated in the diagram.", out.width='100%'}
-knitr::include_graphics("../figs/lifecycle_biology.png", dpi=150)
-```
-
 The total reproductive effort in the population per morph is determined
 by the number of males belonging to that morph and the morph's specified
 reproductive allocation, which determines the maximum number of eggs an
