@@ -740,20 +740,19 @@ AddToTernary(
 
 ```
 
+### The figures to use in the main text
 
-
-```{r baselinesNoStrictPercentages}
-
+```{r baselinesNoStrictPercentages, fig.width=8.15, fig.height=4.72}
 
 layout(matrix(c(1,1,2,3), nrow=2))
-par(mar=c(0,0,0,0))
+par(mar=c(0,0,0,1), oma=c(1,10,5,10))
 # --------------- Baseline model
 dupdat<-data.table::setDT(baseline_points)[,list(Count=.N),names(baseline_points)]
 # Calculate the percentage for easier point plotting
 dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
 
 # Make the ternary diagram
-morphs_ternary_plot()
+morphs_ternary_plot(lab.cex=1.5)
 
 # add the points
 AddToTernary(
@@ -767,7 +766,7 @@ AddToTernary(
 #high div point
 AddToTernary(
   points,
-  col=divcols[1],
+  col=divcols["high"],
   baseline_points[high_which,],
   lwd=2,
   pch=8,
@@ -776,14 +775,17 @@ AddToTernary(
 #low div point
 AddToTernary(
   points,
-  col=divcols[2],
+  col=divcols["low"],
   baseline_points[low_which,],
   lwd=2,
   pch=8,
   cex=2
 )
 
+mtext("analytical",3,cex=1.5)
+
 # -------------- Single locus sims: low
+par(mar=c(0,0,0,2))
 lowdat<-as.data.frame(do.call(rbind,lowDiv[low_patts=="monogamy_nm"]))
 colnames(lowdat)<-c("CP","NP","NN")
 dupdat<-data.table::setDT(lowdat)[,list(Count=.N),
@@ -791,17 +793,19 @@ dupdat<-data.table::setDT(lowdat)[,list(Count=.N),
 # Calculate the percentage for easier point plotting
 dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
 
-morphs_ternary_plot()
+morphs_ternary_plot(lab.cex=1.5)
 
 # add the points
 AddToTernary(
   points,
   dupdat[,1:3],
-  col=divcols[2],
-  pch=6,
+  col=divcols["low"],
+  pch=1,
   lwd=2,
   cex=10*dupdat$Percent
 )
+
+mtext("single-locus simulations",3, cex=1.5)
 
 # -------------- Single locus sims: high
 highdat<-as.data.frame(do.call(rbind,highDiv[high_patts=="monogamy_nm"]))
@@ -810,17 +814,63 @@ dupdat<-data.table::setDT(highdat)[,list(Count=.N),
                                   names(highdat)]
 dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
 
-morphs_ternary_plot()
+morphs_ternary_plot(lab.cex=1.5)
 
 AddToTernary(
   points,
   dupdat[,1:3],
-  col=divcols[1],
-  pch=0,
+  col=divcols["high"],
+  pch=1,
   lwd=2,
   cex=100*dupdat$Percent # add color based on param values
 )
 
+
+outer_legend("topleft","(A) no explicit genetics", bty='n', cex=2)
+
+outer_legend("right", 
+       c("baseline","low diversity", "high diversity",
+         "",
+         "point size","shows freq.","of occurrence"
+         ),
+       pch=1,
+       col=c("black",divcols[c("low","high")],NA,"dark grey","dark grey","dark grey"),
+       bty='n',
+       pt.cex=c(1.5,1.5,1.5,1.5,1,1.5,3),
+       cex=1.5,
+       pt.lwd=2
+      )
+
+# 
+# # add lines to low diversity
+# lines(c(-0.55,0.45),
+#       c(0.6,1.02),
+#       xpd=TRUE,
+#       col=divcols[2],
+#       lwd=2
+#       )
+# 
+# lines(c(-0.55,0.3),
+#       c(0.6,0),
+#       xpd=TRUE,
+#       col=divcols[2],
+#       lwd=2
+#       )
+# 
+# # add lines to high diversity
+# lines(c(-0.55,0.4),
+#       c(-0.12,-1.2),
+#       xpd=TRUE,
+#       col=divcols[1],
+#       lwd=2
+#       )
+# 
+# lines(c(-0.55,0.4),
+#       c(-0.12,-0.1),
+#       xpd=TRUE,
+#       col=divcols[1],
+#       lwd=2
+#       )
 
 ```
 
@@ -830,7 +880,8 @@ And then to follow up on this one, we'll do a two-row genetic architectures one
 
 
 ```{r architectureTernaryLowHigh, fig.width=8.15, fig.height=4.72}
-arch_pch<-c(rep(2,3),6)
+
+  arch_pch<-rep(2,4)
 names(arch_pch)<-names(points_list)
 
 arch_labels<-c(qtls="QTLs",
@@ -840,7 +891,7 @@ arch_labels<-c(qtls="QTLs",
 
 layout(matrix(c(1,2,3,4,5,6,7,8),nrow=2,byrow = TRUE))
 par(mar=c(0,2,1,1.5),
-    oma=c(1,1,0,0),
+    oma=c(1,5,3,0),
     xpd=TRUE)
 
 # -------------- low diversity
@@ -894,7 +945,7 @@ tmp<-lapply(points_list_low[c("qtls","prop0.05","prop0.25","prop0.5")], function
 mtext("Low diversity",
       2,
       outer=TRUE,
-      line=-1.1,
+      line=-0.8,
       adj = 0.895,
       col=divcols[2],
       cex=1.5)
@@ -926,13 +977,13 @@ tmp<-lapply(points_list[c("qtls","prop0.05","prop0.25","prop0.5")], function(poi
 mtext("High diversity",
       2,
       outer=TRUE,
-      line=-1.1,
+      line=-0.8,
       adj = 0.235,
       col=divcols[1],
       cex=1.5)
 
 lgd<-outer_legend(x=-1.15,
-                  y=-0.9,
+                  y=-0.87,
                   c("# Chrom:", names(chr_col)),
                   col=c(NA,chr_col),
                   pch=c(NA,rep(15,3)),
@@ -942,9 +993,9 @@ lgd<-outer_legend(x=-1.15,
                   pt.lwd=2,
                  text.width=c(0.2,rep(0.1,3)))
 outer_legend(x=0,
-             y=-0.9,
+             y=-0.87,
              legend=c("# QTLs:", levels(as.factor(unique(high_freqs$nqtl)))),
-             pch=c(NA,rep(0,4)),
+             pch=c(NA,rep(2,4)),
              col=c(NA,rep("black",4)),
              cex=2,
              pt.cex=c(0,log(as.numeric((levels(as.factor(unique(high_freqs$nqtl))))),base=2)-1),
@@ -953,6 +1004,12 @@ outer_legend(x=0,
              bty='n',
              text.width=c(0.2, rep(0.1,4)),
              inset=0)
+
+outer_legend("topleft","(B) explicit genetic architecture", bty='n', cex=2.5)
+
+
+```
+
 
 ### All ternary plots together
 
