@@ -812,8 +812,6 @@ models (e.g., [@hendrickxMasculinizingSupergeneUnderlies2022,
 @kupperSupergeneDeterminesHighly2016,@lamichhaneyStructuralGenomicChanges2016]).
 To better understand the reasons for the similarity between the the
 genome-wide QTLs simulations versus the supergene simulations, we
-knitr::include_graphics(c("../figs/QTLFig-1.png","../figs/supergeneFig-1.png"))
-```
 visualised the QTL haplotypes in supergenes (see Fig. S6) for a
 representative image). These visualisations suggest that because of the
 additive, polygenic nature of our traits, individuals have multiple
