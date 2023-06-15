@@ -1043,8 +1043,8 @@ propQTL_plot<-function(gsummary,propCol,cols,ylabel="Prop. QTL detected",add_leg
           colMed=cols["courter"],
           cex.axis=2,
           cex.lab=2,
-          las=2, 
-          bty='n'
+          las=2,
+          frame.plot=FALSE
           )
   
   vioplot::vioplot(gsummary[gsummary$Traits=="Parent",propCol]~gsummary$CQ[gsummary$Traits=="Parent"],
@@ -1053,7 +1053,8 @@ propQTL_plot<-function(gsummary,propCol,cols,ylabel="Prop. QTL detected",add_leg
           add=TRUE,
           border=cols["parent"],
           lineCol=cols["parent"],
-          colMed=cols["parent"]
+          colMed=cols["parent"],
+          frame.plot=FALSE
           )
   
   mtext(ylabel,2,cex=2,line=4)
