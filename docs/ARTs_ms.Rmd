@@ -615,7 +615,7 @@ result in the fixation of the courter/parent morph but many retain three morphs.
 chosen low diversity and high diversity parameter sets are marked with a
 purple and a pink asterisk, respectively. On the right are the outputs
 from the individual-based simulation models without explicit genetic
-architectures for the low diversity parameters (top) and for the high
+architectures for the chosen low diversity parameters (top) and high
 diversity parameters (bottom). Most low diversity replicates result in
 fixation of the courter/parent, with some having one or two
 non-courter/parent individuals in the final population, while the high
