@@ -6,6 +6,10 @@ output:
     df_print: paged
 editor_options:
   chunk_output_type: console
+header-includes:
+- \usepackage{pdflscape}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
 ---
 
 
@@ -952,7 +956,11 @@ outer_legend(x=0,
 ```
 
 
+\newpage
+\blandscape
 
 
 
 
+
+\elandscape
