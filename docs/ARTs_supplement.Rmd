@@ -119,18 +119,21 @@ knitr::include_graphics("../figs/mathParams.png")
 
 ## Impacts of mating system on the model {#mating-system-results}
 
+We tested the sensitivity of the single-locus model to the strict assumptions of the monogamous mating system. In all models, females were restricted to mate with a single male. First, we relaxed the constraint that females failed to mate if no acceptable male was chosen, and instead allowed females deposit their eggs with a randomly-selected unmated
+male in the population should they fail to find a preferred mate
+('monogamy + random'). Next we allowed males to be chosen by multiple females, with females who failed to find a preferred mate not being able to produce offspring ('polygyny'). Finally, we allowed males to be chosen y multiple females but allowed females to mate with a randomly-selected unmated male in the
+population should they fail to find a preferred mate ('polygyny + random'). 
+
 As expected, in the low diversity parameter space, the majority of
 simulations resulted in fixation or near-fixation of the courter/parent
-morph (Fig. \@ref(fig:MatingTypesFig)). A more surprising result was the
-inconsistency of results from the mating types within the the high
+morph, regardless of mating system (Fig. \@ref(fig:MatingTypesFig)). A more surprising result was the
+inconsistency of results from the mating systems within the the high
 diversity parameter space. Only the case most similar to the
-mathematical model -- monogamy with no mating -- resulted in
+mathematical model -- monogamy -- resulted in
 polymorphism, with the courter/parent morph coexisting with either the
 non-courter/parent or the non-courter/non-parent morph (Fig.
-\@ref(fig:MatingTypesFig)). Polygyny resulted in the fixation of the
-courter/parent morph regardless of whether females mated at random if a
-suitable mate was found, and monogamy with random mating after searching
-for a preferred mate is unsuccessful resulted in the fixation of the
+\@ref(fig:MatingTypesFig)). Both polygyny and 'polygyny + random' resulted in the fixation of the
+courter/parent morph, and 'monogamy + random' resulted in the fixation of the
 non-courter/parent morph in every case. These results can be explained
 by the nature of density-dependent survival in the individual-based
 model that are not consistent with the mathematical model; in the
