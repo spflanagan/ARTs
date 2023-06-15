@@ -415,7 +415,7 @@ We considered three different genetic architectures for these QTLs: a
 single gene per trait without any additional genetic information,
 multiple QTLs randomly placed throughout chromosomes, and supergenes
 located on one of multiple chromosomes. The single gene scenario is most
-analogous to the mathematical model described above. When the traits had
+analogous to the baseline model described above. When the traits had
 multiple QTLs determining their trait values, each QTL was assigned a
 location on a chromosome and the QTL's effect on the trait is associated
 with a single nucleotide polymorphism (SNP). These SNPs undergo
