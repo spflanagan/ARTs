@@ -479,14 +479,16 @@ breakpoints fell within the region containing the aggregated QTLs for
 the traits, the offspring was considered not viable.
 
 After recombination occurred, if the progeny survived, the genotypes
-underwent mutation, which occurred at a rate of $\mu$. For a given
-individual, the number of mutations introduced was determined as
-$2\mu n_{SNPs} n_{chrom}$. The location of each mutation was randomly
-selected and the allele at that location was randomly chosen from the
-set of existing alleles. The mutation also impacted the phenotypic
-effects of QTLs by altering the original effect by a value drawn from a
-normal distribution with a mean of 0 and a standard deviation of
-$\sigma_\mu$. Finally, offspring were also randomly assigned a sex.
+underwent mutation, which occurred at a rate of $\mu$ at each locus. For
+a given individual, the number of mutations introduced was determined as
+$2\mu n_{SNPs} n_{chrom}$, where $n_{SNPs}$ is the number of SNPs
+and $n__{chrom}$ is the number of chromosomes in the simulation. The
+location of each mutation was randomly selected and the allele at that
+location was randomly chosen from the set of existing alleles. The
+mutation also impacted the phenotypic effects of QTLs by altering the
+original effect by a value drawn from a normal distribution with a mean
+of 0 and a standard deviation of $\sigma_\mu$. Finally, offspring were
+also randomly assigned a sex.
 
 The next stage in the lifecycle was viability selection, which we
 assumed only affects male offspring. For each male offspring, a survival
