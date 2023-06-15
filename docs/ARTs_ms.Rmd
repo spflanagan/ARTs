@@ -447,9 +447,7 @@ recombination and mutation during reproduction. During the mate choice
 phase, females searched through a set number of males and chose the
 first attractive male (i.e., the first courter male she encountered).
 Females always preferred courting males. If a female did not find an
-acceptable mate, she either did not mate or she chose a male at random
-with from the population and allocated all of her offspring to him,
-depending on the parameter settings (see supplement).
+acceptable mate, she did not mate (see supplement for less strict mating dynamics).
 
 Once a female chose a male, fertilization of the eggs occurred, in which
 the chosen male had first male priority (i.e., the chosen male allocated
