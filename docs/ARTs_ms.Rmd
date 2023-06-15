@@ -506,6 +506,9 @@ Each set of genetic architectures and population parameters was also was
 run with four types of mating systems, all of which required females to
 lay their eggs with only a single male: males accept eggs from a single
 female, and females deposit their eggs with a randomly-selected unmated
+### Assessing model sensitivity and dynamics
+
+We first compared the predictions of our baseline model to the results of a simulation model with a single locus for each trait in order to establish the effect of stochasticity on the predictions of the model. This allowed us to separate the effects of stochasticity inherent to a simulation from how the genetic architecture affects the maintenance of alternative male morphs. Using a consistent set of population parameters that determined the extent of balancing selection on the population, we then explored the impacts of different genetic architectures on the maintenance of male morphs.
 male in the population should they fail to find a preferred mate
 ('monogamy'); males accept eggs from multiple females, and females
 deposit their eggs with a randomly-selected unmated male in the
@@ -515,19 +518,6 @@ preferred mate do not produce offspring ('monogamy no mating'); males
 accept eggs from multiple females, and females who fail to find a
 preferred mate do not produce offspring ('polygyny no mating').
 
-### Model analysis
-
-Model results were first assessed visually by graphing the proportion of
-each morph that persisted to the final generation of the model. Our
-first priority was to compare the outcomes of the simulation model with
-a single locus for each trait to the results of our mathematical model
-(from Section \@ref(math-model-methods)). Next, the four mating systems
-were compared in the single-locus model. From this comparison, we were
-then able to narrow the parameter space for the comparisons of the two
-different multilocus genetic architectures. The many different formats
-for these two genetic architectures were then compared in terms of the
-morph composition in the final generation, and the amount of variation
-among replicate runs.
 
 Although selection is built into the model, if the population becomes
 fixed for specific morphs -- and specific genotypes -- selection might
