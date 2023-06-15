@@ -959,8 +959,241 @@ outer_legend(x=0,
 \newpage
 \blandscape
 
+```{r combinedTernaryWide, fig.width=12.225, fig.height=4.72}
+
+layout(matrix(c(1:6, 1, 7:11), nrow=2, byrow = TRUE))
+par(mar=c(0,2,1,2.5), oma=c(1,1,0,0),xpd=TRUE)
+# --------------- Baseline model
+dupdat<-data.table::setDT(baseline_points)[,list(Count=.N),names(baseline_points)]
+# Calculate the percentage for easier point plotting
+dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
+
+# Make the ternary diagram
+morphs_ternary_plot(lab.cex=1.5,
+                      lab.offset=0.25,
+                      atip.pos=3,
+                      atip.rotate=0,
+                      btip.pos=2, 
+                      btip.rotate=0,
+                      ctip.pos=2,
+                      ctip.rotate=0)
+
+# add the points
+AddToTernary(
+  points,
+  col="black",
+  dupdat[,1:3],
+  lwd=2,
+  cex=10*dupdat$Percent+1
+)
+
+#high div point
+AddToTernary(
+  points,
+  col=divcols[1],
+  baseline_points[high_which,],
+  lwd=2,
+  pch=8,
+  cex=2
+)
+#low div point
+AddToTernary(
+  points,
+  col=divcols[2],
+  baseline_points[low_which,],
+  lwd=2,
+  pch=8,
+  cex=2
+)
+
+# -------------- Single locus sims: low
+mar=c(0,2,1,1.5)
+
+lowdat<-as.data.frame(do.call(rbind,lowDiv[low_patts=="monogamy_nm"]))
+colnames(lowdat)<-c("CP","NP","NN")
+dupdat<-data.table::setDT(lowdat)[,list(Count=.N),
+                                  names(lowdat)]
+# Calculate the percentage for easier point plotting
+dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
+
+morphs_ternary_plot(lab.cex=1.5,
+                      lab.offset=0.25,
+                      atip.pos=3,
+                      atip.rotate=0,
+                      btip.pos=2, 
+                      btip.rotate=0,
+                      ctip.pos=2,
+                      ctip.rotate=0)
+
+# add the points
+AddToTernary(
+  points,
+  dupdat[,1:3],
+  col=divcols[2],
+  pch=1,
+  lwd=2,
+  cex=10*dupdat$Percent
+)
+
+
+ text(x=0,
+       y=1.2,
+       "Baseline",
+       cex=2,
+       xpd=TRUE
+       )
+mtext("Low diversity",
+      2,
+      outer=FALSE,
+      line=2,
+      col=divcols[2],
+      cex=1.5)
+
+
+# -------------- low diversity
+  arch_pch<-c(rep(2,3),6)
+names(arch_pch)<-names(points_list)
+
+arch_labels<-c(qtls="QTLs",
+              prop0.05="Supergene 5%",
+              prop0.25="Supergene 25%",
+              prop0.5="Supergene 50%")
+
+
+low_freqs<-final_freqs[which(final_freqs$diversity=="low"),]
+points_list_low<-by(low_freqs, low_freqs$arch, function(arch_dat){
+  # convert the data into the list format
+  points<-apply(arch_dat,
+               1,
+               function(dat){
+                 out<-dat[c("CP","P","NON")]
+                 return(as.numeric(out))
+                 },
+               simplify = FALSE)
+  # output the data with the other info
+  return(list(points=points,
+              chroms=as.factor(arch_dat$nchrom),
+              qtls=as.numeric(arch_dat$nqtl),
+              arch=unique(arch_dat$arch)
+              )
+         )
+}
+)
+tmp<-lapply(points_list_low[c("qtls","prop0.05","prop0.25","prop0.5")], function(points_info){
+  morphs_ternary_plot(lab.cex=1.5,
+                      lab.offset=0.25,
+                      atip.pos=3,
+                      atip.rotate=0,
+                      btip.pos=2, 
+                      btip.rotate=0,
+                      ctip.pos=2,
+                      ctip.rotate=0)
+  
+  # add the points
+  AddToTernary(
+    points,
+    points_info$points,
+    col=alpha(chr_col[points_info$chroms],0.75),
+    pch=arch_pch[points_info$arch],
+    lwd=2,
+    cex=log(points_info$qtls,base = 2)-1
+  )
+  text(x=0,
+       y=1.2,
+       arch_labels[points_info$arch],
+       cex=2,
+       xpd=TRUE
+       )
+})
 
 
 
+
+
+# -------------- Single locus sims: high
+par(mar=c(2,2,0,1.5))
+
+
+
+highdat<-as.data.frame(do.call(rbind,highDiv[high_patts=="monogamy_nm"]))
+colnames(highdat)<-c("CP","NP","NN")
+dupdat<-data.table::setDT(highdat)[,list(Count=.N),
+                                  names(highdat)]
+dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
+
+morphs_ternary_plot(lab.cex=1.5,
+                      lab.offset=0.25,
+                      atip.pos=3,
+                      atip.rotate=0,
+                      btip.pos=2, 
+                      btip.rotate=0,
+                      ctip.pos=2,
+                      ctip.rotate=0)
+
+AddToTernary(
+  points,
+  dupdat[,1:3],
+  col=divcols[1],
+  pch=1,
+  lwd=2,
+  cex=100*dupdat$Percent # add color based on param values
+)
+
+mtext("High diversity",
+      2,
+      outer=FALSE,
+      line=2,
+      col=divcols[1],
+      cex=1.5)
+
+# --------------- high diversity
+
+tmp<-lapply(points_list[c("qtls","prop0.05","prop0.25","prop0.5")], function(points_info){
+  morphs_ternary_plot(lab.cex=1.5,
+                      lab.offset=0.25,
+                      atip.pos=3,
+                      atip.rotate=0,
+                      btip.pos=2, 
+                      btip.rotate=0,
+                      ctip.pos=2,
+                      ctip.rotate=0)
+  
+  # add the points
+  AddToTernary(
+    points,
+    points_info$points,
+    col=alpha(chr_col[points_info$chroms],0.75),
+    pch=arch_pch[points_info$arch],
+    lwd=2,
+    cex=log(points_info$qtls,base = 2)-1
+  )
+})
+
+
+lgd<-outer_legend(x=-1.15,
+                  y=-0.9,
+                  c("# Chrom:", names(chr_col)),
+                  col=c(NA,chr_col),
+                  pch=c(NA,rep(15,3)),
+                  cex=2,
+                  bty='n',
+                  horiz=TRUE,
+                  pt.lwd=2,
+                 text.width=c(0.2,rep(0.1,3)))
+outer_legend(x=0,
+             y=-0.9,
+             legend=c("# QTLs:", levels(as.factor(unique(high_freqs$nqtl)))),
+             pch=c(NA,rep(0,4)),
+             col=c(NA,rep("black",4)),
+             cex=2,
+             pt.cex=c(0,log(as.numeric((levels(as.factor(unique(high_freqs$nqtl))))),base=2)-1),
+             horiz=2,
+             pt.lwd=2,
+             bty='n',
+             text.width=c(0.2, rep(0.1,4)),
+             inset=0)
+
+
+```
 
 \elandscape
