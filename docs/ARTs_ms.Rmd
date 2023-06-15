@@ -249,11 +249,12 @@ We expect that this model can be generalized to species in which one sex
 (but not the other) has two fixed traits that impact mating success and
 the survival of their offspring.
 
-Each generation has three distinct phases: (1) mate choice and
-fertilization; (2) parental care; and (3) viability selection. In the
-mate choice phase of the model, we assume females always prefer to mate
-with males displaying the courtship trait. If a female decides to mate
-with a male, he receives all of her eggs to care for. The male is not
+Each generation has three distinct phases: (1) mate choice; (2)
+fertilization; (3) parental care; (4) viability selection; and (5)
+maturation to adulthood (Fig. \@ref(fig:modelDiagram)). In the mate
+choice phase of the model, we assume females always prefer to mate with
+males displaying the courtship trait. If a female decides to mate with a
+male, he receives all of her eggs to care for. The male is not
 guaranteed paternity of his mates' entire brood, however, because
 non-courting males are able to fertilize a proportion of the eggs. The
 chosen parent does receive preferred male fertilization advantage. The
@@ -263,7 +264,7 @@ the parental care phase of the model, we assume for simplicity that
 males with the parental care trait have 100% offspring survival while
 males without the parental care trait have 0% survival, independent of
 the male's courtship trait. Finally, viability selection is imposed on
-offspring as they mature to adulthood, such that males carrying the
+offspring before they mature to adulthood, such that males carrying the
 courtship trait and/or the parental care trait have a lower probability
 of survival than females and males without either courtship or
 parenting. Males who are both courters and parents have a multiplicative
@@ -783,7 +784,7 @@ complete fixation of the morph in the majority of runs, and any
 variation existing in the form of 1-2 individuals (courter/parent
 frequencies were $\ge$ 99% in all cases), which were a result of
 stochasticity and recombination as opposed to balancing selection on
-morphs (Supplemental Fig. X). These results were consistent across all
+morphs (Supplemental Fig. 5). These results were consistent across all
 genetic architectures, including QTLs distributed across 2, 4, and 8
 chromosomes and QTLs clustered in supergenes spanning from 5% to 50% of
 a single chromosome. In the high diversity parameter space, polygenic
