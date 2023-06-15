@@ -319,7 +319,7 @@ morph is determined by the male reproductive effort of each morph and
 the probability of being chosen: $e_{o_M} = s_M w_{s_M}$. However,
 non-courting males also sneak fertilizations, which impacts the overall
 proportion of fertilizations per morph. The maximum number of possible
-fertilizations arising from sneaking for a given non-parental male is
+fertilizations arising from sneaking for a given non-courting male is
 $N_s = n c n_{sneakers} r_{NN}$. This value reflects that for every
 clutch ($n$), each sneaker can contribute up to their individual
 reproductive allocation (where $r_{NN} = r_{NP}$) offset by the sperm
