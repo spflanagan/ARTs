@@ -911,9 +911,9 @@ td_freqs<-merge(td_summary, final_freqs,by="rep")
 
 ```
 
-```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the final generation of the simulations was not influcenced by genetic architecture or the phenotypic diversity (i.e., morph frequencies), but did differ between low- and high-diversity parameter settings. Shown are genome-wide observed heterozygosity (A), Tajima’s D (B), and male-male Fst (C) were not influenced by the frequency of the morphs in the final generation, nor by the genetic architecture.", fig.keep=TRUE}
+```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the final generation of the simulations was not influcenced by genetic architecture or the phenotypic diversity (i.e., morph frequencies), but did differ between low- and high-diversity parameter settings. Shown are genome-wide observed heterozygosity (A), Tajima’s D (B), and male-male Fst (C).", fig.keep=TRUE, fig.height=3.5}
 
-par(mfrow=c(1,3),xpd=TRUE, mar=c(5,5,1.5,1), oma=c(2,2,3,1))
+par(mfrow=c(1,3),xpd=TRUE, mar=c(5,5,1.5,1), oma=c(2,2,5,1))
 
 plot(popgen_data$propCP,
      popgen_data$gHtMean,
@@ -923,10 +923,10 @@ plot(popgen_data$propCP,
        0.5),
      cex=1.5,
      cex.lab=1.5,
-     xlab="Courter/Parent Frequency",
+     xlab="CP Frequency",
      ylab="Mean Obs. Het.",
      bty='l')
-text(0.28,0.42,"A",cex=2.5)
+legend("topleft","A",cex=2.5, bty='n', x.intersp = -0.9)
 
 
 # Tajima's D
@@ -941,7 +941,7 @@ plot(td_freqs$CP,
      xlab="Courter/Parent Frequency",
      ylab="Mean Tajima's D",
      bty='l')
-text(0.28,4.4,"B",cex=2.5)
+legend("topleft","B",cex=2.5, bty='n', x.intersp = -0.9)
 
 
 
@@ -954,16 +954,16 @@ plot(popgen_data$propCP,
        0.5),
      cex=1.5,
      cex.lab=1.5,
-     xlab="Courter/Parent Frequency",
+     xlab="CP Frequency",
      ylab="Mean male-male Gst",
      bty='l')
-text(0.28,0.6,"C",cex=2.5)
+legend("topleft","C",cex=2.5, bty='n', x.intersp = -0.9)
 
 outer_legend("top",
        bty='n',
        pch=c(17, 16, 15,15),
        lty=c(0, 0, 1,1),
-       col=c("grey", "grey",divcols[2],divcols[1]),
+       col=c("grey", "grey",divcols["high"],divcols["low"]),
        legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
        ncol=4,
        cex=1.5)
