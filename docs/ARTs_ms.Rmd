@@ -1325,6 +1325,29 @@ acknowledges support from funding from the National Science Foundation
 (Grants IOS-1522491 and IOS-1655297) and the University of California
 Santa Cruz.
 
+Notes:
+
+-   combine the two diagrams into one
+
+-   move table to supplement (focus on logic in main text)
+
+-   combine two ternry diagrams -- add labels (baseline + simulation)
+    and consistent shapes
+
+-   genomewide figures:
+
+    -   refine the first statement to better highlight the takehome
+
+    -   only the panels a, c, e
+
+-   read abstract and make sure they take homes
+
+-   think about nuance and reviewer push back
+
+    -   additive model with threshold
+
+-   focus on abstract and short pithy take-home (superficial)
+
 # Data Accessibility
 
 All code has been archived on Zenodo (DOI: ) and is maintained on github
