@@ -333,15 +333,16 @@ if $N_s < s_M$), the number of eggs fertilized through sneaking for that
 morph is the difference between $N_s$ and $s_M$, truncated at zero.
 Otherwise, the number of eggs fertilized through sneaking is $s_M$.
 
-The survival of offspring can similarly be divided into offspring within
-a male's own clutch versus in others' clutches. The offspring surviving
-in any male's clutch is dependent on whether he is a parent or not,
-which determines the selection coefficient arising from clutch survival
-($w_{n_M}$), which for our purposes equals 1 for CP and NP males and
-equals 0 for CN and NN males: $o_{o_M} = e_{o_M} w_{n_M}$. Offspring in
-other males' clutches (i.e., those arising from sneaking) also depend on
-whether the other males' clutch survives. Thus, we calculate the number
-of offspring from sneaking that survive as:
+Next, parental care determines whether clutches survive to a juveniles
+(Stage 3 in Fig. \@ref(fig:modelDiagram)). The offspring surviving in
+any male's clutch is dependent on whether he is a parent or not, which
+determines the selection coefficient arising from clutch survival
+($w_{n_M}$): $o_{o_M} = e_{o_M} w_{n_M}$. For simplicity, we consider
+cases where $w_{n_CP} = w_{CN} = 1$ and $w_{n_NP} = w_{NN} = 0$. To
+fully capture each morph's embryo survivorship, offspring that result
+from sneaking (which depends on the frequency of other morphs and their
+mating success) need to also be considered. We calculate the number of
+offspring from sneaking that survive as:
 
 $$
 o_{s_M} = e_{s_M} \frac{\Sigma{o_{o_M}}}{\Sigma{e_{o_M}}}.
