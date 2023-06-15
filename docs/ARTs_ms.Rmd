@@ -256,19 +256,21 @@ choice phase of the model, we assume females always prefer to mate with
 males displaying the courtship trait. If a female decides to mate with a
 male, he receives all of her eggs to care for. The male is not
 guaranteed paternity of his mates' entire brood, however, because
-non-courting males are able to fertilize a proportion of the eggs. The
-chosen parent does receive preferred male fertilization advantage. The
-consequence of this scenario is that the only mechanism by which
-non-courters can produce offspring is through sneak fertilizations. In
-the parental care phase of the model, we assume for simplicity that
-males with the parental care trait have 100% offspring survival while
-males without the parental care trait have 0% survival, independent of
-the male's courtship trait. Finally, viability selection is imposed on
-offspring before they mature to adulthood, such that males carrying the
-courtship trait and/or the parental care trait have a lower probability
-of survival than females and males without either courtship or
-parenting. Males who are both courters and parents have a multiplicative
-effect of viability selection.
+non-courting males are able to fertilize a proportion of the eggs, and
+all males have an inherent reproductive allocation that sets a maximum
+on the number of offspring he can sire (which is determined by his morph
+phenotype). The chosen parent does receive preferred male fertilization
+advantage. The consequence of this scenario is that the only mechanism
+by which non-courters can produce offspring is through sneak
+fertilizations. In the parental care phase of the model, we assume for
+simplicity that males with the parental care trait have 100% offspring
+survival while males without the parental care trait have 0% survival,
+independent of the male's courtship trait. Finally, viability selection
+is imposed on offspring before they mature to adulthood, such that males
+carrying the courtship trait and/or the parental care trait have a lower
+probability of survival than females and males without either courtship
+or parenting. Males who are both courters and parents have a
+multiplicative effect of viability selection.
 
 ```{r modelDiagram, fig.cap="Diagram of the biological life cycle modelled in both the analytical model and the simulation model. The model has five phases, starting with (1) Adults interact to find mates. Differences between the models are articulated in the diagram.", out.width='100%'}
 knitr::include_graphics("../figs/lifecycle_biology.png", dpi=150)
