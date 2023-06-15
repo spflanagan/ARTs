@@ -398,19 +398,19 @@ alternative reproductive tactics, we developed an individual-based
 simulation model. The simulation model follows a lifecycle that is
 largely the same as the baseline model (Fig. \@ref(fig:modelDiagram)),
 but rather than tracking proportions of the population belonging to
-particular morphs, we tracked individuals within the population (Fig.
-\@ref(fig:modelDiagram)). Each individual had a diploid genotype, which
-included both non-coding loci and quantitative trait loci (QTLs). We
-included two types of QTLs: ones that determined the individual's
-courting trait and ones that determined the individual's parenting
-trait. The QTLs were each assigned a randomly-drawn effect on the trait,
-and the QTLs additively determined the trait value for each trait (i.e.,
-the effects of all QTLs were summed to determine the trait value). In
-this model, we assume no environmental effects on the trait. These trait
-values were then compared to a threshold to dichotomize each trait. The
-threshold for each trait was the mean trait value during the
-initialization of the model (i.e., at generation 0).
-
+particular morphs, we tracked individuals within the population. Each
+individual had a diploid genotype, which included both non-coding loci
+and quantitative trait loci (QTLs). We included two types of QTLs: ones
+that determined the individual's courting trait and ones that determined
+the individual's parenting trait. Each allele at a QTL was assigned a
+randomly-drawn effect on the phenotype, and an individual's quantitative
+phenotypic value was determined by the sum of all their allelic effects
+(i.e., traits were entirely additive). In this model, we assume no
+environmental effects on the trait. Male traits (i.e.,
+courter/non-courter and parent/non-parent) were determined by a
+threshold function. The value of the threshold was constant for each
+iteration of the model, and was initialized as the mean phenotypic value
+at generation 0, prior to any model iterations.
 
 We considered three different genetic architectures for these QTLs: (a) a
 single gene per trait without any additional genetic information (i.e., no non-coding loci to create chromosomes), (b)
