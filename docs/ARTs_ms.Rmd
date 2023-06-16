@@ -736,7 +736,7 @@ A striking result is that stochasticity plays a major role in which
 morphs co-exist with the courter/parent morph, even when parameterization of the model was identical (Fig. \@ref(fig:ternaryPlots)A).
 Across independent iterations of the model, variation in the initial
 starting frequencies of each morph (which centre around 0.25 for each
-morph, but with some variation) can explain nsome of the differences in
+morph, but with some variation) can explain some of the differences in
 outcomes. Variation in outcomes within replicate runs can be attributed
 to the many sources of random chance incorporated in the model:
 stochasticity associated with finite population sizes (i.e., genetic
