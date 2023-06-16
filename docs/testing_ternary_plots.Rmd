@@ -849,7 +849,8 @@ AddToTernary(
 )
 
 
-outer_legend("topleft","(A) no explicit genetics", bty='n', cex=2)
+outer_legend("topleft","(A) no explicit genetics", bty='n', cex=2, 
+       x.intersp = -0.9)
 
 outer_legend("right", 
        c("baseline","low diversity", "high diversity",
@@ -1028,7 +1029,7 @@ outer_legend(x=0,
              text.width=c(0.2, rep(0.1,4)),
              inset=0)
 
-outer_legend("topleft","(B) explicit genetic architecture", bty='n', cex=2.5)
+outer_legend("topleft","(B) explicit genetic architecture", bty='n', cex=2.5, x.intersp = -0.9)
 
 
 ```
