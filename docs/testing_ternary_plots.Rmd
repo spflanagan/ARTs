@@ -747,7 +747,7 @@ AddToTernary(
 ```{r baselinesNoStrictPercentages, fig.width=8.15, fig.height=4.72}
 
 layout(matrix(c(1,1,2,3), nrow=2))
-par(mar=c(0,0,0,1), oma=c(1,10,5,10))
+par(mar=c(1,1.75,0.5,1), oma=c(1,3,5,10),xpd=TRUE)
 # --------------- Baseline model
 dupdat<-data.table::setDT(baseline_points)[,list(Count=.N),names(baseline_points)]
 # Calculate the percentage for easier point plotting
