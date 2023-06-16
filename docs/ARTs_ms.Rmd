@@ -539,9 +539,7 @@ these genome-wide analyses is that QTLs will have higher genetic
 diversity than background marker loci because balancing selection is
 favouring multiple alleles at those loci, with genetic variation
 existing between the morphs and specific variants associated with the
-different phenotypes. For these analyses we only analysed multilocus
-genotypes from the simulations that implemented the monogamous mating
-system without random mating allowed (see Fig. S2).
+different phenotypes. 
 
 To implement this analysis, we used vcfR
 [@knausVcfrPackageManipulate2017] to estimate observed heterozygosity
