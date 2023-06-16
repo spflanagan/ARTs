@@ -890,7 +890,7 @@ td_freqs<-merge(td_summary, final_freqs,by="rep")
 
 ```
 
-```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the final generation of the simulations was not influcenced by genetic architecture or the phenotypic diversity (i.e., morph frequencies), but did differ between low- and high-diversity parameter settings. Shown are genome-wide observed heterozygosity (A), Tajima’s D (B), and male-male Fst (C).", fig.keep='last', fig.height=3.5, fig.width=10}
+```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the final generation of the simulations was not influcenced by genetic architecture or the phenotypic diversity (i.e., morph frequencies), but did differ between low- and high-diversity parameter settings. Shown are genome-wide observed heterozygosity (A), Tajima’s D (B), and male-male Gst (C).", fig.keep='last', fig.height=3.5, fig.width=10}
 
 par(mfrow=c(1,3),xpd=TRUE, mar=c(5,5,1.5,1), oma=c(0,0,5,1))
 
