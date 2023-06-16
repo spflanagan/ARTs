@@ -702,7 +702,7 @@ values are shown in Table \@ref(tab:SimParamsTable).
 
 ```{r SimParamsTable}
 SimParams<-data.frame(
-  parameter = c("r (courter:non-courter ratio)",
+  parameter = c("Ratio of reproductive investment, r (courter:non-courter ratio)",
                 "Max number of offspring CP males can produce",
                 "Max number of offspring CN males can produce",
                 "Max number of offspring NP males can produce",
