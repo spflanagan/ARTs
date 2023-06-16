@@ -608,8 +608,7 @@ non-courter/non-parent) and the fixation of the courter/parent morph.
 maintained for the high diversity parameters, but the number of QTLs or
 chromosomes are not driving factors, and low diversity parameter
 settings resulted in the predicted outcomes. The ternary diagrams show
-the final frequencies of the courter/parent, non-courter/parent, and
-non-courter/non-parent individuals from individual-based simulations
+the final frequencies of the morphs from individual-based simulations
 with QTLs distributed throughout the genome (left column) or clustered
 into supergenes that make up 5%, 25%, or 50% of the chromosome the
 supergene is situated on. Colours represent the number of chromosomes
