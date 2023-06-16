@@ -1275,4 +1275,6 @@ All code has been archived on Zenodo (DOI: ) and is maintained on github
 
 # Author Contributions
 
+SPF and SHA conceived of the project. SPF wrote code and performed analysis with input from SHA. SPF wrote the first draft of the manuscript and both authors substantially revised subsequent version. Both authors approve the the submitted version of the manuscript.
+
 # References
