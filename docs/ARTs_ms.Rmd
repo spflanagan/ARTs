@@ -733,8 +733,7 @@ knitr::kable(SimParams, booktab=TRUE,
 ```
 
 A striking result is that stochasticity plays a major role in which
-morphs co-exist with the courter/parent morph, even when initial
-starting conditions are identical (Fig. \@ref(fig:ternaryPlots)A).
+morphs co-exist with the courter/parent morph, even when parameterization of the model was identical (Fig. \@ref(fig:ternaryPlots)A).
 Across independent iterations of the model, variation in the initial
 starting frequencies of each morph (which centre around 0.25 for each
 morph, but with some variation) can explain nsome of the differences in
