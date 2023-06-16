@@ -584,3 +584,115 @@ mtext("NP",2,line=2,adj =0.2,cex=0.75)
 ```{r ExampleGenomewide,out.width="49%", fig.cap="True QTLs for the courter (blue) and parent (green) traits are not outliers int he distributions of population genetic statistics. Plots of genome-wide estimates of population genetic parameters from representative simulations using QTLs (left) versus supergenes (right), both with 8 QTLs per trait and 2 chromosomes (light vs dark grey points) with 1000 marker loci each. The plots show genome-wide estimates of commonly-estimated population genetic parameters. From top to bottom: p-values from a genome-wide association test for the courter trait; p-values from a genome-wide association test for the parent trait; Gst between male morphs; smoothed Tajima's D estimated in 10bp segments; expected heterozygosity; and average pairwise linkage disequilibrium.",fig.show='hold',fig.align='center', fig.keep=TRUE}
 knitr::include_graphics(c("../figs/QTLFig-1.png","../figs/supergeneFig-1.png"))
 ```
+
+## Distributions of significance of genome-wide summary statistics
+
+```{r}
+welch_correctDF<-function(var1,var2,n1,n2){
+  num<-((var1/n1)+(var2/n2))^2
+  den<-(((var1/n1)^2)/(n1-1))+(((var2/n2)^2)/(n2-1))
+  df<-num/den
+  return(df)
+}
+
+```
+
+```{r readGenomewide}
+
+qtl_outliers<-read.csv("qtl_outliers.csv")
+qtl_outliers$Architecture<-"qtls"
+supergene_outliers<-read.csv("supergene_outliers.csv")
+supergene_outliers$Architecture<-"supergene"
+popgen_data<-dplyr::bind_rows(qtl_outliers,supergene_outliers)
+
+# add low diversity ones
+qtl_outliers<-read.csv("qtl_outliers_lowDiv.csv")
+qtl_outliers$Architecture<-"qtls"
+popgen_data<-dplyr::bind_rows(popgen_data,qtl_outliers)
+supergene_outliers<-read.csv("supergene_outliers_lowDiv.csv")
+supergene_outliers$Architecture<-"supergene"
+popgen_data<-dplyr::bind_rows(popgen_data,supergene_outliers)
+
+sediff<-sqrt((popgen_data$gHtVar/(popgen_data$nChrom*1000)) + 
+               (popgen_data$qHtVar/(popgen_data$nQTLS)))
+HetT<-(popgen_data$gHtMean - popgen_data$qHtMean)/sediff
+HetP<-pt(HetT,
+         df = welch_correctDF(popgen_data$gHtVar,
+                              popgen_data$qHtVar,
+                              (popgen_data$nChrom*1000),
+                              popgen_data$nQTLS), 
+         lower.tail = (HetT >=0))
+
+popgen_data$HetP<-HetP
+popgen_data$Diversity<-factor(gsub("^.*/(\\w+)Diversity.*$","\\1",popgen_data$sim),
+                              levels=c("low","high"))
+
+
+
+final_freqs<-read.csv("../results/morph_freqs_summary.csv")
+final_freqs$rep  <-gsub("../fixedART-results/.*\\/(.*\\w+_monogamy_nm_.*pop\\d).*","\\1",final_freqs$file)
+
+td_summary<-read.csv("../results/tajimaD_summary.csv", row.names = 1)
+td_summary<-td_summary[grep("monogamy_nm",rownames(td_summary)),]
+td_summary$rep<-gsub("../fixedART-results/.*\\/(.*\\w+_monogamy_nm_.*pop)_(\\d).*","\\1\\2",rownames(td_summary))
+
+td_summary$architecture<-gsub("../fixedART-results/(.*)\\/\\/(\\w+)Diversity_.*_monogamy_nm_.*pop_(\\d).*","\\1",rownames(td_summary))
+td_summary$diversity<-factor(gsub("../fixedART-results/(.*)\\/\\/(\\w+)Diversity_.*_monogamy_nm_.*pop_(\\d).*","\\2",rownames(td_summary)),
+                           levels=c("low","high"))
+
+
+td_freqs<-merge(td_summary, final_freqs,by="rep")
+
+
+
+```
+
+```{r genomewideDiv, fig.cap="Tests for statistical significance of differences in genome-wide genetic diversity in the final generation of the simulations between different genetic architectures. Shown are p-values for t-tests comparing genome-wide observed heterozygosity (A) and Tajima’s D (B) between runs with genome-wide QTLs versus supergenes.", fig.keep='last'}
+
+par(mfrow=c(1,2),xpd=TRUE, mar=c(5,5,1.5,1), oma=c(0,0,5,1))
+
+plot(popgen_data$propCP,
+     popgen_data$HetP,
+     pch=as.numeric(as.factor(popgen_data$Architecture))+15,
+     col=scales::alpha(
+       divcols[as.numeric(popgen_data[,"Diversity"])],
+       0.5),
+     cex=2,
+     cex.lab=2,
+     cex.axis=2,
+     xlab="",
+     ylab="Obs. Het. P-value",
+     bty='l')
+legend("topleft","A",cex=2.5, bty='n', x.intersp = -0.9)
+
+
+# Tajima's D
+plot(td_freqs$CP,
+     td_freqs$p,
+     pch=as.numeric(as.factor(td_freqs$architecture))+15,
+     col=scales::alpha(
+       divcols[as.numeric(td_freqs$diversity)],
+       0.5),
+     cex=2,
+     cex.lab=2,
+     cex.axis=2,
+     xlab="",
+     ylab="Tajima's D P-value",
+     bty='l')
+legend("topleft","B",cex=2.5, bty='n', x.intersp = -0.9)
+
+
+
+mtext("Courter-Parent Frequency", 1, outer=TRUE, line=-1, cex=1.5)
+
+outer_legend("top",
+       bty='n',
+       pch=c(17, 16, 15,15),
+       lty=c(0, 0, 1,1),
+       col=c("grey", "grey",divcols["high"],divcols["low"]),
+       legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
+       ncol=4,
+       cex=2.5,
+       pt.cex=2)
+
+```
