@@ -810,25 +810,25 @@ genome-wide expected heterozygosity was not substantially different in
 simulations with genome-wide QTLs versus QTLs in supergenes in the final
 generation of the simulations (t = -0.31, df = 326.75, p = -0.31;
 genome-wide mean = 0.15, supergene mean = 0.16; Fig.
-\@ref(fig:genomewideDiv) A, B). In most runs, the heterozygosity at QTLs
+\@ref(fig:genomewideDiv) A). In most runs, the heterozygosity at QTLs
 was did not significantly differ from heterozygosity at neutral markers
 (mean p-value from t-tests is 0.5 ± 0.01). Tajima's D, which tests for
 directional or balancing selection, also reflects genetic variation in a
 sequence of DNA, and did not deviate substantially between genetic
 architectures and did not relate to final morph frequencies (Fig.
-\@ref(fig:genomewideDiv) C, D).
+\@ref(fig:genomewideDiv) B).
 
 Similarly, we expected supergenes to show more differentiation between
 morphs, since their QTLs segregated together. However, $G_{ST}$ between
 male morphs was also not predicted by the frequency of courter/parent
-morphs (Fig. \@ref(fig:genomewideDiv) E). Significant peaks in
+morphs (Fig. \@ref(fig:genomewideDiv) C). Significant peaks in
 genome-wide $G_{ST}$ estimates were identified, and we evaluated whether
 QTLs were located near to those $G_{ST}$ peaks (i.e., we identified if
 $G_{ST}$ outliers were associated with true QTLs). From this, we then
 calculated the proportion of true QTLs that were located in these
 significant $G_{ST}$ peaks, and found that on average 0.71 (± 0), and
 this proportion was not related to the courter/parent frequency (Fig.
-\@ref(fig:genomewideDiv) F).
+S6).
 
 ```{r}
 welch_correctDF<-function(var1,var2,n1,n2){
