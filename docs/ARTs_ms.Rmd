@@ -249,7 +249,7 @@ We expect that this model can be generalized to species in which one sex
 (but not the other) has two fixed traits that impact mating success and
 the survival of their offspring.
 
-Each generation has three distinct phases: (1) mate choice; (2)
+Each generation has five distinct phases: (1) mate choice; (2)
 fertilization; (3) parental care; (4) viability selection; and (5)
 maturation to adulthood (Fig. \@ref(fig:modelDiagram)). In the mate
 choice phase of the model, we assume females always prefer to mate with
