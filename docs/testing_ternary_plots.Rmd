@@ -754,7 +754,14 @@ dupdat<-data.table::setDT(baseline_points)[,list(Count=.N),names(baseline_points
 dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
 
 # Make the ternary diagram
-morphs_ternary_plot(lab.cex=1.5)
+morphs_ternary_plot(lab.cex=1.5,
+                      lab.offset=0.25,
+                      atip.pos=3,
+                      atip.rotate=0,
+                      btip.pos=2, 
+                      btip.rotate=0,
+                      ctip.pos=2,
+                      ctip.rotate=0)
 
 # add the points
 AddToTernary(
@@ -795,7 +802,14 @@ dupdat<-data.table::setDT(lowdat)[,list(Count=.N),
 # Calculate the percentage for easier point plotting
 dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
 
-morphs_ternary_plot(lab.cex=1.5)
+morphs_ternary_plot(lab.cex=1.5,
+                      lab.offset=0.25,
+                      atip.pos=3,
+                      atip.rotate=0,
+                      btip.pos=2, 
+                      btip.rotate=0,
+                      ctip.pos=2,
+                      ctip.rotate=0)
 
 # add the points
 AddToTernary(
@@ -816,7 +830,14 @@ dupdat<-data.table::setDT(highdat)[,list(Count=.N),
                                   names(highdat)]
 dupdat$Percent<-dupdat$Count/sum(dupdat$Count)
 
-morphs_ternary_plot(lab.cex=1.5)
+morphs_ternary_plot(lab.cex=1.5,
+                      lab.offset=0.25,
+                      atip.pos=3,
+                      atip.rotate=0,
+                      btip.pos=2, 
+                      btip.rotate=0,
+                      ctip.pos=2,
+                      ctip.rotate=0)
 
 AddToTernary(
   points,
