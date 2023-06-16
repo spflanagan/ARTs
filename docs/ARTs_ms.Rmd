@@ -661,7 +661,7 @@ three morphs, with the average proportion of the population being
 non-courter/parents, and
 `r round(mean(divRes[divRes$CP<=0.5,"NN"])*100,2)` % ($\pm$
 `r round(sem(divRes[divRes$CP<=0.5,"NN"])*100,2)` %)
-non-courter/non-parents.
+non-courter/non-parents (Fig. \@ref(fig:ternaryPlots)A, S1).
 
 Overall, the parameters impacting whether diversity was maintained after
 both 100 and 1000 generations were the initial frequencies of the
