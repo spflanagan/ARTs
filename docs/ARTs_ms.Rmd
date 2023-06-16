@@ -351,7 +351,8 @@ $$
 
 Because we assumed entirely obligate parental care, the fraction was
 either 1 or 0, depending on whether the morph holding the clutch had the
-parental care trait.
+parental care trait. Each morph's total number of offspring produced ($o_M$) was
+the sum of $o_{o_M}$ and $o_{s_M}$. 
 
 Following the outcomes of parental care, we imposed viability selection
 on surviving juveniles (Stage 4 in Fig. \@ref(fig:modelDiagram)) by
