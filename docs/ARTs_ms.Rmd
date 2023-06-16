@@ -391,7 +391,7 @@ shinydashboard [@changShinydashboardCreateDashboards2018], rsconnect
 @xieMarkdownCookbook2020]. The interactive app is available at
 <https://spflanagan.shinyapps.io/morph_predictions/>.
 
-Note that this model did not incorporate recombination or inheritance
+Note that this model did not incorporate mutation, recombination, or inheritance
 via females. Nonetheless, this model provided a baseline predictions for
 parameter values likely to facilitate morph diversity within a
 population. We relaxed these assumptions in the individual-based
