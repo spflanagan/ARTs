@@ -703,9 +703,7 @@ final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
 
 ```
 
-We incorporated polygenic inheritance of the male traits in two ways,
-both of which reduced the effect of stochasticity on the final morph
-frequencies. In the low diversity parameter space, the outcomes remained
+In the low diversity parameter space, the outcomes remained
 consistent with the single-locus model (and the predictions of the
 mathematical model): courter/parents dominated the populations, with
 complete fixation of the morph in the majority of runs, and any
