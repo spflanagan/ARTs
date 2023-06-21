@@ -761,17 +761,6 @@ was did not significantly differ from heterozygosity at neutral markers
 directional or balancing selection, also reflects genetic variation in a
 sequence of DNA, and did not deviate substantially between genetic
 architectures and did not relate to final morph frequencies (Fig.
-Similarly, we expected supergenes to show more differentiation between
-morphs, since their QTLs segregated together. However, $G_{ST}$ between
-male morphs was also not predicted by the frequency of courter/parent
-morphs (Fig. \@ref(fig:genomewideDiv) C). Significant peaks in
-genome-wide $G_{ST}$ estimates were identified, and we evaluated whether
-QTLs were located near to those $G_{ST}$ peaks (i.e., we identified if
-$G_{ST}$ outliers were associated with true QTLs). From this, we then
-calculated the proportion of true QTLs that were located in these
-significant $G_{ST}$ peaks, and found that on average 0.71 (± 0), and
-this proportion was not related to the courter/parent frequency (Fig.
-S6).
 \@ref(fig:genomewideDiv) B; Fig. S8). 
 Average linkage disequilibrium was higher for QTLs in supergenes than randomly-distributed QTLs (Fig. S??).
 
@@ -831,9 +820,24 @@ td_summary$diversity<-factor(gsub("../fixedART-results/(.*)\\/\\/(\\w+)Diversity
 
 td_freqs<-merge(td_summary, final_freqs,by="rep")
 
-
+peak_summ_mean<-tapply(popgen_data$propQTLsInPeaksMM,paste(popgen_data$Architecture,popgen_data$Diversity),mean,na.rm=TRUE)
+peak_summ_sem<-tapply(popgen_data$propQTLsInPeaksMM,paste(popgen_data$Architecture,popgen_data$Diversity),sem)
 
 ```
+
+Similarly, we expected supergenes to show more differentiation between
+morphs, since their QTLs segregated together. However, $G_{ST}$ between
+male morphs was also not predicted by the frequency of courter/parent
+morphs (Fig. \@ref(fig:genomewideDiv) C). Significant peaks in
+genome-wide $G_{ST}$ estimates were identified, and we evaluated whether
+QTLs were located near to those $G_{ST}$ peaks (i.e., we identified if
+$G_{ST}$ outliers were associated with true QTLs). From this, we then
+calculated the proportion of true QTLs that were located in these
+significant $G_{ST}$ peaks, and found that under high-diversity parameters,
+on average `r round(peak_summ_mean["qtls high"]*100,2)` $\pm$ `r round(peak_summ_sem["qtls high"]*100,2)`%, of randomly distributed QTLs and  and `r round(peak_summ_mean["supergene high"]*100,2)` $\pm$ `r round(peak_summ_sem["supergene high"]*100,2)`% of QTLs in supergenes were found in $G_{ST}$ peaks, irrespective of the courter/parent frequency (Fig.
+S9).
+
+
 
 ```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the final generation of the simulations was not influcenced by genetic architecture or the phenotypic diversity (i.e., morph frequencies), but did differ between low- and high-diversity parameter settings. Shown are genome-wide observed heterozygosity (A), Tajima’s D (B), and male-male Gst (C).", fig.keep='last', fig.height=3.5, fig.width=10}
 
