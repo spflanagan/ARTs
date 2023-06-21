@@ -1018,21 +1018,6 @@ causal regions in some species
 @hendrickxMasculinizingSupergeneUnderlies2022;
 @kimGeneticsEvidenceBalancing2019; @gazdaGeneticMechanismSexual2020].
 
-Our model applies to fixed polymorphisms, which only describes a portion
-of alternative reproductive tactics. Evidence from ruffs and
-white-throated sparrows suggest that some of the single-locus dynamics
-are driven by genetic variation at key hormone receptor genes
-[@maneySupergenesSteroids2022], highlighting the importance of
-considering hormonal cascades and gene expression networks in models
-(e.g., [@draghiEvolutionaryDynamicsEvolvability2009;
-@draghiRobustnessNoiseGene2015]). These genetic networks might be
-especially important for plastic traits (e.g., the swordtail fish
-*Xiphophorus multilineatus* [@liottaEvidenceGeneticIntegration2021]) or
-those that appear to be controlled by gene expression rather than fixed
-genetic variants (e.g., ocellated wrasse,
-[@nugentNeuroendocrineProfilesAssociated2016]). Future models could
-investigate the evolutionary dynamics of morphs that are controlled by
-gene networks.
 ## Summary
 
 Here, we show that the genetic architecture of discrete morphs impacts
