@@ -695,7 +695,7 @@ process (in which females might not find a suitable mate, even if one
 exists in the population) all contribute to the within-replicate
 variation observed. 
 
-### The role of polygenic inheritance of traits
+### Polygenic architectures reduce effects of stochasticity, with minor impacts of supergenes
 
 ```{r}
 final_freqs<-read.csv("../results/morph_freqs_summary.csv")
