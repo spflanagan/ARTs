@@ -744,7 +744,7 @@ additive, polygenic nature of our traits, individuals have multiple
 pathways to creating the morphs in terms of genotypes at each QTL, even
 when QTLs are segregating together in a supergene.
 
-### Genome-wide genetic diversity
+### Genome-wide genetic diversity is maintained even when trait diversity is low
 
 Supergenes enable specific combinations of alleles at multiple loci to
 be inherited together as a single haplotype; as such, we expected that
