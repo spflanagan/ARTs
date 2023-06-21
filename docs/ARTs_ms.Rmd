@@ -268,51 +268,111 @@ maturation to adulthood (Fig. \@ref(fig:modelDiagram)). We will describe each of
 knitr::include_graphics("../figs/lifecycle_biology.png", dpi=150)
 ```
 
+
+## Stage 1: Mate choice
+
+
+In the mate choice phase of the model, we assumed females always preferred to mate with
+males displaying the courtship trait and did not mate with non-courting males. 
+If a female decided to mate with a
+male, he received all of her eggs to care for. 
+
+In the analytical model, this mate choice phase determined to total number of 
+clutches in the population, $n$. 
 The general calculation for the number of clutches is:
 
 $$
 n=w_s(N_m f_{CP} + N_m f_{CN}) + (1-w_s)(N_m f_{NP} + N_m f_{NN}), 
 $$
 
-where $N_m$ was the number of males in the population and the $f$ terms
-represented the frequency of each morph. For simplicity, we focussed on
-the case where females only mated with courting males ($w_s=1$), so $n$
+where $w_s$ specified the probability a female chose a courting male (CP or CN),
+$N_m$ was the number of males in the population, the $f$ terms
+represented the frequency of each morph. To match our model assumptions, $w_s=1$, so $n$
 simplified to $w_s(N_m f_{CP} + N_m f_{CN})$.
 
-We next calculated the proportion of eggs in the population that were
-sired by each morph (Stage 2 in Fig. \@ref(fig:modelDiagram)). Each
-morph had an inherent maximum reproductive allocation, $r_M$ (where $M$
-designated the morph and contained $\{CP, CN, NP, NN\}$). Chosen males
-had the first priority to fertilize the eggs laid in their territory, so
-the number of eggs fertilized within a single clutch per morph was
-determined by the male reproductive effort of each morph ($e_{o_M}$) and
-the probability of being chosen: $e_{o_M} = f_M N_m r_M w_{s_M}$.
-However, non-courting males could also sneak fertilizations, which
-impacted the overall proportion of fertilizations per morph. The maximum
-number of possible fertilizations arising from sneaking for a given
-non-courting male was $N_s = n c n_{sneakers} r_{NN}$; for every clutch
-($n$), each sneaker could contribute up to their individual reproductive
+The simulation model incorporated stochasticity at this stage of the model. 
+Females searched through a set number of males and chose the
+first attractive male (i.e., the first courting male she encountered).
+If a female did not find an acceptable mate, she did not mate 
+(see Fig. S2 for less strict mating dynamics).
+
+## Stage 2: Fertilization
+
+A chosen male was not guaranteed paternity of an entire brood, 
+because non-courting males were able to fertilize a proportion of the eggs.
+The chosen parent had first-male fertilization advantage. 
+The consequence of this scenario is that the only mechanism
+by which non-courters can produce offspring is through sneak
+fertilizations. 
+Specifically, we modelled sneaking by specifying a total number of sneakers, $n_{sneak}$,
+that could fertilise via sneaking in each clutch, and each sneaker could contribute up to their individual reproductive
 allocation (where $r_{NN} = r_{NP}$) offset by the sperm competition
-coefficient ($c$), but this potential allocation was proportional to the
-number of sneakers ($n_{sneakers}$) allowed to fertilize each clutch. If
-the number of fertilizations arising from sneaking was smaller than the
+coefficient ($c$).
+We explored the impact of different values of these parameters in the analytical model, but for all simulation models analysed here, $n_{sneak}=3$ and $c=0.5$. 
+We also assumed inherent 'reproductive allocations',$r_M$ (where $M$
+designated the morph and contained $\{CP, CN, NP, NN\}$), for each morph,
+which sets a ceiling  on the number of offspring any male can sire.  
+ 
+
+In the analytical model, we modelled the fertilisation success for morphs by considering their success in their own clutch, $e_{o_M} = f_M N_m r_M w_{s_M}$ (which will only be non-zero for courting morphs).
+We specified the maximum
+number of possible fertilizations arising from sneaking for a given
+non-courting morph was $N_s = n c n_{sneakers} r_{NN}$.
+If the number of fertilizations arising from sneaking was smaller than the
 morph's potential population-level reproductive effort (i.e, if
 $N_s < f_M N_m r_M$), the number of eggs fertilized through sneaking for
 that morph was the difference between $N_s$ and $f_M N_m r_M$, truncated
 at zero. Otherwise, the number of eggs fertilized through sneaking was
 $f_M N_m r_M$.
 
-Next, parental care determined whether clutches survived to become
-juveniles (Stage 3 in Fig. \@ref(fig:modelDiagram)). The offspring
-surviving in any male's clutch was dependent on whether he was a parent
-or not, which determined the selection coefficient arising from clutch
-survival ($w_{n_M}$): $o_{o_M} = e_{o_M} w_{n_M}$. For simplicity, we
-considered cases where $w_{n_CP} = w_{CN} = 1$ and
-$w_{n_NP} = w_{NN} = 0$. To fully capture each morph's offspring
-survivorship, offspring that resulted from sneaking (which depended on
-the frequency of other morphs and their mating success) needed to also
-be considered. We therefore calculated the number of offspring from
-sneaking that survive as:
+In the simulation model, we incorporated recombination and mutation during the fertilisation process. 
+Recombination occurred
+independently on chromosomes inherited from the mother and the
+chromosome inherited from the father. The number of recombination events
+for a given chromosome was determined by drawing from a Poisson
+distribution with the recombination rate as the mean, which we set to
+0.2. For each recombination event, breakpoints were chosen by randomly
+drawing from the total number of markers on a chromosome. These
+breakpoints defined the segments of the chromosome that experienced
+recombination, and each segment was randomly chosen to be assigned the
+genotypes and effects from the parents' maternal or paternal chromosome.
+When the genetic architecture was that of a supergene, if the
+breakpoints fell within the region containing the aggregated QTLs for
+the traits, the offspring was considered not viable, mimicking
+suppressed recombination as observed in empirical examples (e.g., ruffs
+[@lamichhaneyStructuralGenomicChanges2016;
+@kupperSupergeneDeterminesHighly2016]).
+
+After recombination, mutation occurred at a rate of $\mu$ at each locus. For
+a given individual, the number of mutations introduced was determined as
+$2\mu n_{SNPs} n_{chrom}$, where $n_{SNPs}$ was the number of SNPs and
+$n_{chrom}$ was the number of chromosomes in the simulation. The
+location of each mutation was randomly selected and the allele at that
+location was randomly chosen from the set of existing alleles. The
+mutation also impacted the phenotypic effects of QTLs by altering the
+original effect by a value drawn from a normal distribution with a mean
+of 0 and a standard deviation of $\sigma_\mu$. Finally, offspring were
+also randomly assigned a sex.
+
+
+## Stage 3: Parental care
+
+We assumed for
+simplicity that males with the parental care trait have 100% offspring
+survival while males without the parental care trait have 0% survival,
+independent of the male's courtship trait. 
+In the simulation model, this was straightforward to model: 
+after the males were assigned their
+paternity shares (during fertilisation), the clutch survived if the chosen male was also a
+parent. Because of this assumption, and those in Stage 1,
+the courter/non-parent morph never produced viable offspring.
+
+In the baseline model, we modelled this by defining the selection coefficient for clutch
+survival, $w_{n_M}$, which determined the success of each morph's clutch, assuming the morph was chosen by a female: $o_{o_M} = e_{o_M} w_{n_M}$. 
+To match our model assumptions,  $w_{n_CP} = w_{NP} = 1$ and
+$w_{n_CN} = w_{NN} = 0$. 
+We also calculated the number of surviving offspring from
+sneaking as:
 
 $$
 o_{s_M} = e_{s_M} \frac{\Sigma{o_{o_M}}}{\Sigma{e_{o_M}}}.
@@ -323,17 +383,36 @@ either 1 or 0, depending on whether the morph holding the clutch had the
 parental care trait. Each morph's total number of offspring produced ($o_M$) was
 the sum of $o_{o_M}$ and $o_{s_M}$. 
 
-Following the outcomes of parental care, we imposed viability selection
-on surviving juveniles (Stage 4 in Fig. \@ref(fig:modelDiagram)) by
-multiplying the viability selection coefficient (${w_v}_M$) by the
-surviving number of offspring per morph ($o_M$): $j_M = o_M w_{v_M}$.
-Finally, these juveniles matured to adulthood (Stage 5 in Fig.
-\@ref(fig:modelDiagram)) and we calculated the frequency of each morph
-in the next generation by dividing the surviving number of juveniles
+
+
+
+## Stage 4: Viability selection
+
+We assumed viability selection only affects male offspring, as a trade-off for courting and parental care.
+In the baseline model, we multiplied the viability selection coefficient (${w_v}_M$) by the
+surviving number of offspring per morph ($o_M$), to determine the number of surviving juveniles per morph: $j_M = o_M w_{v_M}$. In the simulation model, we calculated a survival probability for each male offspring, as $e^{\frac{-(morph - \theta)(morph - \theta)}{2\omega_v}}$, where $\omega_v$ was the strength of viability selection, $morph$ equalled 1 for courters and parents and 0 for non-courters and non-parents, and $\theta = 0$. 
+For each individual, a random value between 0 and 1 was drawn from a uniform distribution; if the number was larger
+than his survival probability, that individual did not
+survive to adulthood. 
+In both models, viability selection acted multiplicatively on courter/parents.
+
+## Stage 5: Maturation to adulthood
+
+In the baseline model, the final stage in the life cycle was calculating the frequency of each morph
+in the next generation by dividing the surviving number of juveniles per morph after viability selection
 ($j_M$) by the sum of all surviving juveniles:
 $f_M = \frac{j_M}{\Sigma_{i=1}^4{j_i}}$.
 
 To evaluate the outcomes of this mathematical model, we iterated forward
+In the simulation model, the total number of surviving offspring in the
+population depended on the proportion of population reproductive success
+achieved by each individual male and female (i.e., each generation, the
+number of offspring created was equal to the carrying capacity).
+If the number of surviving
+offspring was larger than the carrying capacity, offspring were randomly
+selected to become adults. 
+
+
 in time for 100 generations from 1659 combinations of initial morph
 frequencies and repeated those iterations across 5 values for the sperm
 competition coefficient ($c$ = {0..1}), 21 values for the relative
@@ -369,40 +448,6 @@ simulation model.
 
 ## Individual-based simulation model {#sim-model-methods}
 
-To evaluate how genetic architecture affects the maintenance of
-alternative reproductive tactics, we developed an individual-based
-simulation model. The simulation model followed a lifecycle that is
-largely the same as the baseline model (Fig. \@ref(fig:modelDiagram)),
-but rather than tracking proportions of the population belonging to
-particular morphs, we tracked individuals within the population. Each
-individual had a diploid genotype, which included both non-coding loci
-and quantitative trait loci (QTLs). We included two types of QTLs: ones
-that determined the individual's courting trait and ones that determined
-the individual's parenting trait. Each allele at a QTL was assigned a
-randomly-drawn effect on the phenotype, and an individual's quantitative
-phenotypic value was determined by the sum of all their allelic effects
-(i.e., traits were entirely additive). In this model, we assume no
-environmental effects on the trait. Male traits (i.e.,
-courter/non-courter and parent/non-parent) were determined by a
-threshold function. The value of the threshold was constant for each
-iteration of the model, and was initialized as the mean phenotypic value
-at generation 0, prior to any model iterations.
-
-We considered three different genetic architectures for these QTLs: (a)
-a single gene per trait without any additional genetic information
-(i.e., no non-coding loci to create chromosomes), (b) multiple QTLs
-randomly placed throughout chromosomes, and (c) supergenes located on
-one of multiple chromosomes. The single gene scenario is most analogous
-to the baseline model described above. When the traits had multiple QTLs
-determining their trait values, each QTL was assigned a location on a
-chromosome and the QTL's effect on the trait is associated with a single
-nucleotide polymorphism (SNP). These SNPs underwent recombination and
-mutation during mating. The supergene scenario forced the QTLs to
-cluster into a small proportion of one of the chromosomes. In all cases,
-we assumed all QTLs are autosomal, and we did not model sex chromosomes.
-Sex was assigned instead by a draw from a binomial distribution with a
-probability of 0.5 of being female.
-
 When we ran the model, we initialized four replicate populations with
 the identical starting conditions to evaluate the effect of
 stochasticity on the model. These identical conditions included
@@ -415,73 +460,7 @@ each set of four populations, we ran 10,000 generations followed by
 reached a steady state in which we could examine any stable
 polymorphisms or cyclical fluctuations in morph frequencies.
 
-Each generation included five stages, same as the baseline model: (1)
-mate choice; (2) fertilization; (3) clutch survival; (4) viability
-selection on juveniles; (5) maturation to adulthood (Fig.
-\@ref(fig:modelDiagram)). The main differences between the
-individual-based simulation model and the baseline model were the
-introduction of stochasticity during mate choice and survival and the
-introduction of recombination and mutation. During the mate choice
-phase, females searched through a set number of males and chose the
-first attractive male (i.e., the first courter male she encountered).
-Females always preferred courting males. If a female did not find an
-acceptable mate, she did not mate (see supplement for less strict mating
-dynamics).
 
-Once a female chose a male, fertilization of the eggs occurred, in which
-the chosen male had first male priority (i.e., the chosen male allocated
-all of his reproductive effort to his own nest) and up to $n_{sneak}$
-non-courting males could 'sneak' fertilizations, with their
-contributions discounted by a factor of $c$. For all models analysed
-here, $n_{sneak}=3$ and $c=0.5$. After the males were assigned their
-paternity shares, the clutch survived if the chosen male was also a
-parent. Subsequently, the total number of surviving offspring in the
-population depended on the proportion of population reproductive success
-achieved by each individual male and female (i.e., each generation, the
-number of offspring created was equal to the carrying capacity).
-
-As part of the fertilization process, recombination occurred
-independently on the chromosome inherited from the mother and the
-chromosome inherited from the father. The number of recombination events
-for a given chromosome was determined by drawing from a Poisson
-distribution with the recombination rate as the mean, which we set to
-0.2. For each recombination event, breakpoints were chosen by randomly
-drawing from the total number of markers on a chromosome. These
-breakpoints defined the segments of the chromosome that experienced
-recombination, and each segment was randomly chosen to be assigned the
-genotypes and effects from the parents' maternal or paternal chromosome.
-When the genetic architecture was that of a supergene, if the
-breakpoints fell within the region containing the aggregated QTLs for
-the traits, the offspring was considered not viable, mimicking
-suppressed recombination as observed in empirical examples (e.g., ruffs
-[@lamichhaneyStructuralGenomicChanges2016;
-@kupperSupergeneDeterminesHighly2016]).
-
-After recombination occurred, if the progeny survived, the genotypes
-underwent mutation, which occurred at a rate of $\mu$ at each locus. For
-a given individual, the number of mutations introduced was determined as
-$2\mu n_{SNPs} n_{chrom}$, where $n_{SNPs}$ was the number of SNPs and
-$n_{chrom}$ was the number of chromosomes in the simulation. The
-location of each mutation was randomly selected and the allele at that
-location was randomly chosen from the set of existing alleles. The
-mutation also impacted the phenotypic effects of QTLs by altering the
-original effect by a value drawn from a normal distribution with a mean
-of 0 and a standard deviation of $\sigma_\mu$. Finally, offspring were
-also randomly assigned a sex.
-
-The next stage in the lifecycle was viability selection, which we
-assumed only affects male offspring. For each male offspring, a survival
-probability was calculated as $e^{\frac{-morph2}{2\omega_v}}$. Viability
-selection acted multiplicatively on courter-parents (their survival
-probability was
-$e^{\frac{-morph2}{2\omega_v}} \times e^{\frac{-morph2}{2\omega_v}}$). A
-random value between 0 and 1 was drawn, and if the number was larger
-than the survival probability for an individual, that individual did not
-survive to adulthood. If, at this point, the number of surviving
-offspring was larger than the carrying capacity, offspring were randomly
-selected to become adults. When offspring matured to adulthood, the
-previous generation's adults were replaced, and the lifecycle began
-again.
 
 To explore the impacts of genetic architecture on morph maintenance, we
 used two sets of demographic and reproductive parameters that were
