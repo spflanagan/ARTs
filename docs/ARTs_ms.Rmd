@@ -87,7 +87,7 @@ over time (e.g., the feminized dwarf spider morph mates earlier, whereas
 the alternative morph is able to mate with previously-mated females
 later in the season [@hendrickxMasculinizingSupergeneUnderlies2022]).
 When these tactics are fixed within an individual throughout its
-lifetime, they are likely to be underpinned by genetic variants (e.g.,
+lifetime, an individual's tactic is likely to have a large genetic component (e.g.,
 dwarf spiders, side-blotched lizards, ruffs; examples reviewed in
 [@oliveiraAlternativeReproductiveTactics2008;
 @mankSexspecificMorphsGenetics2022]), and have been modelled using
