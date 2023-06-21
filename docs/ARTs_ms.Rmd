@@ -428,10 +428,9 @@ parameter combinations for 1,000 generations for better comparisons with
 the simulation model.
 
 We were interested in identifying the regions of parameter space that
-resulted in the largest diversity of male morphs. To ameliorate the
-difficulty of visualising and summarizing four frequencies, we leveraged
+resulted in the largest diversity of male morphs. We leveraged
 existing ecological mathematical tools to summarize diversity of a
-system into a single metric. Specifically, we calculated the Shannon's
+system into a single metric -- specifically, Shannon's
 diversity index. We calculated this index in the 100th generation using
 the R package vegan [@oksanenVeganCommunityEcology2015] and subsequently
 visualised the diversity of the population using contour plots produced
