@@ -687,6 +687,7 @@ Across independent iterations of the model, variation in the initial
 starting frequencies of each morph (which centre around 0.25 for each
 morph, but with some variation) can explain some of the differences in
 outcomes. Variation in outcomes within replicate runs can be attributed
+## Recombination, mutation, and stochasticity result in fewer morphs maintained
 to the many sources of random chance incorporated in the model:
 stochasticity associated with finite population sizes (i.e., genetic
 drift), the randomness of recombination, and the finite mate search
