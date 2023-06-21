@@ -217,8 +217,8 @@ architectures can influence evolutionary dynamics of polygenic traits.
 To tackle these problems, we use models to test how different genetic
 architectures impact the maintenance of multiple male reproductive
 morphs. We focus on first identifying key reproductive parameters that
-influence the maintenance or loss of morphs using an analytical model.
-Then, we test whether different types of multilocus genetic
+influence the maintenance or loss of morphs using an analytical haploid model.
+Then, we test whether different types of diploid genetic
 architectures (single locus, polygenic, and polygenic supergene) change
 the frequencies of morphs that are maintained using a simulation model.
 We also test the accuracy and ability of current empirical methods in
