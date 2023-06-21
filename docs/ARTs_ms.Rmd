@@ -924,8 +924,8 @@ non-courter).
 
 Understanding how the genetic architecture of stable polymorphisms
 facilitates or constrains their evolution is crucial for understanding
-the mechanisms shaping diversity, but previous models have not explored
-polygenic models of inheritance. Using a simulation model, we show that
+the mechanisms shaping diversity, but we do not fully understand how necessarily polygenic phenotypes can be inherited as discrete suites of traits. 
+Using a simulation model, we show that
 genetic architecture -- specifically, the number of loci and the extent
 of linkage among them -- does impact the evolution of complex
 dichotomous traits. In our single-gene models, under parameter
