@@ -403,7 +403,6 @@ in the next generation by dividing the surviving number of juveniles per morph a
 ($j_M$) by the sum of all surviving juveniles:
 $f_M = \frac{j_M}{\Sigma_{i=1}^4{j_i}}$.
 
-To evaluate the outcomes of this mathematical model, we iterated forward
 In the simulation model, the total number of surviving offspring in the
 population depended on the proportion of population reproductive success
 achieved by each individual male and female (i.e., each generation, the
@@ -413,6 +412,11 @@ offspring was larger than the carrying capacity, offspring were randomly
 selected to become adults. 
 
 
+## Evaluating model outcomes
+
+### Baseline analytical model
+
+To evaluate the outcomes of this analytical model, we iterated forward
 in time for 100 generations from 1659 combinations of initial morph
 frequencies and repeated those iterations across 5 values for the sperm
 competition coefficient ($c$ = {0..1}), 21 values for the relative
@@ -472,7 +476,7 @@ tested three supergene sizes: occupying 5% of a chromosome, 25% of a
 chromosome, or 50% of a chromosome. In all cases, a chromosome was
 comprised of 1000 loci (including marker loci and QTLs).
 
-### Analysing multilocus genotypes
+#### Analysing multilocus genotypes
 
 To provide a link between the predictions of our theoretical models and
 empirical data, we analysed the genetic diversity of the populations at
@@ -519,7 +523,7 @@ actual number of QTLs in each replicate.
 
 # Results
 
-## Baseline model
+## Analytical model reveals many regions of parameter space where multiple morphs are maintained
 
 The purpose of exploring the baseline model was to identify the
 parameter space in which, in a simplistic model, more than one male type
