@@ -508,7 +508,7 @@ differentiation ($G_{ST}$) and association (GWAS p-values), and
 determined the proportion of these peaks that were within a 50 basepair
 window of one of the true QTLs.
 
-We evaluated whether QTLs evolved linkage disequilibrium due to shared
+We evaluated whether QTLs evolved linkage disequilibrium (LD) due to shared
 selection pressures, and not only physical linkage by estimating linkage
 disequilibrium between all loci in all simulations with genetic
 architectures using vcftools [@danecekVariantCallFormat2011]. We then
@@ -523,7 +523,7 @@ actual number of QTLs in each replicate.
 
 ## Analytical model reveals many regions of parameter space where multiple morphs are maintained
 
-The purpose of exploring the baseline model was to identify the
+The purpose of exploring the baseline analytical model was to identify the
 parameter space in which, in a simplistic model, more than one male type
 is predicted to persist, thereby creating a baseline for comparison to
 the simulation results. The courter/non-parent morph was never
