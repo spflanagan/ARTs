@@ -927,11 +927,11 @@ facilitates or constrains their evolution is crucial for understanding
 the mechanisms shaping diversity, but we do not fully understand how necessarily polygenic phenotypes can be inherited as discrete suites of traits. 
 Using a simulation model, we show that
 genetic architecture -- specifically, the number of loci and the extent
-of linkage among them -- does impact the evolution of complex
-dichotomous traits. In our single-gene models, under parameter
-conditions that facilitated balancing selection in simple single-gene
+of linkage among them -- impacts the evolution of complex
+discrete phenotypes. In our single-gene models, under parameter
+conditions that favoured the maintenance of multiple morphs in simple single-gene
 models, which male morphs were retained was determined due to
-stochasticity. However, when more complex architectures are modeled
+stochasticity. However, when more complex architectures are modelled
 using the same parameters, specific combinations of morphs were
 retained; thus, genetic complexity of traits reduced the importance of
 stochasticity. This phenomenon was likely due to genetic correlations
