@@ -942,30 +942,6 @@ did not have qualitatively different outcomes than QTLs distributed
 genome-wide. In addition, unexpectedly high levels of genetic diversity
 were retained within morphs in the supergene scenarios.
 
-We expected the supergenes to evolve to contain single haplotypes for
-each morph, as has been reported in empirical examples of supergenes
-controlling complex phenotypes (e.g.,
-@lamichhaneyStructuralGenomicChanges2016;
-@kupperSupergeneDeterminesHighly2016;
-@kimSexlinkedSupergeneControls2017;
-@hendrickxMasculinizingSupergeneUnderlies2022). A striking difference in
-our results from those of the empirical examples is that we do not see
-fixed alleles exclusively in one morph of the other. Instead,
-quantitative variation is retained within the supergenes, and we do not
-observe discrete haplotypes underlying the categorical morphs. If we
-compare our supergene results to our QTL results, as expected, linkage
-disequilibrium was elevated within the supergene region in our model,
-and similarly high levels of LD were not observed in the genome-wide QTL
-models (Fig. S6). However, measures of genetic variation and
-between-morph differentiation were similar in the two types of models
-(Fig. \@ref(fig:genomewideDiv)). The discrepancy between our model and
-empirical examples could be a result of our model assumptions, in which
-the effects of each locus on the trait values were drawn from a normal
-distribution. In empirical examples, a key gene substantially
-contributes to the phenotypic morph, for example the steroid hormone
-receptor genes in white-throated sparrows and ruffs supergenes
-[@maneySupergenesSteroids2022], which would be better approximated by a
-logarithmic distribution. Additionally, many polymorphisms could rely on
 dominance hierarchies (e.g., as modelled by
 [@svenssonFemalePolymorphismFrequency2005]), and could even be
 underpinned by dominance reversals between morphs
@@ -982,50 +958,47 @@ in a supergene and not result in the single- or two-locus inheritance
 patterns seen in side-blotched lizards [@sinervoRunawaySocialGames2001]
 and damselflies [@svenssonFemalePolymorphismFrequency2005].
 
-Our model revealed unexpected degrees of genome-wide genetic variation,
-even when phenotypic variation was low (i.e., in the low diversity
-scenarios). The expectations for genetic diversity can be framed by what
-is known from sex-specific selection, because our model imposed
-selection on genomic regions that are primarily shared among members of
 a population (morphs), which is analogous to sex-specific selection
-[@morrisIntralocusTacticalConflict2013]. Models of sex-specific
-selection have found that under conditions resulting in balancing
-selection on males and females, genetic variation can be maintained
-[@connallon2012], but most genomic regions will not show excessive
-variation [@flanaganIdentifyingSignaturesSexual2015]. Furthermore,
-extreme differences in allele frequencies within a population can only
-be generated with incredibly strong selection pressures
-[@kasimatisLimitsGenomicDivergence2019]. Our results reflect a different
-pattern -- we observed both maintenance of variation in phenotypes and
-in genotypes, with reasonably high levels of genetic differentiation
-between male types, even after selection had been relaxed because one
-morph was fixed in a population. In other words, even the runs where the
-selection coefficient was estimated to be zero had average male-male
-$G_{ST}$ substantially above zero, which is counter the the predictions
-from single-locus models of sex-specific selection
-[@kasimatisLimitsGenomicDivergence2019]. As such, our model highlights
+[@morrisIntralocusTacticalConflict2013]. 
+Unlike models of sex-specific
+selection, which have found that under conditions resulting in balancing
+selection on males and females genetic variation can be maintained
+[@connallon2012], but that most genomic regions will not show excessive
+variation [@flanaganIdentifyingSignaturesSexual2015], 
+we observed both maintenance of variation in phenotypes and
+in genotypes.
+Additionally, we detected high levels of genetic differentiation between male types,
+even without strong selection, which is opposite to the predictions for sex-specific selection
+[@kasimatisLimitsGenomicDivergence2019]. 
+As such, our model highlights
 how demographic factors, stochasticity, and genomic effects such as
 pleiotropy and linkage can impact genetic variation, and potentially
 obscure putative genome-wide signals of selection.
 
-Our choice to compare QTLs co-located within non-recombining supergenes
-to a genome-wide distribution was motivated by evidence of fixed
-alternative reproductive morphs having both of these genetic
-architectures [@lamichhaneyStructuralGenomicChanges2016;
+Furthermore, we expected the supergenes to evolve to contain single haplotypes for
+each morph, as has been reported in empirical examples of supergenes
+controlling complex phenotypes (e.g.,
+@lamichhaneyStructuralGenomicChanges2016;
 @kupperSupergeneDeterminesHighly2016;
 @kimSexlinkedSupergeneControls2017;
-@hendrickxMasculinizingSupergeneUnderlies2022;
-@kimGeneticsEvidenceBalancing2019; @gazdaGeneticMechanismSexual2020].
-One of the primary ways that empirical researchers characterise the
-genetic architectures underlying traits such as discrete morphs is
-through genome-wide association studies and other genome-wide scans of
-genetic diversity and differentiation. Putative regions are usually
-first identified through estimating allele frequency differences between
-morphs, testing for associations with the traits of interest (e.g.,
-[@lagunas-roblesLinkedSupergenesUnderlie2021;
-@kupperSupergeneDeterminesHighly2016]). We performed these analyses on
-simulated genome-wide data, and found that genome-wide association
-studies are likely to only identify $\le$ 50% of true QTLs, and identify
+@hendrickxMasculinizingSupergeneUnderlies2022). A striking difference in
+our results from those of the empirical examples is that we do not see
+fixed alleles exclusively in one morph or the other. Instead,
+quantitative variation is retained within the supergenes, and we do not
+observe discrete haplotypes underlying the categorical morphs. 
+If we
+compare our supergene results to our QTL results, as expected, linkage
+disequilibrium was elevated within the supergene region in our model,
+and similarly high levels of LD were not observed in the genome-wide QTL
+models (Fig. S7). However, measures of genetic variation and
+between-morph differentiation were similar in the two types of models
+(Fig. \@ref(fig:genomewideDiv)). The discrepancy between our model and
+empirical examples could be a result of our model assumptions, in which
+the effects of each locus on the trait values were drawn from a normal
+distribution. 
+
+These unexpected levels of genetic diversity might have also impaired our ability to detect the causal QTLs using methods such as genome-wide association studies.
+We only identified $\le$ 50% of true QTLs, with
 many false positives. Low true positives and high false positives are
 consistent with other simulation studies of genome-wide studies of
 selection and trait associations
@@ -1035,11 +1008,7 @@ associations with dichotomous traits
 limitations are consistent with both genetic architectures, so appears
 to not only be driven by the extreme linkage disequilibrium within
 supergenes that makes associations difficult to identify
-[@kimSexlinkedSupergeneControls2017]. A possible explanation for the
-results in this study could be the relaxed selection observed at the
-point when the populations were 'genotyped' (Fig. S4) -- mutations of
-small effect could have cropped up that were no longer being removed by
-due to relaxed selection. Altogether, our results suggest that
+[@kimSexlinkedSupergeneControls2017]. Our results suggest that
 genome-wide association studies alone are likely to miss key causal
 variants, even if such approaches have been sufficient in identifying
 causal regions in some species
@@ -1064,6 +1033,7 @@ genetic variants (e.g., ocellated wrasse,
 [@nugentNeuroendocrineProfilesAssociated2016]). Future models could
 investigate the evolutionary dynamics of morphs that are controlled by
 gene networks.
+## Summary
 
 Here, we show that the genetic architecture of discrete morphs impacts
 the frequency of morphs maintained under balancing selection, but does
