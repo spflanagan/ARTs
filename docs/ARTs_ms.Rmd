@@ -460,8 +460,6 @@ deemed a courter vs a non-courter and a parent vs a non-parent). For
 each set of four populations, we ran 10,000 generations followed by
 2,000 'experimental' generations. Doing so ensured that the population
 reached a steady state in which we could examine any stable
-polymorphisms or cyclical fluctuations in morph frequencies.
-
 
 
 To explore the impacts of genetic architecture on morph maintenance, we
