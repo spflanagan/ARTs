@@ -693,9 +693,7 @@ stochasticity associated with finite population sizes (i.e., genetic
 drift), the randomness of recombination, and the finite mate search
 process (in which females might not find a suitable mate, even if one
 exists in the population) all contribute to the within-replicate
-variation observed. Furthermore, these sources of variation
-differentiate the results of the simulation model from those of the
-baseline model.
+variation observed. 
 
 ### The role of polygenic inheritance of traits
 
