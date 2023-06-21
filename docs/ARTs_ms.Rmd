@@ -441,7 +441,7 @@ shinydashboard [@changShinydashboardCreateDashboards2018], rsconnect
 [@wickhamDplyrGrammarData2021], and rmarkdown
 [@allaireRmarkdownDynamicDocuments2021; @xieMarkdownDefinitiveGuide2018;
 @xieMarkdownCookbook2020]. The interactive app is available at
-<https://spflanagan.shinyapps.io/morph_predictions/>.
+<https://spflanagan.shinyapps.io/morph_predictions/> (see Fig. S1 for a static image).
 
 Note that this model did not incorporate mutation, recombination, or inheritance
 via females. Nonetheless, this model provided a baseline predictions for
