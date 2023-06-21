@@ -268,29 +268,6 @@ maturation to adulthood (Fig. \@ref(fig:modelDiagram)). We will describe each of
 knitr::include_graphics("../figs/lifecycle_biology.png", dpi=150)
 ```
 
-We first explored a version of our model that could be solved
-analytically to generate baseline predictions for when multiple morphs
-are maintained. We then used an individual-based simulation model to ask
-how the underlying genetic architecture of these traits affect (compared
-to the baseline) the presence, frequency, and type of alternative male
-phenotypes maintained in the population. We refer to these as the
-baseline model and the simulation model respectively.
-
-## Baseline model {#math-model-methods}
-
-We developed a baseline analytical model that predicts the proportion of
-morphs present in the population at each stage of the lifecycle (Fig.
-\@ref(fig:modelDiagram)), without explicitly modelling genetic
-properties. As such, this model implicitly assumed a haploid population
-where morphs are determined by a single locus, with no mutation,
-recombination, or environmental effects.
-
-In the first stage, morphs were chosen as mates by females (Stage 1 in
-Fig. \@ref(fig:modelDiagram)), which determined the total number of
-clutches in the population. The maximum number of clutches was
-determined by the probability of females mating with each type of male
-morph: the probability of courting males (CP and CN) being chosen was
-$w_s$ and the probability of NP and NN males being chosen was $1-w_s$.
 The general calculation for the number of clutches is:
 
 $$
