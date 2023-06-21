@@ -245,6 +245,22 @@ We expect that this model can be generalized to species in which one sex
 the survival of their offspring.
 
 Each generation has five distinct phases: (1) mate choice; (2)
+To test the importance of genetic architecture in male morphs, we implemented three models. 
+First, we developed an analytical model that reflects haploid inheritance of a single locus that encodes morphs. This model did not include recombination or mutation.
+Second, we used a stochastic individual-based model with two diploid loci, one for each trait (courting and parenting), that incorporated recombination, mutation, and demographic stochasticity.
+Finally, we expanded the stochastic model to incorporate polygenic inheritance of the two traits, with two different explicit physical genetic architectures: quantitative trait loci (QTLs) distributed at random throughout a genome including non-coding loci and a supergene architecture, where QTLs were co-located in a non-recombining region of a single chromosome. We assumed all QTLs were autosomal. 
+Each allele at a QTL was assigned a
+randomly-drawn phenotypic effect, and an individual's quantitative
+phenotypic value was determined by the sum of all their allelic effects
+(i.e., traits were entirely additive).
+In these additive, polygenic models, male traits were determined by a
+threshold function. The value of the threshold was constant for each
+iteration of the model, and was initialized as the mean phenotypic value
+at generation 0, prior to any model iterations. 
+In all cases of the individual-based models,
+Sex was assigned instead by a draw from a binomial distribution with a
+probability of 0.5 of being female.
+
 fertilization; (3) parental care; (4) viability selection; and (5)
 maturation to adulthood (Fig. \@ref(fig:modelDiagram)). In the mate
 choice phase of the model, we assume females always prefer to mate with
