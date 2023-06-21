@@ -642,8 +642,6 @@ because the number of sneakers is multiplied by the sperm competition
 coefficient to determine the proportion of offspring fertilized by the
 non-courters for a given clutch.
 
-## Individual-based simulation model
-
 The results of the baseline model were used to select parameter values
 for the individual-based simulation model, with one set expected to
 produce low-diversity populations (i.e., those where only one morph were
