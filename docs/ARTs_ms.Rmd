@@ -942,6 +942,15 @@ did not have qualitatively different outcomes than QTLs distributed
 genome-wide. In addition, unexpectedly high levels of genetic diversity
 were retained within morphs in the supergene scenarios.
 
+## Supergenes have similar outcomes to randomly distributed QTLs
+
+The discovery of supergenes underlying polymorphism was hailed as an explanation for how complex suites of traits could be inherited in a discrete manner, when they must also be polygenic [@schwanderSupergenesComplexPhenotypes2014].
+We provide compelling evidence that additive genetic variation need not be co-located in a non-recombining region of a chromosome, as long as the discrete traits are determined by a threshold model.
+Real-world examples might differ in these assumptions; for example,the steroid hormone
+receptor genes in white-throated sparrow and ruff supergenes
+[@maneySupergenesSteroids2022] would be better approximated by a
+logarithmic distribution than an additive distribution of allelic effects. 
+Additionally, many polymorphisms could rely on
 dominance hierarchies (e.g., as modelled by
 [@svenssonFemalePolymorphismFrequency2005]), and could even be
 underpinned by dominance reversals between morphs
@@ -958,6 +967,9 @@ in a supergene and not result in the single- or two-locus inheritance
 patterns seen in side-blotched lizards [@sinervoRunawaySocialGames2001]
 and damselflies [@svenssonFemalePolymorphismFrequency2005].
 
+## Unexpected genetic variation was maintained even when traits were fixed
+
+We modelled balancing selection on genomic regions primarily shared among members of
 a population (morphs), which is analogous to sex-specific selection
 [@morrisIntralocusTacticalConflict2013]. 
 Unlike models of sex-specific
