@@ -227,8 +227,8 @@ from our model.
 
 # Methods
 
-Our model considers a biological scenario in which males display to
-attract females, and with obligate male parental care. In our model,
+Our model considers a biological scenario in which males can display to
+attract females and can provide obligate male parental care. In our model,
 males possess two independent traits, courtship and parental care, both
 of which are expressed only in males (but are inherited by females).
 Courting males display within a territory, and females choose a male to
