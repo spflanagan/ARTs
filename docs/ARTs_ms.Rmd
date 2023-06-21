@@ -710,7 +710,7 @@ complete fixation of the morph in the majority of runs, and any
 variation existing in the form of 1-2 individuals (courter/parent
 frequencies were $\ge$ 99% in all cases), which were a result of
 stochasticity and recombination as opposed to balancing selection on
-morphs (Supplemental Fig. 5). These results were consistent across all
+morphs (Fig. S4). These results were consistent across all
 genetic architectures, including QTLs distributed across 2, 4, and 8
 chromosomes and QTLs clustered in supergenes spanning from 5% to 50% of
 a single chromosome. In the high diversity parameter space, polygenic
