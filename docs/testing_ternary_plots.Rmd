@@ -404,6 +404,49 @@ mtext("High diversity",
 
 ```
 
+```{r SingleLocusReplicates}
+# narrow down to the ones we actually analysed
+focus<-highDiv[grep("monogamy_nm",names(highDiv))]
+reps<-gsub("^.*_(\\d)_summary.txt.*$","\\1",names(focus))
+
+
+par(mar=c(1,2,0,1.5), 
+    oma=c(1.5,2.5,3,0),
+    mfrow=c(1,length(unique(reps))), 
+    xpd=TRUE)
+
+# make the plots
+for(rep in unique(reps)){
+  
+  # identify the ones
+  indx<-grep(paste0(rep,"_summary"),names(focus))
+  
+  
+  # make the base plot
+  morphs_ternary_plot(lab.cex=1.5,
+                      lab.offset=0.25,
+                      atip.pos=3,
+                      atip.rotate=0,
+                      btip.pos=2, 
+                      btip.rotate=0,
+                      ctip.pos=2,
+                      ctip.rotate=0)
+
+  # add the points
+  AddToTernary(
+    points,
+    focus[indx],
+    col=ms_cols["monogamy_nm"],
+    pch=as.numeric(rep),
+    lwd=2,
+    cex=2 # add color based on param values
+  )
+  
+}
+
+```
+
+
 ## Polygenic inheritance
 
 The main variables I want to show with the polygenic inheritance are the genetic architecture (QTLs vs supergenes with diff props) and number of chromosomes. I could also do number of QTLs -- that wasn't shown in the main manuscript, as I showed representative images from the 8 QTLs scenarios. How do I want to show this? 
