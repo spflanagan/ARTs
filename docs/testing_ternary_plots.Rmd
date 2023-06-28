@@ -326,7 +326,7 @@ labels<-c(
 ```
 
 
-```{r matingSystemsTernary}
+```{r matingSystemsTernary, fig.height=5.5, fig.width=7}
 # create the base
 par(mar=c(1,2,0,1.5), 
     oma=c(1.5,2.5,3,0),
@@ -392,7 +392,7 @@ for(ms in unique(high_patts)){
 mtext("Low diversity", 
       side = 2, 
       outer=TRUE,
-      adj=1, 
+      adj=0.75, 
       col=divcols["low"],
       padj=-0.5)
 mtext("High diversity", 
@@ -404,14 +404,14 @@ mtext("High diversity",
 
 ```
 
-```{r SingleLocusReplicates}
+```{r SingleLocusReplicates, fig.width=9, fig.height=3.5}
 # narrow down to the ones we actually analysed
 focus<-highDiv[grep("monogamy_nm",names(highDiv))]
 reps<-gsub("^.*_(\\d)_summary.txt.*$","\\1",names(focus))
 
 
 par(mar=c(1,2,0,1.5), 
-    oma=c(1.5,2.5,3,0),
+    oma=c(1,2,2,1),
     mfrow=c(1,length(unique(reps))), 
     xpd=TRUE)
 
