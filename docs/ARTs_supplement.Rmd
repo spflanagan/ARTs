@@ -159,10 +159,10 @@ knitr::include_graphics("../figs/matingSystemsTernary-1")
 ```
 
 
+```{r SingleLocusReplicates, fig.cap="Stochastic processes during the course of simulations created different outcomes for iterations that start with identical conditions. Each ternary diagram shows one set of simulations that were initiated identically."}
+knitr::include_graphics("../figs/SingleLocusReplicates-1")
 
 ```
-
-
 
 
 ### Selection on courter and parent traits
