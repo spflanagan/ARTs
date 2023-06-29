@@ -592,7 +592,7 @@ td_freqs<-merge(td_summary, final_freqs,by="rep")
 
 ```
 
-```{r genomewideDiv, fig.cap="Tests for statistical significance of differences in genome-wide genetic diversity in the final generation of the simulations between different genetic architectures. Shown are p-values for t-tests comparing genome-wide observed heterozygosity (A) and Tajima’s D (B) between runs with genome-wide QTLs versus supergenes.", fig.keep='last'}
+```{r genomewideDiv, fig.cap="Tests for statistical significance of differences in genome-wide genetic diversity in the final generation of the simulations between different genetic architectures. Shown are p-values for t-tests comparing genome-wide observed heterozygosity (A) and Tajima’s D (B) between runs with genome-wide QTLs versus supergenes.", fig.keep='last', fig.height=4, fig.width=7}
 
 par(mfrow=c(1,2),xpd=TRUE, mar=c(5,5,1.5,1), oma=c(0,0,5,1))
 
