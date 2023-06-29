@@ -319,7 +319,6 @@ knitr::include_graphics("../figs/fitnessPlots-1.png")
 
 ## Example haplotypes
 
-### supergene
 
 
 ```{r supergeneExampleData, warning=FALSE}
@@ -417,8 +416,6 @@ mtext("CP",2,line=2,adj =0.9,cex=0.75)
 mtext("NP",2,line=2,adj =0.2,cex=0.75)
 
 ```
-
-### QTLs
 
 
 
