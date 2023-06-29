@@ -834,7 +834,7 @@ $G_{ST}$ outliers were associated with true QTLs). From this, we then
 calculated the proportion of true QTLs that were located in these
 significant $G_{ST}$ peaks, and found that under high-diversity parameters,
 on average `r round(peak_summ_mean["qtls high"]*100,2)` $\pm$ `r round(peak_summ_sem["qtls high"]*100,2)`%, of randomly distributed QTLs and  and `r round(peak_summ_mean["supergene high"]*100,2)` $\pm$ `r round(peak_summ_sem["supergene high"]*100,2)`% of QTLs in supergenes were found in $G_{ST}$ peaks, irrespective of the courter/parent frequency (Fig.
-S9).
+S10).
 
 
 
@@ -908,7 +908,7 @@ A consequence of this high genetic diversity underpinning the categorical traits
 high error rates in detecting true QTLs using genome-wide association tests.
 As expected, the detection of true QTLs in a GWAS was more likely when
 fewer QTLs underpin the trait, especially if those QTLs are aggregated
-on fewer chromosomes (Fig. S10). 
+on fewer chromosomes (Fig. S11). 
 The type of genetic architecture (genome-wide QTLs versus supergenes) had a minimal impact on the detection of QTLs. 
 The QTLs for parent traits were more reliably detected by
 GWAS than the courter QTLs, even though in the majority of simulations the final
@@ -1001,7 +1001,7 @@ If we
 compare our supergene results to our QTL results, as expected, linkage
 disequilibrium was elevated within the supergene region in our model,
 and similarly high levels of LD were not observed in the genome-wide QTL
-models (Fig. S7). However, measures of genetic variation and
+models (Fig. S10). However, measures of genetic variation and
 between-morph differentiation were similar in the two types of models
 (Fig. \@ref(fig:genomewideDiv)). The discrepancy between our model and
 empirical examples could be a result of our model assumptions, in which
