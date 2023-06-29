@@ -518,6 +518,12 @@ mtext("genomewide QTLs", 3, cex=2)
 
 ```
 
+```{r exampleGenotypes, fig.cap="Genetic variation is maintained at multiple loci for a representative QTLs (left) and supergene (right) replicates. Genotypes of individuals in a representative population containing courter/parent (CP) and non-courter/parent (NP) males are shown in rows with genotypes at the courter and parent causal QTLs in the columns. Light purple reflects homozygous genotypes for the reference allele, dark purple represents homozygous genotypes for the alternative allele, and the heterozygotes are in an intermediate purple.",fig.show='hold',fig.align='center',out.width="49%"}
+
+knitr::include_graphics(c("../figs/qtlGenotypes-1.png","../figs/supergeneGenotypes-1.png"))
+```
+
+
 ## Example genome-wide
 
 ```{r ExampleGenomewide,out.width="49%", fig.cap="True QTLs for the courter (blue) and parent (green) traits are not outliers int he distributions of population genetic statistics. Plots of genome-wide estimates of population genetic parameters from representative simulations using QTLs (left) versus supergenes (right), both with 8 QTLs per trait and 2 chromosomes (light vs dark grey points) with 1000 marker loci each. The plots show genome-wide estimates of commonly-estimated population genetic parameters. From top to bottom: p-values from a genome-wide association test for the courter trait; p-values from a genome-wide association test for the parent trait; Gst between male morphs; smoothed Tajima's D estimated in 10bp segments; expected heterozygosity; and average pairwise linkage disequilibrium.",fig.show='hold',fig.align='center', fig.keep=TRUE}
