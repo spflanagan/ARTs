@@ -684,8 +684,8 @@ knitr::kable(SimParams, booktab=TRUE,
 ## Recombination, mutation, and stochasticity result in fewer morphs maintained
 
 
-morph co-existed with the courter/parent morph, even when parameterization of the model was identical (Fig. S??).
 A striking difference between the analytical model and the simple simulation model is that only two morphs are maintained with parameters that retained three morphs in the analytical model (Fig. \@ref(fig:ternaryPlots)A; see Fig. S2 for outcomes with alternative mating dynamics). Furthermore, stochasticity played a major role in which
+morph co-existed with the courter/parent morph, even when parameterization of the model was identical (Fig. S3).
 Variation in outcomes within replicate runs can be attributed
 to the many sources of random chance incorporated in the model:
 stochasticity associated with finite population sizes (i.e., genetic
