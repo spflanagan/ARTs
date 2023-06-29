@@ -680,6 +680,8 @@ outer_legend("top",
 
 ## Genome-wide association studies have high false positive rates
 
+As reported in the main text, we performed genome-wide association studies of our simulated genotypes to identify SNPs that could be statistically associated with either the courter or the parent trait. We then detected the proportion of true positives (proportion of causal QTLs correctly associated with trait values) and false positives (the proportion of detected SNPs that were NOT true QTLs), and found that there here high false positive rates and generall low probabilities of correct detection of loci (Fig. \@ref(fig:GWASoutcomes)). 
+
 ```{r getGWASinfo}
 gwas_output<-read.csv("GWAS_summary.csv", header = FALSE)
 colnames(gwas_output)<-c("Marker",
