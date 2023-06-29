@@ -160,6 +160,7 @@ knitr::include_graphics("../figs/matingSystemsTernary-1.png")
 
 ```
 
+Regardless of the mating strategies, stochasticity impacted model results, even if replicates were initialised with identical starting conditions (Fig. \@ref(fig:SingleLocusReplicates)). Replicates initialised with identical starting conditions (i.e., identical frequencies of each morph) resulted in different morphs being retained in the simulations.  
 
 ```{r SingleLocusReplicates, fig.cap="Stochastic processes during the course of simulations created different outcomes for iterations that start with identical conditions. Each ternary diagram shows one set of simulations that were initiated identically.", out.width="96%"}
 knitr::include_graphics("../figs/SingleLocusReplicates-1.png")
