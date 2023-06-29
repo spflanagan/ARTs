@@ -406,7 +406,7 @@ image(tmp,
       axes=FALSE,
       #ylab="Courter/Parents",
       cex.lab=2)
-abline(h=(ncol(p_num)+1)/ncol(tmp),lwd=2)
+abline(h=(ncol(p_num)+1)/ncol(tmp),lwd=4)
 axis(1,at=seq(0,1,length.out=nrow(qtls)),
      labels = qtls$trait,lwd=0)
 
@@ -504,7 +504,7 @@ image(tmp,
       axes=FALSE,
       #ylab="Courter/Parents",
       cex.lab=2)
-abline(h=(ncol(p_num)+1)/ncol(tmp),lwd=2)
+abline(h=(ncol(p_num)+1)/ncol(tmp),lwd=4)
 axis(1,at=seq(0,1,length.out=nrow(qtls)),
      labels = qtls$trait,lwd=0)
 
