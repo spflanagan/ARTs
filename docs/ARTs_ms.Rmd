@@ -761,7 +761,7 @@ directional or balancing selection, also reflects genetic variation in a
 sequence of DNA, and did not deviate substantially between genetic
 architectures and did not relate to final morph frequencies (Fig.
 \@ref(fig:genomewideDiv) B; Fig. S8). 
-Average linkage disequilibrium was higher for QTLs in supergenes than randomly-distributed QTLs (Fig. S??).
+Average linkage disequilibrium was higher for QTLs in supergenes than randomly-distributed QTLs (Fig. S9).
 
 ```{r}
 welch_correctDF<-function(var1,var2,n1,n2){
