@@ -410,10 +410,11 @@ abline(h=(ncol(p_num)+1)/ncol(tmp),lwd=4)
 axis(1,at=seq(0,1,length.out=nrow(qtls)),
      labels = qtls$trait,lwd=0)
 
-mtext("CP",2,line=2,adj =0.9,cex=0.75)
+mtext("CP",2,line=2,adj =0.9,cex=2)
 
-mtext("NP",2,line=2,adj =0.2,cex=0.75)
+mtext("NP",2,line=2,adj =0.2,cex=2)
 
+mtext("supergene", 3, cex=2)
 ```
 
 
@@ -508,10 +509,11 @@ abline(h=(ncol(p_num)+1)/ncol(tmp),lwd=4)
 axis(1,at=seq(0,1,length.out=nrow(qtls)),
      labels = qtls$trait,lwd=0)
 
-mtext("CP",2,line=2,adj =0.9,cex=0.75)
+mtext("CP",2,line=2,adj =0.9,cex=2)
 
-mtext("NP",2,line=2,adj =0.2,cex=0.75)
+mtext("NP",2,line=2,adj =0.2,cex=2)
 
+mtext("genomewide QTLs", 3, cex=2)
 
 
 ```
