@@ -494,7 +494,7 @@ p_num<-matrix(as.numeric(p_gts),    # Convert to numeric matrix
 ```
 
 
-```{r qtlGenotypes}
+```{r qtlGenotypes, fig.cap="Genetic variation is maintained at multiple loci for a representative QTL replicate. Genotypes of individuals in a representative population containing courter/parent (CP) and non-courter/parent (NP) males are shown in rows with genotypes at the courter and parent causal QTLs in the columns. Light purple reflects homozygous genotypes for the reference allele, dark purple represents homozygous genotypes for the alternative allele, and the heterozygotes are in an intermediate purple.",fig.keep='last', fig.show='last', eval=FALSE}
 # QTL genotypes
 tmp<-cbind(p_num,
             rep(NA,nrow(qtls)),
