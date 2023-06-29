@@ -729,7 +729,7 @@ $\pm$
 and only occasionally resulted in either three morphs being retained or
 the non-courter/non-parent morph replacing the non-courter/parent. The
 size of the supergene did not substantially impact the final morph
-frequencies, nor did the total number of QTLs underlying each locus.
+frequencies, nor did the total number of QTLs underlying each locus. A consequence of the stabilisation of morph frequencies was a reduction in the strength of selection acting in the final generation relative to the first generation of the model (Fig. S5).
 
 Our initial expectation was that supergenes would follow a pattern more
 similar to the single locus results, because empirical examples have
