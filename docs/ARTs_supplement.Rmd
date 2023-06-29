@@ -152,15 +152,15 @@ $r_{non-courter}=8$, the scenarios without random mating do result in
 the maintenance of 2 or 3 morphs in most cases for both monogamy and
 polygyny (Fig. \@ref(fig:MatingTypesFig)), as expected.
 
-```{r MatingTypesFig, fig.cap="Ternary diagrams showing the frequencies of morphs in the final generation of simulation runs with a single gene underlying each trait for parameters expected to yield low diversity (top row) and high diversity (bottom row). Points falling at the corners shows where a single morph was retained; along edges of the triangle represent cases where two morphs were retained; and in the centre are cases where three morphs were retained. Point shapes reflect sets of simulation runs that were initiated with identical starting conditions."}
+```{r MatingTypesFig, fig.cap="Ternary diagrams showing the frequencies of morphs in the final generation of simulation runs with a single gene underlying each trait for parameters expected to yield low diversity (top row) and high diversity (bottom row). Points falling at the corners shows where a single morph was retained; along edges of the triangle represent cases where two morphs were retained; and in the centre are cases where three morphs were retained. Point shapes reflect sets of simulation runs that were initiated with identical starting conditions.", out.width="96%"}
 
-knitr::include_graphics("../figs/matingSystemsTernary-1")
+knitr::include_graphics("../figs/matingSystemsTernary-1.png")
 
 ```
 
 
-```{r SingleLocusReplicates, fig.cap="Stochastic processes during the course of simulations created different outcomes for iterations that start with identical conditions. Each ternary diagram shows one set of simulations that were initiated identically."}
-knitr::include_graphics("../figs/SingleLocusReplicates-1")
+```{r SingleLocusReplicates, fig.cap="Stochastic processes during the course of simulations created different outcomes for iterations that start with identical conditions. Each ternary diagram shows one set of simulations that were initiated identically.", out.width="96%"}
+knitr::include_graphics("../figs/SingleLocusReplicates-1.png")
 
 ```
 
