@@ -70,7 +70,7 @@ final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
 
 ```
 
-## Supplemental figure 1: Analytical model results
+## Extended results of the baseline analytical model
 
 ```{r getMathResults}
 results<-readRDS("../morph_predictions/morph_results_10000_equalStart.RDS")
