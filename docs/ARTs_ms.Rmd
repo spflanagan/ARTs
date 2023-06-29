@@ -827,7 +827,7 @@ peak_summ_sem<-tapply(popgen_data$propQTLsInPeaksMM,paste(popgen_data$Architectu
 Similarly, we expected supergenes to show more differentiation between
 morphs, since their QTLs segregated together. However, $G_{ST}$ between
 male morphs was also not predicted by the frequency of courter/parent
-morphs (Fig. \@ref(fig:genomewideDiv) C). Significant peaks in
+morphs (Fig. \@ref(fig:genomewideDiv) C; Fig. S9). Significant peaks in
 genome-wide $G_{ST}$ estimates were identified, and we evaluated whether
 QTLs were located near to those $G_{ST}$ peaks (i.e., we identified if
 $G_{ST}$ outliers were associated with true QTLs). From this, we then
