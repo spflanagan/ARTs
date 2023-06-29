@@ -1,5 +1,5 @@
 ---
-title: "A supplement to: Genetic architecture of alternative reproductive tactics impacts which morphs are maintained under balancing selection"
+title: "A supplement to: Supergenes are not necessary to explain the maintenance of complex alternative phenotypes"
 output:
   bookdown::pdf_document2:
     fig_caption: yes
