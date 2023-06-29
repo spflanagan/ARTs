@@ -678,6 +678,83 @@ outer_legend("top",
 ```
 
 
+```{r readLDresampled}
+lds<-read.csv("ld_summary_resampled.csv", row.names = 1)
+lds$architecture<-gsub("../fixedART-results/(\\w+)/.*$","\\1", rownames(lds))
+lds$diversity<-gsub("../fixedART-results/(\\w+)//(\\w+Diversity).*$","\\2", rownames(lds))
+```
+
+
+```{r LDplots, fig.cap="Pairwise linkage disequilibrium was not different for QTLs vs marker loci and was not determined by the number of morphs in the simulations (i.e., between high vs low diversity scenarios). Simulations with higher total numbers of QTLs had higher mean pairwise linkage disequilibirum in both QTLs (A) and non-QTLs (B), regardless of whether the QTLs were distributed genome-wide (triangles) or aggregated in supergenes (triangles). No obvious pattern was observed based on the number of chromosomes for either the QTLs (C) or the non-QTLs (D). The non-QTL average linkage disequilibrium estimates were calculated by resampling to account for the different number of markers vs QTLs as found in the simulations."}
+names(divcols)<-c("lowDiversity","highDiversity")
+par(mfrow=c(2,2),
+    mar=c(4,4.5,2,2), 
+    oma=c(2,2,2,2),
+    xpd=TRUE)
+plot(lds[,"avgQ"]~lds[,"nqtl_actual"],
+     xlab="Number of QTLs",
+     ylab="Mean LD of QTLs",
+     pch=as.numeric(as.factor(lds$architecture))+15,
+     cex=2,
+     col=scales::alpha(divcols[lds$diversity],0.5), 
+     bty='l',
+     cex.lab=1.5)
+legend("topright", 
+       "A",
+       cex=3,
+       bty='n')
+
+plot(lds[,"avgResampled"]~lds[,"nqtl_actual"],
+     xlab="Number of QTLs",
+     ylab="Mean LD of non-QTLs",
+    pch=as.numeric(as.factor(lds$architecture))+15,
+     cex=2,
+     col=scales::alpha(divcols[lds$diversity],0.5), 
+     bty='l',
+     cex.lab=1.5)
+legend("topright", 
+       "B",
+       cex=3,
+       bty='n')
+
+plot(jitter(lds[,"nchrom"]),lds[,"avgQ"],
+     xlab="Number of Chromosomes",
+     ylab="Mean LD of QTLs",
+     pch=as.numeric(as.factor(lds$architecture))+15,
+     cex=2,
+     col=scales::alpha(divcols[lds$diversity],0.5), 
+     bty='l',
+     cex.lab=1.5)
+legend("topright", 
+       "C",
+       cex=3,
+       bty='n')
+
+plot(jitter(lds[,"nchrom"]), lds[,"avgResampled"],
+     xlab="Number of Chromosomes",
+     ylab="Mean LD of non-QTLs",
+     pch=as.numeric(as.factor(lds$architecture))+15,
+     cex=2,
+     col=scales::alpha(divcols[lds$diversity],0.5), 
+     bty='l',
+     cex.lab=1.5)
+legend("topright", 
+       "D",
+       cex=3,
+       bty='n')
+
+outer_legend("top",
+       bty='n',
+       pch=c(16, 17, 0,0),
+       lwd=2,
+       lty=0,
+       col=c("grey", "grey",divcols[2],divcols[1]),
+       legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
+       ncol=4, 
+       cex=1.5)
+```
+
+
 ## Genome-wide association studies have high false positive rates
 
 As reported in the main text, we performed genome-wide association studies of our simulated genotypes to identify SNPs that could be statistically associated with either the courter or the parent trait. We then detected the proportion of true positives (proportion of causal QTLs correctly associated with trait values) and false positives (the proportion of detected SNPs that were NOT true QTLs), and found that there here high false positive rates and generall low probabilities of correct detection of loci (Fig. \@ref(fig:GWASoutcomes)). 
