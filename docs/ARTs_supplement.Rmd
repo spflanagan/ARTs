@@ -168,7 +168,7 @@ knitr::include_graphics("../figs/SingleLocusReplicates-1.png")
 ```
 
 
-### Selection on courter and parent traits
+## Selection on courter and parent traits
 
 
 Although selection is built into the model, if the population becomes
