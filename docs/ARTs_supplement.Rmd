@@ -678,7 +678,7 @@ outer_legend("top",
 ```
 
 
-## Genome-wide association study results
+## Genome-wide association studies have high false positive rates
 
 ```{r getGWASinfo}
 gwas_output<-read.csv("GWAS_summary.csv", header = FALSE)
