@@ -328,7 +328,7 @@ labels<-c(
 
 ```{r matingSystemsTernary, fig.height=5.5, fig.width=7}
 # create the base
-par(mar=c(1,2,0,1.5), 
+par(mar=c(0,2,0,1.5), 
     oma=c(1.5,2.5,3,0),
     mfrow=c(2,4), 
     xpd=TRUE)
@@ -392,7 +392,7 @@ for(ms in unique(high_patts)){
 mtext("Low diversity", 
       side = 2, 
       outer=TRUE,
-      adj=0.75, 
+      adj=0.85, 
       col=divcols["low"],
       padj=-0.5)
 mtext("High diversity", 
@@ -411,7 +411,7 @@ reps<-gsub("^.*_(\\d)_summary.txt.*$","\\1",names(focus))
 
 
 par(mar=c(1,2,0,1.5), 
-    oma=c(1,2,2,1),
+    oma=c(1,0,1,0),
     mfrow=c(1,length(unique(reps))), 
     xpd=TRUE)
 
