@@ -292,7 +292,7 @@ tmp<-lapply(seldat, function(dat){
 })
 outer_legend("top",
        bty='n',
-       pch=c(15, 16, 0,0),
+       pch=c(16, 17, 0,0),
        lty=c(0, 0, 1,1),
        lwd=c(2,2,1,1),
        col=c("grey", "grey",divcols[2],divcols[1]),
