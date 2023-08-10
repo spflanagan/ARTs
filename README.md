@@ -81,5 +81,5 @@ SHA acknowledges support from funding from the National Science Foundation (Gran
 
 ## Licensing
 
-Licensing information is found in LICENSE. Please cite our paper if you use and/or modify the code!
+The code is licensed with a GNU GPLv3 license (details in `LICENSE`). Please cite our paper if you use and/or modify the code!
 
