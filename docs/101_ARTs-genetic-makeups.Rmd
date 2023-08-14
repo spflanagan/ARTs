@@ -966,7 +966,7 @@ legend("top",
        ncol=2)
 ```
 
-The relationship between selection gradients at generation 0 and generation 12000 follow a roughly uniform distribution (Fig. \@ref(fig:gensSelectionCorHist)) -- there is no pattern.
+The relationship between selection gradients at generation 0 and generation 12000 follow a roughly uniform distribution (Fig. \@ref(fig:gensSelectionCorHist)) -- there is no pattern. However, the direction of selection in the start of the simulations predicts the diversity of the morphs (Fig. \@ref(fig:selFreq)).
 
 ```{r gensSelectionCorHist, fig.height=4, fig.width=4, fig.cap="Distribution of correlation coefficients between generation 0 and generation 12000 selection gradients on the courter trait."}
 hist(unlist(cors),
@@ -975,7 +975,7 @@ hist(unlist(cors),
      main="")
 ```
 
-Does selection at generation 0 predict diversity at generation 12000?
+
 
 ```{r selFreq, fig.height=6, fig.width=6, fig.cap="The direction of selection on the courter trait in generation zero predicts whether diversity of morphs will be maintained."}
 plot(
@@ -1020,7 +1020,7 @@ legend("topleft",
        ncol=2)
 ```
 
-Which of these ones have cp_freq close to 1 and 0?? They haven't shown up in the plots of high diversity parameters.
+
 
 ```{r eval=FALSE}
 for(i in 1:length(seldat)){
