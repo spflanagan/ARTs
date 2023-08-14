@@ -57,12 +57,12 @@ source("../R/formatting.R")
 
 ```
 
-## The goal
+## The goal: an example
 
-We want to be able to link empirical data to our model predictions. To do that, we want to be able to look at patterns of genetic variation genome-wide. 
+We want to be able to link empirical data to our model predictions. To do that, we want to be able to look at patterns of genetic variation genome-wide. First we will walk through a single example, and then extrapolate to a broader set of simulation outputs. 
 
 ```{r}
-path<-"../results/"#"/mnt/BigData/fixedART-results/qtls/"
+path<-"../results/" #"/mnt/BigData/fixedART-results/qtls/"
 vcfname<-paste0(path,"highDiversity_qtls_q8_c4_1_pop_2.vcf")
 
 ex1<-get.morph.freqs(plot.pc.reps(pattern="highDiversity_qtls_q8_c4_1_summary.txt",path=path,cols,make.plot=FALSE))
@@ -124,9 +124,9 @@ lapply(mtm_diff$Gprimest[qtl_locs],function(d){ abline( v = d) })
 
 ## Summarizing multiple files
 
-So this works well for visualising, but in this particular example the QTLs aren't outliers. I would like to find a way to summarize this across runs. 
+So this works well for visualising, but in this particular example the true QTLs aren't identified as outliers. I would like to find a way to summarize whether QTLs are outliers or not across runs. 
 
-If I use a similar approach as I did for my gwsca model, I want to find peaks and identify if a QTL exists in the peak. In my previous model, I hard-coded that in C++, but I'm feeling lazy and would prefer to just do it in R at this point. So I found some code online that should find peaks for me.
+If I use a similar approach as I did for my gwsca model (Flanagan & Jones 2015), I want to find peaks and identify if a QTL exists in the peak. In my previous model, I hard-coded that in C++, but will implement it in R for this model. First, I find peaks in distributions using a function and then identify whether my QTLs fall within those peaks.
 
 ```{r findPeaksFXN}
 # From https://stats.stackexchange.com/questions/22974/how-to-find-local-peaks-valleys-in-a-series-of-data
@@ -148,6 +148,8 @@ find_peaks <- function (x, m = 3){
 }
 ```
 
+In the specific example from above, we can visualise how this works: 
+
 ```{r plotGstExample}
 mtm_diff$Gprimest[is.na(mtm_diff$Gprimest)]<-0
 peaks<-find_peaks(mtm_diff$Gprimest,m = 50)
@@ -158,6 +160,8 @@ plot(mtm_diff$Gprimest,
 points(qtl_locs, mtm_diff$Gprimest[qtl_locs],cex=2,col="red",pch=8)
 points(peaks,mtm_diff$Gprimest[peaks],cex=2,col="purple",pch=6)
 ```
+
+and extract the QTLs that are in the identified peaks. 
 
 ```{r Gcutoff}
 Gcutoff<-qnorm(p = 0.99,
@@ -176,7 +180,7 @@ QTLsInPeaks<-sapply(qtl_locs,function(q,peaks){
 }, peaks=sigPeaks)
 ```
 
-
+Now that we are confident in this method, we can write a function to apply it to all the model outputs. 
 
 ```{r popgenSummaryFXN}
 get_summary<-function(vcfname){
@@ -293,7 +297,7 @@ get_summary<-function(vcfname){
 }
 ```
 
-
+...and then run that function on each of the sets of runs. 
 
 
 ```{r runQTLsHigh, eval=FALSE}
@@ -340,6 +344,8 @@ write.csv(supergene_outliers,"supergene_outliers.csv",quote=FALSE,row.names = FA
 
 ```
 
+Since there is a lot of data to parse, I have saved the outliers in csv files that I can now read back into R.
+
 ```{r, eval=TRUE}
 qtl_outliers<-read.csv("qtl_outliers.csv")
 qtl_outliers$Architecture<-"qtls"
@@ -348,7 +354,7 @@ supergene_outliers$Architecture<-"supergene"
 popgen_data<-dplyr::bind_rows(qtl_outliers,supergene_outliers)
 ```
 
-Let's see if heterozygosity differs significantly -- I can do a t-test with the Welch-Satterthwaite correction using the data I have here. 
+To see if heterozygosity differs significantly, I can do a t-test with the Welch-Satterthwaite correction using the summary statistics I generated previously and saved int he csv files. 
 
 ```{r welchCorrectFXN}
 welch_correctDF<-function(var1,var2,n1,n2){
@@ -635,9 +641,7 @@ propQTL_plot(gwas_summary[gwas_summary$Architecture=="supergene",],"PropWrongQTL
 ```
 
 
-Are parent QTLS more likely to be picked up because CP/CN is the most common polymorphism or is it because selection on parents is stronger than selection on courters? 
-
-We'll want to summarize the final frequencies and compare it to the prop QTL detected.
+Are parent QTLS more likely to be picked up because CP/CN is the most common polymorphism or is it because selection on parents is stronger than selection on courters? To asnwer this, we can summarize the final frequencies and compare those to the prop QTL detected (Fig. \@ref(fig:freqsDetection)).
 
 ```{r eval=FALSE}
 pfiles<-list.files(path="../fixedART-results/qtls",pattern="pheno.csv",full.names = TRUE)
@@ -739,7 +743,7 @@ plot(overall_info$NON[overall_info$Traits=="Courter" & overall_info$Architecture
 
 # Linkage disequilibrium
 
-Let's look into LD. I've estimated LD using vcftools
+I've estimated LD using vcftools (`../scripts/103_calc-LD.sh`), so I simply need to summarise those outputs here.  
 
 ```{r ld, eval=FALSE}
 # running this as an R script
@@ -866,12 +870,12 @@ outer_legend("top",
        ncol=4)
 ```
 
-LD is highest in low diversity scenarios and with QTLs -- this is surprising to me! I'd have thought supergenes would have the highest LD.
+LD is highest in low diversity scenarios and with QTLs, which is not what was expected -- I would have predicted supergenes would have the highest LD.
 
 
 # Tajima's D
 
-I used a script, `105_summarize-TajimaD.R`, to loop over all the Tajima's D output files from vcftools and write some summary statistics to a file. We'll see if we can glean anything from those results.
+I used a script, `105_summarize-TajimaD.R`, to loop over all the Tajima's D output files from vcftools and write some summary statistics to a file. I will then analyse these here. 
 
 ```{r tdsummary}
 td_summary<-read.csv("../results/tajimaD_summary.csv", row.names = 1)
@@ -887,15 +891,9 @@ hist(td_summary$p,
      main="")
 ```
 
-So I have two suggestions: 
-
-- dig into the ones with small p-values, see what's going on
-
-- compare these to the runs with negative selection on courters/that maintained diversity
-
 
 ```{r}
-final_freqs$rep  <-gsub("../fixedART-results/.*\\/(.*\\w+_monogamy_nm_.*pop\\d).*","\\1",final_freqs$file)
+final_freqs$rep <-gsub("../fixedART-results/.*\\/(.*\\w+_monogamy_nm_.*pop\\d).*","\\1",final_freqs$file)
 td_freqs<-merge(td_summary, final_freqs,by="rep")
 ```
 
@@ -911,17 +909,9 @@ sig_freqs<-final_freqs[gsub("pop_(.*)\\.Tajima.D","pop\\1_pheno.csv",sigTD) %in%
 
 
 
-
-With only 1 QTL:
-
-```{r eval=FALSE}
-td_summary<-read.csv("../results/tajimaD_summary_Q1.csv", row.names = 1)
-td_summary<-td_summary[grep("monogamy_nm",rownames(td_summary)),]
-td_summary$rep<-gsub("../fixedART-results/.*\\/(.*\\w+_monogamy_nm_.*pop)_(\\d).*","\\1\\2",rownames(td_summary))
-```
-
-
 # A representative set of examples
+
+Some of the results documented here are non-intuitive, such as the patterns of LD and the levels of genetic diversity. To better understand the dynamics, we can explore a single example -- in this case, a set of replicates with 8 QTLs and 2 chromosomes. 
 
 ### supergene
 
