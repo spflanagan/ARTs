@@ -66,9 +66,9 @@ morphs_to_ternary<-function(pattern, path){
 ```{r makeTernaryMorphsFXN}
 # made with inspiration from this tutorial: https://cran.r-project.org/web/packages/Ternary/vignettes/Ternary.html
 morphs_ternary_plot<-function(...){
-  TernaryPlot(atip="CP",
-            btip="NP",
-            ctip="NN",
+  TernaryPlot(atip="",
+            btip="",
+            ctip="",
             alab="Courter/Parent",
             blab="Noncourter/Parent",
             clab="Noncourter/Nonparent",
@@ -82,9 +82,11 @@ morphs_ternary_plot<-function(...){
 }
 ```
 
+One of the challenges with the model outputs are that they rely on frequencies that all relate to each other. Therefore, we will use ternary diagrams to more easily see patterns and compare final frequencies. 
+
 ## Baseline model
 
-The baseline model results are saved in `morph_results_Ns.RDS`, I believe.
+The baseline model results are saved in `morph_results_Ns.RDS`, so we can rapidly and easily load those into R.
 
 ```{r baselineData}
 morph_results<-readRDS("../morph_predictions/morph_results_Ns.RDS")
@@ -112,7 +114,7 @@ AddToTernary(
 )
 ```
 
-Note: would be good to scale points based on number of times they land at one outcome...
+
 
 ```{r dupdat}
 dupdat<-data.table::setDT(baseline_points)[,list(Count=.N),names(baseline_points)]
@@ -590,7 +592,7 @@ sim_low<-morph_results[morph_results$initial_CN==0.25 &
 ```
 
 
-```{r combinedTernary}
+```{r combinedTernary, include=FALSE}
 
 par(mar=c(0,0,0,0),
     mfrow=c(2,3))
@@ -895,7 +897,7 @@ morphs_ternary_plot(lab.cex=1.5,
                       lab.offset=0.25,
                       atip.pos=3,
                       atip.rotate=0,
-                      btip.pos=2, 
+                      btip.pos=1, 
                       btip.rotate=0,
                       ctip.pos=2,
                       ctip.rotate=0)
@@ -943,7 +945,7 @@ morphs_ternary_plot(lab.cex=1.5,
                       lab.offset=0.25,
                       atip.pos=3,
                       atip.rotate=0,
-                      btip.pos=2, 
+                      btip.pos=1, 
                       btip.rotate=0,
                       ctip.pos=2,
                       ctip.rotate=0)
@@ -971,7 +973,7 @@ morphs_ternary_plot(lab.cex=1.5,
                       lab.offset=0.25,
                       atip.pos=3,
                       atip.rotate=0,
-                      btip.pos=2, 
+                      btip.pos=1, 
                       btip.rotate=0,
                       ctip.pos=2,
                       ctip.rotate=0)
