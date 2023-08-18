@@ -32,7 +32,8 @@ The simulation-based model can be found in `programs/ARTs/`, and has the followi
 - `classes.h`
 - `populations.h`
 - `random_numbers.h`
-- `makefile`
+
+Compilation of the program requires gcc version 11.4.0, and can be done using the included `makefile`.
 
 Running the simulation model is most efficient on a command-line system, and the scripts used to run it are found in `scripts/`. They are the following:
 
@@ -45,28 +46,24 @@ Running the simulation model is most efficient on a command-line system, and the
 
 The model outputs were all analysed in R. The overall logic and processes for various analyses are found in Rmarkdown documents in `docs/':
 
-- `100_ARTs-notebook.Rmd`
-- `100_model-comparisons.Rmd`
-- `100_single-locus.Rmd`
-- `101_ARTs-genetic-makeups.Rmd`
-- `102_genomics-ARTs.Rmd`
-- `testing_ternary_plots.Rmd`
+- `100_baseline-models.Rmd`: Includes details of model output exploration of the baseline analytical model and the simulation model without explicit genetic architectures.
+- `101_explicit-genetics-outcomes.Rmd`: Describes exploration of model results from models with either QTLs or supergenes as explicit genetic architectures.
+- `102_all-model-outcomes.Rmd`: This document synthesises results that were explored in more depth in `100_baseline-models.Rmd` and `101_explicit-genetics-outcomes`, creating ternary diagrams to summarise results. Figure 1 in the main text is created in this document.
+- `103_genomics-ARTs.Rmd`: This document explores population genomic statistics and genome-wide association studies of outputs from the simulation models with explicit genetic architectures. 
 
 These rely on custom functions and other bits of reusable code found in `R/`:
 
-- `001_expectationTests.R`
-- `002_freq_functions.R`
-- `003_genomic_summaries.R`
-- `102_run_genomic_summaries.R`
-- `103_run_gwas.R`
-- `104_summarize-LD.R`
-- `105_summarize-TajimaD.R`
-- `formatting.R`
+- `formatting.R`: Contains common formatting information for all plots
+- `freq_functions.R`: Contains functions to extract frequencies of morphs from raw model output
+- `genomic_summaries.R`: Contains functions to summarise genomic data generated from analysis of the vcf files created by the simulation models
+- `gwas_preparation.R`: Contains functions to pre-process data to use with the GWAS analysis as well as functions to process GWAS outputs to relate them back to relevant information from the simulation models.
+- `102_run_genomic_summaries.R`: Identifies whether QTLs are in outlier peaks for population genetics statistics. Uses functions in `genomic_summaries.R`. 
+- `103_run_gwas.R`: Runs genome-wide association studies to identify loci associated with the courter and parent traits. Uses functions in `gwas_preparation.R`.
+- `104_summarize-LD.R`: This file compiles information on the linkage disequilibrium analysis and calculates summary statistics for each locus in each simulation.
+- `105_summarize-TajimaD.R`: Assesses Tajima D output from vcftools using functions in `genomic_summaries.R`.
 
-The analysis was conducted in the order of the numbers
 
-## Versions
-
+The analysis was conducted in the order of the numbers in the names of the files.
 
 
 ## Contributors
