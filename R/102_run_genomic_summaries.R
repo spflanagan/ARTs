@@ -1,3 +1,5 @@
+# This file gets population genetic summaries from vcf files created by simulation models
+
 library(vcfR)
 library(dplyr)
 # Run from R directory
