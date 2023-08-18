@@ -5,7 +5,9 @@ The repository supports a manuscript submitted to Proceedings of the Royal Socie
 The full text of that manuscript is found in `docs/ARTs_ms.Rmd` (which uses `docs/preamble.sty`, `proceedings-of-the-royal-society-b.csl`, and `docs/references.bib`, `R/formatting.R`, and figures in `figs/`). 
 A supplementary document, `docs/ARTs_supplement.Rmd`, is also available in this repository.
 
-The `figs/` directory contains an image of the model overview.
+The `figs/` directory contains an image of the model overview and the figures for the main text.
+
+Relevant model outputs have been archived on zenodo (doi: 10.5281/zenodo.8248198), and the README for those data is in `results/README_results.md`.
 
 Two programs are contained in this repository: a baseline analytical model (written in R) and a simulation-based model (written in C++). I will describe those independently and then describe the contents associated with analysis and writing.
 
@@ -17,21 +19,20 @@ Most of the files in that directory are R scripts that run different elements of
 
 The R scripts have the following functions:
 
-- `app.R`
-- `check_freqs.R`
-- `expectation_calculations.R`
-- `morph_gens.R`
-- `morph_gens_ns.R`
-- `morph_predictions.R`
+- `app.R`: Creates interactive plots and runs the shiny app
+- `check_freqs.R`: This script contains a function to check that the input frequencies provided to the function make sense (i.e., sum to 1)
+- `expectation_calculations.R`: This script runs the numerical iterations to generate predictions over some number of generations. It will also plot some outputs if desired.
+- `morph_gens_ns.R`: This script contains functions that perform different steps in the life cycle and wrapper scripts to combine those functions in a single generation and then also across multiple generations.
+- `morph_predictions.R`: This function generates the predictions for a single generation based on some initial frequencies. 
 
 ## Simulation-based model
 
 The simulation-based model can be found in `programs/ARTs/`, and has the following files in addition to a README for that particular model:
 
-- `lifecycle.cpp`
-- `classes.h`
-- `populations.h`
-- `random_numbers.h`
+- `lifecycle.cpp`: This is where most of the work happens
+- `classes.h`: A header file containing class objects (such as 'adults')
+- `populations.h`: A header file containing most of the details of life cycle components, as well as initialising functions.
+- `random_numbers.h`: A header file containing random number generation functions.
 
 Compilation of the program requires gcc version 11.4.0, and can be done using the included `makefile`.
 
