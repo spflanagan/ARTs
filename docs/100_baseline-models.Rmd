@@ -1,5 +1,5 @@
 ---
-title: "Comparing basic frequency-dependent models"
+title: "Comparing basic frequency-dependent models without explicit genetic architectures"
 author: "Sarah P. Flanagan"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output:
@@ -21,7 +21,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-The purpose of this model is to understand how genetic architectures of alternative reproductive tactics impact their maintenance in populations. I'm using an individual-based simulation model with different selection scenarios, types of alternative tactics, and genetic architectures (genome-wide additive genetic variance, supergenes, expression networks). To explore the parameter space, I'm also using a baseline analytical model without the genetic architectures to identify regions of parameter space where we expect multiple morphs to be maintained. 
+The purpose of this model is to understand how genetic architectures of alternative reproductive tactics impact their maintenance in populations. I'm using an individual-based simulation model with different selection scenarios, types of alternative tactics, and genetic architectures (genome-wide additive genetic variance vs supergenes). To explore the parameter space, I'm also using a baseline analytical model without the genetic architectures to identify regions of parameter space where we expect multiple morphs to be maintained. 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
@@ -44,21 +44,18 @@ library(dplyr)
 library(vegan)
 library(tidyr)
 source("../R/002_freq_functions.R")
-
+source("../R/formatting.R")
 source("../morph_predictions/check_freqs.R")
 source("../morph_predictions/morph_gens_ns.R")
 
-cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
-cols2<-c(CP='#d7191c',NCP='#fdae61',CNP='#abd9e9',NCNP='#2c7bb6')
-```
-```{r baseCols}
-base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
-                   "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
-poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
-                    "FreqNcP","FreqCP","Polygyny")
-
 ```
 
+```{r spftools}
+if(length(system.file(package='spfTools'))<=1){
+  devtools::install_github("https://github.com/spflanagan/spfTools/")
+}
+library(spfTools)
+```
 
 
 ## Baseline analytical model overview
