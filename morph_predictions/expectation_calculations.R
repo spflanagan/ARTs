@@ -32,7 +32,7 @@ if(isTRUE(init)){
 
 if(isTRUE(testing)){
   # create some expectations
-  expectations_list<-do.call(rbind,apply(freqs_list,1,morph_gens,gens=100)) # this is slow
+  expectations_list<-do.call(rbind,apply(freqs_list,1,morph_gens_ns,gens=100)) # this is slow
   
   # saved on 25 May 2021 to save time for defaults.
   saveRDS(expectations_list,"expectations_100gens.RDS")
@@ -61,8 +61,8 @@ if(isTRUE(testing)){
   fig
   
   # testing the case where the pop goes extinct.
-  morph_gens(gens=100,freqs=freqs_list[21,])
-  morph_gens(gens=100,freqs=c(0.25,0.25,0.25,0.25))
+  morph_gens_ns(gens=100,freqs=freqs_list[21,])
+  morph_gens_ns(gens=100,freqs=c(0.25,0.25,0.25,0.25))
 }
 
 
