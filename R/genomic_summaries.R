@@ -1,5 +1,12 @@
-# From https://stats.stackexchange.com/questions/22974/how-to-find-local-peaks-valleys-in-a-series-of-data
-# answer/code by stas g, posted 5 Aug 2015, accessed 6 Dec 2021
+#Author: Sarah P. Flanagan (spflanagan.phd@gmail.com)
+
+#' Find peaks in a series of data
+#' Code modified from https://stats.stackexchange.com/questions/22974/how-to-find-local-peaks-valleys-in-a-series-of-data
+#' answer/code by stas g, posted 5 Aug 2015, accessed 6 Dec 2021
+#' @param x Some series of continuous data
+#' @param m A local maximum, defaults to 3
+#' @return A vector of locations in the dataset that are within a peak in a series.
+#' @export
 find_peaks <- function (x, m = 3){
   
   # remove NAs (my modification)
@@ -16,7 +23,13 @@ find_peaks <- function (x, m = 3){
   pks
 }
 
-
+#' Summarize peaks that have been identified in a series of data
+#' @param path The file path to a vcf file
+#' @param pattern A naming pattern to use to identify the vcf file
+#' @param pop The population ID number that has been appended to the end of the filename before ".vcf"
+#' @param m The local maximum to use in the find_peaks() function. Default is 50.
+#' @return A data.frame of summary statistics from population genetics comparisons, separated out by genome-wide loci versus QTLs
+#' @export
 summarize_peaks<-function(path, pattern, pop, m=50){
   
   # get vcf data
@@ -90,6 +103,11 @@ summarize_peaks<-function(path, pattern, pop, m=50){
   
 }
 
+#' A function to get the summary data from summarize_peaks() given a filename and a path
+#' @param filename The base filename to use (without the population or vcf extension)
+#' @param path The path where the file is located
+#' @return A data.frame that is output from summarize_peaks()
+#' @export
 get_summary<-function(filename, path){
   print(filename)
   pattern <- gsub(paste0(path,"(.*)_(pop_\\d).vcf"),"\\1",filename)
