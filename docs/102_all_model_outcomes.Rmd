@@ -1,5 +1,5 @@
 ---
-title: "Ternary plots for ARTs results"
+title: "Visualising results using ternary diagrams to compare all model outcomes"
 output:
   pdf_document: default
   html_document:
@@ -35,17 +35,16 @@ library(vegan)
 library(tidyr)
 library(Ternary)
 source("../R/002_freq_functions.R")
-tmp<-sapply(list.files(path="../../spfTools/R/",full.names = TRUE),source)
 source("../morph_predictions/check_freqs.R")
 source("../morph_predictions/morph_gens_ns.R")
 source("../R/formatting.R")
 ```
-```{r colsSetup}
 
-ms_cols<-c(monogamy='#e08214',
-           monogamy_nm='#b35806',
-           polygyny='#998ec3',
-           polygyny_nm='#5e3c99')
+```{r spftools}
+if(length(system.file(package='spfTools'))<=1){
+  devtools::install_github("https://github.com/spflanagan/spfTools/")
+}
+library(spfTools)
 ```
 
 
@@ -142,7 +141,7 @@ AddToTernary(
 
 These simulations had three diversity settings but also four mating systems, so I'll use a mix of colors and points to show the differences.
 
-```{r singleLocusData}
+```{r singleLocusData, eval=FALSE}
 lowDiv<-morphs_to_ternary(pattern="lowDiversity.*summary.txt",path="single_locus")
 highDiv<-morphs_to_ternary(pattern="highDiversity_.*summary.txt", path="single_locus")
 highDivStrict<-morphs_to_ternary(pattern="highDiversityStrict.*summary.txt",path="single_locus")
@@ -151,7 +150,16 @@ highDivStrict<-morphs_to_ternary(pattern="highDiversityStrict.*summary.txt",path
 lowDiv<-lowDiv[grep("v0",grep("RM", names(lowDiv), invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)] 
 highDiv<-highDiv[grep("v0",grep("RM", names(highDiv), invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)]
 highDivStrict<-highDivStrict[grep("v0",grep("RM", names(highDivStrict), invert=TRUE, value=TRUE), invert=TRUE, value=TRUE)]
+saveRDS(lowDiv,"lowDiv.RDS")
+saveRDS(highDiv,"highDiv.RDS")
+saveRDS(highDivStrict,"highDivStrict.RDS")
 ```
+```{r readSingleLocusData}
+lowDiv<-readRDS("lowDiv.RDS")
+highDiv<-readRDS("highDiv.RDS")
+highDivStrict<-readRDS("highDivStrict.RDS")
+```
+
 
 ```{r singleLocusMSinfo}
 # extract corresponding mating system info
@@ -472,14 +480,7 @@ final_freqs$diversity<-gsub("^.*\\/(\\w+)Diversity.*$","\\1",final_freqs$file)
 high_freqs<-final_freqs[which(final_freqs$diversity=="high"),]
 
 ```
-```{r chrcol}
-chr_col<-c(
-  "#cccccc",
-  "#969696",
-  "#636363"
-)
-names(chr_col)<-levels(final_freqs$nchrom)
-```
+
 
 
 I'll start with just the QTL options.
