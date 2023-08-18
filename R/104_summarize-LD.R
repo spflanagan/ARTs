@@ -1,4 +1,7 @@
+# This file compiles information on the linkage disequilibrium analysis
+# and calculates summary statistics for each locus in each analysis
 
+# run from ARTs/results/
 
 ld_files<-c(list.files(path="../fixedART-results/supergene/", pattern=".LD.geno.ld", full.names = TRUE),
             list.files(path="../fixedART-results/qtls/", pattern=".LD.geno.ld", full.names = TRUE))
