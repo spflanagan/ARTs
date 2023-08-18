@@ -44,24 +44,20 @@ library(dplyr)
 library(vegan)
 library(tidyr)
 source("../R/002_freq_functions.R")
-tmp<-sapply(list.files(path="../../spfTools/R/",full.names = TRUE),source)
+source("../R/formatting.R")
 source("../morph_predictions/check_freqs.R")
 source("../morph_predictions/morph_gens_ns.R")
-
-cols<-c(courter="#33a02c",parent="#1f78b4",cpref="#b2df8a",ppref="#a6cee3")
-cols2<-c(CP='#d7191c',NCP='#fdae61',CNP='#abd9e9',NCNP='#2c7bb6')
 ```
-```{r baseCols}
-base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
-                   "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
-poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
-                    "FreqNcP","FreqCP","Polygyny")
-
+```{r spftools}
+if(length(system.file(package='spfTools'))<=1){
+  devtools::install_github("https://github.com/spflanagan/spfTools/")
+}
+library(spfTools)
 ```
 
 
 
-## Low diversity parameter space
+# Low diversity parameter space
 
 The [results from the mathematical model](https://spflanagan.shinyapps.io/morph_predictions/) were inspected to identify parameter regions where multiple morphs were *not* maintained. I focused on parameter sets when morphs had equal initial frequencies, as the simulation model initiates populations with nearly equal frequencies of the morphs. I selected the low diversity parameters in Table \@ref(tab:lowDivParams) to implement in the simulation model with a single locus underpinning the courter and parent traits. 
 
@@ -381,7 +377,7 @@ legend("top",bty='n',legend = c("Courter/Parent","Courter/Non-parent","Non-court
 ```
 
 
-## High diversity parameter space
+# High diversity parameter space
 
 The [results from the mathematical model](https://spflanagan.shinyapps.io/morph_predictions/) were inspected to identify parameter regions where multiple morphs were maintained. I focused on parameter sets when morphs had equal initial frequencies, as the simulation model initiates populations with nearly equal frequencies of the morphs. I selected the high-diversity parameters in Table \@ref(tab:highDivParams) to implement in the simulation model with a single locus underpinning the courter and parent traits. 
 
