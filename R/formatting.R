@@ -8,4 +8,15 @@ poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
                    "FreqNcP","FreqCP","Polygyny")
 divcols<-c(low='#f781bf',high='#984ea3')
 
-gt_cols<-c("#f2f0f7","#bcbddc","#54278f")
+
+ms_cols<-c(monogamy='#e08214',
+           monogamy_nm='#b35806',
+           polygyny='#998ec3',
+           polygyny_nm='#5e3c99')
+
+chr_col<-c(
+  "#cccccc",
+  "#969696",
+  "#636363"
+)
+names(chr_col)<-levels(final_freqs$nchrom)
