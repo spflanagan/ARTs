@@ -968,7 +968,7 @@ disequilibrium was elevated within the supergene region in our model,
 and similarly high levels of LD were not observed in the genome-wide QTL
 models (Fig. S10). However, measures of genetic variation and
 between-morph differentiation were similar in the two types of models
-(Fig. \@ref(fig:genomewideDiv)). 
+(Fig. \@ref(fig:genomewideDiv)).
 
 These unexpected levels of genetic diversity might have also impaired
 our ability to detect the causal QTLs using methods such as genome-wide
@@ -997,13 +997,13 @@ causal regions in some species
 Here, we show that the genetic architecture of discrete morphs affects
 the frequency of morphs maintained under balancing selection, but does
 not fundamentally change the conditions enabling balancing selection to
-allow multiple morphs to persist. We also show surprisingly elevated genetic
-diversity can be maintained, but that genome-wide scans are unlikely to
-accurately identify the complete genetic architecture of discrete
-traits. Our results highlight that additively determined dichotomous
-traits can be polygenic and exhibit evolutionary dynamics equivalent to
-a single-locus model, regardless of the physical configuration of the
-causal variants.
+allow multiple morphs to persist. We also show surprisingly elevated
+genetic diversity can be maintained, but that genome-wide scans are
+unlikely to accurately identify the complete genetic architecture of
+discrete traits. Our results highlight that additively determined
+dichotomous traits can be polygenic and exhibit evolutionary dynamics
+equivalent to a single-locus model, regardless of the physical
+configuration of the causal variants.
 
 # Acknowledgments
 
