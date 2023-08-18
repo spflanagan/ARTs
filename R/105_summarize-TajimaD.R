@@ -7,7 +7,7 @@ if(length(system.file(package='spfTools'))<=1){
 }
 library(spfTools)
 
-source("genomic_summaries.R")
+source("../R/genomic_summaries.R")
 
 td_files<-c(list.files(path="../fixedART-results/supergene/", pattern=".Tajima.D", full.names = TRUE),
             list.files(path="../fixedART-results/qtls/", pattern=".Tajima.D", full.names = TRUE))
