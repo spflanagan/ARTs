@@ -67,7 +67,6 @@ source("../R/002_freq_functions.R")
 
 source("../morph_predictions/check_freqs.R")
 source("../morph_predictions/morph_gens_ns.R")
-
 ```
 ```{r spftools}
 if(length(system.file(package='spfTools'))<=1){
