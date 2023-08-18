@@ -1,3 +1,5 @@
+# This file extracts phenotype and genotype information from vcf files
+# and then conducts GWAS using the GWASpoly library separately for courter and parent traits
 
 # run from ARTs/R/
 
