@@ -837,31 +837,35 @@ though in the majority of simulations the final population only
 contained parental males (Fig. \@ref(fig:ternaryPlots)B). The higher
 probability of detecting parent QTLs could be attributed to stronger
 selection on that trait (i.e., being a non-parent was more costly than
-being a non-courter). To summarise, a surprising degree of genetic diversity was retained in our simulations despite fixation of some morphs, which impeded the detection of causal loci. 
+being a non-courter). To summarise, a surprising degree of genetic
+diversity was retained in our simulations despite fixation of some
+morphs, which impeded the detection of causal loci.
 
 # Discussion
 
 Understanding how the genetic architecture of phenotypic polymorphisms
-facilitates or constrains their maintenance and evolution is crucial for understanding
-the mechanisms shaping diversity. Yet, we do not fully understand how
-polygenic phenotypes can be inherited as discrete suites of
-traits. Using a simulation model, we show that the genetic architecture --
-specifically, the number of loci and the extent of linkage among them --
-affects the persistence of complex discrete phenotypes. In our single-gene
-models, under parameter conditions that favoured the maintenance of
-multiple morphs in simple single-gene models, which male morphs were
-retained was determined due to stochasticity. However, when more complex
-architectures are modelled using the same parameters, specific
-combinations of morphs were retained; thus, genetic complexity of traits
-reduced the importance of stochasticity. This phenomenon was likely due
-to genetic correlations between traits and loci. 
-In contrast to expectations, we did not find that supergenes increased the probability that multiple morphs are maintained in the population.
-QTLs organised into supergenes (in which causal SNPs are physically
-co-located and experience reduced recombination), although associated
-with high linkage disequilibrium, did not have qualitatively different
-outcomes in terms of the maintenance of discrete morphs than QTLs distributed genome-wide. In addition, unexpectedly
-high levels of genetic diversity were retained within morphs in the
-supergene scenarios.
+facilitates or constrains their maintenance and evolution is crucial for
+understanding the mechanisms shaping diversity. Yet, we do not fully
+understand how polygenic phenotypes can be inherited as discrete suites
+of traits. Using a simulation model, we show that the genetic
+architecture -- specifically, the number of loci and the extent of
+linkage among them -- affects the persistence of complex discrete
+phenotypes. In our single-gene models, under parameter conditions that
+favoured the maintenance of multiple morphs in simple single-gene
+models, which male morphs were retained was determined due to
+stochasticity. However, when more complex architectures are modelled
+using the same parameters, specific combinations of morphs were
+retained; thus, genetic complexity of traits reduced the importance of
+stochasticity. This phenomenon was likely due to genetic correlations
+between traits and loci. In contrast to expectations, we did not find
+that supergenes increased the probability that multiple morphs are
+maintained in the population. QTLs organised into supergenes (in which
+causal SNPs are physically co-located and experience reduced
+recombination), although associated with high linkage disequilibrium,
+did not have qualitatively different outcomes in terms of the
+maintenance of discrete morphs than QTLs distributed genome-wide. In
+addition, unexpectedly high levels of genetic diversity were retained
+within morphs in the supergene scenarios.
 
 ## Supergenes have similar outcomes to randomly distributed QTLs
 
@@ -870,37 +874,47 @@ explanation for how complex suites of traits could be inherited in a
 discrete manner, when they must also be polygenic
 [@schwanderSupergenesComplexPhenotypes2014]. We provide compelling
 evidence that additive genetic variation need not be co-located in a
-non-recombining region of a chromosome for multiple morphs to be maintained. Our model makes several assumptions that might differ from real-world examples, however, and These additional forms of
-complexity in genetic architectures are fruitful areas for future
-research.  For example, the steroid hormone receptor genes in
-white-throated sparrow and ruff supergenes
-[@maneySupergenesSteroids2022] would be better approximated by a
-logarithmic distribution, which differs from the additive distribution of allelic
-effects that we used. Additionally, many polymorphisms could rely on dominance
-hierarchies (e.g., as modelled by
-[@svenssonFemalePolymorphismFrequency2005]), and could even be
-underpinned by dominance reversals between morphs
+non-recombining region of a chromosome for multiple morphs to be
+maintained. Our model makes several assumptions that might differ from
+real-world examples, however, and These additional forms of complexity
+in genetic architectures are fruitful areas for future research. For
+example, the steroid hormone receptor genes in white-throated sparrow
+and ruff supergenes [@maneySupergenesSteroids2022] would be better
+approximated by a logarithmic distribution, which differs from the
+additive distribution of allelic effects that we used. Additionally,
+many polymorphisms could rely on dominance hierarchies (e.g., as
+modelled by [@svenssonFemalePolymorphismFrequency2005]), and could even
+be underpinned by dominance reversals between morphs
 [@pearseSexdependentDominanceMaintains2019] or sexes
 [@grieshopDominanceReversalsAntagonistic2021], which were not
-possibilities considered in our model. Regardless, we provide the important result that discrete
-morphs can be maintained within populations even without discrete
-genetic architectures with a threshold-based switch, contrary to
-predictions from some authors [@boltonColourPolymorphismLikely2016].
-Our results indicate that discrete morphs need not have causal genes co-located in a supergene but can still follow the single- or two-locus phenotypic inheritance
+possibilities considered in our model. Regardless, we provide the
+important result that discrete morphs can be maintained within
+populations even without discrete genetic architectures with a
+threshold-based switch, contrary to predictions from some authors
+[@boltonColourPolymorphismLikely2016]. Our results indicate that
+discrete morphs need not have causal genes co-located in a supergene but
+can still follow the single- or two-locus phenotypic inheritance
 patterns seen in side-blotched lizards [@sinervoRunawaySocialGames2001]
 and damselflies [@svenssonFemalePolymorphismFrequency2005].
 
 ## Unexpected genetic variation was maintained even when traits were fixed
 
-Comparing our model predictions to predictions from the literature on sexually antagonistic selection on autosomes can be informative because both scenarios involve balancing selection on shared genomic regions [@morrisIntralocusTacticalConflict2013]. In our model, balancing selection arises from fitness tradeoffs between reproductive investment and survival in males, which creates conflicts among morphs, wheeras autosomal sexually antagonistic selection involves conflicts between sexes over similar tradeoffs. Unlike
-models of sex-specific selection, which have found that under conditions
-resulting in balancing selection on males and females genetic variation
-can be maintained [@connallon2012], but that most genomic regions will
-not show excessive variation [@flanaganIdentifyingSignaturesSexual2015],
-our models predict the maintenance of variation in phenotypes and in
-genotypes. Additionally, we detected high levels of genetic
-differentiation between male types, even without strong selection, which
-is opposite to the predictions for sex-specific selection
+Comparing our model predictions to predictions from the literature on
+sexually antagonistic selection on autosomes can be informative because
+both scenarios involve balancing selection on shared genomic regions
+[@morrisIntralocusTacticalConflict2013]. In our model, balancing
+selection arises from fitness tradeoffs between reproductive investment
+and survival in males, which creates conflicts among morphs, wheeras
+autosomal sexually antagonistic selection involves conflicts between
+sexes over similar tradeoffs. Unlike models of sex-specific selection,
+which have found that under conditions resulting in balancing selection
+on males and females genetic variation can be maintained
+[@connallon2012], but that most genomic regions will not show excessive
+variation [@flanaganIdentifyingSignaturesSexual2015], our models predict
+the maintenance of variation in phenotypes and in genotypes.
+Additionally, we detected high levels of genetic differentiation between
+male types, even without strong selection, which is opposite to the
+predictions for sex-specific selection
 [@kasimatisLimitsGenomicDivergence2019]. As such, our model highlights
 how demographic factors, stochasticity, and genomic effects such as
 pleiotropy and linkage can affect genetic variation, and potentially
@@ -976,7 +990,8 @@ Santa Cruz.
 # Data Accessibility
 
 All code has been archived on Zenodo (DOI: ) and is maintained on github
-(). 
+(https://github.com/spflanagan/ARTs). 
+Outputs used in the creation of figures in the main text and the supplement are archived on zenodo (DOI: ).
 
 # Author Contributions
 
