@@ -707,14 +707,16 @@ Mendelian simulation model is that only two morphs are maintained with
 parameters that retained three morphs in the analytical model (Fig.
 \@ref(fig:ternaryPlots)A; see Fig. S2 for outcomes with alternative
 mating dynamics). Furthermore, stochasticity played a major role in
-which morph co-existed with the courter/parent morph, even when
-the parameter values used were identical (Fig. S3). Variation in
-outcomes among replicate runs can be attributed to the many sources of
-random chance incorporated in the model: stochasticity associated with
-finite population sizes (i.e., genetic drift), the randomness of
-recombination, and the finite mate search process (in which females
-might not find a suitable mate, even if one exists in the population)
-all contribute to the within-replicate variation observed. Altogether, including realistic genetic components reduced the total diversity of morphs compared to a deterministic single-gene model. 
+which morph co-existed with the courter/parent morph, even when the
+parameter values used were identical (Fig. S3). Variation in outcomes
+among replicate runs can be attributed to the many sources of random
+chance incorporated in the model: stochasticity associated with finite
+population sizes (i.e., genetic drift), the randomness of recombination,
+and the finite mate search process (in which females might not find a
+suitable mate, even if one exists in the population) all contribute to
+the within-replicate variation observed. Altogether, including realistic
+genetic components reduced the total diversity of morphs compared to a
+deterministic single-gene model.
 
 ### Polygenic architectures reduce effects of stochasticity, with supergenes having little effect on the maintenance of morphs
 
@@ -766,7 +768,9 @@ visualised the QTL haplotypes in supergenes (see Fig. S6 and S7 for
 representative images). These visualisations suggest that because of the
 additive, polygenic nature of our traits, individuals have multiple
 pathways to creating the morphs in terms of genotypes at each QTL, even
-when QTLs are segregating together in a supergene. These findings suggest that supergenes are not necessary for maintaining multiple reproductive morphs that are comprised of many causal loci.
+when QTLs are segregating together in a supergene. These findings
+suggest that supergenes are not necessary for maintaining multiple
+reproductive morphs that are comprised of many causal loci.
 
 ### Genome-wide genetic diversity is maintained even when trait diversity is low
 
