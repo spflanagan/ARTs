@@ -15,9 +15,3 @@ ms_cols<-c(monogamy='#e08214',
            polygyny='#998ec3',
            polygyny_nm='#5e3c99')
 
-chr_col<-c(
-  "#cccccc",
-  "#969696",
-  "#636363"
-)
-names(chr_col)<-levels(final_freqs$nchrom)

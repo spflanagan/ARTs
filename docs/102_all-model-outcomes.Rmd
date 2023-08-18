@@ -481,6 +481,14 @@ high_freqs<-final_freqs[which(final_freqs$diversity=="high"),]
 
 ```
 
+```{r setcols}
+chr_col<-c(
+  "#cccccc",
+  "#969696",
+  "#636363"
+)
+names(chr_col)<-levels(final_freqs$nchrom)
+```
 
 
 I'll start with just the QTL options.
