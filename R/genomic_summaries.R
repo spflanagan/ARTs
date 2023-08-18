@@ -114,3 +114,55 @@ get_summary<-function(filename, path){
   pop <-gsub(paste0(path,"(.*)_(pop_\\d).vcf"),"\\2",filename)
   summarize_peaks(path, pattern=pattern, pop=pop)
 }
+
+
+#' A function to summarise the vcftools Tajima's D output, 
+#' specifically to identify regions with and without QTLs
+#' @param td_name A character name of a Tajima's D output file from vcftools
+#' @return A list of summary statistics for all markers, QTLs, and neutral markers
+#' @import spfTools
+#' @export
+summarize_tajimaD_vcftools<-function(td_name){
+  library(spfTools)
+  td<-read.delim(td_name)
+  qtl_file<-gsub("_pop_\\d.Tajima.D","_qtlinfo.txt",td_name)
+  pop<-gsub("^.*pop_(\\d).*$","Pop\\1",td_name)
+  
+  qtl_info<-read.delim(qtl_file)
+  qtl_info<-qtl_info[qtl_info$Pop==pop,-1]
+  qtls<-data.frame(
+    Chrom=gsub("(\\d)\\.(\\d+)","\\1",qtl_info[!is.na(qtl_info)]),
+    Locus=gsub("(\\d)\\.(\\d+)","\\2",qtl_info[!is.na(qtl_info)])
+  )
+  
+  td$QTL<-FALSE
+  for(chrom in unique(td$CHROM)){
+    chtd<-td[td$CHROM==chrom,]
+    
+    locs<-qtls[qtls$Chrom ==chrom,"Locus"]
+    for(i in 1:nrow(chtd)){
+      for(loc in locs){
+        if(loc >= chtd[i,"BIN_START"] & loc <= chtd[i,"BIN_START"]+chtd[i,"N_SNPS"]){
+          # then there's a qtl there
+          chtd$QTL[i] <- TRUE
+        }
+      }
+    }
+    # Save it back to the overall df
+    td[td$CHROM==chrom,"QTL"]<-chtd$QTL
+  }
+  
+  tres<-t.test(td$TajimaD[td$QTL==TRUE], td$TajimaD[td$QTL==FALSE])
+  
+  return(c(
+    avgTD=mean(td$TajimaD),
+    semTD=sem(td$TajimaD),
+    avgTD_qtls=mean(td$TajimaD[td$QTL==TRUE]),
+    semTD_qtls=sem(td$TajimaD[td$QTL==TRUE]),
+    avgTD_neutral=mean(td$TajimaD[td$QTL==FALSE]),
+    semTD_neutral=sem(td$TajimaD[td$QTL==FALSE]),
+    t = tres$statistic,
+    df = tres$parameter,
+    p = tres$p.value
+  ))
+}
