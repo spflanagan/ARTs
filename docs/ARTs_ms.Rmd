@@ -907,16 +907,16 @@ autosomal sexually antagonistic selection involves conflicts between
 sexes over similar tradeoffs. Unlike models of sex-specific selection,
 which have found that under conditions resulting in balancing selection
 on males and females genetic variation can be maintained
-[@connallon2012], but that most genomic regions will not show excessive
-variation [@flanaganIdentifyingSignaturesSexual2015], our models predict
-the maintenance of variation in phenotypes and in genotypes.
-Additionally, we detected high levels of genetic differentiation between
-male types, even without strong selection, which is opposite to the
-predictions for sex-specific selection
-[@kasimatisLimitsGenomicDivergence2019]. As such, our model highlights
-how demographic factors, stochasticity, and genomic effects such as
-pleiotropy and linkage can affect genetic variation, and potentially
-obscure putative genome-wide signals of selection.
+[@connallonGeneralPopulationGenetic2012], but that most genomic regions
+will not show excessive variation
+[@flanaganIdentifyingSignaturesSexual2015], our models predict the
+maintenance of variation in phenotypes and in genotypes. Additionally,
+we detected high levels of genetic differentiation between male types,
+even without strong selection, which is opposite to the predictions for
+sex-specific selection [@kasimatisLimitsGenomicDivergence2019]. As such,
+our model highlights how demographic factors, stochasticity, and genomic
+effects such as pleiotropy and linkage can affect genetic variation, and
+potentially obscure putative genome-wide signals of selection.
 
 Furthermore, we expected the supergenes to evolve to contain single
 haplotypes for each morph, as has been reported in empirical examples of
