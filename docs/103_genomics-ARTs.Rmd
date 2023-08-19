@@ -19,6 +19,10 @@ graphics: yes
 csl: evolution.csl
 editor_options:
   chunk_output_type: console
+header-includes:
+- \usepackage{pdflscape}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
 ---
 
 The purpose of this model is to understand how genetic architectures of alternative reproductive tactics impact their maintenance in populations. I'm using an individual-based simulation model with different selection scenarios, types of alternative tactics, and genetic architectures (genome-wide additive genetic variance, supergenes, expression networks). To explore the parameter space, I'm also using a mathematical model without the genetic architectures to identify regions of parameter space where we expect multiple morphs to be maintained. 
@@ -1613,11 +1617,12 @@ mtext("Courter-Parent Frequency", 1, outer=TRUE, line=-1, cex=1.5)
 outer_legend("top",
        bty='n',
        pch=c(17, 16, 15,15),
-       col=c("grey", "grey",divcols["high"],divcols["low"]),
        legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
        ncol=4,
        cex=2.5,
        pt.cex=2)
 
 ```
+
+\elandscape
 
