@@ -544,7 +544,7 @@ knitr::include_graphics(c("../figs/QTLFig-1.png","../figs/supergeneFig-1.png"))
 
 ## Distributions of significance of genome-wide summary statistics
 
-We looked into the distribution of population genetics statistics across many models to summarise patterns (in the main text), but we also tested these for statistical significance. The distributions of p-values for the observed heterozygosity and Tajima's D, as calculated using vcftools, are shown in Fig. \@ref(fig:genomewideDiv). 
+We looked into the distribution of population genetics statistics across many models to summarise patterns (in the main text), but we also tested these for statistical significance. The distributions of p-values for the observed heterozygosity and Tajima's D, as calculated using vcftools, are shown in Fig. \@ref(fig:genomewideDivSupp). 
 Further, we looked to identify whether causal QTLs ('true' QTLs) were found in regions of the genome with significant $G_{ST}$ values, so we identified regions with peaks in $G_{ST}$ and evaluated whether those peaks contained a causal locus. The genomewide patterns of the proportions of all true QTLs that were found in these peaks is found in Fig. \@ref(fig:GstProportions). Linkage disequilibrium was similarly not found to vary substantially among causal vs marker loci nor between genetic architectures (Fig. \@ref(fig:LDplots)).
 
 
@@ -608,7 +608,7 @@ td_freqs<-merge(td_summary, final_freqs,by="rep")
 
 ```
 
-```{r genomewideDiv, fig.cap="Tests for statistical significance of differences in genome-wide genetic diversity in the final generation of the simulations between different genetic architectures. Shown are p-values for t-tests comparing genome-wide observed heterozygosity (A) and Tajima’s D (B) between runs with genome-wide QTLs versus supergenes.", fig.keep='last', fig.height=4, fig.width=7}
+```{r genomewideDivSupp, fig.cap="Tests for statistical significance of differences in genome-wide genetic diversity in the final generation of the simulations between different genetic architectures. Shown are p-values for t-tests comparing genome-wide observed heterozygosity (A) and Tajima’s D (B) between runs with genome-wide QTLs versus supergenes.", fig.keep='last', fig.height=4, fig.width=7}
 
 par(mfrow=c(1,2),xpd=TRUE, mar=c(5,5,1.5,1), oma=c(0,0,5,1))
 
