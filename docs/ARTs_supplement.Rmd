@@ -65,7 +65,7 @@ source("../morph_predictions/morph_gens_ns.R")
 
 
 ```
-```{r spftools}
+```{r spftools, echo=FALSE,echo=FALSE,message=FALSE, warning=FALSE}
 if(length(system.file(package='spfTools'))<=1){
   devtools::install_github("https://github.com/spflanagan/spfTools/")
 }
