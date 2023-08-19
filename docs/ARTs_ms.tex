@@ -4,6 +4,7 @@
 %
 \documentclass[
   11pt,
+  a4paper,
 ]{article}
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
@@ -16,6 +17,7 @@
   \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+  \setmainfont[]{roboto}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -34,13 +36,7 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  pdftitle={Genetic architecthure of alternative reproductive tactics},
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=2.5cm]{geometry}
 \usepackage{longtable,booktabs,array}
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
@@ -91,8 +87,23 @@
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
-\usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H}
+\usepackage{lineno}
+\usepackage{authblk}
+\usepackage{lipsum} \usepackage{float} \floatplacement{figure}{H} \usepackage[sfdefault]{roboto} \usepackage[T1]{fontenc} 
 
+%command for the package lineno to put line numbers in the manuscript
+\linenumbers
+
+% make it double spaced
+\usepackage{setspace}
+\doublespacing
+
+%authors
+\author[1,*]{Sarah P. Flanagan}
+\author[2]{Suzanne H. Alonzo}
+\affil[1]{\footnotesize School of Biological Sciences, University of Canterbury}
+\affil[2]{\footnotesize Department of Ecology and Evolutionary Biology, University of California Santa Cruz}
+\affil[*]{Corresponding author: spflanagan.phd@gmail.com}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -110,439 +121,642 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Supergenes are not necessary to explain the maintenance of complex alternative phenotypes},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
 
-\title{Genetic architecthure of alternative reproductive tactics}
-\author{true \and true}
-\date{}
+\title{Supergenes are not necessary to explain the maintenance of complex alternative phenotypes}
+\date{\vspace{-2.5em}}
 
 \begin{document}
 \maketitle
+\begin{abstract}
+Evolutionary biology aims to explain the diversity seen in nature. Evolutionary theory provides frameworks to understand how simple polymorphisms or continuous variation are maintained, but phenotypes inherited as discrete suites of quantitative traits are difficult to fit into this framework. Supergenes have been proposed as a solution to this problem -- if causal genes are co-located, they can be inherited as if a single gene, thus bridging the gap between simple polymorphisms and continuous traits. We develop models to ask: how critical are supergenes for maintaining phenotypic diversity? In our simplest model, without explicit genetic architectures, three alternative reproductive morphs are maintained in many of the parameter combinations we evaluated. With these same parameters, models with demographic stochasticity, recombination, and mutation maintained only two of these three morphs, with stochasticity determining which ones. With explicit genetic architectures, regardless of whether causal loci were co-located in a supergene or distributed randomly, this stochasticity was reduced. Even when phenotypic variation was lost, genetic diversity was maintained. Altogether, categorical traits with polygenic bases exhibited similar evolutionary dynamics to those determined by supergenes. Our work suggests that supergenes are not the only answer to the puzzle of how discrete phenotypic variation is maintained. ¶ \par ¶ \textbf{Keywords:} genome-wide genetic diversity, alternative mating tactics, frequency dependent selection, supergene, alternative reproductive tactics, genetic architecture
+\end{abstract}
+
+\begin{verbatim}
+## Skipping install of 'spfTools' from a github remote, the SHA1 (b077a73e) has not changed since last install.
+##   Use `force = TRUE` to force installation
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: devtools
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: usethis
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'usethis' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'devtools'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:permute':
+## 
+##     check
+\end{verbatim}
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-Both genetic and phenotypic variation are required for evolution to
-occur, and as such the maintenance of variation in populations has long
-been of interest to evolutionary biologists and conservation
-geneticists. Evolution is often expected to remove variation from
-populations, with specific patterns of selection being predicted to
-maintain variation at a high frequency -- including overdominance,
-sexually antagonistic selection
-{[}1,\textbf{connallonResolutionSexualAntagonism2011?}{]}, and frequency dependent
-selection {[}2{]}. Yet, substantial phenotypic
-variation is observed, with ubiquitous examples such as the prevalence
-of sexual dimorphism and the unexpectedly frequent existence of
-alternative reproductive tactics, in which individuals of the same
-species and sex display different morphs to maximize reproductive
-fitness in unique ways {[}3{]}.
+A wide variety of animals exhibit sex-specific morphs that are generally
+associated with different discrete ways of maximizing reproductive
+success, which are often referred to as alternative reproductive tactics
+{[}1{]}. These stable
+polymorphisms are typically maintained in populations through negative
+frequency-dependent selection (e.g., female morphs in damselflies
+{[}2{]}; Gouldian finches
+{[}3{]}), the interaction
+of frequency-dependent and density-dependent factors (e.g.,
+side-blotched lizards {[}4{]}), and fluctuating
+selection pressures enabling the partitioning of reproductive success
+over time (e.g., the feminized dwarf spider morph mates earlier, whereas
+the alternative morph is able to mate with previously-mated females
+later in the season {[}5{]}).
+When these tactics are fixed within an individual throughout its
+lifetime, an individual's tactic often has a large genetic component
+(e.g., dwarf spiders, side-blotched lizards, ruffs; examples reviewed in
+{[}1,6{]}). The maintenance of fixed tactics
+have been modelled using explicitly or implicitly simple genetic
+architectures of one or two genetic loci
+{[}4,7--13{]}. Given that morphs are suites of
+traits inherited together, some authors have used verbal models to
+explore the importance of correlational selection and its associated
+formation of genetic correlations and linkage disequilibrium across loci
+{[}14{]}. While these relatively
+simple genetic models do capture the evolutionary dynamics of some
+empirical examples {[}7,15{]}, genomic data has accumulated
+for a number of species suggesting that categorical traits might in fact
+be underpinned by numerous quantitative genetic loci
+{[}16,17{]}.
 
-The genetic basis of polymorphic traits is also critical to
-understanding the maintenance of variation. Evolution can be constrained
-by factors including pleiotropy, genetic correlations, and physical
-linkage. As such, the reduction or removal of these constraints can
-facilitate sequence evolution by relaxing positive selection on genes
-{[}4,\textbf{dapperRelaxedSelectionRapid2020?}{]}.
-However, how genome-wide patterns of constraining factors and patterns of sex- or morph-specific selection remains under-explored in evolutionary theory, in particular as it relates to creating baseline predictions for interpreting empirical datasets.
-Specifically, the majority of predictions relating selection to genetic
-constraints arise from one- or two-locus models (EXAMPLES), which can be
-difficult to extrapolate to genome-wide predictions. In the modern
-genomic era, having predictions for large genome-wide datasets is of
-critical importance to develop testable hypotheses (citations).
-
-One genetic mechanism that is increasingly being considered as an important
-mechanism in evolution are structural variants, such as inversion
-polymorphisms that harbour so-called `supergenes'. These variants are
-regions of the genome in which some individuals carry an inversion, in
-which genes with direct phenotypic effects exist. The mismatched
-directionality reduces recombination between the different variants,
-facilitating the maintenance of both genetic and phenotypic variations.
-These supergenes have been shown to underpin stable polymporhisms
-including multiple social morphs in fire ants
-{[}@yanEvolutionSupergeneThat2020{]}, colony sex ratio skew in ants
-{[}@lagunas-roblesLinkedSupergenesUnderlie2021{]}, sex-specific migratory behaviours {[}@pearseSexdependentDominanceMaintains2019{]}, sperm length and swim speed {[}@kimSexlinkedSupergeneControls2017; @kniefSexchromosomeInversionCauses2017{]}, venom composition in rattlesnakes
-{[}@zancolliWhenOnePhenotype2019{]}, and sexually dimorphic alternative
-reproductive tactics {[}@thomasChromosomalPolymorphismLinked2008;
-@kupperSupergeneDeterminesHighly2016;
-@lamichhaneyStructuralGenomicChanges2016;
-@hendrickxMasculinizingSupergene2022{]}.The potential for structural
-variants to underpin sexually dimorphic polymorphisms is intriguing, as
-most research to date has focused on the role of differential gene
-expression in underlying sexual dimorphism {[}citations{]}. For example, in
-canaries, sexual dichromatism appears to be mediated by differential
-expression of a single gene involved in carotenoid breakdown
-{[}@gazdaGeneticMechanismSexual2020{]}. Androgens are a likely mechanism
-for modulating these gene expression differences, for example in
-primates male-biased genes are more likely to be proximal to androgen
-response elements {[}@andersonRelationshipSexualDimorphism{]}. Unlike the
-canaries, though, examples where supergenes apparently underpin sexually
-dimorphic phenotypes tend to involve multiple morphs of one sex, usually
-males. Nearly all examples include a female-mimic morph, including ruffs
-{[}@kupperSupergeneDeterminesHighly2016;
-@lamichhaneyStructuralGenomicChanges2016{]}, dwarf spiders
-{[}@hendrickxMasculinizingSupergene2022{]}, and white-throated sparrows
-{[}@thomasChromosomalPolymorphismLinked2008{]}. In the ruffs, a third male
-morph exists, with an intermediate phenotype between the dominant or
-`classic' male morph and the female-mimic
-{[}@kupperSupergeneDeterminesHighly2016;
-@lamichhaneyStructuralGenomicChanges2016{]}. At least in some cases,
-these structural variants are successful in coding for these variable
-phenotypes because they include androgen receptors -- the white-throated
+Consistent with other work suggesting that traits critical to
+reproductive fitness are determined by the additive contributions of
+many loci throughout the genome {[}17,18{]}, several alternative
+reproductive tactics are associated with many genetic variants
+throughout the genome which contribute primarily additively to the
+phenotypes {[}16{]} -- implying that although
+the tactics might be discrete and inherited in an apparently Mendelian
+fashion, their genetic basis is much more complex and multivariate. A
+particularly intriguing result is that structural variants have
+aggregated multiple variants contributing to the tactics into a
+`supergene' in at least three species with alternative reproductive
+tactics: the ruff {[}19,20{]}, white-throated sparrow
+{[}21{]}, and dwarf spiders
+{[}5{]}. Supergenes have also
+been linked to sex-specific traits important to reproduction such as
+sperm morphology {[}22,23{]}, head colour
+{[}24{]}, and sex-specific migratory
+behaviours {[}25{]}. The potential
+for supergenes to underpin sexually dimorphic polyphenisms is
+intriguing, as it could explain the apparent mis-match between simple
+single-locus population genetic models and the fact that these
+reproductive tactics are suites of complex traits
+{[}7{]}. Supergenes, with their reduced
+recombination between variants, also provide a mechanism for individuals
+with largely similar genomic information to harbour fixed genetic
+variation without requiring differential gene expression. Examples where
+supergenes apparently underpin sexually dimorphic phenotypes tend to
+involve multiple morphs of one sex, usually males. All known examples of
+alternative morphs determined by supergenes include a female-mimic
+morph, including ruffs {[}19,20{]}, dwarf spiders
+{[}5{]}, and white-throated
+sparrows {[}21{]}. In the ruffs, a
+third male morph exists, with an intermediate phenotype between the
+dominant or `classic' male morph and the female-mimic
+{[}19,20{]}. In some cases, a heterozygous
+genotype is lethal (e.g., ruffs {[}19,20{]}), but not in others (e.g.,
+dwarf spiders {[}5{]}). In the
+white-throated sparrow and the ruff, these structural variants are
+successful in coding for these variable phenotypes because they include
+androgen receptors {[}26{]}-- the white-throated
 sparrow supergene contains the estrogen receptor gene which directly
 influences the aggressive aspects of the dominant male phenotype
-{[}@merrittSupergenelinkedEstrogenReceptor2020{]}.
+{[}27{]}.
 
-These stable polymorphisms -- underpinned by supergenes -- are
-often maintained in populations through partitioning of reproductive
-success over time (e.g., the feminized dwarf spider morph mates earlier,
-whereas the alternative morph is able to mate with previously-mated
-females later in the season {[}@hendrickxMasculinizingSupergene2022{]}),
-frequency dependent selection (examples?). In some cases, a heterozgyous
-genotype is lethal (e.g., ruffs {[}@kupperSupergeneDeterminesHighly2016;
-@lamichhaneyStructuralGenomicChanges2016{]}), but not in others (e.g.,
-dwarf spiders {[}@hendrickxMasculinizingSupergene2022{]}).
+An open question is: to what extent do supergenes facilitate the
+maintenance of multiple morphs versus the evolution of multiple morphs
+facilitating the evolution of supergenes? This question is difficult to
+address empirically, but is important for understanding the genetic
+mechanisms underpinning adaptive genetic variation. For example, if a
+supergene exists and a mutation arises within it that affects the morph
+traits, the genetic variation within the supergene itself could have
+eroded due to relaxation of selection and reduced recombination. As
+such, only the mutation would be likely to show significant genetic
+variation -- this could make a supergene with functional effects
+difficult to detect empirically. This is especially true in cases such
+as the white-throated sparrow, in which the gene with a major effect is
+an estrogen receptor {[}27{]},
+which likely affects the expression of many genes. Furthermore, it is
+currently unknown to what extent genetic architectures -- and the
+constraints inherit to them -- impact the dynamics of the frequency- and
+density-dependent mechanisms that maintain simple cases of genetic
+variation in populations.
 
-Supergenes and other structural variants might resolve interlocus? conflict, but they might also exacerbate it.
+An additional challenge arises from limitations in the empirical data
+that can be used to identify genetic architectures of these traits and
+uncover the mechanisms governing their evolution. The majority of
+examples involved researchers first generating a high quality reference
+genome and subsequently performing whole genome resequencing of
+individuals of each morph and sex to identify variants within
+populations that are associated with the phenotypic tactics
+{[}5,16,19--22,27,28{]}. Alternative approaches
+involve linkage mapping {[}29{]} or the
+investigation of differential gene expression between morphs
+{[}30--32{]}. These methods have proven
+successful in some cases, although for many other types of traits the
+ability to detect causal variants is generally limited
+{[}33--35{]}. Regardless, despite the
+potential ability to uncover the most important evolutionary processes
+in the evolution of these traits using genomic data
+{[}36--38{]}, the power might be
+substantially limited in real-world samples
+{[}39,40{]}. In part, this limitation is
+due to lacking a predictive understanding of how different genetic
+architectures can influence evolutionary dynamics of polygenic traits.
 
-What about conflict between morphs?
-
-One way that researchers have observed a role for supergenes is through genomic analysis. Putative regions are usually first identified through estimating allele frequency differences between morphs, testing for associations with the traits of interest (e.g., {[}@lagunas-roblesLinkedSupergenesUnderlie2021{]}). Recent mathematical and simulation models have helped clarify the allelic variation that is expected to be maintained
-under sex-specific selection pressures,
-and importantly have suggested that sex-specific selection must be incredibly strong
-{[}5{]}.
-However, providing direct linkages between theoretical predictions of
-evolutionary mechanisms, genotype-to-phenotype maps, and realistic
-datasets are currently lacking. Here, we fill this gap using
-individual-based simulation models of alternative reproductive tactics
-in males and three types of genetic architectures for the traits of
-interest. \textbf{Not sure if this is useful}
-
-An open question is to what extent do supergenes facilitate the maintenance of multiple morphs, versus whether the evolution of multiple morphs might facilitate the evolution of supergenes.
-This question is difficult to address empirically, and is likely to have consequences for the maintenance of genetic variation at loci contributing to traits. For example, if a supergene exists and a mutation or arises within it that impacts the morph traits, the genetic variation within the supergene itself could have eroded due to relaxation of selection and reduced recombination. As such, only the mutation would be likely to show significant genetic variation -- this could make a supergene with functional effects difficult to detect empirically. This is especially true in cases such as the white-throated sparrow, in which the gene with a major effect is an estrogen receptor {[}@merrittSupergenelinkedEstrogenReceptor2020{]}, which likely impacts the expression of many genes.
-To tackle this problem, we have developed a simulation model incorporating explicit genetic architectures.
-We first identify regions of the frequency-dependent parameter space that should result in the maintenance of multiple morphs in a single-locus context using a mathematical model, and subsequently compare the outcomes of multilocus genetic architectures to those baselines.
-Our results suggest that morphs encoded by many genes are more robust to stochastic elements that impact the morph frequencies over time, and that the number of morphs that are predicted to persist changes when multilocus genotypes are involved.
-When the morphs have arrived at equilibrial frequencies, selection on male traits is generally relaxed, and this corresponds with a decreased ability to reliably detect causative variants using typical genomic analysis approaches (i.e., genome-wide associations).
+To tackle these problems, we use models to test how different genetic
+architectures affect the maintenance of multiple male reproductive
+morphs. We focus on first identifying key reproductive parameters that
+influence the maintenance or loss of morphs using an analytical haploid
+model. Using a simulation model, we test whether different types of
+diploid genetic architectures (single locus, polygenic, and polygenic
+supergene) change the presence of and relative frequencies of morphs
+that are maintained. We then use the output of these simulation models
+to test the accuracy and ability of current empirical methods to
+identify the causal genetic variants underlying the alternative
+reproductive tactics.
 
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
 
-Our model focusses on a single population of diploid males and females
-with non-overlapping generations. We model two independent traits,
-courtship and parental care, both of which are expressed only in males,
-but are also inherited by females. As such, males are one of four
-morphs: courter/parents; courter/non-parents; non-courters/parents; or
-non-courters/non-parents. The model is inspired by fish species like the
-ocellated wrasse, \emph{Symphodus ocellatus}, and as such we will use
-terminology appropriate to that species. Nonetheless, our model can be
-generalized to any species in which one sex (but not the other) has two
-traits that impact mating success and the survival of their offspring.
+Our model considers a biological scenario in which males can display to
+attract females and provide obligate male parental care. To allow us to
+answer our questions about supergenes facilitating multiple morphs, we
+consider two two independent traits, courtship and parental care, both
+of which are expressed only in males. We assume that all females in the
+population prefer males with the courting trait, but females do not know
+when choosing a male whether that male will also provide care. Males who
+do not court can only reproduce by sneaking, and males who display but
+do not provide any parental care will not produce viable offspring.
+Thus, our model has four potential tactics: courter/parents (CP);
+courter/non-parents (CN); non-courters/parents (NP); or
+non-courters/non-parents (NN). Our model assumes non-overlapping
+generations and no environmental effects on traits. While this model
+does not directly apply to all examples of alternative reproductive
+tactics, it is biologically reasonable and common even if not
+universally true. We expect that this model can be generalized to
+species in which one sex (but not the other) has two fixed traits that
+affect mating success and the survival of their offspring.
 
-Each generation has three distinct phases: (1) mate choice and
-fertilization; (2) parental care; and (3) viability selection. In the
-mate choice phase of the model, females always prefer to mate with males
-displaying the courtship trait. If a female decides to mate with a male,
-he receives all of her eggs to care for. The male is not guaranteed
-paternity of his mates' entire brood, however, because non-courting
-males are able to fertilize a proportion of the eggs. The chosen parent
-does receive first-male priority. The consequences of this setup are
-that the only mechanism by which non-courters can produce offspring is
-through these sneak fertilizations. In the parental care phase of the
-model, males with the parental care trait have 100\% nest survival while
-males without the parental care trait have 0\% nest survival, independent
-of the male's courtship trait. Consequently, non-parents will only be
-sustained in the population by sneaking fertilizations in the parental
-males' nests. Finally, viability selection is imposed on offspring as
-they mature to adulthood, such that males carrying the courtship trait
-and/or the parental care trait have a lower probability of survival than
-females and males without either courtship or parenting. Males who are
-both courters and parents have a multiplicative effect of viability
-selection.
+To test the importance of genetic architecture in male morphs, we
+implemented three models. First, we developed an analytical model that
+reflects haploid inheritance of a single locus that encodes morphs. This
+model did not include recombination or mutation. Second, we used a
+stochastic individual-based model with two diploid loci, one for each
+trait (courting and parenting), that incorporated recombination,
+mutation, and demographic stochasticity. Finally, we expanded the
+stochastic model to incorporate polygenic inheritance of the two traits,
+with two different explicit physical genetic architectures: quantitative
+trait loci (QTLs) distributed at random throughout a genome including
+non-coding loci and a supergene architecture, where QTLs were co-located
+in a non-recombining region of a single chromosome. We assumed all QTLs
+were autosomal. Each allele at a QTL was assigned a randomly-drawn
+phenotypic effect, and an individual's quantitative phenotypic value was
+determined by the sum of all their allelic effects (i.e., traits were
+entirely additive). In these additive, polygenic models, male traits
+were determined by a threshold function. The value of the threshold was
+constant for each iteration of the model, and was initialized as the
+mean phenotypic value at generation 0, prior to any model iterations. In
+all cases of the individual-based models, Sex was assigned instead by a
+draw from a binomial distribution with a probability of 0.5 of being
+female.
 
-We implemented our model first as a mathematical model and then as an
-individual-based simulation model. The purpose of the mathematical model
-was to generate baseline predictions for when multiple morphs are
-maintained.
-
-\hypertarget{mathematical-model}{%
-\subsection{Mathematical model}\label{mathematical-model}}
-
-In the mathematical model, we model the proportion of the population
-that belong to morphs at each stage of the lifecycle (Fig.
-\ref{fig:mathModel}). In the first stage, we consider the proportion of
-the population's nests that will be allocated to each morph. The maximum
-number of nests that could be laid is proportional to the number of
-males in the population (\(N_m\)), if each male has the same likelihood of
-attracting a female to deposit eggs with him. However, in our model,
-males are not equally likely to be chosen by females, and therefore the
-maximum number of nests is scaled by the probability of females mating
-with each type of male morph. In the case of our model, the total number
-of nests laid in the population becomes \[
-\frac{N_f}{N_mf_{CP}+N_m f_{CNp}}
-\] because we have constrained females to only mate with courting males.
+In all three models, each generation has five distinct phases: (1) mate
+choice; (2) fertilization; (3) parental care; (4) viability selection;
+and (5) maturation to adulthood (Fig. \ref{fig:modelDiagram}). We will
+describe each of these phases and highlight differences between the
+models when appropriate.
 
 \begin{figure}[H]
-\includegraphics[width=1\linewidth,]{frequencyDependence} \caption{Diagram of the mathematical model describing the inheritance of alternative male reproductive morphs given courtship and parenting traits.}\label{fig:mathModel}
+\includegraphics[width=1\linewidth,]{../figs/lifecycle_biology} \caption{Diagram of the biological life cycle modelled in both the analytical model and the simulation model. The model has five phases, starting with (1) Adults interact to find mates. Differences between the models are articulated in the diagram.}\label{fig:modelDiagram}
 \end{figure}
 
-Likewise, the proportion of nests each type of male receives (\({p_n}_M\))
-is determined by the number of morphs in the population (\(N_mf_M\) for
-the \(M\) morph), the probability of a female choosing that morph
-(\({w_s}_M\)), and the ratio of the number of nests to the number of
-females (\(n/N_f\)).
+\hypertarget{stage-1-mate-choice}{%
+\subsection{Stage 1: Mate choice}\label{stage-1-mate-choice}}
 
-Within a given nest, the offspring could either be fertilized by the
-nest-holding male or non-courting males `sneaking' fertilizations.
-Therefore, each morph has a proportion of eggs fertilized within their
-own nests (\({p_{fn}}_M\)) and a proportion of eggs fertilized in other
-males' nests (\({p_{fs}}_M\)). These proportions were determined by the
-sperm competition coefficient, \(c\), which penalized non-courting males,
-and the relative reproductive investment for that morph (\(r_M\)).
-Analogously, the proportion of offspring in a nest surviving due to
-parental care investment can be split into the proportion surviving in a
-male's own nest (\({p_{sn}}_M\)) or in another male's nest (\({p_{ss}}_M\)),
-which is simply the proportions from the fertilization step weighted by
-the probability of the nest surviving if the morph is a parent (\(w_n=1\))
-or of the morph is a non-parent (\(w_n=0\)). These proportions
-(\({p_{sn}}_M\) and \({p_{ss}}_M\)) are summed to determine the the overall
-proportion of embryos in the population that survive the parenting phase
-in each morph's nests (\({p_s}_M\)).
+In the mate choice phase of the model, we assumed females always
+preferred to mate with males displaying the courtship trait and did not
+mate with non-courting males. If a female decided to mate with a male,
+he received all of her eggs to care for.
 
-The final stage of the lifecycle is for offspring surviving in the nest
-to undergo viability selection by multiplying the viability selection
-coefficient (\({w_v}_M\)) by the surviving proportion (\({p_s}_M\)) and the
-original frequency of the morph in the population. Finally, the
-frequency of each morph in the next generation was calculated by
-dividing the surviving proportion (\({p_v}_M\) by the sum of all
-proportions.
+In the analytical model, this mate choice phase determined to total
+number of clutches in the population, \(n\). The general calculation for
+the number of clutches is:
 
-To evaluate the outcomes of this mathematical model, we iterated forward
+\[
+n=w_s(N_m f_{CP} + N_m f_{CN}) + (1-w_s)(N_m f_{NP} + N_m f_{NN}), 
+\]
+
+where \(w_s\) specified the probability a female chose a courting male (CP
+or CN), \(N_m\) was the number of males in the population, the \(f\) terms
+represented the frequency of each morph. To match our model assumptions,
+\(w_s=1\), so \(n\) simplified to \(w_s(N_m f_{CP} + N_m f_{CN})\).
+
+The simulation model incorporated stochasticity at this stage of the
+model. Females searched through a set number of males and chose the
+first attractive male (i.e., the first courting male she encountered).
+If a female did not find an acceptable mate, she did not mate.
+
+\hypertarget{stage-2-fertilization}{%
+\subsection{Stage 2: Fertilization}\label{stage-2-fertilization}}
+
+A chosen male was not guaranteed paternity of an entire brood, because
+non-courting males were able to fertilize a proportion of the eggs. The
+chosen parent had first-male fertilization advantage. The consequence of
+this scenario is that the only mechanism by which non-courters can
+produce offspring is through sneak fertilizations. Specifically, we
+modelled sneaking by specifying a total number of sneakers, \(n_{sneak}\),
+that could fertilise via sneaking in each clutch, and each sneaker could
+contribute up to their individual reproductive allocation (where
+\(r_{NN} = r_{NP}\)) offset by the sperm competition coefficient (\(c\)). We
+explored the effect of different values of these parameters in the
+analytical model, but for all simulation models analysed here,
+\(n_{sneak}=3\) and \(c=0.5\). We also assumed inherent `reproductive
+allocations',\(r_M\) (where \(M\) designated the morph and contained
+\(\{CP, CN, NP, NN\}\)), for each morph, which sets a ceiling on the
+number of offspring any male can sire.
+
+In the analytical model, we modelled the fertilisation success for
+morphs by considering their fertilisation success in clutches laid by
+the females who chose them, \(e_{o_M} = f_M N_m r_M w_{s_M}\) (which will
+only be non-zero for courting morphs). We specified the maximum number
+of possible fertilizations arising from sneaking for a given
+non-courting morph was \(N_s = n c n_{sneakers} r_{NN}\). If the number of
+fertilizations arising from sneaking was smaller than the morph's
+potential population-level reproductive effort (i.e, if
+\(N_s < f_M N_m r_M\)), the number of eggs fertilized through sneaking for
+that morph was the difference between \(N_s\) and \(f_M N_m r_M\), truncated
+at zero. Otherwise, the number of eggs fertilized through sneaking was
+\(f_M N_m r_M\).
+
+In the simulation model, we incorporated recombination and mutation
+during the fertilisation process. Recombination occurred independently
+on chromosomes inherited from the mother and the father. The number of
+recombination events for a given chromosome was determined by drawing
+from a Poisson distribution with the recombination rate as the mean,
+which we set to 0.2. For each recombination event, breakpoints were
+chosen by randomly drawing from the total number of markers on a
+chromosome. These breakpoints defined the segments of the chromosome
+that experienced recombination, and each segment was randomly chosen to
+be assigned the genotypes and effects from the parents' maternal or
+paternal chromosome. When the genetic architecture was that of a
+supergene, if the breakpoints fell within the region containing the
+aggregated QTLs for the traits, the offspring was considered not viable,
+mimicking suppressed recombination as observed in empirical examples
+(e.g., ruffs {[}19,20{]}).
+
+After recombination, mutation occurred at a rate of \(\mu\) at each locus.
+For a given individual, the number of mutations introduced was
+determined as \(2\mu n_{SNPs} n_{chrom}\), where \(n_{SNPs}\) was the number
+of SNPs and \(n_{chrom}\) was the number of chromosomes in the simulation.
+The location of each mutation was randomly selected and the allele at
+that location was randomly chosen from the set of existing alleles. The
+mutation also affected the phenotypic effects of QTLs by altering the
+original effect by a value drawn from a normal distribution with a mean
+of 0 and a standard deviation of \(\sigma_\mu\). Finally, offspring were
+also randomly assigned a sex.
+
+\hypertarget{stage-3-parental-care}{%
+\subsection{Stage 3: Parental care}\label{stage-3-parental-care}}
+
+We assumed for simplicity that males with the parental care trait have
+100\% offspring survival while males without the parental care trait have
+0\% survival, independent of the male's courtship trait. This was
+straightforward to model in the simulations: after the males were
+assigned their paternity shares (during fertilisation), the clutch
+survived if the chosen male was also a parent. Because of this
+assumption, and those in Stage 1, the courter/non-parent morph never
+produced viable offspring.
+
+In the baseline model, we modelled this by defining the selection
+coefficient for clutch survival, \(w_{n_M}\), which determined the success
+of each morph's clutch, assuming the morph was chosen by a female:
+\(o_{o_M} = e_{o_M} w_{n_M}\). To match our model assumptions,
+\(w_{n_CP} = w_{NP} = 1\) and \(w_{n_CN} = w_{NN} = 0\). We also calculated
+the number of surviving offspring from sneaking as:
+
+\[
+o_{s_M} = e_{s_M} \frac{\Sigma{o_{o_M}}}{\Sigma{e_{o_M}}}.
+\]
+
+Because we assumed obligate parental care, the fraction was either 1 or
+0, depending on whether the morph associated with the clutch had the
+parental care trait. Each morph's total number of offspring produced
+(\(o_M\)) was the sum of \(o_{o_M}\) and \(o_{s_M}\).
+
+\hypertarget{stage-4-viability-selection}{%
+\subsection{Stage 4: Viability selection}\label{stage-4-viability-selection}}
+
+We assumed viability selection only affects male offspring, through a
+trade-off between courting and parental care. In the baseline model, we
+multiplied the viability selection coefficient (\({w_v}_M\)) by the
+surviving number of offspring per morph (\(o_M\)), to determine the number
+of surviving juveniles per morph: \(j_M = o_M w_{v_M}\). In the simulation
+model, we calculated a survival probability for each male offspring, as
+\(e^{\frac{-(morph - \theta)(morph - \theta)}{2\omega_v}}\), where
+\(\omega_v\) represents the strength of viability selection, \(morph\) is 1
+for courters and parents and 0 for non-courters and non-parents, and
+\(\theta = 0\) (i.e., selection favours the non-courters and non-parents).
+For each individual, a random value between 0 and 1 was drawn from a
+uniform distribution; if the number was larger than his survival
+probability, that individual did not survive to adulthood. In both
+models, viability selection acted multiplicatively on courter/parents.
+
+\hypertarget{stage-5-maturation-to-adulthood}{%
+\subsection{Stage 5: Maturation to adulthood}\label{stage-5-maturation-to-adulthood}}
+
+In the baseline model, the final stage in the life cycle was calculating
+the frequency of each morph in the next generation by dividing the
+surviving number of juveniles per morph after viability selection
+(\(j_M\)) by the sum of all surviving juveniles:
+\(f_M = \frac{j_M}{\Sigma_{i=1}^4{j_i}}\).
+
+In the simulation model, the total number of surviving offspring in the
+population depended on the proportion of population reproductive success
+achieved by each individual male and female (i.e., each generation, the
+number of offspring created was equal to the carrying capacity). If the
+number of surviving offspring was larger than the carrying capacity,
+offspring were randomly selected to become adults.
+
+\hypertarget{evaluating-model-outcomes}{%
+\subsection{Evaluating model outcomes}\label{evaluating-model-outcomes}}
+
+\hypertarget{baseline-analytical-model}{%
+\subsubsection{Baseline analytical model}\label{baseline-analytical-model}}
+
+To evaluate the outcomes of this analytical model, we iterated forward
 in time for 100 generations from 1659 combinations of initial morph
 frequencies and repeated those iterations across 5 values for the sperm
-competition coefficient (\(c\) = \{0..1\}) and 21 values for the relative
-reproductive coefficient (\(r_M\) = \{0\ldots2\}). The iterations were
-implemented in R v. 4.1.1 {[}\textbf{rcoreteam2021?}{]} using some features of tidyR
-{[}\textbf{wickham2021?}{]}. To facilitate visualisation of the results, we
-calculated the Shannon's diversity index for the morphs remaining in the
-100th generation using the R package vegan {[}\textbf{oksanen2015?}{]}. We then
-visualised the diversity of the population using contour plots produced
-by plotly {[}\textbf{sievert2020?}{]} in a shiny app that relies on R packages shiny
-{[}\textbf{chang2021?}{]}, shinydashboard {[}\textbf{chang2018?}{]}, rsconnect {[}\textbf{mcpherson2021?}{]},
-dplyr {[}\textbf{wickham2021?}{]}, and rmarkdown {[}\textbf{allaire2021?},\textbf{xie2020?},\textbf{xie2018?}{]}.
-The interactive app is available at
-\url{https://spflanagan.shinyapps.io/morph_predictions/}.
+competition coefficient (\(c\) = \{0..1\}), 21 values for the relative
+reproductive coefficient (\(r_M\) = \{0\ldots2\}), and 3 values of the number
+of sneakers (\(n_{sneakers}\) =\{1..3\}). The iterations were implemented in
+R v. 4.1.1 {[}41{]} using some
+features of tidyR {[}42{]}. We also ran a subset of
+parameter combinations for 1,000 generations for comparison with the
+simulation model (more details below).
 
-Note that this model does not incorporate recombination or inheritance
-via females. Nonetheless, this model provides a baseline predictions for
-parameter values likely to facilitate morph diversity within a
-population. These limitations are addressed in the individual-based
-simulation model.
+We were interested in identifying the regions of parameter space that
+resulted in the largest diversity of male morphs. We leveraged existing
+ecological mathematical tools to summarize diversity of a system with a
+single metric -- specifically, Shannon's diversity index. We calculated
+this index in the 100th generation using the R package vegan
+{[}43{]} and subsequently visualised the
+diversity of the population using contour plots produced by plotly
+{[}44{]} in a shiny app that relies on R
+packages shiny {[}45{]}, shinydashboard
+{[}46{]}, rsconnect
+{[}47{]}, dplyr
+{[}48{]}, and rmarkdown
+{[}49--51{]}. The interactive app is available at
+\url{https://spflanagan.shinyapps.io/morph_predictions/} (see Fig. S1 for a
+static image).
+
+This model provided a baseline predictions for parameter values likely
+to facilitate morph diversity within a population against which to
+evaluate the effect of more complex and explicit genetic architectures.
 
 \hypertarget{individual-based-simulation-model}{%
-\subsection{Individual-based simulation model}\label{individual-based-simulation-model}}
+\subsubsection{Individual-based simulation model}\label{individual-based-simulation-model}}
 
-To evaluate the role of genetic architecture in the maintenance of
-alternative reproductive tactics, we wrote an individual-based
-simulation model in C++. The simulation model follows the same lifecycle
-as described above, but rather than tracking proportions of the
-population belonging to particular morphs, we tracked individuals within
-the population. Each individual contained diploid genotypes, which
-included both non-coding loci and quantitative trait loci (QTLs). We
-included two types of QTLs: ones that impacted the individual's courting
-trait and ones that impacted the individual's parenting trait. The QTLs
-were each assigned a randomly-drawn effect on the trait, and the QTLs
-additively determined the trait value for each trait (i.e., the effects
-of all QTLs were summed to determine the trait value). In this model, we
-assume no environmental effects impacted the trait value. These trait
-values were then compared to a threshold to dichotomize each trait. The
-threshold for each trait was the mean trait value during the
-initialization of the model (i.e., at generation 0).
+We initialized four replicate populations with identical starting
+conditions to evaluate the effect of stochasticity on the simulation
+models. These identical conditions included randomly-generated values
+for the allelic effects of QTLs, the exact number of individuals of each
+sex and morph, and the thresholds for determining morph traits (i.e.,
+the values at which an individual is deemed a courter vs a non-courter
+and a parent vs a non-parent). For each set of four populations, we ran
+10,000 generations followed by 2,000 `experimental' generations. Doing
+so ensured that the population reached a steady state in which we could
+examine any stable polymorphisms or cyclical fluctuations in morph
+frequencies. We ran at least three sets of these identical replicates
+for all parameter combinations.
 
-We implemented three different genetic architectures: a single gene per
-trait, multiple QTLs randomly placed throughout chromosomes, and
-supergenes. The single gene scenario is most analogous to the
-mathematical model described above. When the traits have multiple QTLs
-determining their trait values, each QTL is assigned a location on a
-chromosome and the QTL's effect on the trait is associated with a single
-nucleotide polymorphism (SNP). These SNPs undergo recombination and
-mutation during mating. The supergene scenario forced the QTLs to
-cluster into a small proportion of one of the chromosomes. These QTLs
-still experience mutation but experienced reduced recombination.
-
-When we ran the model, we initialized four replicate populations with
-the identical starting conditions to evaluate the impact of
-stochasticity on the model. These identical conditions included
-randomly-generated values for the allelic effects of QTLs, exact number
-of individuals of each sex and morph, and thresholds for determining
-morph traits (i.e., the values at which an individual is deemed a
-courter vs a non-courter and a parent vs a non-parent). For each set of
-four populations, we ran 10,000 burn-in generations followed by 2,000
-`experimental' generations. Doing so ensured that the population reached
-a steady state in which we could examine any stable polymorphisms or
-cyclical fluctuations in morph frequencies.
-
-Within each of those generations, the population underwent four main
-phases: (1) mate choice and fertilization; (2) nest survival; (3)
-viability selection on juveniles; (4) maturation to adulthood. The main
-difference between the individual-based simulation model and the
-mathematical model were the introduction of stochasticity during mate
-choice and the introduction of recombination and mutation during
-reproduction. During the mate choice phase, females searched through a
-set number of males and chose the first attractive male (i.e., the first
-courter male she encountered). If a female did not find an acceptable
-mate, she either did not mate (`no mating' or `nm' scenarios) or she
-chose a male at random with from the population and allocated all of her
-offspring to him, depending on the parameter settings. Females always
-preferred courting males.
-
-Once a female chose a male, fertilization of the eggs occurred, in which
-the chosen male had first male priority (i.e., the chosen male allocated
-all of his reproductive effort to his own nest) and up to 3 non-courting
-males could `sneak' fertilizations, with their contributions discounted
-by a factor of \(c\). After the males were assigned their paternity
-shares, the nests survived if the chosen male was also a parent.
-Subsequently, the total number of offspring in the population were
-created based on the proportion of population reproductive success
-achieved by each individual male and female (i.e., each generation, the
-number of offspring created was equal to the carrying capacity).
-
-When fertilization occurred, the parents' genotypes (both neutral
-markers and QTLs) had the opportunity to recombine. Recombination
-occurred independently on the chromosome inherited from the mother and
-the chromosome inherited from the father. The number of recombination
-events for a given chromosome was determined by drawing from a Poisson
-distribution with the recombination rate as the mean, which we set to
-0.2. For each recombination event, breakpoints were chosen by randomly
-drawing from the total number of markers on a chromosome. These
-breakpoints defined the segments of the chromosome that experienced
-recombination, and each segment was randomly chosen to be assigned the
-genotypes and effects from the parents' maternal or paternal chromosome.
-When the genetic architecture was that of a supergene, if the
-breakpoints fell within the region containing the aggregated QTLs for
-the traits, the offspring was considered not viable.
-
-After recombination occurred, if the progeny survived, the genotypes
-underwent mutation, which occurred at a rate of \(mu\). For a given
-individual, the number of mutations introduced was determined as
-\(2\mu*n_SNPs*n_chrom\). The location of each mutation was randomly
-selected and the allele at that location was randomly chosen from the
-set of existing alleles. The mutation also impacted the phenotypic
-effects of QTLs by altering the original effect by a value drawn from a
-normal distribution with a mean of 0 and a standard deviation of
-\(sigma_\mu\). Finally, offspring were also randomly assigned a sex.
-
-The next stage in the lifecycle was viability selection, which impacted
-only male offspring. For each male offspring, a survival probability was
-calculated as \(e^{\frac{-morph2}{2\omega_v}}\). Viability selection acted
-multiplicatively on courter-parents (their survival probability was
-\(e^{\frac{-morph2}{2\omega_v}}*e^{\frac{-morph2}{2\omega_v}}\)). A random
-value between 0 and 1 was drawn, and if the number was larger than the
-survival probability for an individual, that individual did not survive
-to adulthood. If, at this point, the number of surviving offspring was
-larger than the carrying capacity, offspring were randomly selected to
-become adults. When offspring matured to adulthood, the previous
-generation's adults were replaced, and the lifecycle began again.
-
-Each set of genetic architectures and population parameters was also was
-run with four types of mating systems, all of which required females to
-lay their eggs with only a single male: males accept eggs from a single
-female, and females deposit their eggs with a randomly-selected unmated
-male in the population should they fail to find a preferred mate
-(`monogamy'); males accept eggs from multiple females, and females
-deposit their eggs with a randomly-selected unmated male in the
-population should they fail to find a preferred mate (`polygyny'); males
-accept eggs from a single female, and females who fail to find a
-preferred mate do not produce offspring (`monogamy no mating'); males
-accept eggs from multiple females, and females who fail to find a
-preferred mate do not produce offspring (`polygyny no mating').
-
-\hypertarget{model-analysis}{%
-\subsubsection{Model analysis}\label{model-analysis}}
-
-The outcomes of simulation model were first assessed by visualising the proportions of each morph that persisted to the final generation of the model.
-The first priority was to compare the outcomes of the simulation model with a single locus for each trait to the results from the mathematical model.
-Next, the four mating systems were compared in the single-locus model.
-From this comparison, we were then able to narrow the parameter space for the comparisons of the two different multilocus genetic architectures.
-The many different formats for these two genetic architectures were then compared in terms of the morph composition in the final generation, and the amount of variation among replicate runs.
-
-To identify how selection acts on the two male traits, selection gradients on the courter trait and parent trait (both the binary variable of courter/non-courter and parent/non-parent) were estimated as the slope of a linear regression of lifetime reproductive success on each trait values. The patterns of selection were compared across genetic architectures and parameter settings.
+To explore the effects of genetic architecture on morph maintenance, we
+used two sets of demographic and reproductive parameters that were
+identified by the baseline model as either facilitating high or low
+morph diversity. Within each of these parameter settings, we compared
+model outcomes with for cases with each combination of 2, 4, or 8
+chromosomes and 8, 16, 32, or 68 QTLs underlying each trait. We also
+tested three supergene sizes: occupying 5\% of a chromosome, 25\% of a
+chromosome, or 50\% of a chromosome. In all cases, a chromosome was
+comprised of 1000 loci (including marker loci and QTLs).
 
 \hypertarget{analysing-multilocus-genotypes}{%
-\subsubsection{Analysing multilocus genotypes}\label{analysing-multilocus-genotypes}}
+\paragraph{Analysing multilocus genotypes}\label{analysing-multilocus-genotypes}}
 
-To provide a link between our theoretical models and the realities of
-empirical data, we analyzed the genetic diversity of the populations at
-the final generation of the individual based simulations. First we used
-vcfR to estimate observed heterozygosity for all markers in the genome
-and separately for the QTLs. Allele frequencies between morphs were also
-compared using the Gst estimator in vcfR. Additionally, an association
-between male phenotypes and genetic markers was tested for using
-GWASpoly . For both the Gst estimates and the GWAS p-values, any major
-peaks identified were scanned to identify if they were within a 50
-basepair window of one of the true QTLs.
-Finally, we used vcftools {[}@danecekVariantCallFormat2011{]} to test for signals of balancing selection at the QTL loci compared to non-QTL loci.
+To provide a link between the predictions of our theoretical models and
+empirical data, we analysed the genetic diversity of the populations at
+the final generation of the individual based simulations. This is an
+equivalent analysis to the re-sequencing conducted in empirical studies
+{[}5,16,19--22,27,28{]}. The general idea behind
+these genome-wide analyses is that QTLs will have higher genetic
+diversity than background marker loci because balancing selection is
+favouring multiple alleles at those loci, with genetic variation
+existing between the morphs and specific variants associated with the
+different phenotypes.
 
-To investigate whether linkage disequilibrium persisted over time within our various genetic architectures, we used vcftools {[}@danecekVariantCallFormat2011{]} to estimate linkage disequilibrium between all loci. We then estimated summary statistics for each locus and compared linkage disequilibrium between QTLs and compared it to linkage disequilibrium among non-QTLs. Because we had far fewer QTLs than non-QTL loci in all of the iterations, we also used re-sampling of the non-QTLs to estimate the average linkage disequilibrium, using 999 resampled estimates with the actual number of QTLs in each replicate.
+To implement this analysis, we used vcfR
+{[}52{]} to estimate observed heterozygosity
+(i.e., a measure of variation at a locus) for all markers in the genome,
+including QTLs, and compared the frequencies of alleles between morphs
+using \(G_{ST}\), which is a measure between 0 and 1 that indicates how
+different the frequencies are between groups. Additionally, an
+association between male phenotypes and genetic markers was tested for
+using GWASpoly {[}53{]}. Finally, we
+used vcftools {[}54{]} to test for signals of
+balancing selection at the QTL loci compared to non-QTL loci by
+calculating the Tajima's D statistic. Because linkage cause loci near to
+the actual target of selection (the QTL) to have elevated variation as
+well, we identified `peaks' of differentiation (\(G_{ST}\)) and
+association (GWAS p-values), and determined the proportion of these
+peaks that were within a 50 basepair window of one of the true QTLs.
+
+We evaluated whether QTLs evolved linkage disequilibrium (LD) due to
+shared selection pressures, and not only physical linkage by estimating
+linkage disequilibrium between all loci in all simulations with genetic
+architectures using vcftools {[}54{]}. We then
+estimated summary statistics for each locus and compared linkage
+disequilibrium between QTLs to linkage disequilibrium among non-QTLs.
+Because we had far fewer QTLs than non-QTL loci in all of the
+iterations, we also used re-sampling of the non-QTLs to estimate the
+average linkage disequilibrium, using 999 resampled estimates with the
+actual number of QTLs in each replicate.
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
-\hypertarget{frequency-dependent-population-dynamics-model}{%
-\subsection{Frequency-dependent population dynamics model}\label{frequency-dependent-population-dynamics-model}}
+\hypertarget{analytical-model-reveals-many-regions-of-parameter-space-where-multiple-morphs-are-maintained}{%
+\subsection{Analytical model reveals many regions of parameter space where multiple morphs are maintained}\label{analytical-model-reveals-many-regions-of-parameter-space-where-multiple-morphs-are-maintained}}
 
-The initial frequency of each morph impacted whether multiple morphs
-were maintained. In no cases was the courter-nonparent morph maintained.
-This result makes intuitive sense, because if a female chooses to nest
-with a courter-nonparent, the nest will always die (given our parameter
-settings).
+The purpose of exploring the baseline analytical model was to identify
+the parameter space in which, in a genetically simple model in which the
+genetic architecture is not explicit, more than one male type is
+predicted to persist, thereby creating a baseline for comparison to the
+simulation results. The courter/non-parent morph was never maintained in
+the population. This result makes intuitive sense, because if a female
+chooses to mate with a courter/non-parent, the offspring will always die
+(given our parameter settings) (Fig. \ref{fig:ternaryPlots}A).
 
-The parameters controlling sperm competition (\(c\)), relative
-reproductive allocation (\(r\)), and the number of sneakers allowed also
-impacted the diversity of the population after both 100 generations and
-1000 generations. Some initial starting conditions took more than 100
-generations to reach a consistent (i.e., equilibrial) state, but the
-contributions of these three parameters remained qualitatively
-consistent across 100 and 1000 generations. Reproductive allocations
-corresponding to a range of approximately 0.5 to 1 (meaning that
-courters invest half as much to just as much as non-courters in
-producing sperm) resulted in the maximum amount of diversity, as long as
-sperm competition (\(c\)) was above 0.2 (meaning that, if a non-courting
-male produced 8 sperm and courting males produce 4, the non-courting
-male would fertilize 0.2222222 or more of the
-offspring). This importance of the sperm competition coefficient was
-influenced by the number of sneakers allowed, with larger contributions
-from an individual non-courting male (e.g., larger \(c\)) being required
-with fewer sneakers (Fig. \ref{fig:mathParams}).
+To quantitatively identify regions of parameter space that resulted in
+multiple morphs, we focused on parameters yielding Shannon-Wiener
+diversity indices \(\ge 1\) . The regions of the parameter space that have
+positive diversity values correspond to scenarios where three of the
+four morphs were retained (courter/parents, non-courter/parents, and
+non-courter/non-parents), although the dominant morph depended on the
+specific parameter combinations. With equal starting frequencies, after
+10,000 generations, 18.82\% of parameter combinations
+that retained polymorphism resulted in the courter-parent morph
+comprising \(\ge\) 50\% of the population. The remaining
+81.18\% of parameter combinations resulting in the
+maintenance of alternative morphs had more equal representation of all
+three morphs, with the average proportion of the population being
+30.6 \% (\(\pm\)
+1.29 \%) courter/parents,
+34.78 \% (\(\pm\)
+0.75 \%)
+non-courter/parents, and
+34.62 \% (\(\pm\)
+0.68 \%)
+non-courter/non-parents (Fig. \ref{fig:ternaryPlots}A, S1).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \begin{figure}[H]
-\includegraphics{../figs/mathParams-1} \caption{Contour plots showing the diversity of the populations given equal initial starting frequencies of all four morphs, the relative reproductive investments (x-axis), sperm competition coefficients (y-axis), and number of sneakers allowed per nest (1 through 5, plots going from top to bottom).}\label{fig:mathParams}
+\includegraphics[width=0.9\linewidth,]{../figs/combinedTernaryTall-1} \caption{The inclusion of recombination and stochasticity alter
+the frequency of male morphs and explicit genetic architectures affects
+which morphs are maintained under balancing selection. In all diagrams,
+each point in the triangle represents a different combination of the
+predicted frequency of the three male morphs, where the corners
+represent 100\% of each morph and each edge represents relative
+percentages of two out of the three morphs. (A) A comparison of the
+baseline analytical model and the architecture-free single-locus
+simulations. In these diagrams, point size reflects the number of
+parameter settings resulting in that exact combination of morph
+frequencies. The left panel represents the predictions of the baseline
+model, in which most parameter combinations result in the fixation of
+the courter/parent morph but many retain three morphs. The outcomes of
+the chosen low diversity and high diversity parameter sets are marked
+with a purple and a pink asterisk, respectively. On the right are the
+outputs from the individual-based simulation models without explicit
+genetic architectures for the chosen low diversity parameters (top) and
+high diversity parameters (bottom). Most low diversity replicates result
+in fixation of the courter/parent, with some having one or two
+non-courter/parent individuals in the final population, while the high
+diversity replicates include maintenance of two morphs (courter/parent
+and non-courter/parent or courter/parent and non-courter/non-parent) and
+the fixation of the courter/parent morph. (B) Adding explicit genetic
+architectures affects which morphs are maintained for the high diversity
+parameters, but the number of QTLs or chromosomes are not driving
+factors, and low diversity parameter settings resulted in the predicted
+outcomes. The ternary diagrams show the final frequencies of the morphs
+from individual-based simulations with QTLs distributed throughout the
+genome (left column) or clustered into supergenes that make up 5\%, 25\%,
+or 50\% of the chromosome the supergene is situated on. Colours represent
+the number of chromosomes considered by the model and the size of the
+points depict the number of QTLs underlying each trait. In low diversity
+scenarios, regardless of genetic architecture, the courter-parent morph
+is the one that is retained, same as in the baseline model and
+architecture-free simulations in (A). Unlike in the baseline and
+architecture-free models, in high diversity scenarios the
+non-courter/non-parent individuals are rarely retained, and are only
+retained in a few cases when supergenes are very tightly linked.}\label{fig:ternaryPlots}
 \end{figure}
 
-The regions of the parameter space the have non-zero diversity values
-correspond to scenarios where three of the four morphs were retained
-(courter-parents, non-courter-parents, and non-courter-non-parents). The
-dominant morph differed with various parameter combinations. Assuming
-equal starting frequencies, after 10000 generations, 18.8235294\% of
-parameter combinations that retained polymorphism resulted in the
-courter-parent morph comprising \(\le\) 50\% of the population. The
-remaining 81.1764706\% of parameter combinations resulting in
-polymorphism had more equal representation of all three morphs, with the
-average proportion of the population being
-30.6002608 \% (\(pm\)
-1.2914667 \%) courter-parents,
-34.7824745 \% (\(pm\)
-0.7462257 \%) non-courter-parents, and
-34.6172647 \% (\(pm\)
-0.6771888 \%) non-courter-non-parents.
+Overall, the parameters affecting whether diversity was maintained after
+both 100 and 1000 generations were the initial frequencies of the
+morphs, sperm competition (\(c\)), relative reproductive allocation (\(r\)),
+and the number of sneakers allowed (\(n_{sneak}\)). Some initial starting
+conditions took more than 100 generations to reach a consistent (i.e.,
+equilibrial) state, but the contributions of the initial frequencies and
+these three parameters remained qualitatively consistent between 100 and
+1000 generations.
 
-\hypertarget{individual-based-simulation-model-1}{%
-\subsection{Individual-based simulation model}\label{individual-based-simulation-model-1}}
+As expected, larger sperm competition coefficients (\(c\)) resulted in a
+higher likelihood of non-courters being retained in the population,
+which makes sense given that \(c\) affects the proportion of eggs within a
+clutch that a non-courting male can successfully fertilize. Sperm
+competition interacted with the reproductive allocation ratio, \(r\), such
+that when \(c>0.2\), the maximum diversity was achieved when
+\(0.5 \le r \le 1\). As an illustrative example, if \(r = 0.5\), \(c=0.2\),
+and the non-courting male's number of eggs he can fertilize is 8, the
+non-courting male would fertilize
+\(\frac{(8)(2)}{(8) ( 0.5)+(2 )( 0.2 )( 8)}\) =
+0.222 of the offspring. The effects of
+sperm competition on morph diversity were further influenced by
+\(n_{sneak}\), with larger contributions from an individual non-courting
+male (e.g., larger \(c\)) being required to maintain diversity of morphs
+when fewer sneakers were allowed (Fig. S1). This result makes sense
+because the number of sneakers is multiplied by the sperm competition
+coefficient to determine the proportion of offspring fertilized by the
+non-courters for a given clutch. These analyses therefore helped to
+build an understanding of how the different parameters affected model
+predictions and provided a baseline against which to compare our
+simulation results.
 
-The results from the mathematical model were used to select parameter
-settings for the individual-based simulation model, with one set
-expected to produce low-diversity populations (i.e., those where only
-one morph were retained) and another set expected to produce
+We used these results of the baseline model to select parameter values
+for the individual-based simulation model. We selected one set of
+parameters predicted to produce low-diversity populations (i.e., those
+where only one morph were retained) and another set expected to produce
 high-diversity populations (i.e., where 2 or more morphs were retained).
-The chosen parameter settings are shown in Table
+The chosen parameter values are shown in Table
 \ref{tab:SimParamsTable}.
 
 \begin{table}[H]
@@ -553,193 +767,306 @@ The chosen parameter settings are shown in Table
 \toprule
 Parameter & Low Diversity Value & High Diversity Value\\
 \midrule
-r (in shiny app) & 2.0 & 0.75\\
-r\_CP & 8.0 & 6.00\\
-r\_CN & 8.0 & 6.00\\
-r\_NP & 4.0 & 8.00\\
-r\_NN & 4.0 & 8.00\\
+Ratio of reproductive investment, r (courter to non-courter ratio) & 2.0 & 0.70\\
+Max number of offspring CP males can produce & 8.0 & 6.00\\
+Max number of offspring CN males can produce & 8.0 & 6.00\\
+Max number of offspring NP males can produce & 4.0 & 8.00\\
+Max number of offspring NN males can produce & 4.0 & 8.00\\
 \addlinespace
-c & 0.5 & 0.70\\
+c (sperm competition coefficient) & 0.5 & 0.75\\
 number of sneakers & 2.0 & 2.00\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\hypertarget{impacts-of-mating-system-on-the-model}{%
-\subsubsection{Impacts of mating system on the model}\label{impacts-of-mating-system-on-the-model}}
+\hypertarget{recombination-mutation-and-stochasticity-result-in-fewer-morphs-maintained}{%
+\subsection{Recombination, mutation, and stochasticity result in fewer morphs maintained}\label{recombination-mutation-and-stochasticity-result-in-fewer-morphs-maintained}}
 
-As expected, in the low diversity parameter space, the majority of
-simulations resulted in fixation or near-fixation of the courter-parent
-morph (Fig. \ref{fig:MatingTypesFig}). A more surprising result was the
-inconsistency of results from the mating types within the the high
-diversity parameter space. Polygyny resulted in the fixation of the
-courter/parent morph regardless of whether females mated at random if a
-suitable mate was found, and monogamy resulted in the fixation of the
-non-courter/parent morph in every case. Only monogamy with no mating
-allowed resulted in polymorphism, with the courter/parent morph
-coexisting with either the non-courter/parent or the
-non-courter/non-parent morph (Fig. \ref{fig:MatingTypesFig}). These
-results can be explained by the nature of density-dependent survival in
-the individual-based model that are not consistent with the mathematical
-model; in the simulation model, offspring are created in proportion to
-the surviving offspring after mating has occurred, increasing the males'
-reproductive success above their specified reproductive investments.
-This allows males to escape the costs and increase their reproductive
-success beyond what is possible in the mathematical model. Random mating
-if non-preferred males are unable to be found also enables
-non-courter/parents to have increased reproductive success compared the
-the mathematical model predictions, which is why they are fixed in the
-monogamy case. If stricter costs on courting males are imposed,
-specifying \(r=0.25\), meaning that \(r_{courter}=2\) and
-\(r_{non-courter}=8\), the scenarios without random mating do result in
-the maintenance of 2 or 3 morphs in most cases for both monogamy and
-polygyny (Fig. \ref{fig:MatingTypesFig}), as expected.
-
-\begin{figure}[H]
-\includegraphics{../figs/MatingTypesFig-1} \caption{The frequencies of morphs in the final generation of simulation runs a single gene underlying each trait, with parameters expected to yield low diversity (top row), high diversity (centre row), and high diversity with stronger costs on courter reproductive success (bottom row). The frequency of the courter/parent morph in the final generation is printed on top of each bar. In 'monogamy' cases, the males were constrained to only accept eggs from one female into their nests, whereas under 'polygyny' males could mate with multiple females. In both cases females mated once. Parameter settings lablled with 'nm' were runs where females did not mate if they could not find a suitable mate (i.e., if no courters were available). Within each parameter set, the numbers below the bars identify sets of simulation runs that were initiated with identical starting conditions.}\label{fig:MatingTypesFig}
-\end{figure}
-
-One striking result is that stochasticity appears to play a major role
-in which morphs co-exist with the courter-parent morph, even when
-initial starting conditions are identical (Fig.
-\ref{fig:MatingTypesFig}). Across independent iterations of the model,
-variation in the initial starting frequencies of each morph (which
-centre around 0.25 for each morph, but with some variation) can explain
-some of the differences in outcomes. Variation in outcomes within
-replicate runs can be attributed to the many sources of random chance
-incorporated in the model: stochasticity associated with finite
+A striking difference between the analytical model and the simple
+Mendelian simulation model is that only two morphs are maintained with
+parameters that retained three morphs in the analytical model (Fig.
+\ref{fig:ternaryPlots}A; see Fig. S2 for outcomes with alternative
+mating dynamics). Furthermore, stochasticity played a major role in
+which morph co-existed with the courter/parent morph, even when the
+parameter values used were identical (Fig. S3). Variation in outcomes
+among replicate runs can be attributed to the many sources of random
+chance incorporated in the model: stochasticity associated with finite
 population sizes (i.e., genetic drift), the randomness of recombination,
 and the finite mate search process (in which females might not find a
 suitable mate, even if one exists in the population) all contribute to
-the within-replicate variation observed. Furthermore, these sources of
-variation differentiate the results of the simulation model from those
-of the mathematical model.
+the within-replicate variation observed. Altogether, including realistic
+genetic components reduced the total diversity of morphs compared to a
+deterministic single-gene model.
 
-\hypertarget{selection-on-courter-and-parent-traits}{%
-\subsubsection{Selection on courter and parent traits}\label{selection-on-courter-and-parent-traits}}
+\hypertarget{polygenic-architectures-reduce-effects-of-stochasticity-with-supergenes-having-little-effect-on-the-maintenance-of-morphs}{%
+\subsubsection{Polygenic architectures reduce effects of stochasticity, with supergenes having little effect on the maintenance of morphs}\label{polygenic-architectures-reduce-effects-of-stochasticity-with-supergenes-having-little-effect-on-the-maintenance-of-morphs}}
 
-Selection consistently favoured parent traits, whereas courter traits could experience negative selection in high diversity parameter scenarios (Fig. \ref{fig:selectionOverTime}). Selection was strong in the first generation, but by generation 12000 selection was substantially relaxed on one or the other trait, in most cases.
-
-\hypertarget{the-role-of-polygenic-inheritance-of-traits}{%
-\subsubsection{The role of polygenic inheritance of traits}\label{the-role-of-polygenic-inheritance-of-traits}}
-
-We incorporated polygenic inheritance of the male traits in two ways,
-both of which reduced the impacts of stochasticity on the final morph
-frequencies. In the low diversity parameter space, the outcomes remained
-consistent with the single-locus model (and the expectations from the
-mathematical model): courter/parents dominated the populations, with
-complete fixation of the morph in the majority of runs, and any
-variation existing in the form of 1-2 individuals (courter/parent
-frequencies were \(\ge\) 99\% in all cases). These results were consistent
-across all genetic architectures, including QTLs distributed across 2,
-4, and 8 chromosomes and QTLs clustered in supergenes spanning from 5\%
-to 50\% of a single chromosome. In the high diversity parameter space,
-polygenic loci distributed throughout the genome resulted in the
-maintenance of the courter/parent trait at a frequency of
+In the low diversity parameter space, the outcomes remained consistent
+with the single-locus model (and the predictions of the mathematical
+model): courter/parents dominated the populations, with complete
+fixation of the morph in the majority of runs, and any variation
+existing in the form of 1-2 individuals (courter/parent frequencies were
+\(\ge\) 99\% in all cases), which were a result of stochasticity and
+recombination as opposed to balancing selection favouring multiple
+morphs (Fig. S4). These results were consistent across all genetic
+architectures, including QTLs distributed across 2, 4, and 8 chromosomes
+and QTLs clustered in supergenes spanning from 5\% to 50\% of a single
+chromosome. In the high diversity parameter space, polygenic loci
+distributed throughout the genome resulted in the maintenance of the
+courter/parent trait at a frequency of
 50.7\%
 (\(\pm\)
 1.59\%),
 with the non-courter/parent being the dominant morph. These proportions
-are remarkably consistent across genetic architectures. Most simulations
-with supergenes resulted in very similar final morph frequencies
+are remarkably consistent across genetic architectures (Fig.
+\ref{fig:ternaryPlots}B). Most simulations with supergenes resulted in
+very similar final morph frequencies
 (49.21\%
 \(\pm\)
 0.88\%),
 and only occasionally resulted in either three morphs being retained or
-the non-courter/non-parent morph replacing the non-courter parent. The
-size of the supergene did not substantially impact the final morph
-frequencies, nor did the total number of QTLs underlying each locus.
+the non-courter/non-parent morph replacing the non-courter/parent. The
+size of the supergene did not substantially affect the final morph
+frequencies, nor did the total number of QTLs underlying each locus. A
+consequence of the stabilisation of morph frequencies was a reduction in
+the strength of selection acting in the final generation relative to the
+first generation of the model (Fig. S5).
 
-An important predictor of final morph frequencies was the direction of selection on the courter traits in the initial generation (Fig. \ref{fig:selFreq}).
-Selection gradients were strongly positive on the parent trait in generation zero, whereas selection gradients were negative on a subset of the high diversity parameter runs (Fig. \ref{fig:selectionGradients}).
-By the time that 12000 generations had passed, and the morphs had reached their equilibrial frequencies, selection was generally relaxed on the parental trait.
-Selection on the courter trait was also relaxed in many cases (some points overlap 0).
-A number of the low diversity replicates resulted in highly correlated selection on courters and parents, with a number of points falling on the positive 1:1 line (Fig. \ref{fig:selectionGradients}).
+Our initial expectation was that supergenes would follow a pattern more
+similar to the single locus results, because empirical examples have
+demonstrated Mendelian inheritance patterns approximating single-locus
+models (e.g., {[}19{]}).
+To better understand the reasons for the similarity between the the
+genome-wide QTLs simulations versus the supergene simulations, we
+visualised the QTL haplotypes in supergenes (see Fig. S6 and S7 for
+representative images). These visualisations suggest that because of the
+additive, polygenic nature of our traits, individuals have multiple
+pathways to creating the morphs in terms of genotypes at each QTL, even
+when QTLs are segregating together in a supergene. These findings
+suggest that supergenes are not necessary for maintaining multiple
+reproductive morphs that are comprised of many causal loci.
+
+\hypertarget{genome-wide-genetic-diversity-is-maintained-even-when-trait-diversity-is-low}{%
+\subsubsection{Genome-wide genetic diversity is maintained even when trait diversity is low}\label{genome-wide-genetic-diversity-is-maintained-even-when-trait-diversity-is-low}}
+
+Supergenes enable specific combinations of alleles at multiple loci to
+be inherited together as a single haplotype; as such, we expected that
+the simulations with supergenes would evolve to have lower within-morph
+genetic diversity at QTLs (i.e., low observed heterozygosity) than the
+genome-wide QTLs scenarios. Surprisingly, we found that the average
+genome-wide expected heterozygosity was not substantially different in
+simulations with genome-wide QTLs versus QTLs in supergenes in the final
+generation of the simulations (t = -0.31, df = 326.75, p = -0.31;
+genome-wide mean = 0.15, supergene mean = 0.16; Fig.
+\ref{fig:genomewideDiv} A; Fig. S8). In most runs, the heterozygosity
+at QTLs was did not significantly differ from heterozygosity at neutral
+markers (mean p-value from t-tests is 0.5 ± 0.01). Tajima's D, which
+tests for directional or balancing selection, also reflects genetic
+variation in a sequence of DNA, and did not deviate substantially
+between genetic architectures and did not relate to final morph
+frequencies (Fig. \ref{fig:genomewideDiv} B; Fig. S8). Average linkage
+disequilibrium was higher for QTLs in supergenes than
+randomly-distributed QTLs (Fig. S9).
+
+Similarly, we expected supergenes to show more differentiation between
+morphs, since their QTLs segregated together. However, \(G_{ST}\) between
+male morphs was also not predicted by the frequency of courter/parent
+morphs (Fig. \ref{fig:genomewideDiv} C; Fig. S9). Significant peaks in
+genome-wide \(G_{ST}\) estimates were identified, and we evaluated whether
+QTLs were located near to those \(G_{ST}\) peaks (i.e., we identified if
+\(G_{ST}\) outliers were associated with true QTLs). From this, we then
+calculated the proportion of true QTLs that were located in these
+significant \(G_{ST}\) peaks, and found that under high-diversity
+parameters, on average 63.04
+\(\pm\) 1.09\%, of randomly
+distributed QTLs and and
+74.31 \(\pm\)
+0.9\% of QTLs in supergenes
+were found in \(G_{ST}\) peaks, irrespective of the courter/parent
+frequency (Fig. S10).
 
 \begin{figure}[H]
-\includegraphics{../figs/selFreq-1} \caption{The direction of selection on the courter trait in generation zero predicts whether diversity of morphs will be maintained.}\label{fig:selFreq}
+\includegraphics[width=9.71in,]{../figs/genomewideDiv-1} \caption{Genome-wide genetic diversity in the final generation of the simulations was not influcenced by genetic architecture or the phenotypic diversity (i.e., morph frequencies), but did differ between low- and high-diversity parameter settings. Shown are genome-wide observed heterozygosity (A), Tajima’s D (B), and male-male Gst (C).}\label{fig:genomewideDiv}
 \end{figure}
 
-\begin{figure}[H]
-\includegraphics{../figs/selectionGradients-1} \caption{Selection gradients on parent and courter traits differ across the scenarios of our simulation model. In the first generation, selection always favours the parent trait, but selection gradients on the courter trait can be negative under parameter settings that favoured high diversity. By the end of the simulations (generation 12000), selection has been relaxed, so that selection on the parent trait is often near zero, as is selection on the courter trait. In some cases, the selection gradients on courter and parent triats are correlated at this final generation, especially in low diversity scenarios with QTLs as the genetic architecture. Solid grey lines show the x- and y-axes, with dotted grey lines showing the one-to-one correlation lines.}\label{fig:selectionGradients}
-\end{figure}
-
-Balancing selection and/or maintenance of genetic variation? - genetic
-variation at QTLs vs non QTLs vs detected qtls - Tajima's D?
-
-Does linkage disequilibrium evolve?
-
-\hypertarget{will-gwas-detect-the-actual-qtls}{%
-\subsubsection{Will GWAS detect the actual QTLs?}\label{will-gwas-detect-the-actual-qtls}}
-
-As expected, the detection of true QTLs in a GWAS was more likely when
-fewer QTLs underpin the trait, especially if those QTLs are aggregated
-on fewer chromosomes (Fig. \ref{fig:GWASoutcomes}). Somewhat
-surprisingly, the QTLs for parent traits were more reliably detected by
-GWAS than the courter QTLs. In the majority of simulations, the final
-population only contained parental males, but both courters and
-non-courters persisted in the population (Fig.
-\ref{fig:MatingTypesFig}). The finding the parent QTLs are more likely
-to be detected is likely because that trait experienced stronger
-selection on it (i.e., being a non-parent was more costly than being a
-non-courter).
-
-We expected the supergene scenarios to have a higher detection rate, but
-this was not the case. The primary difference was that the variance in
-false positive rates was increased with supergenes, but the true
-positive rates were unaffected by the localization of QTLs.
-
-\begin{figure}[H]
-\includegraphics{../figs/GWASoutcomes-1} \caption{Genome-wide association studies of the simulated genotypes reveals a relatively low detection rate of QTLs and a generally high false positive rate, both influenced by the genetic architecture of the traits. The top row show the results for genome-wide QTLs and the bottom row shows the results for supergenes.}\label{fig:GWASoutcomes}
-\end{figure}
-
-\begin{figure}[H]
-\includegraphics{../figs/freqsDetection-1} \caption{The proportion of non-dominant morphs in the population did not impact the ability to detect QTLs through genome-wide associations. The top row shows multilocus QTL genetic architectures and the ability to detect traits considering either the parent/non-courters proportion or the non-courters/non-parent proportions. The bottom row shows the same results for supergenes.}\label{fig:freqsDetection}
-\end{figure}
+A consequence of this high genetic diversity underpinning the
+categorical traits appears to be high error rates in detecting true QTLs
+using genome-wide association tests. As expected, the detection of true
+QTLs in a GWAS was more likely when fewer QTLs underpin the trait,
+especially if those QTLs are aggregated on fewer chromosomes (Fig. S11).
+The type of genetic architecture (genome-wide QTLs versus supergenes)
+had a minimal effect on the detection of QTLs. The QTLs for parent
+traits were more reliably detected by GWAS than the courter QTLs, even
+though in the majority of simulations the final population only
+contained parental males (Fig. \ref{fig:ternaryPlots}B). The higher
+probability of detecting parent QTLs could be attributed to stronger
+selection on that trait (i.e., being a non-parent was more costly than
+being a non-courter). To summarise, a surprising degree of genetic
+diversity was retained in our simulations despite fixation of some
+morphs, which impeded the detection of causal loci.
 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
-Summary of findings - genetic architecture matters - maybe counter
-intuitively it reduces stochasticity, likely through genetic
-correlations and/or linkage disequilibrium? - GWAS is only going to pick
-up \(\le\) 50\% of true QTLs, and will provide spurious results - a mention
-of sexual conflict?
+Understanding how the genetic architecture of phenotypic polymorphisms
+facilitates or constrains their maintenance and evolution is crucial for
+understanding the mechanisms shaping diversity. Yet, we do not fully
+understand how polygenic phenotypes can be inherited as discrete suites
+of traits. Using a simulation model, we show that the genetic
+architecture -- specifically, the number of loci and the extent of
+linkage among them -- affects the persistence of complex discrete
+phenotypes. In our single-gene models, under parameter conditions that
+favoured the maintenance of multiple morphs in simple single-gene
+models, which male morphs were retained was determined due to
+stochasticity. However, when more complex architectures are modelled
+using the same parameters, specific combinations of morphs were
+retained; thus, genetic complexity of traits reduced the importance of
+stochasticity. This phenomenon was likely due to genetic correlations
+between traits and loci. In contrast to expectations, we did not find
+that supergenes increased the probability that multiple morphs are
+maintained in the population. QTLs organised into supergenes (in which
+causal SNPs are physically co-located and experience reduced
+recombination), although associated with high linkage disequilibrium,
+did not have qualitatively different outcomes in terms of the
+maintenance of discrete morphs than QTLs distributed genome-wide. In
+addition, unexpectedly high levels of genetic diversity were retained
+within morphs in the supergene scenarios.
 
-Why might cause the deviation from the single-locus expectation? - LD,
-genetic correlations - compare to previous models and speculate on how
-it might impact their results - discuss real-world examples
+\hypertarget{supergenes-have-similar-outcomes-to-randomly-distributed-qtls}{%
+\subsection{Supergenes have similar outcomes to randomly distributed QTLs}\label{supergenes-have-similar-outcomes-to-randomly-distributed-qtls}}
 
-Detection of QTLs: what's up?
-extreme LD within supergenes makes associations difficult to identify (e.g., Kim et al zebrafinch paper)
-this is consistent with previous models
-like my SCA paper - what does this mean for our ability to study real
-world pops?
+The discovery of supergenes underlying polymorphism was hailed as an
+explanation for how complex suites of traits could be inherited in a
+discrete manner, when they must also be polygenic
+{[}55{]}. We provide compelling
+evidence that additive genetic variation need not be co-located in a
+non-recombining region of a chromosome for multiple morphs to be
+maintained. Our model makes several assumptions that might differ from
+real-world examples, however, and These additional forms of complexity
+in genetic architectures are fruitful areas for future research. For
+example, the steroid hormone receptor genes in white-throated sparrow
+and ruff supergenes {[}26{]} would be better
+approximated by a logarithmic distribution, which differs from the
+additive distribution of allelic effects that we used. Additionally,
+many polymorphisms could rely on dominance hierarchies (e.g., as
+modelled by {[}10{]}), and could even
+be underpinned by dominance reversals between morphs
+{[}25{]} or sexes
+{[}56{]}, which were not
+possibilities considered in our model. Regardless, we provide the
+important result that discrete morphs can be maintained within
+populations even without discrete genetic architectures with a
+threshold-based switch, contrary to predictions from some authors
+{[}57{]}. Our results indicate that
+discrete morphs need not have causal genes co-located in a supergene but
+can still follow the single- or two-locus phenotypic inheritance
+patterns seen in side-blotched lizards {[}7{]}
+and damselflies {[}10{]}.
 
-Maintenance of variation (esp.~morphs) and genetic architectures -
-genetic architecture is critically important - this doesn't include
-other elements of sex-specific or morph-specific architectures such as
-sex-specific dominance of sex-biased gene expression
+\hypertarget{unexpected-genetic-variation-was-maintained-even-when-traits-were-fixed}{%
+\subsection{Unexpected genetic variation was maintained even when traits were fixed}\label{unexpected-genetic-variation-was-maintained-even-when-traits-were-fixed}}
+
+Comparing our model predictions to predictions from the literature on
+sexually antagonistic selection on autosomes can be informative because
+both scenarios involve balancing selection on shared genomic regions
+{[}13{]}. In our model, balancing
+selection arises from fitness tradeoffs between reproductive investment
+and survival in males, which creates conflicts among morphs, wheeras
+autosomal sexually antagonistic selection involves conflicts between
+sexes over similar tradeoffs. Unlike models of sex-specific selection,
+which have found that under conditions resulting in balancing selection
+on males and females genetic variation can be maintained
+{[}58{]}, but that most genomic regions
+will not show excessive variation
+{[}40{]}, our models predict the
+maintenance of variation in phenotypes and in genotypes. Additionally,
+we detected high levels of genetic differentiation between male types,
+even without strong selection, which is opposite to the predictions for
+sex-specific selection {[}59{]}. As such,
+our model highlights how demographic factors, stochasticity, and genomic
+effects such as pleiotropy and linkage can affect genetic variation, and
+potentially obscure putative genome-wide signals of selection.
+
+Furthermore, we expected the supergenes to evolve to contain single
+haplotypes for each morph, as has been reported in empirical examples of
+supergenes controlling complex phenotypes (e.g.,
+{[}19{]};
+{[}20{]};
+{[}22{]};
+{[}5{]}). A striking difference in
+our results from those of the empirical examples is that we do not see
+fixed alleles exclusively in one morph or the other. Instead,
+quantitative variation is retained within the supergenes, and we do not
+observe discrete haplotypes underlying the categorical morphs. If we
+compare our supergene results to our QTL results, as expected, linkage
+disequilibrium was elevated within the supergene region in our model,
+and similarly high levels of LD were not observed in the genome-wide QTL
+models (Fig. S10). However, measures of genetic variation and
+between-morph differentiation were similar in the two types of models
+(Fig. \ref{fig:genomewideDiv}).
+
+These unexpected levels of genetic diversity might have also impaired
+our ability to detect the causal QTLs using methods such as genome-wide
+association studies. We only identified \(\le\) 50\% of true QTLs, with
+many false positives. Low true positives and high false positives are
+consistent with other simulation studies of genome-wide studies of
+selection and trait associations
+{[}40{]}, especially for genome-wide
+associations with dichotomous traits
+{[}35{]}. In this study, these
+limitations are consistent with both genetic architectures, so appears
+to not only be driven by the extreme linkage disequilibrium within
+supergenes that makes associations difficult to identify
+{[}22{]}. Our results suggest that
+genome-wide association studies alone are likely to miss key causal
+variants, even if such approaches have been sufficient in identifying
+causal regions in some species
+{[}5,16,19,20,22,24{]}.
+
+\hypertarget{summary}{%
+\subsection{Summary}\label{summary}}
+
+Here, we show that the genetic architecture of discrete morphs affects
+the frequency of morphs maintained under balancing selection, but does
+not fundamentally change the conditions enabling balancing selection to
+allow multiple morphs to persist. We also show surprisingly elevated
+genetic diversity can be maintained, but that genome-wide scans are
+unlikely to accurately identify the complete genetic architecture of
+discrete traits. Our results highlight that additively determined
+dichotomous traits can be polygenic and exhibit evolutionary dynamics
+equivalent to a single-locus model, regardless of the physical
+configuration of the causal variants.
 
 \hypertarget{acknowledgments}{%
 \section{Acknowledgments}\label{acknowledgments}}
 
-We acknowledge Ngāi Tūāhuriri, upon whose lands the analyses and writing
-was conducted. This work was conducted in part while SPF was a
-postdoctoral fellowship at the National Institute for Mathematical and
+Thanks to the Flanagan lab for their feedback on early drafts of this
+work. We acknowledge Ngāi Tūāhuriri, upon whose lands the analyses and
+writing was conducted. This work was conducted in part while SPF was a
+postdoctoral fellow at the National Institute for Mathematical and
 Biological Synthesis, sponsored by the National Science Foundation
 through NSF Award \#DBI-1300426, with additional support from The
 University of Tennessee, Knoxville. SPF was partially funded by the
-Marsden fund grant number UOC1904 while working on this research.
+Marsden fund grant number UOC1904 while working on this research. SHA
+acknowledges support from funding from the National Science Foundation
+(Grants IOS-1522491 and IOS-1655297) and the University of California
+Santa Cruz.
 
 \hypertarget{data-accessibility}{%
 \section{Data Accessibility}\label{data-accessibility}}
 
-All code has been archived on Zenodo (DOI: ) and is maintained on github
-(). Simulation results are archived on dryad ().
+All code is maintained on github (\url{https://github.com/spflanagan/ARTs})
+and the current version has been archived on Zenodo (DOI: ). Outputs
+used in the creation of figures in the main text and the supplement are
+archived on zenodo (DOI: 10.5281/zenodo.8248198).
 
 \hypertarget{author-contributions}{%
 \section{Author Contributions}\label{author-contributions}}
+
+SPF and SHA conceived of the project. SPF wrote code and performed
+analysis with input from SHA. SPF wrote the first draft of the
+manuscript and both authors substantially revised subsequent version.
+Both authors approve the the submitted version of the manuscript.
 
 \hypertarget{references}{%
 \section*{References}\label{references}}
@@ -747,25 +1074,241 @@ All code has been archived on Zenodo (DOI: ) and is maintained on github
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{0}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-connallonEvolutionaryConsequencesSexSpecific2018}{}}%
-\CSLLeftMargin{1. }
-\CSLRightInline{Connallon T, Sharma S, Olito C. 2018 Evolutionary {Consequences} of {Sex-Specific Selection} in {Variable Environments}: {Four Simple Models Reveal Diverse Evolutionary Outcomes}. \emph{The American Naturalist} \textbf{193}, 93--105. (doi:\href{https://doi.org/10.1086/700720}{10.1086/700720})}
-
-\leavevmode\vadjust pre{\hypertarget{ref-alonzoMateChoiceGames2001}{}}%
-\CSLLeftMargin{2. }
-\CSLRightInline{Alonzo SH, Sinervo B. 2001 Mate choice games, context-dependent good genes, and genetic cycles in the side-blotched lizard, {\emph{Uta}}{ \emph{Stansburiana}}. \emph{Behavioral Ecology and Sociobiology} \textbf{49}, 176--186. (doi:\href{https://doi.org/10.1007/s002650000265}{10.1007/s002650000265})}
-
 \leavevmode\vadjust pre{\hypertarget{ref-oliveiraAlternativeReproductiveTactics2008}{}}%
-\CSLLeftMargin{3. }
+\CSLLeftMargin{1. }%
 \CSLRightInline{Oliveira RF, Taborsky M, Brockmann HJ. 2008 \emph{Alternative {Reproductive Tactics}: {An Integrative Approach}}. {Cambridge, United Kingdom}: {Cambridge University Press}. }
 
-\leavevmode\vadjust pre{\hypertarget{ref-harrisonSexualSelectionDrives2015}{}}%
-\CSLLeftMargin{4. }
-\CSLRightInline{Harrison PW, Wright AE, Zimmer F, Dean R, Montgomery SH, Pointer MA, Mank JE. 2015 Sexual selection drives evolution and rapid turnover of male gene expression. \emph{Proceedings of the National Academy of Sciences} \textbf{112}, 4393.}
+\leavevmode\vadjust pre{\hypertarget{ref-iserbytNegativeFrequencydependentSelection2013}{}}%
+\CSLLeftMargin{2. }%
+\CSLRightInline{Iserbyt A, Bots J, Van Gossum H, Sherratt TN. 2013 Negative frequency-dependent selection or alternative reproductive tactics: Maintenance of female polymorphism in natural populations. \emph{BMC Evolutionary Biology} \textbf{13}, 139. (doi:\href{https://doi.org/10.1186/1471-2148-13-139}{10.1186/1471-2148-13-139})}
 
-\leavevmode\vadjust pre{\hypertarget{ref-kasimatisLimitsGenomicDivergence2019a}{}}%
-\CSLLeftMargin{5. }
-\CSLRightInline{Kasimatis KR, Ralph PL, Phillips PC. 2019 Limits to {Genomic Divergence Under Sexually Antagonistic Selection}. \emph{G3\&amp;\#58; Genes\textbar Genomes\textbar Genetics} \textbf{9}, 3813--3824. (doi:\href{https://doi.org/10.1534/g3.119.400711}{10.1534/g3.119.400711})}
+\leavevmode\vadjust pre{\hypertarget{ref-prykeFrequencydependentPhysiologicalTradeoffs2007}{}}%
+\CSLLeftMargin{3. }%
+\CSLRightInline{Pryke SR, Astheimer LB, Buttemer WA, Griffith SC. 2007 Frequency-dependent physiological trade-offs between competing colour morphs. \emph{Biology Letters} \textbf{3}, 494--497. (doi:\href{https://doi.org/10.1098/rsbl.2007.0213}{10.1098/rsbl.2007.0213})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-alonzoMateChoiceGames2001}{}}%
+\CSLLeftMargin{4. }%
+\CSLRightInline{Alonzo SH, Sinervo B. 2001 Mate choice games, context-dependent good genes, and genetic cycles in the side-blotched lizard, {\emph{Uta}}{ \emph{Stansburiana}}. \emph{Behavioral Ecology and Sociobiology} \textbf{49}, 176--186. (doi:\href{https://doi.org/10.1007/s002650000265}{10.1007/s002650000265})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-hendrickxMasculinizingSupergeneUnderlies2022}{}}%
+\CSLLeftMargin{5. }%
+\CSLRightInline{Hendrickx F, De Corte Z, Sonet G, Van Belleghem SM, Köstlbacher S, Vangestel C. 2022 A masculinizing supergene underlies an exaggerated male reproductive morph in a spider. \emph{Nature Ecology \& Evolution} \textbf{6}, 195--206. (doi:\href{https://doi.org/10.1038/s41559-021-01626-6}{10.1038/s41559-021-01626-6})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-mankSexspecificMorphsGenetics2022}{}}%
+\CSLLeftMargin{6. }%
+\CSLRightInline{Mank JE. 2022 Sex-specific morphs: The genetics and evolution of intra-sexual variation. \emph{Nature Reviews Genetics}, 1--9. (doi:\href{https://doi.org/10.1038/s41576-022-00524-2}{10.1038/s41576-022-00524-2})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-sinervoRunawaySocialGames2001}{}}%
+\CSLLeftMargin{7. }%
+\CSLRightInline{Sinervo B. 2001 Runaway social games, genetic cycles driven by alternative male and female strategies, and the origin of morphs. \emph{Genetica} \textbf{112--113}, 417--434. (doi:\href{https://doi.org/10.1007/978-94-010-0585-2_25}{10.1007/978-94-010-0585-2\_25})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-sinervoRockPaperScissors1996}{}}%
+\CSLLeftMargin{8. }%
+\CSLRightInline{Sinervo B, Lively CM. 1996 The rock\textendash paper\textendash scissors game and the evolution of alternative male strategies. \emph{Nature} \textbf{380}, 240--243. (doi:\href{https://doi.org/10.1038/380240a0}{10.1038/380240a0})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-takahashiNegativeFrequencydependentSelection2010}{}}%
+\CSLLeftMargin{9. }%
+\CSLRightInline{Takahashi Y, Yoshimura J, Morita S, Watanabe M. 2010 Negative frequency-dependent selection in female color polymorphism of a damselfly. \emph{Evolution} \textbf{64}, 3620--3628. (doi:\href{https://doi.org/10.1111/j.1558-5646.2010.01083.x}{10.1111/j.1558-5646.2010.01083.x})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-svenssonFemalePolymorphismFrequency2005}{}}%
+\CSLLeftMargin{10. }%
+\CSLRightInline{Svensson EI, Abbott J, Härdling R. 2005 Female polymorphism, frequency dependence, and rapid evolutionary dynamics in natural populations. \emph{The American Naturalist} \textbf{165}, 567--576. (doi:\href{https://doi.org/10.1086/429278}{10.1086/429278})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-sinervoDevelopmentalPhysiologicalNeural2006}{}}%
+\CSLLeftMargin{11. }%
+\CSLRightInline{Sinervo B, Calsbeek R. 2006 \href{https://www.jstor.org/stable/30033844}{The developmental, physiological, neural, and genetical causes and consequences of frequency-dependent selection in the wild}. \emph{Annual Review of Ecology, Evolution, and Systematics} \textbf{37}, 581--610.}
+
+\leavevmode\vadjust pre{\hypertarget{ref-ryanGeneticPolymorphismSwordtail1992}{}}%
+\CSLLeftMargin{12. }%
+\CSLRightInline{Ryan MJ, Pease CM, Morris MR. 1992 A genetic polymorphism in the swordtail {\emph{Xiphophorus}}{ \emph{Nigrensis}}: Testing the prediction of equal fitnesses. \emph{The American Naturalist} \textbf{139}, 21--31.}
+
+\leavevmode\vadjust pre{\hypertarget{ref-morrisIntralocusTacticalConflict2013}{}}%
+\CSLLeftMargin{13. }%
+\CSLRightInline{Morris MR, Goedert D, Abbott JK, Robinson DM, Rios-Cardenas O. 2013 Intralocus {Tactical Conflict} and the {Evolution} of {Alternative Reproductive Tactics}. In \emph{Advances in the {Study} of {Behavior}}, pp. 447--478. {Elsevier}. (doi:\href{https://doi.org/10.1016/B978-0-12-407186-5.00007-0}{10.1016/B978-0-12-407186-5.00007-0})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-sinervoCorrelationalSelectionEvolution2002}{}}%
+\CSLLeftMargin{14. }%
+\CSLRightInline{Sinervo B, Svensson E. 2002 Correlational selection and the evolution of genomic architecture. \emph{Heredity} \textbf{89}, 329--338. (doi:\href{https://doi.org/10.1038/sj.hdy.6800148}{10.1038/sj.hdy.6800148})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-tsubakiGeneticPolymorphismLinked2003a}{}}%
+\CSLLeftMargin{15. }%
+\CSLRightInline{Tsubaki Y. 2003 The genetic polymorphism linked to mate-securing strategies in the male damselfly {\emph{Mnais}}{ \emph{Costalis}} {Selys} ({Odonata}: {Calopterygidae}). \emph{Population Ecology} \textbf{45}, 263--266. (doi:\href{https://doi.org/10.1007/s10144-003-0162-8}{10.1007/s10144-003-0162-8})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-kimGeneticsEvidenceBalancing2019}{}}%
+\CSLLeftMargin{16. }%
+\CSLRightInline{Kim K-W \emph{et al.} 2019 Genetics and evidence for balancing selection of a sex-linked colour polymorphism in a songbird. \emph{Nature Communications} \textbf{10}, 1--11. (doi:\href{https://doi.org/10.1038/s41467-019-09806-6}{10.1038/s41467-019-09806-6})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-slyMolecularParallelismSignaling2022}{}}%
+\CSLLeftMargin{17. }%
+\CSLRightInline{Sly ND, Freeman-Gallant CR, Henschen AE, Minias P, Whittingham LA, Dunn PO. 2022 Molecular parallelism in signaling function across different sexually selected ornaments in a warbler. \emph{Proceedings of the National Academy of Sciences} \textbf{119}, e2120482119. (doi:\href{https://doi.org/10.1073/pnas.2120482119}{10.1073/pnas.2120482119})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-flanaganGenomewideSelectionComponents2017}{}}%
+\CSLLeftMargin{18. }%
+\CSLRightInline{Flanagan SP, Jones AG. 2017 Genome-wide selection components analysis in a fish with male pregnancy. \emph{Evolution} \textbf{71}, 1096--1105. (doi:\href{https://doi.org/10.1111/evo.13173}{10.1111/evo.13173})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-lamichhaneyStructuralGenomicChanges2016}{}}%
+\CSLLeftMargin{19. }%
+\CSLRightInline{Lamichhaney S \emph{et al.} 2016 Structural genomic changes underlie alternative reproductive strategies in the ruff ({Philomachus} pugnax). \emph{Nat Genet} \textbf{48}, 84--88. (doi:\href{10.1038/ng.3430\%20http://www.nature.com/ng/journal/v48/n1/abs/ng.3430.html\#supplementary-information}{10.1038/ng.3430 http://www.nature.com/ng/journal/v48/n1/abs/ng.3430.html\#supplementary-information})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-kupperSupergeneDeterminesHighly2016}{}}%
+\CSLLeftMargin{20. }%
+\CSLRightInline{Kupper C \emph{et al.} 2016 A supergene determines highly divergent male reproductive morphs in the ruff. \emph{Nat Genet} \textbf{48}, 79--83. (doi:\href{10.1038/ng.3443\%20http://www.nature.com/ng/journal/v48/n1/abs/ng.3443.html\#supplementary-information}{10.1038/ng.3443 http://www.nature.com/ng/journal/v48/n1/abs/ng.3443.html\#supplementary-information})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-thomasChromosomalPolymorphismLinked2008}{}}%
+\CSLLeftMargin{21. }%
+\CSLRightInline{Thomas JW, Cáceres M, Lowman JJ, Morehouse CB, Short ME, Baldwin EL, Maney DL, Martin CL. 2008 The chromosomal polymorphism linked to variation in social behavior in the white-throated sparrow ({\emph{Zonotrichia Albicollis}}) is a complex rearrangement and suppressor of recombination. \emph{Genetics} \textbf{179}, 1455--1468. (doi:\href{https://doi.org/10.1534/genetics.108.088229}{10.1534/genetics.108.088229})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-kimSexlinkedSupergeneControls2017}{}}%
+\CSLLeftMargin{22. }%
+\CSLRightInline{Kim K-W, Bennison C, Hemmings N, Brookes L, Hurley LL, Griffith SC, Burke T, Birkhead TR, Slate J. 2017 A sex-linked supergene controls sperm morphology and swimming speed in a songbird. \emph{Nature Ecology \& Evolution} \textbf{1}, 1168--1176. (doi:\href{https://doi.org/10.1038/s41559-017-0235-2}{10.1038/s41559-017-0235-2})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-kniefSexchromosomeInversionCauses2017}{}}%
+\CSLLeftMargin{23. }%
+\CSLRightInline{Knief U \emph{et al.} 2017 A sex-chromosome inversion causes strong overdominance for sperm traits that affect siring success. \emph{Nature Ecology \& Evolution} \textbf{1}, 1177--1184. (doi:\href{https://doi.org/10.1038/s41559-017-0236-1}{10.1038/s41559-017-0236-1})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-gazdaGeneticMechanismSexual2020}{}}%
+\CSLLeftMargin{24. }%
+\CSLRightInline{Gazda MA \emph{et al.} 2020 A genetic mechanism for sexual dichromatism in birds. \emph{Science} \textbf{368}, 1270--1274.}
+
+\leavevmode\vadjust pre{\hypertarget{ref-pearseSexdependentDominanceMaintains2019}{}}%
+\CSLLeftMargin{25. }%
+\CSLRightInline{Pearse DE \emph{et al.} 2019 Sex-dependent dominance maintains migration supergene in rainbow trout. \emph{Nature Ecology \& Evolution} \textbf{3}, 1731--1742. (doi:\href{https://doi.org/10.1038/s41559-019-1044-6}{10.1038/s41559-019-1044-6})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-maneySupergenesSteroids2022}{}}%
+\CSLLeftMargin{26. }%
+\CSLRightInline{Maney DL, Küpper C. 2022 Supergenes on steroids. \emph{Philosophical Transactions of the Royal Society B: Biological Sciences} \textbf{377}, 20200507. (doi:\href{https://doi.org/10.1098/rstb.2020.0507}{10.1098/rstb.2020.0507})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-merrittSupergenelinkedEstrogenReceptor2020}{}}%
+\CSLLeftMargin{27. }%
+\CSLRightInline{Merritt JR, Grogan KE, Zinzow-Kramer WM, Sun D, Ortlund EA, Yi SV, Maney DL. 2020 A supergene-linked estrogen receptor drives alternative phenotypes in a polymorphic songbird. \emph{Proceedings of the National Academy of Sciences} \textbf{117}, 21673--21680. (doi:\href{https://doi.org/10.1073/pnas.2011347117}{10.1073/pnas.2011347117})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-maneySupergeneBirdFour2020}{}}%
+\CSLLeftMargin{28. }%
+\CSLRightInline{Maney DL, Merritt JR, Prichard MR, Horton BM, Yi SV. 2020 Inside the supergene of the bird with four sexes. \emph{Hormones and Behavior} \textbf{126}, 104850. (doi:\href{https://doi.org/10.1016/j.yhbeh.2020.104850}{10.1016/j.yhbeh.2020.104850})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-lepaisGeneticArchitectureThreshold2017}{}}%
+\CSLLeftMargin{29. }%
+\CSLRightInline{Lepais O, Manicki A, Glise S, Buoro M, Bardonnet A. 2017 Genetic architecture of threshold reaction norms for male alternative reproductive tactics in {Atlantic} salmon ({Salmo} salar {L}.). \emph{Scientific Reports} \textbf{7}, 43552. (doi:\href{https://doi.org/10.1038/srep43552}{10.1038/srep43552})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-nugentNeuroendocrineProfilesAssociated2016}{}}%
+\CSLLeftMargin{30. }%
+\CSLRightInline{Nugent BM, Stiver KA, Alonzo SH, Hofmann HA. 2016 Neuroendocrine profiles associated with discrete behavioural variation in {Symphodus} ocellatus, a species with male alternative reproductive tactics. \emph{Molecular Ecology} \textbf{25}, 5212--5227. (doi:\href{https://doi.org/10.1111/mec.13828}{10.1111/mec.13828})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-stuglikAlternativeReproductiveTactics2014}{}}%
+\CSLLeftMargin{31. }%
+\CSLRightInline{Stuglik MT, Babik W, Prokop Z, Radwan J. 2014 Alternative reproductive tactics and sex-biased gene expression: The study of the bulb mite transcriptome. \emph{Ecology and Evolution} \textbf{4}, 623--632. (doi:\href{https://doi.org/10.1002/ece3.965}{10.1002/ece3.965})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-takahashiCandidateGenesAssociated2019}{}}%
+\CSLLeftMargin{32. }%
+\CSLRightInline{Takahashi M, Takahashi Y, Kawata M. 2019 Candidate genes associated with color morphs of female-limited polymorphisms of the damselfly {\emph{Ischnura}}{ \emph{Senegalensis}}. \emph{Heredity} \textbf{122}, 81--92. (doi:\href{https://doi.org/10.1038/s41437-018-0076-z}{10.1038/s41437-018-0076-z})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-josephsWhatCanGenomewide2017}{}}%
+\CSLLeftMargin{33. }%
+\CSLRightInline{Josephs EB, Stinchcombe JR, Wright SI. 2017 What can genome-wide association studies tell us about the evolutionary forces maintaining genetic variation for quantitative traits? \emph{New Phytologist} \textbf{214}, 21--33. (doi:\href{https://doi.org/10.1111/nph.14410}{10.1111/nph.14410})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-uricchioEvolutionaryPerspectivesPolygenic2020}{}}%
+\CSLLeftMargin{34. }%
+\CSLRightInline{Uricchio LH. 2020 Evolutionary perspectives on polygenic selection, missing heritability, and {GWAS}. \emph{Human Genetics} \textbf{139}, 5--21. (doi:\href{https://doi.org/10.1007/s00439-019-02040-6}{10.1007/s00439-019-02040-6})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-stringerUnderestimatedEffectSizes2011}{}}%
+\CSLLeftMargin{35. }%
+\CSLRightInline{Stringer S, Wray NR, Kahn RS, Derks EM. 2011 Underestimated effect sizes in {GWAS}: Fundamental limitations of single {SNP} analysis for dichotomous phenotypes. \emph{PLOS ONE} \textbf{6}, e27964. (doi:\href{https://doi.org/10.1371/journal.pone.0027964}{10.1371/journal.pone.0027964})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-bitarelloInferringBalancingSelection2023}{}}%
+\CSLLeftMargin{36. }%
+\CSLRightInline{Bitarello BD, Brandt DYC, Meyer D, Andrés AM. 2023 Inferring balancing selection from genome-scale data. \emph{Genome Biology and Evolution} \textbf{15}, evad032. (doi:\href{https://doi.org/10.1093/gbe/evad032}{10.1093/gbe/evad032})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-svenssonCorrelationalSelectionAge2021}{}}%
+\CSLLeftMargin{37. }%
+\CSLRightInline{Svensson EI \emph{et al.} 2021 Correlational selection in the age of genomics. \emph{Nature Ecology \& Evolution} \textbf{5}, 562--573. (doi:\href{https://doi.org/10.1038/s41559-021-01413-3}{10.1038/s41559-021-01413-3})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-weigandDetectingSignaturesPositive2018}{}}%
+\CSLLeftMargin{38. }%
+\CSLRightInline{Weigand H, Leese F. 2018 Detecting signatures of positive selection in non-model species using genomic data. \emph{Zoological Journal of the Linnean Society} \textbf{184}, 528--583. (doi:\href{https://doi.org/10.1093/zoolinnean/zly007}{10.1093/zoolinnean/zly007})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-kellyPromiseDeceitGenomic2021}{}}%
+\CSLLeftMargin{39. }%
+\CSLRightInline{Kelly JK. 2021 The promise and deceit of genomic selection component analyses. \emph{Proceedings of the Royal Society B: Biological Sciences} \textbf{288}, 20211812. (doi:\href{https://doi.org/10.1098/rspb.2021.1812}{10.1098/rspb.2021.1812})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-flanaganIdentifyingSignaturesSexual2015}{}}%
+\CSLLeftMargin{40. }%
+\CSLRightInline{Flanagan SP, Jones AG. 2015 Identifying signatures of sexual selection using genomewide selection components analysis. \emph{Ecol Evol.} \textbf{5}, 2722--2744. (doi:\href{https://doi.org/10.1002/ece3.1546}{10.1002/ece3.1546})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-rcoreteamLanguageEnvironmentStatistical2021}{}}%
+\CSLLeftMargin{41. }%
+\CSLRightInline{Team RC. 2021 R: {A Language} and {Environment} for {Statistical Computing}. }
+
+\leavevmode\vadjust pre{\hypertarget{ref-wickhamTidyrTidyMessy2021}{}}%
+\CSLLeftMargin{42. }%
+\CSLRightInline{Wickham H. 2021 Tidyr: {Tidy} messy data. }
+
+\leavevmode\vadjust pre{\hypertarget{ref-oksanenVeganCommunityEcology2015}{}}%
+\CSLLeftMargin{43. }%
+\CSLRightInline{Oksanen J \emph{et al.} 2015 Vegan: Community ecology package. }
+
+\leavevmode\vadjust pre{\hypertarget{ref-sievertInteractiveWebbasedData2020}{}}%
+\CSLLeftMargin{44. }%
+\CSLRightInline{Sievert C. 2020 \emph{Interactive web-based data visualization with r, plotly, and shiny}. {Chapman and Hall/CRC}. }
+
+\leavevmode\vadjust pre{\hypertarget{ref-changShinyWebApplication2021}{}}%
+\CSLLeftMargin{45. }%
+\CSLRightInline{Chang W \emph{et al.} 2021 Shiny: {Web} application framework for r. }
+
+\leavevmode\vadjust pre{\hypertarget{ref-changShinydashboardCreateDashboards2018}{}}%
+\CSLLeftMargin{46. }%
+\CSLRightInline{Chang W, Borges Ribeiro B. 2018 Shinydashboard: {Create} dashboards with 'shiny'. }
+
+\leavevmode\vadjust pre{\hypertarget{ref-mcphersonRsconnectDeploymentInterface2021}{}}%
+\CSLLeftMargin{47. }%
+\CSLRightInline{McPherson J, Allaire J. 2021 Rsconnect: {Deployment} interface for r markdown documents and shiny applications. }
+
+\leavevmode\vadjust pre{\hypertarget{ref-wickhamDplyrGrammarData2021}{}}%
+\CSLLeftMargin{48. }%
+\CSLRightInline{Wickham H, François R, Henry L, Müller K. 2021 Dplyr: {A} grammar of data manipulation. }
+
+\leavevmode\vadjust pre{\hypertarget{ref-allaireRmarkdownDynamicDocuments2021}{}}%
+\CSLLeftMargin{49. }%
+\CSLRightInline{Allaire J \emph{et al.} 2021 \emph{Rmarkdown: {Dynamic} documents for r}. }
+
+\leavevmode\vadjust pre{\hypertarget{ref-xieMarkdownDefinitiveGuide2018}{}}%
+\CSLLeftMargin{50. }%
+\CSLRightInline{Xie Y, Allaire JJ, Grolemund G. 2018 \emph{R markdown: {The} definitive guide}. {Boca Raton, Florida}: {Chapman and Hall/CRC}. }
+
+\leavevmode\vadjust pre{\hypertarget{ref-xieMarkdownCookbook2020}{}}%
+\CSLLeftMargin{51. }%
+\CSLRightInline{Xie Y, Dervieux C, Riederer E. 2020 \emph{R markdown cookbook}. {Boca Raton, Florida}: {Chapman and Hall/CRC}. }
+
+\leavevmode\vadjust pre{\hypertarget{ref-knausVcfrPackageManipulate2017}{}}%
+\CSLLeftMargin{52. }%
+\CSLRightInline{Knaus BJ, Grünwald NJ. 2017 Vcfr: A package to manipulate and visualize variant call format data in {R}. \emph{Molecular Ecology Resources} \textbf{17}, 44--53. (doi:\href{https://doi.org/10.1111/1755-0998.12549}{10.1111/1755-0998.12549})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-rosyaraSoftwareGenomewideAssociation2016}{}}%
+\CSLLeftMargin{53. }%
+\CSLRightInline{Rosyara UR, De Jong WS, Douches DS, Endelman JB. 2016 Software for genome-wide association studies in autopolyploids and its application to potato. \emph{The Plant Genome} \textbf{9}, plantgenome2015.08.0073. (doi:\href{https://doi.org/10.3835/plantgenome2015.08.0073}{10.3835/plantgenome2015.08.0073})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-danecekVariantCallFormat2011}{}}%
+\CSLLeftMargin{54. }%
+\CSLRightInline{Danecek P \emph{et al.} 2011 The variant call format and {VCFtools}. \emph{Bioinformatics} \textbf{27}, 2156--2158. (doi:\href{https://doi.org/10.1093/bioinformatics/btr330}{10.1093/bioinformatics/btr330})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-schwanderSupergenesComplexPhenotypes2014}{}}%
+\CSLLeftMargin{55. }%
+\CSLRightInline{Schwander T, Libbrecht R, Keller L. 2014 Supergenes and complex phenotypes. \emph{Current Biology} \textbf{24}, R288--R294. (doi:\href{https://doi.org/10.1016/j.cub.2014.01.056}{10.1016/j.cub.2014.01.056})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-grieshopDominanceReversalsAntagonistic2021}{}}%
+\CSLLeftMargin{56. }%
+\CSLRightInline{Grieshop K, Ho EKH, Kasimatis KR. 2021 Dominance reversals, antagonistic pleiotropy, and the maintenance of genetic variation. (doi:\href{https://doi.org/10.48550/ARXIV.2109.01571}{10.48550/ARXIV.2109.01571})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-boltonColourPolymorphismLikely2016}{}}%
+\CSLLeftMargin{57. }%
+\CSLRightInline{Bolton PE, Rollins LA, Griffith SC. 2016 Colour polymorphism is likely to be disadvantageous to some populations and species due to genetic architecture and morph interactions. \emph{Molecular Ecology} \textbf{25}, 2713--2718. (doi:\href{https://doi.org/10.1111/mec.13632}{10.1111/mec.13632})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-connallonGeneralPopulationGenetic2012}{}}%
+\CSLLeftMargin{58. }%
+\CSLRightInline{Connallon T, Clark AG. 2012 A general population genetic framework for antagonistic selection that accounts for demography and recurrent mutation. \emph{Genetics} \textbf{190}, 1477--1489. (doi:\href{https://doi.org/10.1534/genetics.111.137117}{10.1534/genetics.111.137117})}
+
+\leavevmode\vadjust pre{\hypertarget{ref-kasimatisLimitsGenomicDivergence2019}{}}%
+\CSLLeftMargin{59. }%
+\CSLRightInline{Kasimatis KR, Ralph PL, Phillips PC. 2019 Limits to genomic divergence under sexually antagonistic selection. \emph{G3\&amp;\#58; Genes\textbar Genomes\textbar Genetics} \textbf{9}, 3813--3824. (doi:\href{https://doi.org/10.1534/g3.119.400711}{10.1534/g3.119.400711})}
 
 \end{CSLReferences}
 
