@@ -1,14 +1,14 @@
 ---
 title: Supergenes are not necessary to explain the maintenance of complex alternative phenotypes
 output:
+  bookdown::word_document2: 
+    includes:
+      in_header: preamble.sty
   bookdown::pdf_document2:
     fig_caption: yes
     keep_tex: yes
     number_sections: no
     toc: no
-    includes:
-      in_header: preamble.sty
-  bookdown::word_document2: 
     includes:
       in_header: preamble.sty
 bibliography: references.bib
