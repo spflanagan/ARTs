@@ -68,13 +68,13 @@ source("../R/freq_functions.R")
 source("../morph_predictions/check_freqs.R")
 source("../morph_predictions/morph_gens_ns.R")
 ```
+
 ```{r spftools}
 if(length(system.file(package='spfTools'))<=1){
   devtools::install_github("https://github.com/spflanagan/spfTools/")
 }
 library(spfTools)
 ```
-
 
 # Introduction
 
@@ -793,7 +793,6 @@ frequencies (Fig. \@ref(fig:genomewideDiv) B; Fig. S8). Average linkage
 disequilibrium was higher for QTLs in supergenes than
 randomly-distributed QTLs (Fig. S9).
 
-
 ```{r getPopgen}
 popgen_data<-read.csv("popgen_summary.csv")
 peak_summ_mean<-tapply(popgen_data$propQTLsInPeaksMM,paste(popgen_data$Architecture,popgen_data$Diversity),mean,na.rm=TRUE)
@@ -802,7 +801,6 @@ peak_summ_sem<-tapply(popgen_data$propQTLsInPeaksMM,paste(popgen_data$Architectu
 td_freqs<-read.csv("td_freqs.csv")
 
 ```
-
 
 Similarly, we expected supergenes to show more differentiation between
 morphs, since their QTLs segregated together. However, $G_{ST}$ between
