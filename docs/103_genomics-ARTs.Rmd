@@ -1617,6 +1617,7 @@ mtext("Courter-Parent Frequency", 1, outer=TRUE, line=-1, cex=1.5)
 outer_legend("top",
        bty='n',
        pch=c(17, 16, 15,15),
+       col=c("grey", "grey",divcols[2],divcols[1]),
        legend=c("Supergenes", "QTLs", "High Diversity", "Low Diversity"),
        ncol=4,
        cex=2.5,
