@@ -989,7 +989,7 @@ Santa Cruz.
 # Data Accessibility
 
 All code is maintained on github (<https://github.com/spflanagan/ARTs>)
-and the current version has been archived on Zenodo (DOI: ). Outputs
+and the current version has been archived on Zenodo (DOI: https://zenodo.org/badge/latestdoi/83730380). Outputs
 used in the creation of figures in the main text and the supplement are
 archived on zenodo (DOI: 10.5281/zenodo.8248198).
 
