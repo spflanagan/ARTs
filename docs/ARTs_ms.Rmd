@@ -2,6 +2,7 @@
 title: Supergenes are not necessary to explain the maintenance of complex alternative phenotypes
 output:
   bookdown::word_document2: 
+    reference_docx: "draft-styles.docx"
     includes:
       in_header: preamble.sty
   bookdown::pdf_document2:
