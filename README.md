@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/83730380.svg)](https://zenodo.org/badge/latestdoi/83730380)
+
 # Alternative Reproductive Tactics Models
 
 This repository contains code to model the evolution of alternative reproductive tactics and the code to analyse the outputs of the models.
