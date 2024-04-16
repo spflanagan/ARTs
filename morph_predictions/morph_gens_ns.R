@@ -1,8 +1,8 @@
 # Version of morph_gen_ns.R to allow different survivals
+# object-oriented version of the code to run the model
+# now in terms of actual numbers!
 
-# object-oriented version of morph_gens
-# also now in terms of actual numbers!
-#source("check_freqs.R")
+
 nest_fertilize<-function(freqs, Nm, max_off,ws=c(1,1,0,0), rs=c(4,4,8,8)){
   # number of nests 
   n<-freqs*ws*Nm
@@ -70,7 +70,9 @@ one_gen<-function(rs=c(4,4,8,8),
 #' @param gens The number of generations
 #' @param freqs A vector containing the frequencies of the other morphs (CP,CN,NP,NN). 
 #'              The frequencies must be labelled or all four provided in the order above.
-#'              If it is a vector with three values, the fourth is calculated as the frequency of the morph of interest.
+#'              If it is a vector with three values, the fourth is calculated as 
+#'              the frequency of the morph of interest.
+#' @param ... Other parameters to be passed to one_gen(), such as vectors of survival.
 #' @return Returns the vector of allele frequencies in the final generation
 morph_gens_ns<-function(gens,freqs, ...){
   freqs<-check_freqs(freqs)
