@@ -1,3 +1,5 @@
+# Version of morph_gen_ns.R to allow different survivals
+
 # object-oriented version of morph_gens
 # also now in terms of actual numbers!
 #source("check_freqs.R")
@@ -31,7 +33,7 @@ nest_survival<-function(ferts,morph_sneak=c(0,0,1,1),morph_wn=c(1,0,1,0)){
   surv<-ferts*morph_sneak*nest_loss
   # modify non-sneakers
   surv[morph_sneak==0]<-nests[which(morph_sneak==0)]
-
+  
   return(surv)
 }
 
@@ -50,12 +52,13 @@ one_gen<-function(rs=c(4,4,8,8),
                   Nm=500,
                   max_sneakers=2,
                   cv=0.5,
-                  wn=1,
+                  ws=c(1,1,0,0),
+                  wn=c(1,0,1,0),
                   wv=exp(-0.5/(2*50))){
   max_off<-cv*max_sneakers*rs[4]
   freqs<-check_freqs(freqs)
-  eggs<-nest_fertilize(freqs, Nm=Nm,max_off,ws=c(1,1,0,0), rs=rs)
-  nests<-nest_survival(eggs,morph_sneak=c(0,0,1,1),morph_wn=c(wn,0,wn,0))
+  eggs<-nest_fertilize(freqs, Nm=Nm,max_off,ws=ws, rs=rs)
+  nests<-nest_survival(eggs,morph_sneak=c(0,0,1,1),morph_wn=wn)
   adults<-viability(nests,morph_wvs=c(wv*wv,wv,wv,1))
   return(adults)
 }
