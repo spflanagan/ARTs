@@ -6,7 +6,6 @@ library(dplyr)
 library(vegan)
 library(tidyr)
 library(rmarkdown)
-source("morph_predictions.R")
 source("morph_gens_ns.R")
 source("check_freqs.R")
 
