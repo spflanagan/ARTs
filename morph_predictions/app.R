@@ -16,8 +16,15 @@ get_freqs<-function(){
   return(freqs_list)
 }
 
-get_results<-function(){
-  morph_results<-readRDS("morph_results_Ns.RDS")
+get_results<-function(survival){
+  if(survival=="0%"){
+    morph_results<-readRDS("morph_results_Ns_10000.RDS")  
+  } else if(survival=="10%"){
+    morph_results<-readRDS("morph_results_Ns_10000_ten-survive.RDS")  
+  } else {
+    morph_results<-readRDS("morph_results_Ns_10000-fifty-survive.RDS")  
+  }
+  
   morph_results$diversity<-vegan::diversity(round(morph_results[,c("CP","CN","NP","NN")],4))
   return(morph_results)
 }
@@ -134,6 +141,14 @@ ui <- dashboardPage(
     ),
     hr(),
     conditionalPanel("input.tabs == 'plot'",
+                     selectInput(
+                       "survival",
+                       "How many of the disfavoured morph survive?",
+                       c("0%","10%","50%")
+                     )
+    ),
+    hr(),
+    conditionalPanel("input.tabs == 'plot'",
                      sliderInput("sliderCP","CP freq", min=0, max=1, step=0.05, value=0.25,round=2),
                      sliderInput("sliderNP","NP freq", min=0, max=1, step=0.05, value=0.25,round=2),
                      sliderInput("r","Relative reproductive input (courters/non-courters)",min=0, max=2,step=0.1,value=0.5,round=2),
@@ -215,7 +230,7 @@ server <- function(input, output, session) {
     withProgress(
       message = "Loading... Please wait", {
         freqs_list<-get_freqs()
-        morph_results<-get_results()
+        morph_results<-get_results(input$survival)
       }
     )
     
