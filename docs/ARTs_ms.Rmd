@@ -397,10 +397,12 @@ Because we assumed obligate parental care, the fraction was either 1 or
 0, depending on whether the morph associated with the clutch had the
 parental care trait. Each morph's total number of offspring produced
 ($o_M$) was the sum of $o_{o_M}$ and $o_{s_M}$.
+<!--# R2:  Does the model assume that the courter male provides parental care to the offspring produced as a result of fertilization by a sneak male? How is the fractional contribution of courters:sneakers modeled in the analysis? -->
 
 ## Stage 4: Viability selection
 
-We assumed viability selection only affects male offspring, through a
+<!--# R2: Lines 234 – 235. I might be missing something, but if two traits are independent how can a trade-off emerge between them? There has to be some constraint built into the model that results in the trade-off. -->We
+assumed viability selection only affects male offspring, through a
 trade-off between courting and parental care. In the baseline model, we
 multiplied the viability selection coefficient (${w_v}_M$) by the
 surviving number of offspring per morph ($o_M$), to determine the number
@@ -429,6 +431,7 @@ achieved by each individual male and female (i.e., each generation, the
 number of offspring created was equal to the carrying capacity). If the
 number of surviving offspring was larger than the carrying capacity,
 offspring were randomly selected to become adults.
+<!--# R1: First and only mention of "carrying capacity". Perhaps give more details on how this was specified and how it related to viability selection. -->
 
 ## Evaluating model outcomes
 
@@ -488,8 +491,10 @@ morph diversity. Within each of these parameter settings, we compared
 model outcomes with for cases with each combination of 2, 4, or 8
 chromosomes and 8, 16, 32, or 68 QTLs underlying each trait. We also
 tested three supergene sizes: occupying 5% of a chromosome, 25% of a
-chromosome, or 50% of a chromosome. In all cases, a chromosome was
-comprised of 1000 loci (including marker loci and QTLs).
+chromosome, or 50% of a chromosome.
+<!--# R2: Are these reasonable values for the size of supergenes? --> In
+all cases, a chromosome was comprised of 1000 loci (including marker
+loci and QTLs).
 
 #### Analysing multilocus genotypes
 
@@ -772,6 +777,7 @@ pathways to creating the morphs in terms of genotypes at each QTL, even
 when QTLs are segregating together in a supergene. These findings
 suggest that supergenes are not necessary for maintaining multiple
 reproductive morphs that are comprised of many causal loci.
+<!--# R1: does this represent multiple independent origins to the morphs? -->
 
 ### Genome-wide genetic diversity is maintained even when trait diversity is low
 
@@ -875,15 +881,17 @@ discrete manner, when they must also be polygenic
 evidence that additive genetic variation need not be co-located in a
 non-recombining region of a chromosome for multiple morphs to be
 maintained. Our model makes several assumptions that might differ from
-real-world examples, however, and These additional forms of complexity
-in genetic architectures are fruitful areas for future research. For
-example, the steroid hormone receptor genes in white-throated sparrow
-and ruff supergenes [@maneySupergenesSteroids2022] would be better
-approximated by a logarithmic distribution, which differs from the
-additive distribution of allelic effects that we used. Additionally,
-many polymorphisms could rely on dominance hierarchies (e.g., as
-modelled by [@svenssonFemalePolymorphismFrequency2005]), and could even
-be underpinned by dominance reversals between morphs
+real-world examples, however, and
+<!--#  R2: The sentence ends abruptly, what's missing?--> These
+additional forms of complexity in genetic architectures are fruitful
+areas for future research. For example, the steroid hormone receptor
+genes in white-throated sparrow and ruff supergenes
+[@maneySupergenesSteroids2022] would be better approximated by a
+logarithmic distribution, which differs from the additive distribution
+of allelic effects that we used. Additionally, many polymorphisms could
+rely on dominance hierarchies (e.g., as modelled by
+[@svenssonFemalePolymorphismFrequency2005]), and could even be
+underpinned by dominance reversals between morphs
 [@pearseSexdependentDominanceMaintains2019] or sexes
 [@grieshopDominanceReversalsAntagonistic2021], which were not
 possibilities considered in our model. Regardless, we provide the
