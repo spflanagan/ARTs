@@ -489,7 +489,7 @@ used two sets of demographic and reproductive parameters that were
 identified by the baseline model as either facilitating high or low
 morph diversity. Within each of these parameter settings, we compared
 model outcomes with for cases with each combination of 2, 4, or 8
-chromosomes and 8, 16, 32, or 68 QTLs underlying each trait. We also
+chromosomes and 8, 16, 32, or 64 QTLs underlying each trait. We also
 tested three supergene sizes: occupying 5% of a chromosome, 25% of a
 chromosome, or 50% of a chromosome.
 <!--# R2: Are these reasonable values for the size of supergenes? --> In
@@ -596,7 +596,7 @@ non-courter/non-parents (Fig. \@ref(fig:ternaryPlots)A, S1).
 the frequency of male morphs and explicit genetic architectures affects
 which morphs are maintained under balancing selection. In all diagrams,
 each point in the triangle represents a different combination of the
-predicted frequency of the three male morphs, where the corners
+predicted frequency of the three male morphs, where the vertices
 represent 100% of each morph and each edge represents relative
 percentages of two out of the three morphs. (A) A comparison of the
 baseline analytical model and the architecture-free single-locus
@@ -911,7 +911,7 @@ sexually antagonistic selection on autosomes can be informative because
 both scenarios involve balancing selection on shared genomic regions
 [@morrisIntralocusTacticalConflict2013]. In our model, balancing
 selection arises from fitness tradeoffs between reproductive investment
-and survival in males, which creates conflicts among morphs, wheeras
+and survival in males, which creates conflicts among morphs, whereas
 autosomal sexually antagonistic selection involves conflicts between
 sexes over similar tradeoffs. Unlike models of sex-specific selection,
 which have found that under conditions resulting in balancing selection
