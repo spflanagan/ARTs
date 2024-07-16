@@ -21,11 +21,12 @@ editor_options:
   markdown:
     wrap: 72
 fontsize: 11pt
-abstract: "Evolutionary biology aims to explain the diversity seen in nature. Evolutionary theory provides frameworks to understand how simple polymorphisms or continuous variation are maintained, but phenotypes inherited as discrete suites of quantitative traits are difficult to fit into this framework. Supergenes have been proposed as a solution to this problem – if causal genes are co-located, they can be inherited as if a single gene, thus bridging the gap between simple polymorphisms and continuous traits. We develop models to ask: how critical are supergenes for maintaining phenotypic diversity? In our simplest model, without explicit genetic architectures, three alternative reproductive morphs are maintained in many of the parameter combinations we evaluated. With these same parameters, models with demographic stochasticity, recombination, and mutation maintained only two of these three morphs, with stochasticity determining which ones. With explicit genetic architectures, regardless of whether causal loci were co-located in a supergene or distributed randomly, this stochasticity was reduced. Even when phenotypic variation was lost, genetic diversity was maintained. Altogether, categorical traits with polygenic bases exhibited similar evolutionary dynamics to those determined by supergenes. Our work suggests that supergenes are not the only answer to the puzzle of how discrete phenotypic variation is maintained.  \\par  \\textbf{Keywords:} genome-wide genetic diversity, alternative mating tactics, frequency dependent selection, supergene, alternative reproductive tactics, genetic architecture"
+abstract: "Evolutionary biology aims to explain the diversity seen in nature. Evolutionary theory provides frameworks to understand how simple polymorphisms or continuous variation are maintained, but phenotypes inherited as discrete suites of quantitative traits are difficult to fit into this framework. Supergenes have been proposed as a solution to this problem – if causal genes are co-located, they can be inherited as if a single gene, thus bridging the gap between simple polymorphisms and continuous traits. We develop models to ask: how critical are supergenes for maintaining phenotypic diversity? In our simplest model, without explicit genetic architectures, three alternative reproductive morphs are maintained in many of the parameter combinations we evaluated. For these same parameter values, models with demographic stochasticity, recombination, and mutation (but without explicit genetic architecture) maintained only two of these three morphs, with stochasticity determining which morphs persisted. With explicit genetic architectures, regardless of whether causal loci were co-located in a supergene or distributed randomly, this stochasticity in which morphs are maintained was reduced. Even when phenotypic variation was lost, genetic diversity was maintained. Altogether, categorical traits with polygenic bases exhibited similar evolutionary dynamics to those determined by supergenes. Our work suggests that supergenes are not the only answer to the puzzle of how discrete polygenic phenotypic variation is maintained.  \\par  \\textbf{Keywords:} genome-wide genetic diversity, alternative mating tactics, frequency dependent selection, supergene, alternative reproductive tactics, genetic architecture"
 preprint: no
 mainfont: roboto
 geometry: margin=2.5cm
 papersize: a4
+always_allow_html: true
 ---
 
 ```{r, include=FALSE}
@@ -129,8 +130,10 @@ the tactics might be discrete and inherited in an apparently Mendelian
 fashion, their genetic basis is much more complex and multivariate. A
 particularly intriguing result is that structural variants have
 aggregated multiple variants contributing to the tactics into a
-'supergene' in at least three species with alternative reproductive
-tactics: the ruff [@lamichhaneyStructuralGenomicChanges2016;
+'supergene' (a tightly linked set of genes, often with reduced
+recombination due to inversions [@ford1965; @thompson2014at least three
+species with alternative reproductive tactics: the ruff
+[@lamichhaneyStructuralGenomicChanges2016;
 @kupperSupergeneDeterminesHighly2016], white-throated sparrow
 [@thomasChromosomalPolymorphismLinked2008], and dwarf spiders
 [@hendrickxMasculinizingSupergeneUnderlies2022]. Supergenes have also
@@ -166,9 +169,13 @@ successful in coding for these variable phenotypes because they include
 androgen receptors [@maneySupergenesSteroids2022]-- the white-throated
 sparrow supergene contains the estrogen receptor gene which directly
 influences the aggressive aspects of the dominant male phenotype
-[@merrittSupergenelinkedEstrogenReceptor2020].
+[@merrittSupergenelinkedEstrogenReceptor2020]. Despite the potential
+promise of supergenes to explain the existence of genetically determined
+alternative reproductive tactics, the existence of these inversion
+polymorphisms has not been studied in the majority of species with fixed
+alternative tactics.
 
-An open question is: to what extent do supergenes facilitate the
+Thus, an open question is: to what extent do supergenes facilitate the
 maintenance of multiple morphs versus the evolution of multiple morphs
 facilitating the evolution of supergenes? This question is difficult to
 address empirically, but is important for understanding the genetic
@@ -236,46 +243,48 @@ reproductive tactics.
 # Methods
 
 Our model considers a biological scenario in which males can display to
-attract females and provide obligate male parental care. To allow us to
-answer our questions about supergenes facilitating multiple morphs, we
-consider two two independent traits, courtship and parental care, both
-of which are expressed only in males. We assume that all females in the
-population prefer males with the courting trait, but females do not know
-when choosing a male whether that male will also provide care. Males who
-do not court can only reproduce by sneaking, and males who display but
-do not provide any parental care will not produce viable offspring.
-Thus, our model has four potential tactics: courter/parents (CP);
-courter/non-parents (CN); non-courters/parents (NP); or
-non-courters/non-parents (NN). Our model assumes non-overlapping
-generations and no environmental effects on traits. While this model
-does not directly apply to all examples of alternative reproductive
-tactics, it is biologically reasonable and common even if not
-universally true. We expect that this model can be generalized to
+attract females and provide obligate male-only parental care. To allow
+us to answer our questions about supergenes facilitating multiple
+morphs, we consider two two independent traits, courtship and parental
+care, both of which are expressed only in males. We assume that all
+females in the population prefer males with the courting trait, but
+females do not know when choosing a male whether that male will also
+provide care. Males who do not court can only reproduce by sneaking, and
+males who display but do not provide any parental care will not produce
+viable offspring. Thus, our model has four potential tactics:
+courter/parents (CP); courter/non-parents (CN); non-courters/parents
+(NP); or non-courters/non-parents (NN). Our model assumes
+non-overlapping generations and no environmental effects on traits.
+While this model does not directly apply to all examples of alternative
+reproductive tactics, it is biologically reasonable and common even if
+not universally true. We expect that this model can be generalized to
 species in which one sex (but not the other) has two fixed traits that
 affect mating success and the survival of their offspring.
 
 To test the importance of genetic architecture in male morphs, we
 implemented three models. First, we developed an analytical model that
 reflects haploid inheritance of a single locus that encodes morphs. This
-model did not include recombination or mutation. Second, we used a
-stochastic individual-based model with two diploid loci, one for each
-trait (courting and parenting), that incorporated recombination,
-mutation, and demographic stochasticity. Finally, we expanded the
-stochastic model to incorporate polygenic inheritance of the two traits,
-with two different explicit physical genetic architectures: quantitative
-trait loci (QTLs) distributed at random throughout a genome including
-non-coding loci and a supergene architecture, where QTLs were co-located
-in a non-recombining region of a single chromosome. We assumed all QTLs
-were autosomal. Each allele at a QTL was assigned a randomly-drawn
-phenotypic effect, and an individual's quantitative phenotypic value was
-determined by the sum of all their allelic effects (i.e., traits were
-entirely additive). In these additive, polygenic models, male traits
-were determined by a threshold function. The value of the threshold was
-constant for each iteration of the model, and was initialized as the
-mean phenotypic value at generation 0, prior to any model iterations. In
-all cases of the individual-based models, Sex was assigned instead by a
-draw from a binomial distribution with a probability of 0.5 of being
-female.
+model did not include recombination or mutation. The goal of this model
+was to determine parameter settings that lead to the persistence of
+three morphs versus the fixation of a single morph in the population.
+Second, we used a stochastic individual-based model with two diploid
+loci, one for each trait (courting and parenting), that incorporated
+recombination, mutation, and demographic stochasticity. Finally, we
+expanded the stochastic model to incorporate polygenic inheritance of
+the two traits, with two different explicit physical genetic
+architectures: quantitative trait loci (QTLs) distributed at random
+throughout a genome including non-coding loci and a supergene
+architecture, where QTLs were co-located in a non-recombining region of
+a single chromosome. We assumed all QTLs were autosomal. Each allele at
+a QTL was assigned a randomly-drawn phenotypic effect, and an
+individual's quantitative phenotypic value was determined by the sum of
+all their allelic effects (i.e., traits were entirely additive). In
+these additive, polygenic models, male traits were determined by a
+threshold function. The value of the threshold was constant for each
+iteration of the model, and was initialized as the mean phenotypic value
+at generation 0, prior to any model iterations. In all cases of the
+individual-based models, Sex was assigned instead by a draw from a
+binomial distribution with a probability of 0.5 of being female.
 
 In all three models, each generation has five distinct phases: (1) mate
 choice; (2) fertilization; (3) parental care; (4) viability selection;
@@ -328,7 +337,9 @@ analytical model, but for all simulation models analysed here,
 $n_{sneak}=3$ and $c=0.5$. We also assumed inherent 'reproductive
 allocations',$r_M$ (where $M$ designated the morph and contained
 $\{CP, CN, NP, NN\}$), for each morph, which sets a ceiling on the
-number of offspring any male can sire.
+number of offspring any male can sire -- this is analogous to sperm
+quantity, which frequently is higher in sneakers than dominant morphs in
+empirical examples [@kustraSpermAlternativeReproductive2020].
 
 In the analytical model, we modelled the fertilisation success for
 morphs by considering their fertilisation success in clutches laid by
@@ -338,10 +349,10 @@ of possible fertilizations arising from sneaking for a given
 non-courting morph was $N_s = n c n_{sneakers} r_{NN}$. If the number of
 fertilizations arising from sneaking was smaller than the morph's
 potential population-level reproductive effort (i.e, if
-$N_s < f_M N_m r_M$), the number of eggs fertilized through sneaking for
-that morph was the difference between $N_s$ and $f_M N_m r_M$, truncated
-at zero. Otherwise, the number of eggs fertilized through sneaking was
-$f_M N_m r_M$.
+$N_s < f_M N_m r_M$), the number of eggs fertilized through sneaking
+($e_{s_M}$) for that morph was the difference between $N_s$ and
+$f_M N_m r_M$, truncated at zero. Otherwise, the number of eggs
+fertilized through sneaking was $f_M N_m r_M$.
 
 In the simulation model, we incorporated recombination and mutation
 during the fertilisation process. Recombination occurred independently
@@ -380,14 +391,17 @@ straightforward to model in the simulations: after the males were
 assigned their paternity shares (during fertilisation), the clutch
 survived if the chosen male was also a parent. Because of this
 assumption, and those in Stage 1, the courter/non-parent morph never
-produced viable offspring.
+produced viable offspring. However, this morph was included in the
+models at the initial stages because the two traits were set up to be
+inherited independently in the initial conditions for each run of the
+model.
 
 In the baseline model, we modelled this by defining the selection
 coefficient for clutch survival, $w_{n_M}$, which determined the success
 of each morph's clutch, assuming the morph was chosen by a female:
 $o_{o_M} = e_{o_M} w_{n_M}$. To match our model assumptions,
-$w_{n_CP} = w_{NP} = 1$ and $w_{n_CN} = w_{NN} = 0$. We also calculated
-the number of surviving offspring from sneaking as:
+$w_{n_{CP}} = w_{n_{NP}} = 1$ and $w_{n_{CN}} = w_{n_{NN}} = 0$. We also
+calculated the number of surviving offspring from sneaking as:
 
 $$
 o_{s_M} = e_{s_M} \frac{\Sigma{o_{o_M}}}{\Sigma{e_{o_M}}}.
@@ -395,19 +409,20 @@ $$
 
 Because we assumed obligate parental care, the fraction was either 1 or
 0, depending on whether the morph associated with the clutch had the
-parental care trait. Each morph's total number of offspring produced
-($o_M$) was the sum of $o_{o_M}$ and $o_{s_M}$.
-<!--# R2:  Does the model assume that the courter male provides parental care to the offspring produced as a result of fertilization by a sneak male? How is the fractional contribution of courters:sneakers modeled in the analysis? -->
+parental care trait. Males with the parental care trait were assumed to
+care for all offspring in the clutch, including those arising from
+sneaking. Each morph's total number of offspring produced ($o_M$) was
+the sum of $o_{o_M}$ and $o_{s_M}$.
 
 ## Stage 4: Viability selection
 
-<!--# R2: Lines 234 – 235. I might be missing something, but if two traits are independent how can a trade-off emerge between them? There has to be some constraint built into the model that results in the trade-off. -->We
-assumed viability selection only affects male offspring, through a
-trade-off between courting and parental care. In the baseline model, we
-multiplied the viability selection coefficient (${w_v}_M$) by the
-surviving number of offspring per morph ($o_M$), to determine the number
-of surviving juveniles per morph: $j_M = o_M w_{v_M}$. In the simulation
-model, we calculated a survival probability for each male offspring, as
+We assumed viability selection only affects male offspring, as a cost
+imposed on displaying courting and/or parental care (following
+<!--# find examples -->). In the baseline model, we multiplied the
+viability selection coefficient (${w_v}_M$) by the surviving number of
+offspring per morph ($o_M$), to determine the number of surviving
+juveniles per morph: $j_M = o_M w_{v_M}$. In the simulation model, we
+calculated a survival probability for each male offspring, as
 $e^{\frac{-(morph - \theta)(morph - \theta)}{2\omega_v}}$, where
 $\omega_v$ represents the strength of viability selection, $morph$ is 1
 for courters and parents and 0 for non-courters and non-parents, and
@@ -428,10 +443,11 @@ $f_M = \frac{j_M}{\Sigma_{i=1}^4{j_i}}$.
 In the simulation model, the total number of surviving offspring in the
 population depended on the proportion of population reproductive success
 achieved by each individual male and female (i.e., each generation, the
-number of offspring created was equal to the carrying capacity). If the
-number of surviving offspring was larger than the carrying capacity,
-offspring were randomly selected to become adults.
-<!--# R1: First and only mention of "carrying capacity". Perhaps give more details on how this was specified and how it related to viability selection. -->
+number of offspring created was equal to the carrying capacity). The
+carrying capacity was arbitrarily set as 1000 to constrain the maximum
+population size. If the number of surviving offspring was larger than
+the carrying capacity, offspring were randomly selected to become adults
+(i.e., independent of their morph).
 
 ## Evaluating model outcomes
 
@@ -490,11 +506,15 @@ identified by the baseline model as either facilitating high or low
 morph diversity. Within each of these parameter settings, we compared
 model outcomes with for cases with each combination of 2, 4, or 8
 chromosomes and 8, 16, 32, or 64 QTLs underlying each trait. We also
-tested three supergene sizes: occupying 5% of a chromosome, 25% of a
-chromosome, or 50% of a chromosome.
-<!--# R2: Are these reasonable values for the size of supergenes? --> In
-all cases, a chromosome was comprised of 1000 loci (including marker
-loci and QTLs).
+tested three supergene sizes, which are similar to empirical supergene
+examples: occupying 5% of a chromosome (similar to the spider
+*Oedothorax gibbosus,* [@hendrickxMasculinizingSupergeneUnderlies2022]),
+25% of a chromosome (similar to the ruff,
+[@hillLowMutationLoad2023][@lamichhaneyStructuralGenomicChanges2016][@kupperSupergeneDeterminesHighly2016]),
+or 50% of a chromosome (similar to rainbow trout,
+[@pearseSexdependentDominanceMaintains2019] and white-throated sparrow,
+[@tuttleDivergenceFunctionalDegradation2016]). In all cases, a
+chromosome was comprised of 1000 loci (including marker loci and QTLs).
 
 #### Analysing multilocus genotypes
 
@@ -774,10 +794,12 @@ visualised the QTL haplotypes in supergenes (see Fig. S6 and S7 for
 representative images). These visualisations suggest that because of the
 additive, polygenic nature of our traits, individuals have multiple
 pathways to creating the morphs in terms of genotypes at each QTL, even
-when QTLs are segregating together in a supergene. These findings
-suggest that supergenes are not necessary for maintaining multiple
-reproductive morphs that are comprised of many causal loci.
-<!--# R1: does this represent multiple independent origins to the morphs? -->
+when QTLs are segregating together in a supergene. This genetic
+diversity reflects the continuous nature of the traits that additively
+define a discrete morph, and the fact that threshold traits can harbour
+hidden diversity. These findings suggest that supergenes are not
+necessary for maintaining multiple reproductive morphs by all causal
+loci having the same variants within each morph type.
 
 ### Genome-wide genetic diversity is maintained even when trait diversity is low
 
@@ -788,17 +810,18 @@ genetic diversity at QTLs (i.e., low observed heterozygosity) than the
 genome-wide QTLs scenarios. Surprisingly, we found that the average
 genome-wide expected heterozygosity was not substantially different in
 simulations with genome-wide QTLs versus QTLs in supergenes in the final
-generation of the simulations (t = -0.31, df = 326.75, p = -0.31;
-genome-wide mean = 0.15, supergene mean = 0.16; Fig.
-\@ref(fig:genomewideDiv) A; Fig. S8). In most runs, the heterozygosity
-at QTLs was did not significantly differ from heterozygosity at neutral
-markers (mean p-value from t-tests is 0.5 ± 0.01). Tajima's D, which
-tests for directional or balancing selection, also reflects genetic
-variation in a sequence of DNA, and did not deviate substantially
-between genetic architectures and did not relate to final morph
-frequencies (Fig. \@ref(fig:genomewideDiv) B; Fig. S8). Average linkage
-disequilibrium was higher for QTLs in supergenes than
-randomly-distributed QTLs (Fig. S9).
+generation of the simulations, but differed between low versus high
+diversity parameter settings ($F_{3,1636}$= 111.3, p \< 0.0001;
+diversity $p$ \< 0.0001; architecture $p$ = 0.399; genome-wide mean =
+0.15, supergene mean = 0.16; Fig. \@ref(fig:genomewideDiv) A; Fig. S8).
+In most runs, the heterozygosity at QTLs was did not significantly
+differ from heterozygosity at neutral markers (mean p-value from t-tests
+is 0.5 ± 0.01). Tajima's D, which tests for directional or balancing
+selection, also reflects genetic variation in a sequence of DNA, and did
+not deviate substantially between genetic architectures and did not
+relate to final morph frequencies (Fig. \@ref(fig:genomewideDiv) B; Fig.
+S8). Average linkage disequilibrium was higher for QTLs in supergenes
+than randomly-distributed QTLs (Fig. S9).
 
 ```{r getPopgen}
 popgen_data<-read.csv("popgen_summary.csv")
@@ -855,21 +878,22 @@ understand how polygenic phenotypes can be inherited as discrete suites
 of traits. Using a simulation model, we show that the genetic
 architecture -- specifically, the number of loci and the extent of
 linkage among them -- affects the persistence of complex discrete
-phenotypes. In our single-gene models, under parameter conditions that
-favoured the maintenance of multiple morphs in simple single-gene
-models, which male morphs were retained was determined due to
-stochasticity. However, when more complex architectures are modelled
-using the same parameters, specific combinations of morphs were
-retained; thus, genetic complexity of traits reduced the importance of
-stochasticity. This phenomenon was likely due to genetic correlations
-between traits and loci. In contrast to expectations, we did not find
-that supergenes increased the probability that multiple morphs are
-maintained in the population. QTLs organised into supergenes (in which
-causal SNPs are physically co-located and experience reduced
-recombination), although associated with high linkage disequilibrium,
-did not have qualitatively different outcomes in terms of the
-maintenance of discrete morphs than QTLs distributed genome-wide. In
-addition, unexpectedly high levels of genetic diversity were retained
+phenotypes. In our single-gene simulation models, under parameter
+conditions that favoured the maintenance of multiple morphs in simple
+single-gene simulation models, which male morphs were retained was
+determined due to stochasticity. However, when more complex
+architectures are modelled using the same parameters, specific
+combinations of morphs were retained; thus, genetic complexity of traits
+reduced the importance of stochasticity and increased the maintenance of
+phenotypic and genetic diversity. This phenomenon was likely due to
+genetic correlations between traits and loci. In contrast to
+expectations, we did not find that supergenes increased the probability
+that multiple morphs are maintained in the population. QTLs organised
+into supergenes (in which causal SNPs are physically co-located and
+experience reduced recombination), although associated with high linkage
+disequilibrium, did not have qualitatively different outcomes in terms
+of the maintenance of discrete morphs than QTLs distributed genome-wide.
+In addition, unexpectedly high levels of genetic diversity were retained
 within morphs in the supergene scenarios.
 
 ## Supergenes have similar outcomes to randomly distributed QTLs
@@ -880,16 +904,13 @@ discrete manner, when they must also be polygenic
 [@schwanderSupergenesComplexPhenotypes2014]. We provide compelling
 evidence that additive genetic variation need not be co-located in a
 non-recombining region of a chromosome for multiple morphs to be
-maintained. Our model makes several assumptions that might differ from
-real-world examples, however, and
-<!--#  R2: The sentence ends abruptly, what's missing?--> These
-additional forms of complexity in genetic architectures are fruitful
-areas for future research. For example, the steroid hormone receptor
-genes in white-throated sparrow and ruff supergenes
-[@maneySupergenesSteroids2022] would be better approximated by a
-logarithmic distribution, which differs from the additive distribution
-of allelic effects that we used. Additionally, many polymorphisms could
-rely on dominance hierarchies (e.g., as modelled by
+maintained. Considering additional forms of complexity in genetic
+architectures is a fruitful area for future research. For example, the
+steroid hormone receptor genes in white-throated sparrow and ruff
+supergenes [@maneySupergenesSteroids2022] would be better approximated
+by a logarithmic distribution, which differs from the additive
+distribution of allelic effects that we used. Additionally, many
+polymorphisms could rely on dominance hierarchies (e.g., as modelled by
 [@svenssonFemalePolymorphismFrequency2005]), and could even be
 underpinned by dominance reversals between morphs
 [@pearseSexdependentDominanceMaintains2019] or sexes
@@ -902,7 +923,9 @@ threshold-based switch, contrary to predictions from some authors
 discrete morphs need not have causal genes co-located in a supergene but
 can still follow the single- or two-locus phenotypic inheritance
 patterns seen in side-blotched lizards [@sinervoRunawaySocialGames2001]
-and damselflies [@svenssonFemalePolymorphismFrequency2005].
+and damselflies [@svenssonFemalePolymorphismFrequency2005], and other
+species with fixed alternative reproductive tactics that do not yet have
+evidence of supergenes.
 
 ## Unexpected genetic variation was maintained even when traits were fixed
 
