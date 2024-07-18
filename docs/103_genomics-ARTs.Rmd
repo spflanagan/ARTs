@@ -39,7 +39,7 @@ knitr::opts_chunk$set(
   dev="png"
 )
 ```
-```{r librarysetup, echo=FALSE,echo=FALSE,message=FALSE}
+```{r librarysetup, echo=FALSE,message=FALSE}
 library(RColorBrewer)
 library(scales)
 library(sm)
@@ -50,6 +50,10 @@ library(vegan)
 library(tidyr)
 library(vcfR)
 library(GWASpoly)
+```
+
+
+```{r readScripts, echo=FALSE,message=FALSE}
 source("../R/genomic_summaries.R")
 source("../R/freq_functions.R")
 source("../R/formatting.R")
@@ -490,18 +494,18 @@ qq.plot(court_scan, trait="CourtTrait") #some departures from the null (dashed l
 
 We need to choose a -log10(p) threshold to control false positive rate. Bonferroni is overly conservative because LD means that markers are not independent. So we can use LD to estimate effective number of markers using method="M.eff", and can also use a permutation test.
 
-```{r}
+```{r, eval=FALSE}
 data2 <- set.threshold(court_scan,method="M.eff",level=0.05)
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 p <- manhattan.plot(data2,traits="CourtTrait")
 p + theme(axis.text.x = element_text(angle=90,vjust=0.5))
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 plot(data2@scores$CourtTrait$additive)
 courtQTLs<-qtls[1,grep("CourterQTL",colnames(qtls))]
 qtllocs<-as.numeric(gsub("(\\d)\\.(\\d+)","\\1",courtQTLs))*1000 + 
@@ -513,7 +517,7 @@ points(qtllocs,
        cex=2)
 ```
 
-```{r}
+```{r, eval=FALSE}
 qtl <- get.QTL(data=data2,traits="CourtTrait",models="additive",bp.window=10)
 fit.ans <- fit.QTL(data=data2,trait="CourtTrait",
                    qtl=qtl[,c("Marker","Model")])
@@ -647,7 +651,7 @@ propQTL_plot(gwas_summary[gwas_summary$Architecture=="supergene",],"PropWrongQTL
 ```
 
 
-Are parent QTLS more likely to be picked up because CP/CN is the most common polymorphism or is it because selection on parents is stronger than selection on courters? To asnwer this, we can summarize the final frequencies and compare those to the prop QTL detected (Fig. \@ref(fig:freqsDetection)).
+Are parent QTLS more likely to be picked up because CP/CN is the most common polymorphism or is it because selection on parents is stronger than selection on courters? To answer this, we can summarize the final frequencies and compare those to the prop QTL detected (Fig. \@ref(fig:freqsDetection)).
 
 ```{r eval=FALSE}
 pfiles<-list.files(path="../fixedART-results/qtls",pattern="pheno.csv",full.names = TRUE)
@@ -836,6 +840,7 @@ lds$diversity<-gsub("../fixedART-results/(\\w+)//(\\w+Diversity).*$","\\2", rown
 
 
 ```{r LDplots}
+divcols<-c(low='#7fbf7b',high='#af8dc3')
 names(divcols)<-c("lowDiversity","highDiversity")
 par(mfrow=c(2,2))
 plot(lds[,"avgQ"]~lds[,"nqtl_actual"],
@@ -1555,13 +1560,18 @@ td_freqs$diversity<-factor(td_freqs$diversity,
                            levels=c("low","high"))
 ```
 
+```{r}
+div_mod<-lm(popgen_data$gHtMean~popgen_data$Diversity*popgen_data$Architecture)
+```
 
 
 \newpage
 \blandscape
 
 
-```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the final generation of the simulations was not influcenced by genetic architecture or the phenotypic diversity (i.e., morph frequencies), but did differ between low- and high-diversity parameter settings. Shown are genome-wide observed heterozygosity (A), Tajima’s D (B), and male-male Gst (C).", fig.keep='last', fig.height=3.5, fig.width=10}
+```{r genomewideDiv, fig.cap="Genome-wide genetic diversity in the final generation of the simulations was not influcenced by genetic architecture or the phenotypic diversity (i.e., morph frequencies), but did differ between low- and high-diversity parameter settings. Shown are genome-wide observed heterozygosity (A), Tajima’s D (B), and male-male Gst (C).", fig.keep='last', fig.height=3.5, fig.width=10, eval=TRUE}
+
+divcols<-c(low='#7fbf7b',high='#af8dc3')
 
 par(mfrow=c(1,3),xpd=TRUE, mar=c(5,5,1.5,1), oma=c(0.5,0,5,1))
 
