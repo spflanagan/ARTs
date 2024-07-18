@@ -1,0 +1,192 @@
+---
+title: "Scenarios with more lower consequences for non-parents"
+output:
+  bookdown::pdf_document2:
+    fig_caption: yes
+    keep_tex: yes
+    number_sections: no
+    template: manuscript.latex
+    toc: yes
+    toc_depth: 2
+spacing: singlespacing
+fontsize: 11pt
+capsize: normalsize
+documentclass: article
+footerdate: yes
+graphics: yes
+csl: evolution.csl
+editor_options:
+  chunk_output_type: console
+header-includes:
+- \usepackage{pdflscape}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,out.extra='',fig.pos="H",dpi=200,fig.height = 7,fig.width = 7)
+knitr::opts_knit$set(root.dir='../results/') #change
+```
+```{r opts, echo = FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+  fig.path = "../figs/",
+  dev="png"
+)
+```
+```{r librarysetup, echo=FALSE,echo=FALSE,message=FALSE}
+library(RColorBrewer)
+library(scales)
+library(sm)
+library(kableExtra)
+library(plotly)
+library(dplyr)
+library(vegan)
+library(tidyr)
+library(Ternary)
+source("../R/freq_functions.R")
+source("../morph_predictions/check_freqs.R")
+source("../morph_predictions/morph_gens_ns.R")
+source("../R/formatting.R")
+```
+
+```{r spftools}
+if(length(system.file(package='spfTools'))<=1){
+  devtools::install_github("https://github.com/spflanagan/spfTools/")
+}
+library(spfTools)
+```
+
+```{r extractLastGensFXN}
+extract_last_gens<-function(pattern, path){
+  all_files<-list.files(pattern=pattern, path=path, full.names = TRUE)
+  all_last_gens <- do.call(rbind,lapply(all_files, get_last_gen_data))
+  return(all_last_gens)
+}
+```
+
+```{r getLastGenDataFXN}
+get_last_gen_data<-function(file){
+  data<-read.delim(file, sep="\t")
+  # keep the last generation only
+  max_gen<-max(data$Generation)
+  last_gen<-data[which(data$Generation==max_gen),]
+   #break it into each population in the file
+  return(last_gen)
+}
+```
+
+
+```{r dataConversionFXN}
+morphs_to_ternary<-function(pattern, path){
+  data<-extract_last_gens(pattern=pattern,path=path)
+  data_points<-apply(data,
+                   1,
+                   function(dat){
+                     out<-dat[c("FreqCP","FreqNcP","FreqNcNp")]
+                     if(length(which(is.na(out)==TRUE))>0){
+                       browser()
+                     }
+                     return(as.numeric(out))
+                   },
+                   simplify = FALSE)
+  return(data_points)
+}
+
+```
+```{r makeTernaryMorphsFXN}
+# made with inspiration from this tutorial: https://cran.r-project.org/web/packages/Ternary/vignettes/Ternary.html
+morphs_ternary_plot<-function(...){
+  TernaryPlot(atip="",
+            btip="",
+            ctip="",
+            alab="Courter/Parent",
+            blab="Noncourter/Parent",
+            clab="Noncourter/Nonparent",
+            grid.lines=4,
+            grid.minor.lines = 1,
+            grid.lty = "dotted",
+            grid.minor.lty = "dotted",
+            lab.col=cols2[c(1,2,4)],
+            tip.col=cols2[c(1,2,4)],
+            ...)
+}
+```
+
+
+
+
+```{r singleLocusData, eval=FALSE}
+lowDivSurv<-morphs_to_ternary(pattern="no_parent_survival.*lowDiv.*summary.txt",path="single_locus")
+highDivSurv<-morphs_to_ternary(pattern="no_parent_survival.*highDiv_.*summary.txt", path="single_locus")
+
+## Add the survival rate??
+
+saveRDS(lowDivSurv,"lowDivSurv.RDS")
+saveRDS(highDivSurv,"highDivSurv.RDS")
+```
+```{r readSingleLocusData}
+lowDivSurv<-readRDS("lowDivSurv.RDS")
+highDivSurv<-readRDS("highDivSurv.RDS")
+```
+
+```{r}
+low_names<-as.factor(gsub("no_parent_survival_(\\w+)_lowDiv.*summary.txt",
+                "\\1",
+                list.files(
+                  pattern="no_parent_survival.*lowDiv.*summary.txt",
+                  path="single_locus"
+                  )
+))
+high_names<-as.factor(gsub("no_parent_survival_(\\w+)_highDiv.*summary.txt",
+                "\\1",
+                list.files(
+                  pattern="no_parent_survival.*highDiv.*summary.txt",
+                  path="single_locus"
+                  )
+))
+
+```
+
+
+
+```{r singleLocusPlot}
+
+
+# create the base
+par(mar=c(0,0,0,0))
+morphs_ternary_plot()
+
+# add the points
+AddToTernary(
+  points,
+  lowDivSurv,
+  col=divcols["low"],
+  pch=as.numeric(low_names),
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+AddToTernary(
+  points,
+  highDivSurv,
+  col=divcols[["high"]],
+  pch=as.numeric(high_names),
+  lwd=2,
+  cex=2 # add color based on param values
+)
+
+
+outer_legend("topleft",
+       c("low", "high","50% survival","10% survival"),
+       col=c(divcols[c("low","high")],"grey","grey"),
+       pch=c(15,15,1,2),
+       pt.cex=2,
+       bty='n',
+       ncol=2,
+       pt.lwd=2)
+
+
+```
+
