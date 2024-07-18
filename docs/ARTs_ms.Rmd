@@ -131,8 +131,8 @@ fashion, their genetic basis is much more complex and multivariate. A
 particularly intriguing result is that structural variants have
 aggregated multiple variants contributing to the tactics into a
 'supergene' (a tightly linked set of genes, often with reduced
-recombination due to inversions [@ford1965; @thompson2014at least three
-species with alternative reproductive tactics: the ruff
+recombination due to inversions [@ford1965; @thompson2014]) in at least
+three species with alternative reproductive tactics: the ruff
 [@lamichhaneyStructuralGenomicChanges2016;
 @kupperSupergeneDeterminesHighly2016], white-throated sparrow
 [@thomasChromosomalPolymorphismLinked2008], and dwarf spiders
@@ -287,7 +287,7 @@ individual-based models, Sex was assigned instead by a draw from a
 binomial distribution with a probability of 0.5 of being female.
 
 In all three models, each generation has five distinct phases: (1) mate
-choice; (2) fertilization; (3) parental care; (4) viability selection;
+choice; (2) fertilisation; (3) parental care; (4) viability selection;
 and (5) maturation to adulthood (Fig. \@ref(fig:modelDiagram)). We will
 describe each of these phases and highlight differences between the
 models when appropriate.
@@ -321,13 +321,13 @@ model. Females searched through a set number of males and chose the
 first attractive male (i.e., the first courting male she encountered).
 If a female did not find an acceptable mate, she did not mate.
 
-## Stage 2: Fertilization
+## Stage 2: Fertilisation
 
 A chosen male was not guaranteed paternity of an entire brood, because
-non-courting males were able to fertilize a proportion of the eggs. The
-chosen parent had first-male fertilization advantage. The consequence of
+non-courting males were able to fertilise a proportion of the eggs. The
+chosen parent had first-male fertilisation advantage. The consequence of
 this scenario is that the only mechanism by which non-courters can
-produce offspring is through sneak fertilizations. Specifically, we
+produce offspring is through sneak fertilisations. Specifically, we
 modelled sneaking by specifying a total number of sneakers, $n_{sneak}$,
 that could fertilise via sneaking in each clutch, and each sneaker could
 contribute up to their individual reproductive allocation (where
@@ -345,14 +345,14 @@ In the analytical model, we modelled the fertilisation success for
 morphs by considering their fertilisation success in clutches laid by
 the females who chose them, $e_{o_M} = f_M N_m r_M w_{s_M}$ (which will
 only be non-zero for courting morphs). We specified the maximum number
-of possible fertilizations arising from sneaking for a given
+of possible fertilisations arising from sneaking for a given
 non-courting morph was $N_s = n c n_{sneakers} r_{NN}$. If the number of
-fertilizations arising from sneaking was smaller than the morph's
+fertilisations arising from sneaking was smaller than the morph's
 potential population-level reproductive effort (i.e, if
-$N_s < f_M N_m r_M$), the number of eggs fertilized through sneaking
+$N_s < f_M N_m r_M$), the number of eggs fertilised through sneaking
 ($e_{s_M}$) for that morph was the difference between $N_s$ and
 $f_M N_m r_M$, truncated at zero. Otherwise, the number of eggs
-fertilized through sneaking was $f_M N_m r_M$.
+fertilised through sneaking was $f_M N_m r_M$.
 
 In the simulation model, we incorporated recombination and mutation
 during the fertilisation process. Recombination occurred independently
@@ -417,12 +417,13 @@ the sum of $o_{o_M}$ and $o_{s_M}$.
 ## Stage 4: Viability selection
 
 We assumed viability selection only affects male offspring, as a cost
-imposed on displaying courting and/or parental care (following
-<!--# find examples -->). In the baseline model, we multiplied the
-viability selection coefficient (${w_v}_M$) by the surviving number of
-offspring per morph ($o_M$), to determine the number of surviving
-juveniles per morph: $j_M = o_M w_{v_M}$. In the simulation model, we
-calculated a survival probability for each male offspring, as
+imposed on displaying courting and/or parental care (to reflect
+empirical patterns of fitness costs to male displays [@blount2004] and
+care [@santos2012]). In the baseline model, we multiplied the viability
+selection coefficient (${w_v}_M$) by the surviving number of offspring
+per morph ($o_M$), to determine the number of surviving juveniles per
+morph: $j_M = o_M w_{v_M}$. In the simulation model, we calculated a
+survival probability for each male offspring, as
 $e^{\frac{-(morph - \theta)(morph - \theta)}{2\omega_v}}$, where
 $\omega_v$ represents the strength of viability selection, $morph$ is 1
 for courters and parents and 0 for non-courters and non-parents, and
@@ -667,12 +668,12 @@ these three parameters remained qualitatively consistent between 100 and
 As expected, larger sperm competition coefficients ($c$) resulted in a
 higher likelihood of non-courters being retained in the population,
 which makes sense given that $c$ affects the proportion of eggs within a
-clutch that a non-courting male can successfully fertilize. Sperm
+clutch that a non-courting male can successfully fertilise. Sperm
 competition interacted with the reproductive allocation ratio, $r$, such
 that when $c>0.2$, the maximum diversity was achieved when
 $0.5 \le r \le 1$. As an illustrative example, if $r = 0.5$, $c=0.2$,
-and the non-courting male's number of eggs he can fertilize is 8, the
-non-courting male would fertilize
+and the non-courting male's number of eggs he can fertilise is 8, the
+non-courting male would fertilise
 $\frac{(8)(2)}{(8) ( 0.5)+(2 )( 0.2 )( 8)}$ =
 `r round((8*0.2)/(4+(2*0.2*8)),3)` of the offspring. The effects of
 sperm competition on morph diversity were further influenced by
@@ -680,7 +681,7 @@ $n_{sneak}$, with larger contributions from an individual non-courting
 male (e.g., larger $c$) being required to maintain diversity of morphs
 when fewer sneakers were allowed (Fig. S1). This result makes sense
 because the number of sneakers is multiplied by the sperm competition
-coefficient to determine the proportion of offspring fertilized by the
+coefficient to determine the proportion of offspring fertilised by the
 non-courters for a given clutch. These analyses therefore helped to
 build an understanding of how the different parameters affected model
 predictions and provided a baseline against which to compare our
@@ -904,13 +905,16 @@ discrete manner, when they must also be polygenic
 [@schwanderSupergenesComplexPhenotypes2014]. We provide compelling
 evidence that additive genetic variation need not be co-located in a
 non-recombining region of a chromosome for multiple morphs to be
-maintained. Considering additional forms of complexity in genetic
-architectures is a fruitful area for future research. For example, the
-steroid hormone receptor genes in white-throated sparrow and ruff
-supergenes [@maneySupergenesSteroids2022] would be better approximated
-by a logarithmic distribution, which differs from the additive
-distribution of allelic effects that we used. Additionally, many
-polymorphisms could rely on dominance hierarchies (e.g., as modelled by
+maintained. We focus on courting and care phenotypes as two exemplars of
+polygenic traits, but expect our results would be applicable to other
+traits involved in alternative tactics, such as aggression. Considering
+additional forms of complexity in genetic architectures is a fruitful
+area for future research. For example, the steroid hormone receptor
+genes in white-throated sparrow and ruff supergenes
+[@maneySupergenesSteroids2022] would be better approximated by a
+logarithmic distribution, which differs from the additive distribution
+of allelic effects that we used. Additionally, many polymorphisms could
+rely on dominance hierarchies (e.g., as modelled by
 [@svenssonFemalePolymorphismFrequency2005]), and could even be
 underpinned by dominance reversals between morphs
 [@pearseSexdependentDominanceMaintains2019] or sexes
