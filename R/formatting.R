@@ -6,7 +6,7 @@ base_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq"
                    "FreqNcP","FreqCP","Courter2NonRS","Parent2NonSurvival")
 poly_keep_cols<- c("Pop","PopSize","NumMal","NumFem","ParentThresh","ParentFreq","CourterThresh","CourterFreq","FreqNcNp","FreqCNp",
                    "FreqNcP","FreqCP","Polygyny")
-divcols<-c(low='#f781bf',high='#984ea3')
+divcols<-c(low='#7fbf7b',high='#af8dc3')
 
 gt_cols<-c("#f2f0f7","#bcbddc","#54278f")
 
