@@ -922,7 +922,7 @@ underpinned by dominance reversals between morphs
 possibilities considered in our model. Regardless, we provide the
 important result that discrete morphs can be maintained within
 populations even without discrete genetic architectures with a
-threshold-based switch, contrary to predictions from some authors
+threshold-based switch, contrary to some previous predictions
 [@boltonColourPolymorphismLikely2016]. Our results indicate that
 discrete morphs need not have causal genes co-located in a supergene but
 can still follow the single- or two-locus phenotypic inheritance
@@ -994,6 +994,51 @@ causal regions in some species
 @hendrickxMasculinizingSupergeneUnderlies2022;
 @kimGeneticsEvidenceBalancing2019; @gazdaGeneticMechanismSexual2020].
 
+## Empirical scenarios likely to fit this model
+
+Like any theory, our model has several assumptions that best capture
+some empirical scenarios more than others. First, we prevented the
+courter/non-parent morph from persisting by assuming that those males do
+not have any reproductive success. We therefore only allowed at most two
+or three alternative male phenotypes to persist in populations. These
+are the two most common types of sex-specific, multi-morphic, fixed
+(i.e., heritable) morphs observed empirically
+[@mankSexspecificMorphsGenetics2022]. Our model's assumptions about
+morph reproductive success are similar to the ruffs, in which the
+inversion genotype is lethal in the homozygous state
+[@kupperSupergeneDeterminesHighly2016,
+@lamichhaneyStructuralGenomicChanges2016], although the exact details of
+the lack of reproductive success of the unviable morph is achieved
+differently than in our model. Other empirical scenarios of morph
+reproductive success exist, such as pure frequency dependence (i.e.,
+without the imbalanced fitness costs among morphs with negative
+frequency-dependence, as assumed in our model). Such negative
+frequency-dependent fitness can maintain three morphs, such as in
+side-blotched lizards [@sinervoRockPaperScissors1996] and the
+blue-tailed damselfly
+[@sanchez-guillenHybridizationInheritanceFemale2005]. Nonetheless, we
+expect that our genomic findings -- that supergenes are not required,
+and remarkable genetic diversity can be maintained within morphs -- will
+be robust to these differences and generally applicable. For example,
+the complex and variable structural rearrangements seen in *Xiphophorus
+birchmanni* female-mimics [@dodgeComplexStructuralVariation2024]could
+reflect variation being maintained at causal loci, similar to what is
+predicted from our model. We also assumed that the loci determining the
+courting and parenting traits were autosomal and that each causal locus
+has a roughly equal, additive contribution to the trait. If the causal
+variants are Y-linked, such as in Para guppies
+[@sandkamExtremeChromosomePolymorphism2021,
+@lindholmExtremePolymorphismYlinked2004], or under control of sex
+steroid hormones, as might be the case in the ruff
+[@maneySupergenesSteroids2022], then our predictions about genetic
+architectures might not be fully supported in these species. Altogether,
+although we assumed specific patterns of morph reproductive success,
+which might only reflect some proportion of heteromorphic species'
+patterns of relative fitness, we anticipate that highly polygenic traits
+can persist across a wide range of empirical systems, with considerable
+genetic diversity being maintained, both with and without supergenes or
+other structural variatns to group causal loci within the genome.
+
 ## Summary
 
 Here, we show that the genetic architecture of discrete morphs affects
@@ -1019,7 +1064,8 @@ University of Tennessee, Knoxville. SPF was partially funded by the
 Marsden fund grant number UOC1904 while working on this research. SHA
 acknowledges support from funding from the National Science Foundation
 (Grants IOS-1522491 and IOS-1655297) and the University of California
-Santa Cruz.
+Santa Cruz. We thank the editor and three anonymous reviewers for their
+input on the manuscript.
 
 # Data Accessibility
 
