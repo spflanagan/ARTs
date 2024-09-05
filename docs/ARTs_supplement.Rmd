@@ -6,8 +6,6 @@ output:
     keep_tex: yes
     number_sections: no
     toc: no
-    includes:
-      in_header: supplement_preamble.sty
 bibliography: references.bib
 capsize: normalsize
 documentclass: article
