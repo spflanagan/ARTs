@@ -75,6 +75,13 @@ final_freqs$rep<-gsub("^.*Diversity_(.*)_pheno.csv","\\1",final_freqs$file)
 
 ```
 
+## Paper information
+
+Title: Supergenes are not necessary to explain the maintenance of complex alternative phenotypes
+Authors: Sarah P. Flanagan (University of Canterbury), Suzanne H. Alonzo (University of California Santa Cruz)
+Journal: Proceedings of the Royal Society B: Biological Sciences
+Article DOI: 10.1098/rspb.2024.1715
+
 ## Extended results of the baseline analytical model
 
 We used the analytical model to identify regions of parameter space that resulted in diversity (i.e., multiple morphs being maintained). We used the Shannon-Wiener diversity index to quantify diversity in the analytical model output and visualised the results in a contour plot (Fig. \@ref(fig:mathParams)), which shows diversity along various relative reproductive investments (x-axis) and sperm competition coefficients (y-axis) for five different number of sneakers allowed. 
