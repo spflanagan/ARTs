@@ -29,7 +29,7 @@ LC=0.5
 
 # Things to vary
 SUPERGENE_PROP_VARS='0.05 0.25 0.5'
-NUM_CHROM='2' #'2 4 8'
+NUM_CHROM='4 8' #'2 4 8'
 NUM_QTL='1' #'8 16 32 64'
 
 ### --- MOVE TO THE CORRECT DIRECTORIES --- ###
@@ -51,30 +51,18 @@ for i in `seq ${NUMREPS}`; do
 			
 			# expected high diversity 
 			echo "./ARTs --courter --parent \
-				-b ../../fixedART-results/qtls/highDiversity_qtls_q${q}_c${c}_${i} \
+				-b ../../fixedART-results/qtls/highDiversity_qtls_monogamy_nm_q${q}_c${c}_${i} \
 				-crs ${CRS} -ncrs ${NRS} -sperm-r ${C} \
 				-surv-noparent 0 -surv-parent 1 --viability \
-				--same-base -mm 4 -p 4 --polygyny --output-vcf \
-				-q ${q} -c ${c}" >> "parallel_cmds.sh"
-			echo "./ARTs --courter --parent \
-				-b ../../fixedART-results/qtls/highDiversity_qtls_nm_q${q}_c${c}_${i} \
-				-crs ${CRS} -ncrs ${NRS} -sperm-r ${C} \
-				-surv-noparent 0 -surv-parent 1 --viability \
-				--same-base -mm 4 -p 4 --polygyny --allow-no-mating --output-vcf \
+				--same-base -mm 4 -p 4 --allow-no-mating --output-vcf \
 				-q ${q} -c ${c}" >> "parallel_cmds.sh"	
 			
 			# expected low diversity
 			echo "./ARTs --courter --parent \
-				-b ../../fixedART-results/qtls/lowDiversity_polygyny_qtls_q${q}_c${c}_${i} \
+				-b ../../fixedART-results/qtls/lowDiversity_qtls_monogamy_nm_q${q}_c${c}_${i} \
 				-crs ${LCRS} -ncrs ${LNRS} -sperm-r ${LC} \
 				-surv-noparent 0 -surv-parent 1 --viability \
-				-mm 4 --same-base -p 4 --polygyny --output-vcf \
-				-q ${q} -c ${c}" >> "parallel_cmds.sh"
-			echo "./ARTs --courter --parent \
-				-b ../../fixedART-results/qtls/lowDiversity_qtls_nm_q${q}_c${c}_${i} \
-				-crs ${LCRS} -ncrs ${LNRS} -sperm-r ${LC} \
-				-surv-noparent 0 -surv-parent 1 --viability \
-				-mm 4 --same-base -p 4 --polygyny --allow-no-mating --output-vcf \
+				-mm 4 --same-base -p 4 --allow-no-mating --output-vcf \
 				-q ${q} -c ${c}" >> "parallel_cmds.sh"
 				
 			# supergenes
@@ -82,30 +70,18 @@ for i in `seq ${NUMREPS}`; do
 				
 				# expected high diversity 
 				echo "./ARTs --courter --parent --supergene \
-					-b ../../fixedART-results/supergene/highDiversity_supergene_prop${p}_q${q}_c${c}_${i} \
+					-b ../../fixedART-results/supergene/highDiversity_supergene_monogamy_nm_prop${p}_q${q}_c${c}_${i} \
 					-crs ${CRS} -ncrs ${NRS} -sperm-r ${C} \
 					-surv-noparent 0 -surv-parent 1 --viability \
-					--same-base -mm 4 -p 4 --polygyny --output-vcf \
-					-q ${q} -c ${c} -sprop ${p}" >> "parallel_cmds.sh"
-				echo "./ARTs --courter --parent --supergene \
-					-b ../../fixedART-results/supergene/highDiversity_supergene_nm_prop${p}_q${q}_c${c}_${i} \
-					-crs ${CRS} -ncrs ${NRS} -sperm-r ${C} \
-					-surv-noparent 0 -surv-parent 1 --viability \
-					--same-base -mm 4 -p 4 --polygyny --allow-no-mating --output-vcf \
+					--same-base -mm 4 -p 4 --allow-no-mating --output-vcf \
 					-q ${q} -c ${c} -sprop ${p}" >> "parallel_cmds.sh"	
 				
 				# expected low diversity
 				echo "./ARTs --courter --parent --supergene \
-					-b ../../fixedART-results/supergene/lowDiversity_supergene_polygyny_prop${p}_q${q}_c${c}_${i} \
+					-b ../../fixedART-results/supergene/lowDiversity_supergene_monogamy_nm_prop${p}_q${q}_c${c}_${i} \
 					-crs ${LCRS} -ncrs ${LNRS} -sperm-r ${LC} \
 					-surv-noparent 0 -surv-parent 1 --viability \
-					-mm 4 --same-base -p 4 --polygyny --output-vcf \
-					-q ${q} -c ${c} -sprop ${p}" >> "parallel_cmds.sh"
-				echo "./ARTs --courter --parent --supergene \
-					-b ../../fixedART-results/supergene/lowDiversity_supergene_nm_prop${p}_q${q}_c${c}_${i} \
-					-crs ${LCRS} -ncrs ${LNRS} -sperm-r ${LC} \
-					-surv-noparent 0 -surv-parent 1 --viability \
-					-mm 4 --same-base -p 4 --polygyny --allow-no-mating --output-vcf \
+					-mm 4 --same-base -p 4 --allow-no-mating --output-vcf \
 					-q ${q} -c ${c} -sprop ${p}" >> "parallel_cmds.sh"
 			done
 		done
